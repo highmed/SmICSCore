@@ -1,0 +1,26 @@
+version: '3'
+
+services:  
+
+  dotnet:
+    build:
+        context: .
+        args:
+            repo: "http//192.168.2.132:8080/ehrbase/rest/openehr/v1"
+    container_name: smics_core
+    ports:
+      - "80:80"
+    networks: 
+        - smics-net
+
+  webapp:
+    build: ./infectioncontrolsystem2
+    ports:
+      - "8081:3231"
+    container_name: smics_visualisierung
+    networks: 
+     - smics-net
+
+networks:
+  smics-net: {}
+

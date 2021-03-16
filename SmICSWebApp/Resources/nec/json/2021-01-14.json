@@ -1,0 +1,1 @@
+[{"PatientID":"1","StationID":["1"],"RoomID":["1"],"MovementTypeID":[0],"Date":"2021-01-14T15:08:40.047Z","Prediciton":0.1,"LabGroundTruth":true,"PathogenGroundTruth":["H"]},{"PatientID":"2","StationID":["2"],"RoomID":["2"],"MovementTypeID":[0],"Date":"2021-01-14T15:08:40.047Z","Prediciton":0.2,"LabGroundTruth":true,"PathogenGroundTruth":["I"]}]

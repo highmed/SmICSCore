@@ -1,0 +1,157 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+.con {
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
+    margin-top: 2%;
+    margin-bottom: 6%;
+    border-left: 0px solid #33ccff;
+    height: auto;
+    box-shadow: 0px 0px 6px grey;
+    background-image: url("../resources/Background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.deph_1, .deph_2, .deph_3, .deph_4, .deph_5 {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    padding: 2%;
+    height: auto;
+    border: 1.75px dotted lightgrey;
+    margin: 2%;
+    background-color: #F8F8F8;
+}
+.deph_1 {
+    border: 0px dotted lightgrey;
+    background-color: transparent;
+}
+
+input {
+    border: 2px lightgrey;
+    width: 50%;
+    margin: 1%;
+}
+
+#button {
+    width: 20%;
+    border-radius: 8px;
+    background: linear-gradient(to bottom, #33ccff 0%, #3399ff 100%);
+    padding: 0.5%;
+    color: white;
+    margin-left: 2%;
+}
+
+#button:hover {
+    opacity: 1
+}
+
+select {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-padding-end: 20px;
+    -moz-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -moz-padding-start: 2px;
+    background-color: #e6f2ff; /* Fallback color if gradients are not supported */
+    background-image: url(../images/select-arrow.png), -webkit-linear-gradient(top, #E5E5E5, #F4F4F4); /* For Chrome and Safari */
+    background-image: url(../images/select-arrow.png), -moz-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Firefox (3.6 to 15) */
+    background-image: url(../images/select-arrow.png), -ms-linear-gradient(top, #E5E5E5, #F4F4F4); /* For pre-releases of Internet Explorer  10*/
+    background-image: url(../images/select-arrow.png), -o-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Opera (11.1 to 12.0) */
+    background-image: url(../images/select-arrow.png), linear-gradient(to bottom, #E5E5E5, #F4F4F4); /* Standard syntax; must be last */
+    background-position: center right;
+    background-repeat: no-repeat;
+    border: 0px solid #AAA;
+    border-radius: 0px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    color: #555;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 50%;
+}
+
+.span {
+    font-size: 20px;
+    background-color: #e6f2ff; /* Fallback color if gradients are not supported */
+    background-image: url(../images/select-arrow.png), -webkit-linear-gradient(top, #E5E5E5, #F4F4F4); /* For Chrome and Safari */
+    background-image: url(../images/select-arrow.png), -moz-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Firefox (3.6 to 15) */
+    background-image: url(../images/select-arrow.png), -ms-linear-gradient(top, #E5E5E5, #F4F4F4); /* For pre-releases of Internet Explorer  10*/
+    background-image: url(../images/select-arrow.png), -o-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Opera (11.1 to 12.0) */
+    background-image: url(../images/select-arrow.png), linear-gradient(to bottom, #E5E5E5, #F4F4F4); /* Standard syntax; must be last */
+    padding: 0.5%;
+    border: 2px solid white;
+}
+
+.table {
+    display: table;
+    padding: 1%;
+    text-align: center;
+    /*background-color: #e6f2ff;*/
+}
+
+.tr {
+    display: table-row;
+}
+
+.tb {
+    display: table-cell;
+    width: 5%;
+    font-size: 95%;
+}
+
+.tb_bez {
+    text-align: right;
+}
+
+h3 {
+    color: #0086b3;
+    padding-left: 2%;
+}
+
+input[type="checkbox"].css-checkbox {
+    position: absolute;
+    z-index: -1000;
+    left: -1000px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+}
+
+input[type="checkbox"].css-checkbox + label.css-label {
+    padding-left: 30px;
+    height: 25px;
+    display: inline-block;
+    line-height: 25px;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    font-size: 25px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+input[type="checkbox"].css-checkbox:checked + label.css-label {
+    background-position: 0 -25px;
+}
+
+label.css-label {
+    background-image: url("../resources/csscheckbox.png");
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+

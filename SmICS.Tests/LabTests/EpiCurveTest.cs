@@ -1,0 +1,1087 @@
+﻿using Autofac.Extras.Moq;
+using SmICSCoreLib.AQL;
+using SmICSCoreLib.AQL.General;
+using SmICSCoreLib.AQL.Lab.EpiKurve;
+using SmICSCoreLib.AQL.Lab.EpiKurve.ReceiveModel;
+using SmICSCoreLib.REST;
+using System;
+using System.Collections.Generic;
+using Xunit;
+
+
+namespace SmICSDataGenerator.Tests.LabTests
+{
+    public class EpiCurveTest
+    {
+        [Fact]
+        public void ProcessorTest()
+        {
+            RestDataAccess _data = TestConnection.Initialize();
+
+            EpiCurveParameter parameter = new EpiCurveParameter
+            {
+                Starttime = new DateTime(2021, 1, 1),
+                Endtime = new DateTime(2021, 1, 10),
+                PathogenName = "sars-cov-2"
+            };
+
+            EpiCurveFactory epiCurveFactory = new EpiCurveFactory(_data);
+            List<EpiCurveModel> actual = epiCurveFactory.Process(parameter);
+            List<EpiCurveModel> expected = GetExpectedEpiCurveModels();
+
+            Assert.Equal(expected.Count, actual.Count);
+
+            for (int i = 0; i < actual.Count; i++)
+            {
+                Assert.Equal(expected[i].Anzahl, actual[i].Anzahl);
+                Assert.Equal(expected[i].Anzahl_cs, actual[i].Anzahl_cs);
+                Assert.Equal(expected[i].anzahl_gesamt, actual[i].anzahl_gesamt);
+                Assert.Equal(expected[i].anzahl_gesamt_av28, actual[i].anzahl_gesamt_av28);
+                Assert.Equal(expected[i].anzahl_gesamt_av7, actual[i].anzahl_gesamt_av7);
+                Assert.Equal(expected[i].Datum, actual[i].Datum);
+                Assert.Equal(expected[i].ErregerBEZL, actual[i].ErregerBEZL);
+                Assert.Equal(expected[i].ErregerBEZL, actual[i].ErregerBEZL);
+                Assert.Equal(expected[i].ErregerID, actual[i].ErregerID);
+                Assert.Equal(expected[i].MAVG28, actual[i].MAVG28);
+                Assert.Equal(expected[i].MAVG28_cs, actual[i].MAVG28_cs);
+                Assert.Equal(expected[i].MAVG7, actual[i].MAVG7);
+                Assert.Equal(expected[i].MAVG7_cs, actual[i].MAVG7_cs);
+                Assert.Equal(expected[i].StationID, actual[i].StationID);
+            }
+        }
+
+        private List<EpiCurveModel> GetExpectedEpiCurveModels() 
+        {
+                return new List<EpiCurveModel>()
+                {
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 1,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 1),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "klinik"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 1,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 1),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Coronastation"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 0,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 1),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 0,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 1),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Radiologie"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 2,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 2),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "klinik"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 2,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 2),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Coronastation"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 0,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 2),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 0,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 2),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Radiologie"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 2,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 4,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 3),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "klinik"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 3,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 3),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Coronastation"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 1,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 3),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 0,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 3),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Radiologie"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 2,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 6,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 4),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "klinik"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 4,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 4),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Coronastation"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 2,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 4),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 0,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 4),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Radiologie"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 6,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 5),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "klinik"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 4,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 5),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Coronastation"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 2,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 5),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 0,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 5),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Radiologie"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 3,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 9,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 6),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "klinik"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 3,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 7,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 6),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Coronastation"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 2,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 6),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 0,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 6),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Radiologie"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 4,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 12,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 2,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 7),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "klinik"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 2,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 8,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 2,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 7),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Coronastation"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 3,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 7),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 1,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 7),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Radiologie"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 13,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 2,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 8),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "klinik"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 8,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 2,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 8),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Coronastation"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 3,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 8),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 2,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 8),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Radiologie"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 2,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 13,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 3,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 9),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "klinik"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 8,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 2,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 9),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Coronastation"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 2,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 1,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 9),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 3,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 9),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Radiologie"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 14,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 2,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 10),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "klinik"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 9,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 2,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 10),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Coronastation"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 2,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 1,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 10),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 3,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 10),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Radiologie"
+                    }
+                };
+        }
+
+        /*[Fact]
+        public void ProcessorMockTest()
+        {
+            using (var mock = AutoMock.GetLoose())
+            {
+                EpiCurveParameter parameter = new EpiCurveParameter() { 
+                    Starttime = new DateTime(2020, 12, 1, 0, 0, 0),
+                    Endtime = new DateTime(2020, 12, 15, 23, 59, 59),
+                    //Flag = true
+                };
+
+                mock.Mock<IRestDataAccess>().Setup(x => x.AQLQuery<FlagTimeModel>(AQLCatalog.LaborEpiCurve(DateTime.Now, "").Query)).Returns(GetMockFlagTimeSamples());
+
+                var cls = mock.Create<EpiCurveFactory>();
+
+                var expected = GetExpectedMockSamples();
+
+                var actual = cls.Process(parameter);
+
+                Assert.True(actual != null);
+                Assert.Equal(expected.Count, actual.Count);
+
+                for (int i = 0; i < actual.Count; i++)
+                {
+                    Assert.Equal(expected[i].Anzahl, actual[i].Anzahl);
+                    Assert.Equal(expected[i].Anzahl_cs, actual[i].Anzahl_cs);
+                    Assert.Equal(expected[i].anzahl_gesamt, actual[i].anzahl_gesamt);
+                    Assert.Equal(expected[i].anzahl_gesamt_av28, actual[i].anzahl_gesamt_av28);
+                    Assert.Equal(expected[i].anzahl_gesamt_av7, actual[i].anzahl_gesamt_av7);
+                    Assert.Equal(expected[i].Datum, actual[i].Datum);
+                    Assert.Equal(expected[i].ErregerBEZL, actual[i].ErregerBEZL);
+                    Assert.Equal(expected[i].ErregerBEZL, actual[i].ErregerBEZL);
+                    Assert.Equal(expected[i].ErregerID, actual[i].ErregerID);
+                    Assert.Equal(expected[i].MAVG28, actual[i].MAVG28);
+                    Assert.Equal(expected[i].MAVG28_cs, actual[i].MAVG28_cs);
+                    Assert.Equal(expected[i].MAVG7, actual[i].MAVG7);
+                    Assert.Equal(expected[i].MAVG7_cs, actual[i].MAVG7_cs);
+                    Assert.Equal(expected[i].StationID, actual[i].StationID);
+                }
+            }
+        }
+
+        private List<FlagTimeModel> GetMockFlagTimeSamples()
+        {
+            return new List<FlagTimeModel>()
+            {
+                new FlagTimeModel
+                {
+
+                }
+            };
+        }
+        private List<EpiCurveModel> GetExpectedMockSamples()
+        {
+            return new List<EpiCurveModel>() {
+                new EpiCurveModel
+                {
+                    Anzahl = 1,
+                    anzahl_gesamt = 1,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = null,
+                    ErregerBEZL = "Sars-Cov-2",
+                    ErregerID = "COV",
+                    StationID = "Coronastation",
+                    Datum = new DateTime(2021, 1, 1, 0, 0, 0)
+                },
+                 new EpiCurveModel
+                {
+                    Anzahl = 1,
+                    anzahl_gesamt = 1,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = null,
+                    ErregerBEZL = "Sars-Cov-2",
+                    ErregerID = "COV",
+                    StationID = "klinik",
+                    Datum = new DateTime(2021, 1, 1, 0, 0, 0)
+                },
+                new EpiCurveModel
+                {
+                    Anzahl = 1,
+                    anzahl_gesamt = 2,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = null,
+                    ErregerBEZL = "Sars-Cov-2",
+                    ErregerID = "COV",
+                    StationID = "Coronastation",
+                    Datum = new DateTime(2021, 1, 2, 0, 0, 0)
+                },
+                 new EpiCurveModel
+                {
+                    Anzahl = 1,
+                    anzahl_gesamt = 1,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = null,
+                    ErregerBEZL = "Sars-Cov-2",
+                    ErregerID = "COV",
+                    StationID = "klinik",
+                    Datum = new DateTime(2021, 1, 1, 0, 0, 0)
+                },
+                new EpiCurveModel
+                {
+                    Anzahl = 1,
+                    anzahl_gesamt = 1,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = null,
+                    ErregerBEZL = "SARS-Cov-2",
+                    ErregerID = "COV",
+                    StationID = "Stationskennung X",
+                    Datum = new DateTime(2021, 1, 3, 0, 0, 0)
+                },
+                new EpiCurveModel
+                {
+                    Anzahl = 1,
+                    anzahl_gesamt = 7,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = "Cov",
+                    ErregerBEZL = "Cov",
+                    ErregerID = "Cov",
+                    StationID = "Corona Station",
+                    Datum = new DateTime(2020, 12, 4, 0, 0, 0)
+                },
+                new EpiCurveModel
+                {
+                    Anzahl = 1,
+                    anzahl_gesamt = 8,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = "Cov",
+                    ErregerBEZL = "Cov",
+                    ErregerID = "Cov",
+                    StationID = "Corona Station",
+                    Datum = new DateTime(2020, 12, 5, 0, 0, 0)
+                },
+                new EpiCurveModel
+                {
+                    Anzahl = 1,
+                    anzahl_gesamt = 9,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 1,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = "Cov",
+                    ErregerBEZL = "Cov",
+                    ErregerID = "Cov",
+                    StationID = "Corona Station",
+                    Datum = new DateTime(2020, 12, 6, 0, 0, 0)
+                },
+                new EpiCurveModel
+                {
+                    Anzahl = 2,
+                    anzahl_gesamt = 11,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = "Cov",
+                    ErregerBEZL = "Cov",
+                    ErregerID = "Cov",
+                    StationID = "Corona Station",
+                    Datum = new DateTime(2020, 12, 7, 0, 0, 0)
+                },
+                    new EpiCurveModel
+                {
+                    Anzahl = -1,
+                    anzahl_gesamt = 10,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = "Cov",
+                    ErregerBEZL = "Cov",
+                    ErregerID = "Cov",
+                    StationID = "Corona Station",
+                    Datum = new DateTime(2020, 12, 8, 0, 0, 0)
+                },
+                    new EpiCurveModel
+                {
+                    Anzahl = 2,
+                    anzahl_gesamt = 10,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = "Cov",
+                    ErregerBEZL = "Cov",
+                    ErregerID = "Cov",
+                    StationID = "Corona Station",
+                    Datum = new DateTime(2020, 12, 9, 0, 0, 0)
+                },
+                    new EpiCurveModel
+                {
+                    Anzahl = 2,
+                    anzahl_gesamt = 2,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = "Cov",
+                    ErregerBEZL = "Cov",
+                    ErregerID = "Cov",
+                    StationID = "Corona Station",
+                    Datum = new DateTime(2020, 12, 10, 0, 0, 0)
+                },
+                    new EpiCurveModel
+                {
+                    Anzahl = 2,
+                    anzahl_gesamt = 2,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = "Cov",
+                    ErregerBEZL = "Cov",
+                    ErregerID = "Cov",
+                    StationID = "Corona Station",
+                    Datum = new DateTime(2020, 12, 11, 0, 0, 0)
+                },
+                    new EpiCurveModel
+                {
+                    Anzahl = 2,
+                    anzahl_gesamt = 2,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = "Cov",
+                    ErregerBEZL = "Cov",
+                    ErregerID = "Cov",
+                    StationID = "Corona Station",
+                    Datum = new DateTime(2020, 12, 12, 0, 0, 0)
+                },
+                    new EpiCurveModel
+                {
+                    Anzahl = 2,
+                    anzahl_gesamt = 2,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = "Cov",
+                    ErregerBEZL = "Cov",
+                    ErregerID = "Cov",
+                    StationID = "Corona Station",
+                    Datum = new DateTime(2020, 12, 13, 0, 0, 0)
+                },
+                    new EpiCurveModel
+                {
+                    Anzahl = 2,
+                    anzahl_gesamt = 2,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = "Cov",
+                    ErregerBEZL = "Cov",
+                    ErregerID = "Cov",
+                    StationID = "Corona Station",
+                    Datum = new DateTime(2020, 12, 14, 0, 0, 0)
+                },
+                    new EpiCurveModel
+                {
+                    Anzahl = 2,
+                    anzahl_gesamt = 2,
+                    anzahl_gesamt_av28 = 0,
+                    anzahl_gesamt_av7 = 0,
+                    Anzahl_cs = 0,
+                    MAVG28 = 0,
+                    MAVG28_cs = 0,
+                    MAVG7 = 0,
+                    MAVG7_cs = 0,
+                    ErregerBEZL = "Cov",
+                    ErregerBEZL = "Cov",
+                    ErregerID = "Cov",
+                    StationID = "Corona Station",
+                    Datum = new DateTime(2020, 12, 15, 0, 0, 0)
+                }
+            };
+        }*/
+    }
+}
