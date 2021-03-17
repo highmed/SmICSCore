@@ -66,10 +66,11 @@ namespace SmICSCoreLib.Tests.TestData
         [Fact]
         public void CreateTestPatients()
         {
-            JObject patientObj = new JObject();
+            JArray patientArray = new JArray();
             RestDataAccess _data = CreateDataAccess();
             for (int i = 17; i <= 34; i++)
             {
+                JObject patientObj = new JObject();
                 string patientNo = i.ToString();
                 if (patientNo.Length == 1)
                 {
@@ -78,7 +79,9 @@ namespace SmICSCoreLib.Tests.TestData
                 string ehr_id = ExistsPatient(_data, "Patient"+patientNo);
                 if (ehr_id != null)
                 {
-                    patientObj.Add(new JProperty("Patient" + patientNo, ehr_id));
+                    patientObj.Add(new JProperty("EHR_ID", ehr_id));
+                    patientObj.Add(new JProperty("Patient", "Patient"+patientNo));
+                    patientArray.Add(patientObj);
                     continue;
                 }
 
@@ -97,9 +100,11 @@ namespace SmICSCoreLib.Tests.TestData
                         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
                     }
                 }
-                patientObj.Add(new JProperty("Patient" + patientNo, ehr_id));
+                patientObj.Add(new JProperty("EHR_ID", ehr_id));
+                patientObj.Add(new JProperty("Patient", "Patient" + patientNo));
+                patientArray.Add(patientObj); ;
             }
-            JSONFileStream.JSONWriter.Write(patientObj, @"../../../Resources/", "GeneratedEHRIDs");
+            JSONFileStream.JSONWriter.Write(patientArray, @"../../../Resources/", "GeneratedEHRIDs");
         }
 
         private string ExistsPatient(RestDataAccess _data, string patientNo)

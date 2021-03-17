@@ -43,14 +43,15 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten
             LabordatenID = labDataReceive.LabordatenID;
             PatientID = labDataReceive.PatientID;
             FallID = labDataReceive.FallID;
-            ProbeID = labDataReceive.ProbeID;
+            ProbeID = labDataReceive.LabordatenID;
             ZeitpunktProbenentnahme = labDataReceive.ZeitpunktProbenentnahme;
             ZeitpunktProbeneingang = labDataReceive.ZeitpunktProbeneingang;
             MaterialID = labDataReceive.MaterialID == null ? "MissingID" : labDataReceive.MaterialID;
             Material_l = labDataReceive.Material_l == null ? " " : labDataReceive.Material_l;
-            Befund = (labDataReceive.Befund == "positiv") ? true : false;
+            Befund = (labDataReceive.BefundCode == "260373001") ? true : false;
             KeimID = labDataReceive.KeimID;
             Befunddatum = labDataReceive.Befunddatum;
+            Befundkommentar = labDataReceive.Befundkommentar;
         }
     }
 

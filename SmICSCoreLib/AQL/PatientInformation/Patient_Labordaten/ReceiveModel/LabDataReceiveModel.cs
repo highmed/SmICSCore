@@ -24,6 +24,8 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten.ReceiveModel
         public DateTime ZeitpunktProbenentnahme { get; set; }
         [JsonProperty(PropertyName = "ZeitpunktProbeneingang")]
         public DateTime ZeitpunktProbeneingang { get; set; }
+        [JsonProperty(PropertyName = "Befundzeit")]
+        public DateTime Befundzeit { get; set; }
         [JsonProperty(PropertyName = "MaterialID")]
         public string MaterialID { get; set; } = "Abs";
         [JsonProperty(PropertyName = "Material_l")]
@@ -31,10 +33,16 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten.ReceiveModel
         public string Material_l { get; set; }
         [JsonProperty(PropertyName = "Befund")]
         public string Befund { get; set; }
+        [JsonProperty(PropertyName = "BefundCode")]
+        public string BefundCode { get; set; }
+        [JsonProperty(PropertyName = "Viruslast")]
+        public string Viruslast { get; set; }
         [JsonProperty(PropertyName = "Befundkommentar")]
         public string Befundkommentar { get; set; }
         [JsonProperty(PropertyName = "KeimID")]
         public string KeimID { get; set; } = "COV";
+        [JsonProperty(PropertyName = "Keim_l")]
+        public string Keim_l { get; set; } = "SARS-CoV-2";
         [JsonProperty(PropertyName = "Befunddatum")]
         public DateTime Befunddatum { get; set; }
     }

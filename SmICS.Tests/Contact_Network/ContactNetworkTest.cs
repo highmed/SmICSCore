@@ -1,52 +1,129 @@
 ﻿using SmICSCoreLib.AQL.Contact_Nth_Network;
 using SmICSCoreLib.REST;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Xunit;
 
 namespace SmICSDataGenerator.Tests.Contact_Network
 {
-    public class ContactNetworkTest
-    {
-        [Fact]
-        public void ProcessorTest()
-        {
+	public class ContactNetworkTest
+	{
+		[Theory]
+		[ClassData(typeof(ContactNetworkTestData))]
+		public void ProcessorTest(int degree, string ehr_id, int start_year, int start_month, int start_day, int end_year, int end_month, int end_day, int expectedResultSet)
+		{
 			IRestDataAccess _data = TestConnection.Initialize();
 
-            ContactParameter contactParams = new ContactParameter()
-            {
-                Degree = 1,
-                PatientID = "",
-                Starttime = new DateTime(),
-                Endtime = new DateTime()
-            };
+			ContactParameter contactParams = new ContactParameter()
+			{
+				Degree = degree,
+				PatientID = ehr_id,
+				Starttime = new DateTime(start_year, start_month, start_day),
+				Endtime = new DateTime(end_year, end_month, end_day)
+			};
 
-            ContactNetworkFactory factory = new ContactNetworkFactory(_data);
-            List<ContactModel> actual = factory.Process(contactParams);
-            List<ContactModel> expected = getExpectedContactModels();
+			ContactNetworkFactory factory = new ContactNetworkFactory(_data);
+			List<ContactModel> actual = factory.Process(contactParams);
+			List<ContactModel> expected = getExpectedContactModels(expectedResultSet);
 
 			Assert.Equal(expected.Count, actual.Count);
 
 			for (int i = 0; i < actual.Count; i++)
+			{
+				Assert.Equal(expected[i].paID, actual[i].paID);
+				Assert.Equal(expected[i].pbID, actual[i].pbID);
+				Assert.Equal(expected[i].Beginn, actual[i].Beginn);
+				Assert.Equal(expected[i].Ende, actual[i].Beginn);
+				Assert.Equal(expected[i].StationID, actual[i].StationID);
+				Assert.Equal(expected[i].Grad, actual[i].Grad);
+			}
+		}
+
+		private class ContactNetworkTestData : IEnumerable<object[]>
+		{
+			public IEnumerator<object[]> GetEnumerator()
             {
-                Assert.Equal(expected[i].paID, actual[i].paID);
-                Assert.Equal(expected[i].pbID, actual[i].pbID);
-                Assert.Equal(expected[i].Beginn, actual[i].Beginn);
-                Assert.Equal(expected[i].Ende, actual[i].Beginn);
-                Assert.Equal(expected[i].StationID, actual[i].StationID);
-                Assert.Equal(expected[i].Grad, actual[i].Grad);
-            }               
+				List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
+				yield return new object[] { 1, patient[0].EHR_ID, 2021, 1, 1, 2021, 1, 10, 0 };
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        private List<ContactModel> getExpectedContactModels()
-        {
-			Patient ehrID = SmICSCoreLib.JSONFileStream.JSONReader<Patient>.ReadSingle(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
-            return new List<ContactModel>()
+		private List<ContactModel> getExpectedContactModels(int ResultSetID)
+		{
+			List<PatientIDs> patients = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
+			Dictionary<int, List<ContactModel>> ResultSet = new Dictionary<int, List<ContactModel>>
+			{
+				{ 
+					0, 
+					new List<ContactModel>()
+					{
+						new ContactModel
+						{
+							paID = patients[0].EHR_ID,
+							pbID = patients[1].EHR_ID,
+							Beginn = DateTime.Parse("2021-01-02 09:00:00"),
+							Ende = DateTime.Parse("2021-01-05 15:00:00"),
+							Grad = 1,
+							StationID = "Coronastation"
+						},
+						new ContactModel
+						{
+							paID = patients[0].EHR_ID,
+							pbID = patients[2].EHR_ID,
+							Beginn = DateTime.Parse("2021-01-03 11:00:00"),
+							Ende = DateTime.Parse("2021-01-05 15:00:00"),
+							Grad = 1,
+							StationID = "Coronastation"
+						},
+						new ContactModel
+						{
+							paID = patients[0].EHR_ID,
+							pbID = patients[3].EHR_ID,
+							Beginn = DateTime.Parse("2021-01-03 09:00:00"),
+							Ende = DateTime.Parse("2021-01-05 15:00:00"),
+							Grad = 1,
+							StationID = "Coronastation"
+						},
+						new ContactModel
+						{
+							paID = patients[0].EHR_ID,
+							pbID = patients[4].EHR_ID,
+							Beginn = DateTime.Parse("2021-01-04 15:30:00"),
+							Ende = DateTime.Parse("2021-01-05 15:00:00"),
+							Grad = 1,
+							StationID = "Coronastation"
+						},
+						new ContactModel
+						{
+							paID = patients[0].EHR_ID,
+							pbID = patients[5].EHR_ID,
+							Beginn = DateTime.Parse("2021-01-04 09:00:00"),
+							Ende = DateTime.Parse("2021-01-05 15:00:00"),
+							Grad = 1,
+							StationID = "Coronastation"
+						},new ContactModel
+						{
+							paID = patients[0].EHR_ID,
+							pbID = patients[5].EHR_ID,
+							Beginn = DateTime.Parse("2021-01-04 09:00:00"),
+							Ende = DateTime.Parse("2021-01-05 15:00:00"),
+							Grad = 1,
+							StationID = "Coronastation"
+						}
+					} }	
+			};
+
+			return ResultSet[ResultSetID];
+		}
+            /*return new List<ContactModel>()
             {
 				new ContactModel
 				{
-					paID = ehrID.Patient17,
-					pbID = ehrID.Patient18,
+					paID = patients[0].EHR_ID,
+					pbID = patients[1].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-02 09:00:00"),
 					Ende = DateTime.Parse("2021-01-05 15:00:00"),
 					Grad = 1,
@@ -54,8 +131,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient17,
-					pbID = ehrID.Patient19,
+					paID = patients[0].EHR_ID,
+					pbID = patients[2].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-03 11:00:00"),
 					Ende = DateTime.Parse("2021-01-05 15:00:00"),
 					Grad = 1,
@@ -63,8 +140,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient17,
-					pbID = ehrID.Patient20,
+					paID = patients[0].EHR_ID,
+					pbID = patients[3].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-03 09:00:00"),
 					Ende = DateTime.Parse("2021-01-05 15:00:00"),
 					Grad = 1,
@@ -72,8 +149,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient17,
-					pbID = ehrID.Patient21,
+					paID = patients[0].EHR_ID,
+					pbID = patients[4].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-04 15:30:00"),
 					Ende = DateTime.Parse("2021-01-05 15:00:00"),
 					Grad = 1,
@@ -81,8 +158,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient17,
-					pbID = ehrID.Patient22,
+					paID = patients[0].EHR_ID,
+					pbID = patients[5].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
 					Ende = DateTime.Parse("2021-01-05 15:00:00"),
 					Grad = 1,
@@ -90,8 +167,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient18,
-					pbID = ehrID.Patient19,
+					paID = patients[1].EHR_ID,
+					pbID = patients[2].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-03 11:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
 					Grad = 1,
@@ -99,8 +176,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient18,
-					pbID = ehrID.Patient20,
+					paID = patients[1].EHR_ID,
+					pbID = patients[3].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-03 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
 					Grad = 1,
@@ -108,8 +185,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient18,
-					pbID = ehrID.Patient21,
+					paID = patients[1].EHR_ID,
+					pbID = patients[4].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-04 15:30:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
 					Grad = 1,
@@ -117,8 +194,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient18,
-					pbID = ehrID.Patient22,
+					paID = patients[1].EHR_ID,
+					pbID = patients[5].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
 					Grad = 1,
@@ -126,7 +203,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient18,
+					paID = patients[1].EHR_ID,
 					pbID = ehrID.Patient23,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
@@ -135,7 +212,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient18,
+					paID = patients[1].EHR_ID,
 					pbID = ehrID.Patient24,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
@@ -144,7 +221,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient18,
+					paID = patients[1].EHR_ID,
 					pbID = ehrID.Patient25,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
@@ -153,7 +230,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient18,
+					paID = patients[1].EHR_ID,
 					pbID = ehrID.Patient26,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
@@ -162,7 +239,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient18,
+					paID = patients[1].EHR_ID,
 					pbID = ehrID.Patient29,
 					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
@@ -171,7 +248,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient18,
+					paID = patients[1].EHR_ID,
 					pbID = ehrID.Patient30,
 					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
@@ -180,8 +257,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient19,
-					pbID = ehrID.Patient21,
+					paID = patients[2].EHR_ID,
+					pbID = patients[4].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-02 09:00:00"),
 					Ende = DateTime.Parse("2021-01-03 11:00:00"),
 					Grad = 1,
@@ -189,7 +266,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient19,
+					paID = patients[2].EHR_ID,
 					pbID = ehrID.Patient30,
 					Beginn = DateTime.Parse("2021-01-01 09:00:00"),
 					Ende = DateTime.Parse("2021-01-03 11:00:00"),
@@ -198,7 +275,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient19,
+					paID = patients[2].EHR_ID,
 					pbID = ehrID.Patient32,
 					Beginn = DateTime.Parse("2021-01-01 09:00:00"),
 					Ende = DateTime.Parse("2021-01-03 11:00:00"),
@@ -207,8 +284,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient19,
-					pbID = ehrID.Patient20,
+					paID = patients[2].EHR_ID,
+					pbID = patients[3].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-03 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
 					Grad = 1,
@@ -216,8 +293,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient19,
-					pbID = ehrID.Patient21,
+					paID = patients[2].EHR_ID,
+					pbID = patients[4].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-04 15:30:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
 					Grad = 1,
@@ -225,8 +302,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient19,
-					pbID = ehrID.Patient22,
+					paID = patients[2].EHR_ID,
+					pbID = patients[5].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
 					Grad = 1,
@@ -234,7 +311,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient19,
+					paID = patients[2].EHR_ID,
 					pbID = ehrID.Patient23,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
@@ -243,7 +320,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient19,
+					paID = patients[2].EHR_ID,
 					pbID = ehrID.Patient24,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
@@ -252,7 +329,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient19,
+					paID = patients[2].EHR_ID,
 					pbID = ehrID.Patient25,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
@@ -261,7 +338,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient19,
+					paID = patients[2].EHR_ID,
 					pbID = ehrID.Patient26,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
@@ -270,7 +347,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient19,
+					paID = patients[2].EHR_ID,
 					pbID = ehrID.Patient29,
 					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
@@ -279,7 +356,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient19,
+					paID = patients[2].EHR_ID,
 					pbID = ehrID.Patient30,
 					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
 					Ende = DateTime.Parse("2021-01-07 15:00:00"),
@@ -288,8 +365,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
-					pbID = ehrID.Patient21,
+					paID = patients[3].EHR_ID,
+					pbID = patients[4].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-04 15:30:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
 					Grad = 1,
@@ -297,8 +374,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
-					pbID = ehrID.Patient21,
+					paID = patients[3].EHR_ID,
+					pbID = patients[4].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-08 14:00:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
 					Grad = 1,
@@ -306,8 +383,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
-					pbID = ehrID.Patient22,
+					paID = patients[3].EHR_ID,
+					pbID = patients[5].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
 					Grad = 1,
@@ -315,7 +392,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
+					paID = patients[3].EHR_ID,
 					pbID = ehrID.Patient23,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
@@ -324,7 +401,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
+					paID = patients[3].EHR_ID,
 					pbID = ehrID.Patient24,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
@@ -333,7 +410,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
+					paID = patients[3].EHR_ID,
 					pbID = ehrID.Patient25,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
@@ -342,7 +419,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
+					paID = patients[3].EHR_ID,
 					pbID = ehrID.Patient26,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
@@ -351,7 +428,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
+					paID = patients[3].EHR_ID,
 					pbID = ehrID.Patient27,
 					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
@@ -360,7 +437,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
+					paID = patients[3].EHR_ID,
 					pbID = ehrID.Patient28,
 					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
@@ -369,7 +446,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
+					paID = patients[3].EHR_ID,
 					pbID = ehrID.Patient29,
 					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
@@ -378,7 +455,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
+					paID = patients[3].EHR_ID,
 					pbID = ehrID.Patient30,
 					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
@@ -387,7 +464,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
+					paID = patients[3].EHR_ID,
 					pbID = ehrID.Patient31,
 					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
@@ -396,7 +473,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
+					paID = patients[3].EHR_ID,
 					pbID = ehrID.Patient32,
 					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
@@ -405,7 +482,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient20,
+					paID = patients[3].EHR_ID,
 					pbID = ehrID.Patient33,
 					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
 					Ende = DateTime.Parse("2021-01-09 15:00:00"),
@@ -414,7 +491,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient27,
 					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
 					Ende = DateTime.Parse("2021-01-04 15:30:00"),
@@ -423,7 +500,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient30,
 					Beginn = DateTime.Parse("2021-01-01 09:00:00"),
 					Ende = DateTime.Parse("2021-01-04 15:30:00"),
@@ -432,7 +509,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient32,
 					Beginn = DateTime.Parse("2021-01-01 09:00:00"),
 					Ende = DateTime.Parse("2021-01-04 15:30:00"),
@@ -441,8 +518,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
-					pbID = ehrID.Patient22,
+					paID = patients[4].EHR_ID,
+					pbID = patients[5].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
 					Ende = DateTime.Parse("2021-01-06 16:00:00"),
 					Grad = 1,
@@ -450,7 +527,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient23,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-06 16:00:00"),
@@ -459,7 +536,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient24,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-06 16:00:00"),
@@ -468,7 +545,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient25,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-06 16:00:00"),
@@ -477,7 +554,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient26,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-01-06 16:00:00"),
@@ -486,8 +563,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
-					pbID = ehrID.Patient22,
+					paID = patients[4].EHR_ID,
+					pbID = patients[5].EHR_ID,
 					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
 					Grad = 1,
@@ -495,7 +572,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient23,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -504,7 +581,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient24,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -513,7 +590,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient25,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -522,7 +599,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient26,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -531,7 +608,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient27,
 					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -540,7 +617,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient28,
 					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -549,7 +626,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient29,
 					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -558,7 +635,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient30,
 					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -567,7 +644,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient31,
 					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -576,7 +653,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient32,
 					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -585,7 +662,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient33,
 					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -594,7 +671,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient21,
+					paID = patients[4].EHR_ID,
 					pbID = ehrID.Patient34,
 					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -603,7 +680,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient22,
+					paID = patients[5].EHR_ID,
 					pbID = ehrID.Patient23,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -612,7 +689,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient22,
+					paID = patients[5].EHR_ID,
 					pbID = ehrID.Patient24,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -621,7 +698,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient22,
+					paID = patients[5].EHR_ID,
 					pbID = ehrID.Patient25,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -630,7 +707,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient22,
+					paID = patients[5].EHR_ID,
 					pbID = ehrID.Patient26,
 					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -639,7 +716,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient22,
+					paID = patients[5].EHR_ID,
 					pbID = ehrID.Patient27,
 					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -648,7 +725,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient22,
+					paID = patients[5].EHR_ID,
 					pbID = ehrID.Patient28,
 					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -657,7 +734,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient22,
+					paID = patients[5].EHR_ID,
 					pbID = ehrID.Patient29,
 					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -666,7 +743,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient22,
+					paID = patients[5].EHR_ID,
 					pbID = ehrID.Patient30,
 					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -675,7 +752,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient22,
+					paID = patients[5].EHR_ID,
 					pbID = ehrID.Patient31,
 					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -684,7 +761,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient22,
+					paID = patients[5].EHR_ID,
 					pbID = ehrID.Patient32,
 					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -693,7 +770,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient22,
+					paID = patients[5].EHR_ID,
 					pbID = ehrID.Patient33,
 					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -702,7 +779,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				},
 				new ContactModel
 				{
-					paID = ehrID.Patient22,
+					paID = patients[5].EHR_ID,
 					pbID = ehrID.Patient34,
 					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
 					Ende = DateTime.Parse("2021-02-01 00:00:00"),
@@ -1367,7 +1444,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 					StationID = "Coronastation"
 				}
 
-			};
-        }
+			};*/
+        
     }
 }

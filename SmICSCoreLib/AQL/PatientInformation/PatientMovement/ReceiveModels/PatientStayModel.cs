@@ -12,6 +12,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.PatientMovement.ReceiveModels
         public string Fachabteilung { get; set; }
         public string StationID { get; set; }
         public string FallID { get; set; }
+        public string FachabteilungsID { get; set; }
         public string Raum { get; set; }
         public string Bewegungsart_l { get; set; }
     }
