@@ -10,9 +10,7 @@ using SmICSCoreLib.AQL.Lab;
 using SmICSCoreLib.AQL.Algorithm;
 using SmICSCoreLib.AQL.ConnectionTest;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
-using SmICSCoreLib.AQL.PatientInformation.Patient_PathogenFlag;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
-using SmICSCoreLib.AQL.PatientInformation.Patient_DiagnosticResult;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.Lab.EpiKurve;
@@ -47,20 +45,6 @@ namespace SmICSWebApp.Controllers
             _patinet_Stay = patinet_Stay;
         }
 
-        [Route("ConnectionTest")]
-        [HttpGet]
-        public ActionResult<JArray> ConnectionTest()
-        {
-            try
-            {
-                return _connectionTest.Test();
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }
-
         [Route("Contact_1stDegree_TTPK")]
         [HttpPost]
         public ActionResult<List<ContactModel>> Contact_1stDegree_TTP([FromBody] ContactParameter parameter)
@@ -74,6 +58,13 @@ namespace SmICSWebApp.Controllers
                 return ErrorHandling(e);
             }
         }
+
+        /// <summary></summary>
+        /// <remarks>
+        /// Gibt zu dem angegebenen Patienten und dem angegebenen Zeitraum alle weiteren Patienten zurück mit welchem der Patient kontakt hatte. Hierzu werden Informationen bzgl. des Zeitraums und der Grad des Kontakts geliefert. 
+        /// </remarks>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         [Route("Contact_NthDegree_TTKP_Degree")]
         [HttpPost]
         public ActionResult<List<ContactModel>> Contact_NthDegree_TTP_Degree([FromBody] ContactParameter parameter)
@@ -87,7 +78,14 @@ namespace SmICSWebApp.Controllers
                 return ErrorHandling(e);
             }
         }
-       
+
+        /// <summary></summary>
+        /// <remarks>
+        /// Gibt alle virologischen Befunde der angegeben Patienten wieder. 
+        /// Momentan sind die virologischen Befunde auf das SARS-CoV-2 Wirus beschränkt.
+        /// </remarks>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         [Route("Patient_Labordaten_Ps")]
         [HttpPost]
         public ActionResult<List<LabDataModel>> Patient_Labordaten_Ps([FromBody] PatientListParameter parameter)
@@ -160,52 +158,19 @@ namespace SmICSWebApp.Controllers
             }
         }
 
-
-        [Route("Patient_PathogenFlag_TTEPs")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
-        [HttpPost]
-        public ActionResult<List<PathogenFlagModel>> Patient_PathogenFlag_TTEPs([FromBody] PatientListParameter parameter)
-        {
-            try
-            {
-                return _patientInformation.Patient_PathogenFlag_TTEPs(parameter);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }
-
-        [Route("Patient_DiagnosticResults_TTPs")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
-        [HttpPost]
-        public ActionResult<List<DiagnosticResultModel>> Patient_DiagnosticResults_TTPs([FromBody] PatientListParameter parameter)
-        {
-            try
-            {
-                return _patientInformation.Patient_DiagnosticResults_TTPs(parameter);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }
+        /// <summary></summary>
+        /// <remarks>
+        /// Gibt alle stationären Aufnahmen, Entlassungen, Stationswechsel und Prozeduren der angegeben Patienten wieder. 
+        /// Eine Prozedur wird immer nur als ein Zeitpunkt wiedergegeben, da in den meisten Fällen die genaue Dauer einer Prozedur nicht dokumentiert wird.
+        /// </remarks>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         [Route("Patient_Bewegung_Ps")]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
         public ActionResult<List<PatientMovementModel>> Patient_Bewegung_Ps([FromBody] PatientListParameter parameter)
         {
             try
             {
-                /*{
-                    "patientList": "4100936739"
-                }*/
-                /*{
-                     "List": ["6abf1aec-27f9-463d-bdc4-8b08fdc5fdb8"]
-                }*/
                 return _patientInformation.Patient_Bewegung_Ps(parameter);
             }
             catch (Exception e)
@@ -213,7 +178,15 @@ namespace SmICSWebApp.Controllers
                 return ErrorHandling(e);
             }
         }
-        
+
+        /// <summary></summary>
+        /// <remarks>
+        /// Gibt die Anzahl der aggregierten virologischen Befundee für das gesamte Krankenhaus pro Tag in dem angegebenen Zeitraum zurück. Hierbei werden die für Aggregierung die Stationen berücksichtigt auf welcher die entsprechende Probe für den Nachweis entnommen wurde. Außerdem wirden für jeden Tag der gleitende Mittelwert für 7 und 28 Tage ermittelt.  
+        /// Momentan sind die virologischen Befunde auf das SARS-CoV-2 Wirus beschränkt.
+        /// Alle mit "_cs" markierten Werte sind für die virologische Auswertung irrelevant.
+        /// </remarks>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
         [Route("Labor_ErregerProTag_TTEsKSs")]
         [HttpPost]
         public ActionResult<List<EpiCurveModel>> Labor_ErregerProTag_TTEsKSs([FromBody] TimespanParameter parameter)

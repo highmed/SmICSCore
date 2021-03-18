@@ -29,7 +29,7 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network
         {
             paID = Parameter.PatientID;
             pbID = ContactPatient.PatientID;
-            if (ContactPatient.Beginn < PatientWard.Beginn)
+            if (ContactPatient.Beginn > PatientWard.Beginn)
             {
                 Beginn = ContactPatient.Beginn;
             } else
@@ -37,9 +37,9 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network
                 Beginn = PatientWard.Beginn;
             }
 
-            if (ContactPatient.Ende > PatientWard.Ende)
+            if (ContactPatient.Ende < PatientWard.Ende && ContactPatient.Ende.HasValue)
             {
-                Ende = ContactPatient.Ende;
+                Ende = ContactPatient.Ende?? DateTime.Now;
             }
             else
             {

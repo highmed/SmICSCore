@@ -28,6 +28,7 @@ namespace SmICSCoreLib.REST
                 {
                     return null;
                 }
+
                 return openEHRJSONSerializer<T>.ReceiveModelConstructor(response);
             }
             else

@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using Xunit;
 
 
-namespace SmICSDataGenerator.Tests
+namespace SmICSDataGenerator.Tests.PatientInformationTests
 {
     public class PatientMovementProcessorTest
     {
@@ -109,110 +109,6 @@ namespace SmICSDataGenerator.Tests
             return ResultSet[ResultSetID];
         }
 
-        /*
-        #region Mocking
-        [Fact]
-        public void ProcessorMockingTest() 
-        {
-            using(var mock = AutoMock.GetLoose())
-            {
-                PatientListParameter patientList = new PatientListParameter() { patientList = new List<string> { "1000000001", "1000000002" } };
-
-                EpsiodeOfCareParameter epsiodeOfCare01 = new EpsiodeOfCareParameter { CaseID = "19784321", PatientID = "1000000001" };
-                EpsiodeOfCareParameter epsiodeOfCare02 = new EpsiodeOfCareParameter { CaseID = "19784327", PatientID = "1000000002" };
-
-                mock.Mock<IRestDataAccess>().Setup(x => x.AQLQuery<PatientStayModel>(AQLCatalog.PatientStay(patientList).Query)).Returns(GetMockingSamplePatientStay());
-                mock.Mock<IRestDataAccess>().Setup(x => x.AQLQuery<EpisodeOfCareModel>(AQLCatalog.EpisodeOfCare(epsiodeOfCare01).Query)).Returns(GetMockingSampleEpisodeOfCare1000000001());
-                mock.Mock<IRestDataAccess>().Setup(x => x.AQLQuery<EpisodeOfCareModel>(AQLCatalog.EpisodeOfCare(epsiodeOfCare02).Query)).Returns(GetMockingSampleEpisodeOfCare1000000002());
-
-                var cls = mock.Create<PatientMovementFactory>();
-
-                var expected = GetMockingExpectedSamples();
-
-                var actual = cls.Process(patientList);
-
-                Assert.True(actual != null);
-                Assert.Equal(expected.Count, actual.Count);
-
-                for(int i = 0; i < actual.Count; i++)
-                {
-                    Assert.Equal(expected[i].Beginn, actual[i].Beginn);
-                    Assert.Equal(expected[i].Ende, actual[i].Ende);
-                    Assert.Equal(expected[i].StationID, actual[i].StationID);
-                    Assert.Equal(expected[i].Raum, actual[i].Raum);
-                    Assert.Equal(expected[i].FallID, actual[i].FallID);
-                    Assert.Equal(expected[i].PatientID, actual[i].PatientID);
-                    Assert.Equal(expected[i].Bewegungstyp, actual[i].Bewegungstyp);
-                    Assert.Equal(expected[i].BewegungstypID, actual[i].BewegungstypID);
-                    Assert.Equal(expected[i].Bewegungsart_l, actual[i].Bewegungsart_l);
-                }
-            } 
-        }
-        private List<PatientStayModel> GetMockingSamplePatientStay() 
-        {
-            return new List<PatientStayModel>() { 
-                new PatientStayModel {
-                    PatientID = "1000000001",
-                    Beginn = new DateTime(2020, 12, 16, 8, 0, 0),
-                    Ende = new DateTime(2020, 12, 16, 12, 0, 0),
-                    Bewegungsart_l = "",
-                    Fachabteilung = "0800",
-                    StationID = "Station Corona",
-                    Raum = "17",
-                    FallID = "19784321"
-                },
-                new PatientStayModel {
-                    PatientID = "1000000001",
-                    Beginn = new DateTime(2020, 12, 16, 12, 0, 0),
-                    Ende = new DateTime(2020, 12, 16, 12, 0, 0),
-                    Bewegungsart_l = "",
-                    Fachabteilung = "0800",
-                    StationID = "Station Behandlung",
-                    Raum = "Behandlungszimmer 01",
-                    FallID = "19784321"
-                },
-                new PatientStayModel {
-                    PatientID = "1000000001",
-                    Beginn = new DateTime(2020, 12, 16, 12, 0, 0),
-                    Ende = new DateTime(2020, 12, 16, 16, 0, 0),
-                    Bewegungsart_l = "",
-                    Fachabteilung = "0800",
-                    StationID = "Corona Intensivstation",
-                    Raum = "1",
-                    FallID = "19784321"
-                },
-                new PatientStayModel {
-                    PatientID = "1000000002",
-                    Beginn = new DateTime(2020, 12, 15, 8, 0, 0),
-                    Ende = new DateTime(2020, 12, 16, 11, 0, 0),
-                    Bewegungsart_l = "",
-                    Fachabteilung = "0800",
-                    StationID = "Station Corona",
-                    Raum = "13",
-                    FallID = "19784327"
-                },
-                new PatientStayModel {
-                    PatientID = "1000000002",
-                    Beginn = new DateTime(2020, 12, 16, 11, 0, 0),
-                    Ende = new DateTime(2020, 12, 16, 11, 0, 0),
-                    Bewegungsart_l = "",
-                    Fachabteilung = "0800",
-                    StationID = "Station Behandlung",
-                    Raum = "Behandlungszimmer 01",
-                    FallID = "19784327"
-                },
-                new PatientStayModel {
-                    PatientID = "1000000002",
-                    Beginn = new DateTime(2020, 12, 16, 11, 0, 0),
-                    Ende = new DateTime(2020, 12, 16, 16, 0, 0),
-                    Bewegungsart_l = "",
-                    Fachabteilung = "0800",
-                    StationID = "Station Corona",
-                    Raum = "13",
-                    FallID = "19784327"
-                }
-            };
-        }
 
         /*new PatientMovementModel
                {

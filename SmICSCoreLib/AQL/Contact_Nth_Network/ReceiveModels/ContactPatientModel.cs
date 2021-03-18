@@ -8,7 +8,7 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network.ReceiveModels
     {
         public string PatientID { get; set; }
         public DateTime Beginn { get; set; }
-        public DateTime Ende { get; set; }
+        public Nullable<DateTime> Ende { get; set; }
 
         public override bool Equals(object obj)
         {

@@ -33,8 +33,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 			{
 				Assert.Equal(expected[i].paID, actual[i].paID);
 				Assert.Equal(expected[i].pbID, actual[i].pbID);
-				Assert.Equal(expected[i].Beginn, actual[i].Beginn);
-				Assert.Equal(expected[i].Ende, actual[i].Beginn);
+				Assert.Equal(expected[i].Beginn.ToLocalTime(), actual[i].Beginn.ToLocalTime());
+				Assert.Equal(expected[i].Ende.ToLocalTime(), actual[i].Ende.ToLocalTime());
 				Assert.Equal(expected[i].StationID, actual[i].StationID);
 				Assert.Equal(expected[i].Grad, actual[i].Grad);
 			}
@@ -64,17 +64,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 						{
 							paID = patients[0].EHR_ID,
 							pbID = patients[1].EHR_ID,
-							Beginn = DateTime.Parse("2021-01-02 09:00:00"),
-							Ende = DateTime.Parse("2021-01-05 15:00:00"),
-							Grad = 1,
-							StationID = "Coronastation"
-						},
-						new ContactModel
-						{
-							paID = patients[0].EHR_ID,
-							pbID = patients[2].EHR_ID,
-							Beginn = DateTime.Parse("2021-01-03 11:00:00"),
-							Ende = DateTime.Parse("2021-01-05 15:00:00"),
+							Beginn = DateTime.Parse("2021-01-02 09:00:00+01:00"),
+							Ende = DateTime.Parse("2021-01-05 15:00:00+01:00"),
 							Grad = 1,
 							StationID = "Coronastation"
 						},
@@ -82,8 +73,26 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 						{
 							paID = patients[0].EHR_ID,
 							pbID = patients[3].EHR_ID,
-							Beginn = DateTime.Parse("2021-01-03 09:00:00"),
-							Ende = DateTime.Parse("2021-01-05 15:00:00"),
+							Beginn = DateTime.Parse("2021-01-03 09:00:00+01:00"),
+							Ende = DateTime.Parse("2021-01-05 15:00:00+01:00"),
+							Grad = 1,
+							StationID = "Coronastation"
+						},
+						new ContactModel
+						{
+							paID = patients[0].EHR_ID,
+							pbID = patients[2].EHR_ID,
+							Beginn = DateTime.Parse("2021-01-03 11:00:00+01:00"),
+							Ende = DateTime.Parse("2021-01-05 15:00:00+01:00"),
+							Grad = 1,
+							StationID = "Coronastation"
+						},
+						new ContactModel
+						{
+							paID = patients[0].EHR_ID,
+							pbID = patients[5].EHR_ID,
+							Beginn = DateTime.Parse("2021-01-04 09:00:00+01:00"),
+							Ende = DateTime.Parse("2021-01-05 15:00:00+01:00"),
 							Grad = 1,
 							StationID = "Coronastation"
 						},
@@ -91,25 +100,16 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 						{
 							paID = patients[0].EHR_ID,
 							pbID = patients[4].EHR_ID,
-							Beginn = DateTime.Parse("2021-01-04 15:30:00"),
-							Ende = DateTime.Parse("2021-01-05 15:00:00"),
-							Grad = 1,
-							StationID = "Coronastation"
-						},
-						new ContactModel
-						{
-							paID = patients[0].EHR_ID,
-							pbID = patients[5].EHR_ID,
-							Beginn = DateTime.Parse("2021-01-04 09:00:00"),
-							Ende = DateTime.Parse("2021-01-05 15:00:00"),
+							Beginn = DateTime.Parse("2021-01-04 15:30:00+01:00"),
+							Ende = DateTime.Parse("2021-01-05 15:00:00+01:00"),
 							Grad = 1,
 							StationID = "Coronastation"
 						},new ContactModel
 						{
 							paID = patients[0].EHR_ID,
-							pbID = patients[5].EHR_ID,
-							Beginn = DateTime.Parse("2021-01-04 09:00:00"),
-							Ende = DateTime.Parse("2021-01-05 15:00:00"),
+							pbID = patients[6].EHR_ID,
+							Beginn = DateTime.Parse("2021-01-05 09:00:00+01:00"),
+							Ende = DateTime.Parse("2021-01-05 15:00:00+01:00"),
 							Grad = 1,
 							StationID = "Coronastation"
 						}

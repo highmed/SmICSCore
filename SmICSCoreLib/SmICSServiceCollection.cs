@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SmICSCoreLib.AQL.PatientInformation;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
-using SmICSCoreLib.AQL.PatientInformation.Patient_DiagnosticResult;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
-using SmICSCoreLib.AQL.PatientInformation.Patient_PathogenFlag;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using SmICSCoreLib.AQL.Contact_Nth_Network;
 using SmICSCoreLib.AQL.Lab;
@@ -30,8 +28,6 @@ namespace SmICS
             
             services.AddTransient<IPatientMovementFactory, PatientMovementFactory>();
             services.AddTransient<IPatientLabordataFactory, PatientLabordataFactory>();
-            services.AddTransient<IPatientPathogenFlagFactory, PatientPathogenFlagFactory>();
-            services.AddTransient<IDiagnosticResultFactory, DiagnosticResultFactory>();
             services.AddTransient<IContactNetworkFactory, ContactNetworkFactory>();
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();
             services.AddTransient<ISymptomFactory, SymptomFactory>();

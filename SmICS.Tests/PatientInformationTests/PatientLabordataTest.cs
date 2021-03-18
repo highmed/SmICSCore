@@ -9,7 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Xunit;
 
-namespace SmICSDataGenerator.Tests
+namespace SmICSDataGenerator.Tests.PatientInformationTests
 {
     public class PatientLabordataTest
     {
@@ -728,84 +728,6 @@ namespace SmICSDataGenerator.Tests
             return ResultSet[ResultSetID];
         }
 
-        #region Mock
-        [Fact]
-        public void ProcessorMockTest()
-        {
-            using (var mock = AutoMock.GetLoose())
-            {
-                PatientListParameter patientList = new PatientListParameter() { patientList = new List<string> { "1000000001" } };
-
-                mock.Mock<IRestDataAccess>().Setup(x => x.AQLQuery<LabDataReceiveModel>(AQLCatalog.PatientLaborData(patientList).Query)).Returns(getMockLabDataReceiveSamples());
-
-                var cls = mock.Create<PatientLabordataFactory>();
-
-                var expected = GetMockExpectedSamples();
-
-                var actual = cls.Process(patientList);
-
-                Assert.True(actual != null);
-                Assert.Equal(expected.Count, actual.Count);
-
-                for (int i = 0; i < actual.Count; i++)
-                {
-                    Assert.Equal(expected[i].PatientID, actual[i].PatientID);
-                    Assert.Equal(expected[i].FallID, actual[i].FallID);
-                    Assert.Equal(expected[i].Befund, actual[i].Befund);
-                    Assert.Equal(expected[i].Befunddatum, actual[i].Befunddatum);
-                    Assert.Equal(expected[i].Befundkommentar, actual[i].Befundkommentar);
-                    Assert.Equal(expected[i].ZeitpunktProbeneingang, actual[i].ZeitpunktProbeneingang);
-                    Assert.Equal(expected[i].ZeitpunktProbenentnahme, actual[i].ZeitpunktProbenentnahme);
-                    Assert.Equal(expected[i].LabordatenID, actual[i].LabordatenID);
-                    Assert.Equal(expected[i].ProbeID, actual[i].ProbeID);
-                    Assert.Equal(expected[i].KeimID, actual[i].KeimID);
-                    Assert.Equal(expected[i].MaterialID, actual[i].MaterialID);
-                    Assert.Equal(expected[i].Material_l, actual[i].Material_l);
-                }
-            }
-        }
-
-        private List<LabDataModel> GetMockExpectedSamples()
-        {
-            return new List<LabDataModel>() {
-                new LabDataModel
-                {
-                    FallID = "12345678",
-                    PatientID = "1000000001",
-                    Befund = true,
-                    KeimID = "COV",
-                    MaterialID = "Abstrich",
-                    Material_l = "Abstrich",
-                    Befunddatum = new DateTime(2020, 12, 17, 9, 0, 0),
-                    ZeitpunktProbenentnahme = new DateTime(2020, 12, 16, 12, 31, 0),
-                    ProbeID = "111",
-                    LabordatenID = "1111",
-                    Befundkommentar = null,
-                    ZeitpunktProbeneingang = DateTime.MinValue
-                }
-            };
-        }
-
-        private List<LabDataReceiveModel> getMockLabDataReceiveSamples()
-        {
-            return new List<LabDataReceiveModel>() {
-                new LabDataReceiveModel
-                {
-                    FallID = "12345678",
-                    PatientID = "1000000001",
-                    Befund = "positiv",
-                    KeimID = "COV",
-                    MaterialID = "Abstrich",
-                    Material_l = "Abstrich",
-                    Befunddatum = new DateTime(2020, 12, 17, 9, 0, 0),
-                    ZeitpunktProbenentnahme = new DateTime(2020, 12, 16, 12, 31, 0),
-                    ProbeID = "111",
-                    LabordatenID = "1111",
-                    Befundkommentar = null,
-                    ZeitpunktProbeneingang = DateTime.MinValue
-                }
-            };
-        }
-        #endregion
+       
     }
 }
