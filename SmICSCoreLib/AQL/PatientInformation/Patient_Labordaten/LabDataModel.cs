@@ -24,8 +24,8 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten
         public DateTime ZeitpunktProbeneingang { get; set; }
         [JsonProperty(PropertyName = "Probenart")]
         public string MaterialID { get; set; } = "Abs";
-        [JsonProperty(PropertyName = "Screening")]
-        public bool screening { get; set; } = false;
+        [JsonProperty(PropertyName = "Screening")]  //Nur für Visualisierung -> nicht essentiell
+        public bool screening { get; set; } = false; //Nur für Visualisierung -> nicht essentiell
         [JsonProperty(PropertyName = "Material_l")]
         [DefaultValue(" ")]
         public string Material_l { get; set; }
