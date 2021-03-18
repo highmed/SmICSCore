@@ -90,6 +90,7 @@ namespace SmICSWebApp.Controllers
         [HttpPost]
         public ActionResult<List<LabDataModel>> Patient_Labordaten_Ps([FromBody] PatientListParameter parameter)
         {
+            System.Diagnostics.Debug.WriteLine("\n CALLED Patient_Labordaten_Ps \n");
             try
             {
                 return _patientInformation.Patient_Labordaten_Ps(parameter);
@@ -169,6 +170,7 @@ namespace SmICSWebApp.Controllers
         [HttpPost]
         public ActionResult<List<PatientMovementModel>> Patient_Bewegung_Ps([FromBody] PatientListParameter parameter)
         {
+            System.Diagnostics.Debug.WriteLine("\n CALLED Patient_Bewegung_Ps \n");
             try
             {
                 return _patientInformation.Patient_Bewegung_Ps(parameter);
@@ -191,9 +193,10 @@ namespace SmICSWebApp.Controllers
         [HttpPost]
         public ActionResult<List<EpiCurveModel>> Labor_ErregerProTag_TTEsKSs([FromBody] TimespanParameter parameter)
         {
+            System.Diagnostics.Debug.WriteLine("\n CALLED EPICURVE \n");
             try
             {
-                EpiCurveParameter epiParams = new EpiCurveParameter() { Endtime = parameter.Endtime, Starttime = parameter.Starttime, PathogenName = "COV" };
+                EpiCurveParameter epiParams = new EpiCurveParameter() { Endtime = parameter.Endtime, Starttime = parameter.Starttime, PathogenName = "sars-cov-2" };
                 return _labData.Labor_Epikurve(epiParams);
             }
             catch (Exception e)
