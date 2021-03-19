@@ -25,7 +25,7 @@ namespace SmICSCoreLib.AQL.Algorithm.NEC
 
         public NECCombinedDataModel Process(DateTime date)
         {
-            List<PatientModel> currentPatients = _restData.AQLQuery<PatientModel>(AQLCatalog.GetAllPatients(date).Query);
+            List<PatientModel> currentPatients = _restData.AQLQuery<PatientModel>(AQLCatalog.GetAllPatients(date));
 
             PatientListParameter patientParameter = PatientModelListToPatientListParameter(currentPatients);
 

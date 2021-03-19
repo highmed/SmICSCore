@@ -8,17 +8,18 @@ namespace SmICSCoreLib.AQL
 {
     public class AQLQuery
     {
-        private string query = "";
-        public string Query { get { return this.query; } }
+        private string Query { get; }
+        public string Name { get; }
 
-        public AQLQuery(string query)
-        {   
-            this.query = query;
+        public AQLQuery(string name, string query)
+        {
+            Name = name;
+            Query = query;
         }
         
         public override string ToString()
         {
-            return this.Query;
+            return Query;
         }
     }
 }

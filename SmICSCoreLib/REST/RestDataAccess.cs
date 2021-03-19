@@ -4,23 +4,29 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SmICSCoreLib.AQL;
 
 namespace SmICSCoreLib.REST
 {
     public class RestDataAccess : IRestDataAccess
     {
         private RestClientConnector _client;
-        public RestDataAccess(RestClientConnector client)
+        private ILogger<RestDataAccess> _logger;
+
+        public RestDataAccess(ILogger<RestDataAccess> logger, RestClientConnector client)
         {
             _client = client;
+            _logger = logger;
         }
 
-        public List<T> AQLQuery<T>(string query) where T : new()
+        public List<T> AQLQuery<T>(AQLQuery query) where T : new()
         {
+            _logger.LogInformation("Posted Query: {Query}", query.Name);
             string restPath = "/query/aql";
-            HttpResponseMessage response = _client.Client.PostAsync(OpenehrConfig.openehrEndpoint + restPath, GetHttpContentQuery(query)).Result;
+            HttpResponseMessage response = _client.Client.PostAsync(OpenehrConfig.openehrEndpoint + restPath, GetHttpContentQuery(query.ToString())).Result;
             //System.Diagnostics.Debug.Print(response.RequestMessage.ToString());
             if (response.IsSuccessStatusCode)
             {
@@ -28,12 +34,13 @@ namespace SmICSCoreLib.REST
                 {
                     return null;
                 }
-
+                _logger.LogInformation("Received AQL Result From {Query}", query.Name);
                 return openEHRJSONSerializer<T>.ReceiveModelConstructor(response);
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+                _logger.LogInformation("NO AQL Result Received {Query}", query.Name);
+                _logger.LogDebug("No Success Code: {statusCode} \n {responsePhrase}", response.StatusCode, response.ReasonPhrase);
                 return null;
             }
         }
@@ -76,24 +83,7 @@ namespace SmICSCoreLib.REST
             return  _client.Client.PostAsync(OpenehrConfig.openehrEndpoint + restPath, GetEHRStatus(Namespace, ID));
         }
 
-
-        public void UpdateEHRStatus(string ehrID, bool queryable)
-        {
-            string restPath = "/ehr/"+ehrID+"/ehr_status";
-            HttpResponseMessage response = _client.Client.GetAsync(OpenehrConfig.openehrEndpoint + restPath).Result;
-            string content = response.Content.ReadAsStringAsync().Result;
-            JObject ehrStatus = JsonConvert.DeserializeObject<JObject>(content, new JsonSerializerSettings
-            {
-                DateTimeZoneHandling = DateTimeZoneHandling.Local
-            });
-            bool isQueryable = (bool)ehrStatus.Property("is_queryable").Value;
-            if (isQueryable == queryable)
-            {
-                return;
-            }
-            ehrStatus.Property("is_queryable").Value = queryable;
-            _client.Client.PutAsync(OpenehrConfig.openehrEndpoint + restPath, ConvertJObjectToHTTPResponse(ehrStatus));
-        }
+        #region private Methods
         private HttpContent GetHttpContentADL(string xml)
         {
             HttpContent content = new StringContent(xml, Encoding.UTF8, "application/xml");
@@ -132,5 +122,6 @@ namespace SmICSCoreLib.REST
             content.Headers.Add("Prefer", "return=representation");
             return content;
         }
+        #endregion
     }
 }

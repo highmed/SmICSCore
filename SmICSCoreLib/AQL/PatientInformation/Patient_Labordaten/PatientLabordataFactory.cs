@@ -18,7 +18,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten
         }
         public List<LabDataModel> Process(PatientListParameter parameter)
         {
-            List<LabDataReceiveModel> receiveLabDataList = _restData.AQLQuery<LabDataReceiveModel>(AQLCatalog.PatientLaborData(parameter).Query);
+            List<LabDataReceiveModel> receiveLabDataList = _restData.AQLQuery<LabDataReceiveModel>(AQLCatalog.PatientLaborData(parameter));
 
             if (receiveLabDataList is null)
             {

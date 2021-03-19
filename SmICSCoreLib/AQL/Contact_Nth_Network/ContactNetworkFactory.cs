@@ -55,7 +55,7 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network
         private void FindWardsQuery()
         {
             ContactParameter parameter = patientStack.Pop();
-            List<PatientWardModel> patientWardList = _restData.AQLQuery<PatientWardModel>(AQLCatalog.ContactPatientWards(parameter).Query);
+            List<PatientWardModel> patientWardList = _restData.AQLQuery<PatientWardModel>(AQLCatalog.ContactPatientWards(parameter));
 
             if (patientWardList is null)
             {
@@ -71,7 +71,7 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network
             foreach (PatientWardModel patientWard in PatientWardList)
             {
                 ContactPatientsParameter secondQueryParameter = SecondParameterConstructor(patientWard, parameter);
-                List<ContactPatientModel> contactPatientList = _restData.AQLQuery<ContactPatientModel>(AQLCatalog.ContactPatients(secondQueryParameter).Query);
+                List<ContactPatientModel> contactPatientList = _restData.AQLQuery<ContactPatientModel>(AQLCatalog.ContactPatients(secondQueryParameter));
                 if (contactPatientList == null)
                 {
                     continue;

@@ -19,7 +19,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
         }
         public List<PatientMovementModel> Process(PatientListParameter parameter)
         {
-            List<PatientStayModel> patientStayList = _restData.AQLQuery<PatientStayModel>(AQLCatalog.PatientStay(parameter).Query);
+            List<PatientStayModel> patientStayList = _restData.AQLQuery<PatientStayModel>(AQLCatalog.PatientStay(parameter));
             if (patientStayList is null)
             {
                 return new List<PatientMovementModel>();
@@ -43,7 +43,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
                 if (!PatID_CaseId_Combination.Contains(patfallID))
                 {
 
-                    List<EpisodeOfCareModel> episodeOfCareList = _restData.AQLQuery<EpisodeOfCareModel>(AQLCatalog.EpisodeOfCare(episodeOfCareParam).Query);
+                    List<EpisodeOfCareModel> episodeOfCareList = _restData.AQLQuery<EpisodeOfCareModel>(AQLCatalog.EpisodeOfCare(episodeOfCareParam));
 
                     if (!(episodeOfCareList is null))
                     {

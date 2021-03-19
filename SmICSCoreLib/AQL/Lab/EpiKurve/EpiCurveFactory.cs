@@ -1,14 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.Text;
 using SmICSCoreLib.Util;
-using Newtonsoft.Json;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.Lab.EpiKurve.ReceiveModel;
-using SmICSCoreLib.AQL.Lab.EpiKurve;
 using SmICSCoreLib.REST;
+using Microsoft.Extensions.Logging;
 
 namespace SmICSCoreLib.AQL.Lab.EpiKurve
 {
@@ -20,16 +16,19 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
 
         private List<EpiCurveModel> epiCurveList;
         private SortedDictionary<DateTime, Dictionary<string, EpiCurveModel>> dataAggregationStorage;
-        private IRestDataAccess _restData;
         private Dictionary<string, PatientInfectionModel> infections;
         private Dictionary<string, EpiCurveModel> EpiCurveEntryByWard;
 
         private Dictionary<string, List<int>> mavg7;
         private Dictionary<string, List<int>> mavg28;
+        
+        private IRestDataAccess _restData;
+        private ILogger<EpiCurveFactory> _logger;
 
-        public EpiCurveFactory(IRestDataAccess restData)
+        public EpiCurveFactory(IRestDataAccess restData, ILogger<EpiCurveFactory> logger)
         {
             _restData = restData;
+            _logger = logger;
         }
         public List<EpiCurveModel> Process(EpiCurveParameter parameter)
         {
@@ -60,8 +59,8 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
         }
         private void CreateDailyEntries(DateTime date, EpiCurveParameter parameter)
         {
-            System.Diagnostics.Debug.WriteLine("Flag - Query: " + date.ToString());
-            List<FlagTimeModel> flagTimes = _restData.AQLQuery<FlagTimeModel>(AQLCatalog.LaborEpiCurve(date, parameter).Query);
+            _logger.LogDebug("Flag - Query Paramters: Datum: {Date} \r PathogenList: {pathogens}", date.ToString(), parameter.PathogenCodesToAqlMatchString());
+            List<FlagTimeModel> flagTimes = _restData.AQLQuery<FlagTimeModel>(AQLCatalog.LaborEpiCurve(date, parameter));
 
             if (flagTimes == null)
             {
@@ -83,15 +82,20 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
         {
             foreach (FlagTimeModel flag in flagTimes)
             {
-                System.Diagnostics.Debug.WriteLine("PatientLocation - Query: " + flag.PatientID + " - " + date.ToString());
-                
-                PatientLocation patientLocation = _restData.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(flag.Datum, flag.PatientID).Query)[0];
+                _logger.LogDebug("PatientLocation - Query Paramters: PatientID: {PatientID} \r Datum: {Date}", flag.PatientID, flag.Datum.ToString());
 
-                if(patientLocation == null)
+                List<PatientLocation> patientLocations = _restData.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(flag.Datum, flag.PatientID));
+
+                PatientLocation patientLocation = null;
+                if (patientLocation == null)
                 {
+                    _logger.LogDebug("PatientLocation - Query Response Count: {LocationCount}", null);
                     patientLocation = new PatientLocation() { Ward = "ohne Stationsangabe", Departement = "0000" };
                 }
-
+                else
+                {
+                    patientLocation = patientLocations[0];
+                }
                 SetBasicDailyEpiCurveEntries(flag, patientLocation, date);
                 AggregateFlagInformation(flag, patientLocation);
 
