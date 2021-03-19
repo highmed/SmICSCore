@@ -22,7 +22,7 @@ namespace SmICSDataGenerator.Tests.LabTests
             {
                 Starttime = new DateTime(2021, 1, 1),
                 Endtime = new DateTime(2021, 1, 10),
-                PathogenName = "sars-cov-2"
+                PathogenCodes = new List<string>() { "94500-6", "94745-7", "94558-4" }
             };
 
             EpiCurveFactory epiCurveFactory = new EpiCurveFactory(_data);

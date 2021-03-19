@@ -44,7 +44,9 @@ ORDER BY h/data[at0001]/items[at0004]/value/value ASC
 ```
 
 ## 2. Patient Movements
- 
+
+The patient movements are calculated from two queries. The first query returns for every patient <ins>every</ins> recorded patient stay on different wards within the hospital. The second query needs to be executed for every patient in comination with the returend "FallID" from the first query. It returns the dates for the patient admission and discharge. With that information the patient stay will be divided in the different patient stays for each "FallID".
+
 ```
 SELECT e/ehr_id/value as PatientID,
     i/items[at0001]/value/value as FallID, 
@@ -81,6 +83,9 @@ WHERE c/name/value = 'Stationärer Versorgungsfall'
 
 ## 3. Labaratory Data
 
+Returns all virologic findings for the given patients.
+
+*Current Limitations: No options for choosing a specific virus*
 ```
 SELECT e/ehr_id/value as PatientID, 
     c/context/start_time/value as Befunddatum, 
@@ -109,6 +114,10 @@ WHERE c/name/value = 'Virologischer Befund'
 
 ## 4. Epidemiological curve
 
+The epidemiological curve is executed by two queries. The first query returns all virologic findings and their related patient IDs for the given virus (in LOINC Code) in the given period. The second query returns the ward where the specimen for the linked finding was taken to aggregate the count of the findings to a specific ward. If two consecutive negative findings can be related to a patient with a positiv finding, this patient will be declared as healed and will be stubtacted from the aggregated data.
+
+*Limitations: The queries currently will not take into account if a patient has two positive consecutive findings of the same virus and handle it as one finding.*
+
 ```
 SELECT e/ehr_id/value as PatientID, 
     i/items[at0001]/value/value as FallID, 
@@ -124,7 +133,7 @@ CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
             CONTAINS (CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]))) 
 WHERE c/name/value='Virologischer Befund' 
     and d/items[at0001]/name/value='Nachweis' 
-    and d/items[at0024]/value/value like '<Virusnachweistest>' 
+    and d/items[at0024]/value/defining_code/code_string MATCHES {'<PathogenLoincCode>'} 
     and m/items[at0015]/value/value>='<Datum>' 
     and m/items[at0015]/value/value<'<Datum (nächster Tag)>'
 ```

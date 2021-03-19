@@ -196,7 +196,7 @@ namespace SmICSWebApp.Controllers
             System.Diagnostics.Debug.WriteLine("\n CALLED EPICURVE \n");
             try
             {
-                EpiCurveParameter epiParams = new EpiCurveParameter() { Endtime = parameter.Endtime, Starttime = parameter.Starttime, PathogenName = "sars-cov-2" };
+                EpiCurveParameter epiParams = new EpiCurveParameter() { Endtime = parameter.Endtime, Starttime = parameter.Starttime, PathogenCodes = new List<string>() { "94500-6", "94745-7", "94558-4" } };
                 return _labData.Labor_Epikurve(epiParams);
             }
             catch (Exception e)

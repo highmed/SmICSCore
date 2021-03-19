@@ -122,7 +122,7 @@ namespace SmICSCoreLib.AQL
             //TODO: AQL musst zu eine MIBI AQL umgewandelt werden. 
             return new AQLQuery($"SELECT e/ehr_id/value as PatientID, z/items[at0015]/value/value as ZeitpunktProbenentnahme, z/items[at0029]/value/defining_code/code_string/value as MaterialID, g/items[at0001]/value/value as Befund, g/items[at0024]/value/defining_code/code_string as KeimID, c/context/start_time/value as Befunddatum FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1] CONTAINS (CLUSTER f[openEHR-EHR-CLUSTER.case_identification.v0] and CLUSTER z[openEHR-EHR-CLUSTER.specimen.v1] and CLUSTER j[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] CONTAINS CLUSTER g[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]) WHERE c/name/value = 'Virologischer Befund' and g/items[at0001]/name = 'Nachweis' and g/items[at0024]/name = 'Virus' and e/ehr_id/value = '{PatientID}' and z/items[at0015]/value/value >= '{timespan.Starttime}' and z/items[at0015]/value/value <= '{timespan.Endtime}'");
         }
-        public static AQLQuery LaborEpiCurve(DateTime date, string pathogenName)
+        public static AQLQuery LaborEpiCurve(DateTime date, EpiCurveParameter parameter)
         {
             return new AQLQuery($@"SELECT e/ehr_id/value as PatientID,
                                    i/items[at0001]/value/value as FallID,
@@ -139,7 +139,7 @@ namespace SmICSCoreLib.AQL
                                         CONTAINS (CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1])))
                             WHERE c/name/value='Virologischer Befund' 
                             and d/items[at0001]/name/value='Nachweis' 
-                            and d/items[at0024]/value/value like '{ pathogenName }*' 
+                            and d/items[at0024]/value/defining_code/code_string MATCHES { parameter.PathogenCodesToAqlMatchString() }
                             and m/items[at0015]/value/value>='{ date.ToString("yyyy-MM-dd") }' and m/items[at0015]/value/value<'{ date.AddDays(1).ToString("yyyy-MM-dd") }'");
         }
         public static AQLQuery PatientLocation(DateTime date, string patientID)

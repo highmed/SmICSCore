@@ -37,7 +37,7 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
 
             for (DateTime date = parameter.Starttime.Date; date <= parameter.Endtime.Date; date = date.AddDays(1.0))
             {
-                CreateDailyEntries(date, parameter.PathogenName);
+                CreateDailyEntries(date, parameter);
                 CreateEmptyWardEntries(date);
             }
 
@@ -58,10 +58,10 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
             mavg7.Add(COMPLETE_CLINIC, new List<int>());
             mavg28.Add(COMPLETE_CLINIC, new List<int>());
         }
-        private void CreateDailyEntries(DateTime date, string pathogen)
+        private void CreateDailyEntries(DateTime date, EpiCurveParameter parameter)
         {
             System.Diagnostics.Debug.WriteLine("Flag - Query: " + date.ToString());
-            List<FlagTimeModel> flagTimes = _restData.AQLQuery<FlagTimeModel>(AQLCatalog.LaborEpiCurve(date, pathogen).Query);
+            List<FlagTimeModel> flagTimes = _restData.AQLQuery<FlagTimeModel>(AQLCatalog.LaborEpiCurve(date, parameter).Query);
 
             if (flagTimes == null)
             {
