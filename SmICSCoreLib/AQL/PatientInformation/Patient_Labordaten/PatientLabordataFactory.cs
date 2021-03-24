@@ -11,6 +11,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten
 {
     public class PatientLabordataFactory : IPatientLabordataFactory
     {
+        private readonly string INCONCLUSIVE = "419984006";
         protected IRestDataAccess _restData;
         public PatientLabordataFactory(IRestDataAccess restData)
         {
@@ -29,11 +30,16 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten
 
 
         }
+
         private List<LabDataModel> LabDataConstructor(List<LabDataReceiveModel> receiveLabDataList)
         {
             List<LabDataModel> labDataModels = new List<LabDataModel>();
             foreach (LabDataReceiveModel labData in receiveLabDataList)
             {
+                if(labData.BefundCode == INCONCLUSIVE)
+                {
+                    continue;
+                }
                 labDataModels.Add(new LabDataModel(labData));
             }
             return labDataModels;

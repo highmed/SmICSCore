@@ -43,6 +43,7 @@ namespace SmICSWebApp
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    //.UseUrls("http://*:5000");
                 });
     }
 }

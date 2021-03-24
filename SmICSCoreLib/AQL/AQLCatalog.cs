@@ -48,7 +48,21 @@ namespace SmICSCoreLib.AQL
                                 or NOT EXISTS h/data[at0001]/items[at0005]/value/value)
                                 and o/items[at0024]/value/defining_code/code_string = '{ parameter.Departement }' 
                                 and l/items[at0027]/value/value = '{ parameter.WardID }' 
-                                and not e/ehr_id/value = '{ parameter.PatientID }'
+                                ORDER BY h/data[at0001]/items[at0004]/value/value");
+        }
+        public static AQLQuery ContactPatients_WithoutWardInformation(ContactPatientsParameter parameter)
+        {
+            return new AQLQuery("ContactPatients", $@"SELECT e/ehr_id/value as PatientID,
+                                h/data[at0001]/items[at0004]/value/value as Beginn, 
+                                h/data[at0001]/items[at0005]/value/value as Ende FROM EHR e 
+                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] 
+                                CONTAINS ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] 
+                                CONTAINS (CLUSTER l[openEHR-EHR-CLUSTER.location.v1] and CLUSTER o[openEHR-EHR-CLUSTER.organization.v0])
+                                WHERE c/name/value='Patientenaufenthalt' 
+                                and h/data[at0001]/items[at0004]/value/value <= '{ parameter.Endtime.ToString("o") }' 
+                                and (h/data[at0001]/items[at0004]/value/value >= '{ parameter.Starttime.ToString("o") }'
+                                or NOT EXISTS h/data[at0001]/items[at0005]/value/value)
+                                and l/items[at0027]/value/value = '{ parameter.WardID }' 
                                 ORDER BY h/data[at0001]/items[at0004]/value/value");
         }
         public static AQLQuery PatientStay(PatientListParameter patientList)

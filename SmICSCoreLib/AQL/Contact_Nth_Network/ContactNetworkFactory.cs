@@ -71,7 +71,16 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network
             foreach (PatientWardModel patientWard in PatientWardList)
             {
                 ContactPatientsParameter secondQueryParameter = SecondParameterConstructor(patientWard, parameter);
-                List<ContactPatientModel> contactPatientList = _restData.AQLQuery<ContactPatientModel>(AQLCatalog.ContactPatients(secondQueryParameter));
+                List<ContactPatientModel> contactPatientList  = null;
+                if (patientWard.StationID == null)
+                {
+                    _restData.AQLQuery<ContactPatientModel>(AQLCatalog.ContactPatients_WithoutWardInformation(secondQueryParameter));
+                    patientWard.StationID = patientWard.Fachabteilung;
+                }
+                else
+                {
+                    contactPatientList = _restData.AQLQuery<ContactPatientModel>(AQLCatalog.ContactPatients(secondQueryParameter));
+                }
                 if (contactPatientList == null)
                 {
                     continue;
