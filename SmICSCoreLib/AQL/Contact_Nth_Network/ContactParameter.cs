@@ -8,6 +8,6 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network
     public class ContactParameter : TimespanParameter
     {
         public string PatientID { get; set; }
-        public int Degree { get; set; }
+        public int Degree { get; set; } = 1;
     }
 }

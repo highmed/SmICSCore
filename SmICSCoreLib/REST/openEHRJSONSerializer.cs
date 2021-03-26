@@ -19,6 +19,7 @@ namespace SmICSCoreLib.REST
                 return null;
             }
             var str = response.Content.ReadAsStringAsync().Result;
+
             return Deserialize(str);
         }
 

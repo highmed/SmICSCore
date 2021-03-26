@@ -33,7 +33,6 @@ namespace SmICSWebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSmICSLibrary();
-            services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<DataService>();
                      
             services.AddSwaggerGen(c =>

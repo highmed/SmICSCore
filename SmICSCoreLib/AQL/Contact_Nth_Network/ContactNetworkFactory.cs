@@ -1,44 +1,49 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SmICSCoreLib.AQL.Contact_Nth_Network.ReceiveModels;
+using SmICSCoreLib.AQL.General;
+using SmICSCoreLib.AQL.PatientInformation;
+using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
+using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.REST;
-using SmICSCoreLib.Util;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace SmICSCoreLib.AQL.Contact_Nth_Network
 {
     public class ContactNetworkFactory : IContactNetworkFactory
     {
         private static Stack<ContactParameter> patientStack;
-        private static List<ContactModel> contactList;
+        private static ContactModel contacts;
         private static int currentDegree;
 
-        private IRestDataAccess _restData;
-
-        public ContactNetworkFactory(IRestDataAccess restData)
+        private readonly IRestDataAccess _restData;
+        private readonly ILogger _logger;
+        private readonly IPatientInformation _patientInformation;
+        public ContactNetworkFactory(IRestDataAccess restData, ILogger logger, IPatientInformation patientInformation)
         {
+            _logger = logger;
             _restData = restData;
+            _patientInformation = patientInformation;
         }
 
-        public List<ContactModel> Process(ContactParameter parameter)
+        public ContactModel Process(ContactParameter parameter)
         {
             patientStack = new Stack<ContactParameter>();
-            contactList = new List<ContactModel>();
+            contacts = new ContactModel();
             currentDegree = 1;
 
             patientStack.Push(parameter);
-
+            
             DegreeIterator();
-            return contactList;
+            return contacts;
         }
 
         private void DegreeIterator()
         {
             int maxDegree = Convert.ToInt32(patientStack.Peek().Degree);
-            contactList = new List<ContactModel>();
 
             while (currentDegree <= maxDegree)
             {
@@ -59,6 +64,7 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network
 
             if (patientWardList is null)
             {
+                _logger.LogDebug("ContactNetworkFactory.FindWardsQuery(): Found No Wards - ResultSet: NULL");
                 return;
             }
 
@@ -74,8 +80,9 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network
                 List<ContactPatientModel> contactPatientList  = null;
                 if (patientWard.StationID == null)
                 {
-                    _restData.AQLQuery<ContactPatientModel>(AQLCatalog.ContactPatients_WithoutWardInformation(secondQueryParameter));
-                    patientWard.StationID = patientWard.Fachabteilung;
+                    _logger.LogInformation("ContactNetworkFactory.FindContactPatients(): No WardID From ContactNetworkFactory.FindWardsQuery(). Set DepartementID to WardID.");
+                    secondQueryParameter.WardID = patientWard.Fachabteilung;
+                    contactPatientList = _restData.AQLQuery<ContactPatientModel>(AQLCatalog.ContactPatients_WithoutWardInformation(secondQueryParameter));
                 }
                 else
                 {
@@ -83,29 +90,21 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network
                 }
                 if (contactPatientList == null)
                 {
+                    _logger.LogDebug("ContactNetworkFactory.FindContactPatients(): Found No Contact Patients For Ward {wardID} - ResultSet: NULL", secondQueryParameter.WardID);
                     continue;
                 }
                 
-                ContactModelConstructor(contactPatientList, patientWard, parameter);
+                ContactModelConstructor(contactPatientList);
             }
         }
 
-        private void ContactModelConstructor(List<ContactPatientModel> ContactPatientList, PatientWardModel patientWard, ContactParameter parameter)
+        private void ContactModelConstructor(List<ContactPatientModel> ContactPatientList)
         {
-            foreach (ContactPatientModel contactPatient in ContactPatientList)
+            foreach (ContactPatientModel contact in ContactPatientList)
             {
-                if (isValidTimeSlot(contactPatient, parameter) == false)
-                {
-                    continue;
-                }
-
-                ContactModel contact = new ContactModel(contactPatient, patientWard, parameter, currentDegree);
-                if (!contactList.Contains(contact))
-                {
-                    contactList.Add(contact);
-                    updatePatientStack(contactPatient, parameter);
-                }
-
+                PatientListParameter patList = new PatientListParameter() { patientList = new List<string> { contact.PatientID } };
+                contacts.PatientMovements.AddRange(_patientInformation.Patient_Bewegung_Ps(patList));
+                contacts.LaborData.AddRange(_patientInformation.Patient_Labordaten_Ps(patList));
             }
         }
         
