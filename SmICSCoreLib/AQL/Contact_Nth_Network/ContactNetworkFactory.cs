@@ -20,9 +20,9 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network
         private static int currentDegree;
 
         private readonly IRestDataAccess _restData;
-        private readonly ILogger _logger;
+        private readonly ILogger<ContactNetworkFactory> _logger;
         private readonly IPatientInformation _patientInformation;
-        public ContactNetworkFactory(IRestDataAccess restData, ILogger logger, IPatientInformation patientInformation)
+        public ContactNetworkFactory(IRestDataAccess restData, ILogger<ContactNetworkFactory> logger, IPatientInformation patientInformation)
         {
             _logger = logger;
             _restData = restData;
@@ -32,12 +32,14 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network
         public ContactModel Process(ContactParameter parameter)
         {
             patientStack = new Stack<ContactParameter>();
-            contacts = new ContactModel();
+            contacts = new ContactModel() { PatientMovements = new List<PatientMovementModel>(), LaborData = new List<LabDataModel>() };
             currentDegree = 1;
 
             patientStack.Push(parameter);
             
             DegreeIterator();
+            _logger.LogDebug(contacts.PatientMovements.ToString());
+            _logger.LogDebug(contacts.LaborData.ToString());
             return contacts;
         }
 

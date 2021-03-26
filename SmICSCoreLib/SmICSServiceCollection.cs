@@ -28,18 +28,19 @@ namespace SmICS
             
             services.AddTransient<IPatientMovementFactory, PatientMovementFactory>();
             services.AddTransient<IPatientLabordataFactory, PatientLabordataFactory>();
+            services.AddTransient<IMibiPatientLaborDataFactory, MibiPatientLaborDataFactory>();
+            services.AddTransient<ISymptomFactory, SymptomFactory>();
+
+            services.AddTransient<IPatientInformation, PatientInformation>();
+
             services.AddTransient<IContactNetworkFactory, ContactNetworkFactory>();
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();
-            services.AddTransient<ISymptomFactory, SymptomFactory>();
-            services.AddTransient<IMibiPatientLaborDataFactory, MibiPatientLaborDataFactory>();
             
             services.AddTransient<INECCombinedFactory, NECCombinedFactory>();
 
             services.AddTransient<INECResultDataFactory, NECResultDataFactory>();
             services.AddTransient<INECResultFileFactory, NECResultFileFactory>();
 
-            services.AddTransient<IPatientInformation, PatientInformation>();
-            services.AddTransient<IContactNetworkProcedures, ContactNetworkProcedures>();
             services.AddTransient<ILabData, LabData>();
             services.AddTransient<IConnectionTest, ConnectionTest>();
             services.AddSingleton<IAlgorithmData, AlgortihmData>();

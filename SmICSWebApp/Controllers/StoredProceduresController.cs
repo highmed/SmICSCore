@@ -29,16 +29,16 @@ namespace SmICSWebApp.Controllers
     [ApiController]
     public class StoredProceduresController : ControllerBase
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<StoredProceduresController> _logger;
         
         private readonly IConnectionTest _connectionTest;
         private readonly ILabData _labData;
         private readonly IPatientInformation _patientInformation;
-        private readonly IContactNetworkProcedures _contact;
+        private readonly IContactNetworkFactory _contact;
         private readonly IAlgorithmData _algorithm;
         private readonly IPatinet_Stay _patinet_Stay;
 
-        public StoredProceduresController(ILogger logger, ILabData labData, IPatientInformation patientInformation, IContactNetworkProcedures contact, IAlgorithmData algorithm, IConnectionTest connectionTest, IPatinet_Stay patinet_Stay)
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, ILabData labData, IPatientInformation patientInformation, IContactNetworkFactory contact, IAlgorithmData algorithm, IConnectionTest connectionTest, IPatinet_Stay patinet_Stay)
         {
             _logger = logger;
             _connectionTest = connectionTest;
@@ -47,20 +47,6 @@ namespace SmICSWebApp.Controllers
             _contact = contact;
             _algorithm = algorithm;
             _patinet_Stay = patinet_Stay;
-        }
-
-        [Route("Contact_1stDegree_TTPK")]
-        [HttpPost]
-        public ActionResult<List<ContactModel>> Contact_1stDegree_TTP([FromBody] ContactParameter parameter)
-        {
-            try
-            { 
-                return _contact.Contact_1stDegree_TTP(parameter);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
         }
 
         /// <summary></summary>
@@ -76,7 +62,8 @@ namespace SmICSWebApp.Controllers
             _logger.LogInformation("CALLED Contact_NthDegree_TTP_Degree with parameters: \n\r PatientID: {patID}\n\r Starttime: {start} \n\r Endtime: {end} \n\r Degree: {d} ", parameter.PatientID, parameter.Starttime, parameter.Endtime, parameter.Degree);
             try
             {
-                return _contact.Contact_NthDegree_TTP_Degree(parameter);
+                System.Diagnostics.Debug.WriteLine("CALLED Contact_NthDegree_TTKP_Degree " + parameter.PatientID + " - " + parameter.Starttime + " - " + parameter.Endtime + " - " + parameter.Degree);
+                return _contact.Process(parameter);
             }
             catch (Exception e)
             {

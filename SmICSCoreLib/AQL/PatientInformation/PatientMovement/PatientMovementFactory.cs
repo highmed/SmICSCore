@@ -43,12 +43,20 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
                 if (!PatID_CaseId_Combination.Contains(patfallID))
                 {
 
-                    List<EpisodeOfCareModel> episodeOfCareList = _restData.AQLQuery<EpisodeOfCareModel>(AQLCatalog.EpisodeOfCare(episodeOfCareParam));
-
+                    List<EpisodeOfCareModel> episodeOfCareList = _restData.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParam));
+                    List<EpisodeOfCareModel> discharges = _restData.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParam));
                     if (!(episodeOfCareList is null))
                     {
                         //result.First because there can be just one admission/discharge timestamp for each case
                         episodeOfCare = episodeOfCareList[0];
+                        if(discharges != null)
+                        {
+                            episodeOfCare.Ende = discharges[0].Ende;
+                        }
+                        if(episodeOfCare.Ende == DateTime.MinValue)
+                        {
+                            episodeOfCare.Ende = DateTime.Now;
+                        }
                     }
                     PatID_CaseId_Combination.Add(patfallID);
                 }
@@ -70,16 +78,17 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
         private void addMovementTypeByDateComparison(PatientStayModel patientStay, List<PatientMovementModel> patientMovementList)
         {
             PatientMovementModel patientMovement = new PatientMovementModel(patientStay);
-            if (patientMovement.Beginn == patientMovement.Ende || patientMovement.Ende == DateTime.MinValue)
+            if (patientMovement.Beginn == patientMovement.Ende)
             {
-                if (patientMovement.Ende == DateTime.MinValue)
-                {
-                    patientMovement.Ende = patientMovement.Beginn;
-                }
+                
                 patientMovement.AddMovementType(4, "Behandlung");
             }
             else
             {
+                if (patientMovement.Ende == DateTime.MinValue)
+                {
+                    patientMovement.Ende = DateTime.Now;
+                }
                 patientMovement.AddMovementType(3, "Wechsel");
             }
             patientMovementList.Add(patientMovement);

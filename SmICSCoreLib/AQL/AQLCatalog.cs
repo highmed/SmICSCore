@@ -87,14 +87,22 @@ namespace SmICSCoreLib.AQL
                                 AND e/ehr_id/value MATCHES {patientList.ToAQLMatchString()}
                                 ORDER BY e/ehr_id/value ASC, h/items[at0004]/value/value ASC");
         }
-        public static AQLQuery EpisodeOfCare(EpsiodeOfCareParameter parameter)
+        public static AQLQuery PatientAdmission(EpsiodeOfCareParameter parameter)
         {
-            return new AQLQuery("EpisodeOfCare",$@"SELECT p/data[at0001]/items[at0071]/value/value as Beginn, 
-                                b/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Ende 
+            return new AQLQuery("PatientAdmission", $@"SELECT p/data[at0001]/items[at0071]/value/value as Beginn
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
-                                CONTAINS (ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
-                                and ADMIN_ENTRY b[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
+                                CONTAINS ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
+                                WHERE c/name/value = 'Stationärer Versorgungsfall' 
+                                and e/ehr_id/value = '{ parameter.PatientID }' 
+                                and c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value = '{ parameter.CaseID }'");
+        }
+        public static AQLQuery PatientDischarge(EpsiodeOfCareParameter parameter)
+        {
+            return new AQLQuery("PatientDischarge", $@"SELECT b/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Ende 
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
+                                CONTAINS ADMIN_ENTRY b[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0] 
                                 WHERE c/name/value = 'Stationärer Versorgungsfall' 
                                 and e/ehr_id/value = '{ parameter.PatientID }' 
                                 and c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value = '{ parameter.CaseID }'");
