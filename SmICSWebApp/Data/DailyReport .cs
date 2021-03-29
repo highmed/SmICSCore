@@ -17,28 +17,37 @@ namespace SmICSWebApp.Data
         public bool standAktuell { get; set; }
 
         [JsonProperty(PropertyName = "fallzahl")]
-        public string fallzahl { get; set; } 
-        
+        public string fallzahl { get; set; }
+
         [JsonProperty(PropertyName = "fallzahlVortag")]
-        public string fallzahlVortag { get; set; }   
+        public string fallzahlVortag { get; set; }
 
         [JsonProperty(PropertyName = "todesfaelle")]
-        public string todesfaelle { get; set; } 
-        
+        public string todesfaelle { get; set; }
+
         [JsonProperty(PropertyName = "todesfaelleVortag")]
         public string todesfaelleVortag { get; set; }
 
         [JsonProperty(PropertyName = "rWert7Tage")]
-        public string rWert7Tage { get; set; } 
-        
+        public string rWert7Tage { get; set; }
+
         [JsonProperty(PropertyName = "rWert7TageVortag")]
         public string rWert7TageVortag { get; set; }
-        
+
         [JsonProperty(PropertyName = "inzidenz7Tage")]
-        public string inzidenz7Tage { get; set; }  
-        
+        public string inzidenz7Tage { get; set; }
+
         [JsonProperty(PropertyName = "inzidenz7TageVortag")]
         public string inzidenz7TageVortag { get; set; }
+
+        [JsonProperty(PropertyName = "gesamtImpfung")]
+        public string gesamtImpfung { get; set; }
+
+        [JsonProperty(PropertyName = "erstImpfung")]
+        public string erstImpfung { get; set; }
+
+        [JsonProperty(PropertyName = "zweitImpfung")]
+        public string zweitImpfung { get; set; }
 
         [JsonProperty(PropertyName = "bundesland")]
         public Bundesland[] bundesland { get; set; }
@@ -60,7 +69,7 @@ namespace SmICSWebApp.Data
     {
         [JsonProperty(PropertyName = "stadt")]
         public string stadt { get; set; }
-        
+
         [JsonProperty(PropertyName = "landkreis")]
         public string landkreis { get; set; }
 
@@ -90,7 +99,7 @@ namespace SmICSWebApp.Data
 
         [JsonProperty(PropertyName = "fallzahlGesamt")]
         public int fallzahlGesamt { get; set; }
-     
+
         [JsonProperty(PropertyName = "faelle7BL")]
         public float faelle7BL { get; set; }
 
@@ -104,9 +113,10 @@ namespace SmICSWebApp.Data
         public int todesfaelle7BL { get; set; }
 
         [JsonProperty(PropertyName = "inzidenz7Tage")]
-        public string inzidenz7Tage { get; set; } 
-        
+        public string inzidenz7Tage { get; set; }
+
         [JsonProperty(PropertyName = "farbe")]
         public string farbe { get; set; }
     }
+
 }

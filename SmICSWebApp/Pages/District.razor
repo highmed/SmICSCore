@@ -92,8 +92,20 @@
                 <div class="col-8 d-flex">
                     <div class="card flex-fill">
                         <div class="card-header">
-                            <h5 class="card-title">Corona Landkreise Tabelle </h5>
+                            <div class="row">
+                                <div class="col-8">
+                                    <h5 class="card-title">Corona Landkreise Tabelle @lb</h5>
+                                </div>
+                                <div class="col-4">
+                                    <ul class="pagination" style="justify-content: flex-end;">
+                                        <li class="paginate_button page-item next">
+                                            <a href="/state" class="page-link"> Zurück zum Hauptansicht</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
+                      
                         <div class="card-body">
                             <p>Datenstand @stand</p>
 
@@ -410,20 +422,27 @@
             }
 
             lastReport = dataService.DeserializeRkiData(datum.AddDays(-1));
-            lastBundeslaender = lastReport.bericht.bundesland;
-            foreach (var lastBundesland in lastBundeslaender)
+            if (lastReport != null)
             {
-                if (lastBundesland.blAttribute.bundesland == lb)
+                lastBundeslaender = lastReport.bericht.bundesland;
+                foreach (var lastBundesland in lastBundeslaender)
                 {
-                    int vortag = lastBundesland.blAttribute.fallzahlGesamt;
-                    fallzahlVortag = fallzahl - vortag;
-                    int vortag2 = lastBundesland.blAttribute.todesfaelle;
-                    todesfaelleVortag = todesfaelle - vortag2;
-                    inzidenz7TageVortag = lastBundesland.blAttribute.inzidenz7Tage;
-                    lkArrayLast = lastBundesland.landkreis;
+                    if (lastBundesland.blAttribute.bundesland == lb)
+                    {
+                        int vortag = lastBundesland.blAttribute.fallzahlGesamt;
+                        fallzahlVortag = fallzahl - vortag;
+                        int vortag2 = lastBundesland.blAttribute.todesfaelle;
+                        todesfaelleVortag = todesfaelle - vortag2;
+                        inzidenz7TageVortag = lastBundesland.blAttribute.inzidenz7Tage;
+                        lkArrayLast = lastBundesland.landkreis;
+                    }
                 }
+                rWert7TageVortag = lastReport.bericht.rWert7Tage;
             }
-            rWert7TageVortag = lastReport.bericht.rWert7Tage;
+            else
+            {
+                lastBundeslaender = bundeslaender;
+            }
 
             inzidenzColor = dataService.SetCaseColor(double.Parse(inzidenz7Tage), double.Parse(inzidenz7TageVortag));
             rWertColor = dataService.SetCaseColor(double.Parse(rWert7Tage), double.Parse(rWert7TageVortag));

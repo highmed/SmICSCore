@@ -16,9 +16,9 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Stationary
             _restData = restData;
         }
 
-        public List<StationaryDataModel> Process(string patientId, DateTime datum)
+        public List<StationaryDataModel> Process(string patientId, string fallkennung, DateTime datum)
         {
-            List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQuery<StationaryDataReceiveModel>(AQLCatalog.Stationary(patientId, datum));
+            List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQuery<StationaryDataReceiveModel>(AQLCatalog.Stationary(patientId, fallkennung, datum));
 
             if (stationaryDataReceives is null)
             {
@@ -27,20 +27,18 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Stationary
 
             return StationaryConstructor(stationaryDataReceives);
         }
-        //Wenn die Fallkennung vorhanden ist
 
-        //public List<StationaryDataModel> Process(string patientId, DateTime datum, string fallkennung)
-        //{
-        //    List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQuery<StationaryDataReceiveModel>(AQLCatalog.Stationary( patientId, datum, fallkennung);
+        public List<StationaryDataModel> ProcessFromCase(string patientId, string fallId)
+        {
+            List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQuery<StationaryDataReceiveModel>(AQLCatalog.StayFromCase(patientId, fallId));
 
-        //    if (stationaryDataReceives is null)
-        //    {
-        //        return new List<StationaryDataModel>();
-        //    }
+            if (stationaryDataReceives is null)
+            {
+                return new List<StationaryDataModel>();
+            }
 
-        //    return StationaryConstructor(stationaryDataReceives);
-        //}
-
+            return StationaryConstructor(stationaryDataReceives);
+        }
 
         private List<StationaryDataModel> StationaryConstructor(List<StationaryDataReceiveModel> stationaryDataReceives)
         {

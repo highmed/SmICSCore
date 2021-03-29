@@ -35,7 +35,8 @@ namespace SmICSWebApp
             services.AddSmICSLibrary();
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<DataService>();
-                     
+            services.AddSingleton<Symptom>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AQL API", Version = "v1" });

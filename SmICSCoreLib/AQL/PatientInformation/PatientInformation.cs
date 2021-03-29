@@ -20,33 +20,50 @@ namespace SmICSCoreLib.AQL.PatientInformation
         private IMibiPatientLaborDataFactory _mibiLabFac;
         private ISymptomFactory _symptomFac;
 
-        public PatientInformation(IPatientMovementFactory patMoveFac, IPatientLabordataFactory patLabFac, ISymptomFactory symptomFac, IMibiPatientLaborDataFactory mibiLabFac) 
+        public PatientInformation(IPatientMovementFactory patMoveFac, IPatientLabordataFactory patLabFac, 
+                                    ISymptomFactory symptomFac, IMibiPatientLaborDataFactory mibiLabFac) 
         {
             _patMoveFac = patMoveFac;
             _patLabFac = patLabFac;
             _mibiLabFac = mibiLabFac;
             _symptomFac = symptomFac;
         }
+       
         public List<PatientMovementModel> Patient_Bewegung_Ps(PatientListParameter parameter)
         {
             return _patMoveFac.Process(parameter);
         }
-
-
+        
         public List<LabDataModel> Patient_Labordaten_Ps(PatientListParameter parameter)
         {
             return _patLabFac.Process(parameter);
         }
-
+        
         public List<MibiLabDataModel> MibiLabData(PatientListParameter parameter)
         {
             return _mibiLabFac.Process(parameter);
         }
-
+        
         public List<SymptomModel> Patient_Symptom_TTPs(PatientListParameter parameter)
         {
             return _symptomFac.Process(parameter);
         }
+        
+        public List<SymptomModel> Patient_Symptom()
+        {
+            return _symptomFac.ProcessNoParam();
+        }
+
+        public List<SymptomModel> Patient_By_Symptom(string symptom)
+        {
+            return _symptomFac.PatientBySymptom(symptom);
+        }
+
+        public List<SymptomModel> Symptoms_By_PatientId(string patientId, DateTime datum)
+        {
+            return _symptomFac.SymptomByPatient(patientId, datum);
+        }
+
     }
 
 }

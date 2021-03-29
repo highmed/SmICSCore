@@ -16,8 +16,8 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Stationary.ReceiveModel
         [JsonProperty(PropertyName = "Versorgungsfallgrund")]
         public string Versorgungsfallgrund { get; set; }
 
-        [JsonProperty(PropertyName = "Art_der_Aufnahme")]
-        public string Art_der_Aufnahme { get; set; }
+        [JsonProperty(PropertyName = "Aufnahmeanlass")]
+        public string Aufnahmeanlass { get; set; }
 
         [JsonProperty(PropertyName = "Datum_Uhrzeit_der_Aufnahme")]
         public DateTime Datum_Uhrzeit_der_Aufnahme { get; set; }

@@ -17,8 +17,8 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Stationary
         [JsonProperty(PropertyName = "Versorgungsfallgrund")]
         public string Versorgungsfallgrund { get; set; }
 
-        [JsonProperty(PropertyName = "Art_der_Aufnahme")]
-        public string Art_der_Aufnahme { get; set; }
+        [JsonProperty(PropertyName = "Aufnahmeanlass")]
+        public string Aufnahmeanlass { get; set; }
 
         [JsonProperty(PropertyName = "Datum_Uhrzeit_der_Aufnahme")]
         public DateTime Datum_Uhrzeit_der_Aufnahme { get; set; }
@@ -36,7 +36,7 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Stationary
             FallID = stationaryDataReceiveModel.FallID;
             PatientID = stationaryDataReceiveModel.PatientID;
             Versorgungsfallgrund = stationaryDataReceiveModel.Versorgungsfallgrund;
-            Art_der_Aufnahme = stationaryDataReceiveModel.Art_der_Aufnahme;
+            Aufnahmeanlass = stationaryDataReceiveModel.Aufnahmeanlass;
             Datum_Uhrzeit_der_Aufnahme = stationaryDataReceiveModel.Datum_Uhrzeit_der_Aufnahme;
             Art_der_Entlassung = stationaryDataReceiveModel.Art_der_Entlassung;
             Datum_Uhrzeit_der_Entlassung = stationaryDataReceiveModel.Datum_Uhrzeit_der_Entlassung;

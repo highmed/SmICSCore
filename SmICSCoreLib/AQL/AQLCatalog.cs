@@ -172,17 +172,14 @@ namespace SmICSCoreLib.AQL
         {
             return new AQLQuery("CasesWithResults",$"SELECT DISTINCT e/ehr_id/value as PatientID, m/items[at0001]/value/value AS FallID, c/uid/value as UID FROM EHR e CONTAINS COMPOSITION c CONTAINS CLUSTER m[openEHR-EHR-CLUSTER.case_identification.v0] WHERE c/name/value = 'Mikrobiologischer Befund' AND e/ehr_id/value matches { patientList.ToAQLMatchString() } order by m/items[at0001]/value/value asc");
         }
-
         public static AQLQuery ReportMeta(CaseIDReceiveModel caseID)
         {
             return new AQLQuery("ReportMeta",$"SELECT DISTINCT e/ehr_id/value as PatientID, m/items[at0001]/value/value as FallID, c/uid/value as UID FROM EHR e CONTAINS COMPOSITION c CONTAINS CLUSTER m[openEHR-EHR-CLUSTER.case_identification.v0] WHERE e/ehr_id/value = '{ caseID.PatientID }' and m/items[at0001]/value/value = '{ caseID.FallID }' ORDER BY o/data[at0001]/events[at0002]/time/value DESC");
         }
-
         public static AQLQuery Requirements(MetaDataReceiveModel metaData)
         {
             return new AQLQuery("Requirements",$"select distinct a/protocol[at0004]/items[at0094]/items[at0106]/value/value as anforderung from EHR e contains COMPOSITION c contains (CLUSTER m[openEHR-EHR-CLUSTER.case_identification.v0] and OBSERVATION a[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]) where (e/ehr_id/value='{ metaData.PatientID }' and c/uid/value = '{ metaData.UID }' and m/items[at0001]/value/value = '{ metaData.FallID }' )");
         }
-
         public static AQLQuery SamplesFromResult(MetaDataReceiveModel metaData)
         {
             return new AQLQuery("SamplesFromResult", $"SELECT b/items[at0029]/value/value as MaterialID, b/items[at0001]/value/id as LabordatenID, b/items[at0015]/value/value as ZeitpunktProbeentnahme, b/items[at0034]/value/value as ZeitpunktProbeneingang FROM EHR e CONTAINS COMPOSITION c CONTAINS (CLUSTER w[openEHR-EHR-CLUSTER.case_identification.v0] and CLUSTER b[openEHR-EHR-CLUSTER.specimen.v1] CONTAINS CLUSTER z[openEHR-EHR-CLUSTER.anatomical_location.v1]) where e/ehr_id/value = '{ metaData.PatientID }' and c/uid/value = '{ metaData.UID }' and  w/items[at0001]/value/value = '{ metaData.FallID }' order by b/items[at0015]/value/value desc");
@@ -197,7 +194,6 @@ namespace SmICSCoreLib.AQL
         {
             return new AQLQuery("PatientSymptom_VS",$"SELECT e/ehr_id/value as PatientenID, a/data[at0190]/events[at0191]/data[at0192]/items[at0001]/value/value as NameDesSymptoms, a/data[at0190]/events[at0191]/data[at0192/items[at0151]/value/value as Lokalisation, a/ data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value as Beginn, a/ data[at0190]/events[at0191]/data[at0192]/items[at0021]/value/value as Schweregrad, a/ data[at0190]/events[at0191]/data[at0192]/items[at0161] as Rueckgang FROM EHR e CONTAINS COMPOSITION c CONTAINS OBSERVATION a[openEHR-EHR-OBSERVATION.symptom_sign.v0] WHERE c/archetype_details/template_id='Symptom' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
         }
-
         public static AQLQuery PatientSymptom_AS(PatientListParameter patientList)
         {
             return new AQLQuery("PatientSymptom_AS",$"SELECT e/ehr_id/value as PatientenID, a/data[at0001]/items[at0002]/value/value as AusschlussAussage, a/ data[at0001]/items[at0003]/value/value as Diagnose FROM EHR e CONTAINS COMPOSITION c CONTAINS EVALUATION a[openEHR-EHR-EVALUATION.exclusion_specific.v1] WHERE c/archetype_details/template_id='Symptom' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
@@ -212,26 +208,23 @@ namespace SmICSCoreLib.AQL
         {
             return new AQLQuery("AntibiogramFromPathogen", $"SELECT w/feeder_audit/originating_system_audit/time/value as erregerZeit, b/items[at0024]/value/value as antibiotikum, b/items[at0004]/value/defining_code/code_string as resistenz, b/items[at0001]/value/magnitude as mhkMagnitude, b/items[at0001]/value/magnitude_status as mhkMagnitudeStatus, b/items[at0001]/value/units as mhkUnits, u/feeder_audit/originating_system_audit/time/value as antibiogrammZeit, b/feeder_audit/original_content/value as original FROM EHR e CONTAINS COMPOSITION c contains (CLUSTER m[openEHR-EHR-CLUSTER.case_identification.v0] and OBSERVATION j[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] CONTAINS CLUSTER w[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] CONTAINS CLUSTER z[openEHR-EHR-CLUSTER.erregerdetails.v1] CONTAINS CLUSTER u[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] CONTAINS CLUSTER b[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]) where e/ehr_id/value = '{ metaData.PatientID }' and c/uid/value = '{ metaData.UID }' and  w/items[at0001]/value/value = '{ metaData.FallID }' and erregerName = '{ pathogenData.KeimID }' and isolatNummer = '{ pathogenData.IsolatNo }' and w/items[at0001]/name='Erregername' and b/items[at0024]/name='Antibiotikum' order by b/items[at0024]/value/value asc");
         }
-        public static AQLQuery Stationary(string patientId, DateTime datum)
+
+        public static AQLQuery Stationary(string patientId, string fallkennung, DateTime datum)
         {
-            return new AQLQuery("Stationary", $"SELECT e/ehr_id/value as PatientID, c/context/other_context[at0001]/items[at0003]/value/value  as FallID, g/data[at0001]/items[at0071]/value/value  as Datum_Uhrzeit_der_Aufnahme, z/data[at0001]/items[at0011]/value/value as Datum_Uhrzeit_der_Entlassung FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v0] CONTAINS (ADMIN_ENTRY g[openEHR-EHR-ADMIN_ENTRY.admission.v0] and ADMIN_ENTRY z[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) WHERE c/name/value='Stationärer Versorgungsfall' and e/ehr_id/value='{patientId}' and  g/data[at0001]/items[at0071]/value/value < '{datum.Date.ToString("yyyy-MM-dd")}'");
+            return new AQLQuery("Stationary", $"SELECT e/ehr_id/value as PatientID, " +
+                                $"c/context/other_context[at0001]/items[at0003]/value/value  as FallID, " +
+                                $"g/data[at0001]/items[at0071]/value/value  as Datum_Uhrzeit_der_Aufnahme, " +
+                                $"z/data[at0001]/items[at0011]/value/value as Datum_Uhrzeit_der_Entlassung, " +
+                                $"g/data[at0001]/items[at0049]/value/value as Aufnahmeanlass, " +
+                                $"z/data[at0001]/items[at0040]/value/value as Art_der_Entlassung, " +
+                                $"g/data[at0001]/items[at0013,'Versorgungsfallgrund']/value/value as Versorgungsfallgrund " +
+                                $"FROM EHR e " +
+                                $"CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v0] " +
+                                $"CONTAINS (ADMIN_ENTRY g[openEHR-EHR-ADMIN_ENTRY.admission.v0] and ADMIN_ENTRY z[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) " +
+                                $"WHERE c/name/value='Stationärer Versorgungsfall' and e/ehr_id/value='{patientId}' and  " +
+                                $"g/data[at0001]/items[at0071]/value/value < '{datum.Date.AddDays(-3).ToString("yyyy-MM-dd")}' and " +
+                                $"c/context/other_context[at0001]/items[at0003]/value/value='{fallkennung}'");
         }
-
-        public static AQLQuery Count(string nachweis)
-        {
-            return new AQLQuery("Count",$"SELECT e/ehr_id/value as PatientID, p/items[at0015]/value/value as Zeitpunkt_der_Probenentnahme FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1] CONTAINS (CLUSTER x[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] and CLUSTER p[openEHR-EHR-CLUSTER.specimen.v1]) WHERE c/name/value='Virologischer Befund' and x/items[at0001,'Nachweis']/value/value='{nachweis}' and x/items[at0024,'Virus']/value/value='SARS-Cov-2'");
-        }
-
-        //Wenn die Fallkennung vorhanden ist
-        //public static AQLQuery Stationary( string patientId, DateTime datum, string fallkennung)
-        //{
-        //    return new AQLQuery($"SELECT e/ehr_id/value as PatientID, c/context/other_context[at0001]/items[at0003]/value/value  as Fallkennung, g/data[at0001]/items[at0071]/value/value  as Datum_Uhrzeit_der_Aufnahme, z/data[at0001]/items[at0011]/value/value as Datum_Uhrzeit_der_Entlassung FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v0] CONTAINS (ADMIN_ENTRY g[openEHR-EHR-ADMIN_ENTRY.admission.v0] and ADMIN_ENTRY z[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) WHERE c/name/value='Stationärer Versorgungsfall' and e/ehr_id/value='{patientId}' and  g/data[at0001]/items[at0071]/value/value < '{datum.Date.ToString("yyyy-MM-dd")}' and and c/context/other_context[at0001]/items[at0003]/value/value='{fallkennung}'");
-        //}
-
-        //public static AQLQuery Count(string nachweis)
-        //{
-        //    return new AQLQuery($"SELECT e/ehr_id/value as PatientID, p/items[at0015]/value/value as Zeitpunkt_der_Probenentnahme, s/items[at0001]/value/value as Fallkennung FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1] CONTAINS (CLUSTER x[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] and CLUSTER p[openEHR-EHR-CLUSTER.specimen.v1] and CLUSTER s[openEHR-EHR-CLUSTER.case_identification.v0]) WHERE c/name/value='Virologischer Befund' and x/items[at0001,'Nachweis']/value/value='{nachweis}' and x/items[at0024,'Virus']/value/value='SARS-Cov-2'");
-        //}
 
         public static AQLQuery Case(DateTime date)
         {
@@ -242,6 +235,71 @@ namespace SmICSCoreLib.AQL
         {
             return new AQLQuery("WeekCase",$"SELECT COUNT(DISTINCT e/ehr_id/value) as Anzahl_Faelle FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1] CONTAINS (CLUSTER x[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] and CLUSTER p[openEHR-EHR-CLUSTER.specimen.v1]) WHERE c/name/value='Virologischer Befund' and x/items[at0001,'Nachweis']/value/value='positiv' and x/items[at0024,'Virus']/value/value='SARS-Cov-2' and p/items[at0015]/value/value >= '{startDate.Date.ToString("yyyy-MM-dd")}' and p/items[at0015]/value/value <= '{endDate.Date.ToString("yyyy-MM-dd")}' ");
         }
+
+        public static AQLQuery SymptomsByPatient(string patientId, DateTime datum)
+        {
+            return new AQLQuery("SymptomsByPatient", $@"SELECT e/ehr_id/value as PatientenID, 
+                                t/data[at0190]/events[at0191]/data[at0192]/items[at0001]/value/value as NameDesSymptoms, 
+                                t/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value as Beginn, 
+                                t/data[at0190]/events[at0191]/data[at0192]/items[at0161]/value/value as Rueckgang " +
+                                $"FROM EHR e " +
+                                $"CONTAINS COMPOSITION c [openEHR-EHR-COMPOSITION.registereintrag.v1] " +
+                                $"CONTAINS OBSERVATION t[openEHR-EHR-OBSERVATION.symptom_sign.v0] " +
+                                $"WHERE c/name/value='COVID-19 Symptom' and  PatientenID='{patientId}' " +
+                                $"and Beginn = '{datum.Date.ToString("yyyy-MM-dd")}'");
+        }
+       
+        public static AQLQuery StayFromCase(string patientId, string fallId)
+        {
+            return new AQLQuery("StayFromCase", $@"SELECT e/ehr_id/value as PatientID, 
+                                    c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value as FallID,
+                                    j/data[at0001]/items[at0071]/value/value  as Datum_Uhrzeit_der_Aufnahme,
+                                    j/data[at0001]/items[at0013]/value/value as Versorgungsfallgrund, 
+                                    j/data[at0001]/items[at0049,'Aufnahmeanlass']/value/value as Aufnahmeanlass,
+                                    w/data[at0001]/items[at0040]/value/value as Art_der_Entlassung, 
+                                    w/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Datum_Uhrzeit_der_Entlassung
+                                    FROM EHR e 
+                                    CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
+                                    CONTAINS (ADMIN_ENTRY j[openEHR-EHR-ADMIN_ENTRY.admission.v0] and 
+                                    ADMIN_ENTRY w[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
+                                    WHERE PatientID='{patientId}' and FallID='{fallId}'");
+        }
+
+        public static AQLQuery CovidPat(string nachweis)
+        {          
+            return new AQLQuery("CovidPat", $@"SELECT e/ehr_id/value as PatientID, 
+                                i/items[at0001]/value/value as Fallkennung, 
+                                m/items[at0034]/value/value as Zeitpunkt_des_Probeneingangs 
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] and 
+                                OBSERVATION z[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
+                                CONTAINS (CLUSTER a[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] and CLUSTER m [openEHR-EHR-CLUSTER.specimen.v1])) 
+                                WHERE  a/items[at0001,'Nachweis']/value/defining_code/code_string='{nachweis}'and 
+                                a/items[at0024]/value/defining_code/code_string MATCHES {{'94500-6','94558-4', '94745-7'}}");
+        }
+
+        public static AQLQuery PatientBySymptom(string symptom)
+        {
+            return new AQLQuery("PatientBySymptom", $@"SELECT e/ehr_id/value as PatientenID, 
+                                t/data[at0190]/events[at0191]/data[at0192]/items[at0001]/value/value as NameDesSymptoms, 
+                                t/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value as Beginn, 
+                                t/data[at0190]/events[at0191]/data[at0192]/items[at0161]/value/value as Rueckgang 
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c [openEHR-EHR-COMPOSITION.registereintrag.v1] 
+                                CONTAINS OBSERVATION t[openEHR-EHR-OBSERVATION.symptom_sign.v0] 
+                                WHERE c/name/value='COVID-19 Symptom' and  
+                                t/data[at0190]/events[at0191]/data[at0192]/items[at0001]/value/value = '{symptom}'");
+        }
+
+        public static AQLQuery PatientSymptom()
+        {
+            return new AQLQuery("PatientBySymptom", $@"SELECT a/data[at0190]/events[at0191]/data[at0192]/items[at0001]/value/value as NameDesSymptoms, 
+                                COUNT(e/ehr_id/value) as Anzahl_Patienten 
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c CONTAINS OBSERVATION a[openEHR-EHR-OBSERVATION.symptom_sign.v0] 
+                                WHERE c/archetype_details/template_id='Symptom' GROUP BY NameDesSymptoms");
+        }
+
     }
 }
  

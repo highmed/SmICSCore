@@ -17,5 +17,8 @@ namespace SmICSCoreLib.AQL.PatientInformation
         List<PatientMovementModel> Patient_Bewegung_Ps(PatientListParameter parameter);
         List<MibiLabDataModel> MibiLabData(PatientListParameter parameter);
         List<SymptomModel> Patient_Symptom_TTPs(PatientListParameter parameter);
+        List<SymptomModel> Patient_Symptom();
+        List<SymptomModel> Patient_By_Symptom(string symptom);
+        List<SymptomModel> Symptoms_By_PatientId(string patientId, DateTime datum);
     }
 }
