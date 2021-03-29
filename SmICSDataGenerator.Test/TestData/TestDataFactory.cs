@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SmICSCoreLib.AQL;
 using SmICSCoreLib.REST;
@@ -109,7 +110,7 @@ namespace SmICSCoreLib.Tests.TestData
 
         private string ExistsPatient(RestDataAccess _data, string patientNo)
         {
-            List<Patient> patient = _data.AQLQuery<Patient>(AQLCatalog.GetEHRID(patientNo).Query);
+            List<Patient> patient = _data.AQLQuery<Patient>(AQLCatalog.GetEHRID(patientNo));
             return patient != null ? patient[0].PatientID : null;
         }
 
@@ -122,7 +123,7 @@ namespace SmICSCoreLib.Tests.TestData
             OpenehrConfig.openehrPassword = "etltestuser#01";
 
             RestClientConnector restClient = new RestClientConnector();
-            return new RestDataAccess(restClient);
+            return new RestDataAccess(NullLogger<RestDataAccess>.Instance, restClient);
 
         }
 

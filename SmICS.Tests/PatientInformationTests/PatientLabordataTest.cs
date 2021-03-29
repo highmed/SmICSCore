@@ -1,8 +1,5 @@
-﻿using Autofac.Extras.Moq;
-using SmICSCoreLib.AQL;
-using SmICSCoreLib.AQL.General;
+﻿using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten.ReceiveModel;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections;
@@ -36,15 +33,15 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                 Assert.Equal(expected[i].PatientID, actual[i].PatientID);
                 Assert.Equal(expected[i].FallID, actual[i].FallID);
                 Assert.Equal(expected[i].Befund, actual[i].Befund);
-                Assert.Equal(expected[i].Befunddatum.ToLocalTime(), actual[i].Befunddatum.ToLocalTime());
+                Assert.Equal(expected[i].Befunddatum.ToString("s"), actual[i].Befunddatum.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].Befundkommentar, actual[i].Befundkommentar);
                 Assert.Equal(expected[i].KeimID, actual[i].KeimID);
                 Assert.Equal(expected[i].LabordatenID, actual[i].LabordatenID);
                 Assert.Equal(expected[i].MaterialID, actual[i].MaterialID);
                 Assert.Equal(expected[i].Material_l, actual[i].Material_l);
                 Assert.Equal(expected[i].ProbeID, actual[i].ProbeID);
-                Assert.Equal(expected[i].ZeitpunktProbeneingang.ToLocalTime(), actual[i].ZeitpunktProbeneingang.ToLocalTime());
-                Assert.Equal(expected[i].ZeitpunktProbenentnahme.ToLocalTime(), actual[i].ZeitpunktProbenentnahme.ToLocalTime());
+                Assert.Equal(expected[i].ZeitpunktProbeneingang.ToString("s"), actual[i].ZeitpunktProbeneingang.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].ZeitpunktProbenentnahme.ToString("s"), actual[i].ZeitpunktProbenentnahme.ToUniversalTime().ToString("s"));
                 //Assert.Equal(expected[i].Fachabteilung, actual[i].Fachabteilung); --> Exisitiert noch nicht, muss aber eingebunden werden
             }
         }
@@ -54,7 +51,10 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
             public IEnumerator<object[]> GetEnumerator()
             {
                 List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
-                yield return new object[] { patient[0].EHR_ID, 0 };
+                for (int i = 0; i <= 17; i++)
+                {
+                    yield return new object[] { patient[i].EHR_ID, i };
+                }
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -81,8 +81,8 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                             MaterialID = "119342007",
                             Material_l = "Salvia specimen (specimen)",
                             ProbeID = "01",
-                            ZeitpunktProbeneingang = new DateTime(2021, 1, 1, 9, 30, 0),
-                            ZeitpunktProbenentnahme = new DateTime(2021, 1, 1, 10, 0, 0)
+                            ZeitpunktProbenentnahme = new DateTime(2021, 1, 1, 9, 30, 0),
+                            ZeitpunktProbeneingang = new DateTime(2021, 1, 1, 10, 0, 0)
                         },
                         new LabDataModel
                         {
@@ -96,8 +96,8 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                             MaterialID = "119342007",
                             Material_l = "Salvia specimen (specimen)",
                             ProbeID = "02",
-                            ZeitpunktProbeneingang = new DateTime(2021, 1, 3, 9, 30, 0),
-                            ZeitpunktProbenentnahme = new DateTime(2021, 1, 3, 10, 0, 0)
+                            ZeitpunktProbenentnahme = new DateTime(2021, 1, 3, 9, 30, 0),
+                            ZeitpunktProbeneingang = new DateTime(2021, 1, 3, 10, 0, 0)
                         },new LabDataModel
                         {
                             PatientID = patient[0].EHR_ID,
@@ -110,8 +110,8 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                             MaterialID = "119342007",
                             Material_l = "Salvia specimen (specimen)",
                             ProbeID = "03",
-                            ZeitpunktProbeneingang = new DateTime(2021, 1, 5, 9, 30, 0),
-                            ZeitpunktProbenentnahme = new DateTime(2021, 1, 5, 10, 0, 0)
+                            ZeitpunktProbenentnahme = new DateTime(2021, 1, 5, 9, 30, 0),
+                            ZeitpunktProbeneingang = new DateTime(2021, 1, 5, 10, 0, 0)
                         }
                     }
                 },
@@ -346,15 +346,15 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                             PatientID = patient[6].EHR_ID,
                             FallID = "00000007",
                             Befund = true,
-                            Befunddatum = new DateTime(2021, 1, 7, 9, 30, 0),
+                            Befunddatum = new DateTime(2021, 1, 5, 9, 30, 0),
                             Befundkommentar = "Kommentar 1",
                             KeimID = "94500-6",
                             LabordatenID = "01",
                             MaterialID = "119342007",
                             Material_l = "Salvia specimen (specimen)",
                             ProbeID = "01",
-                            ZeitpunktProbeneingang = new DateTime(2021, 1, 7, 10, 0, 0),
-                            ZeitpunktProbenentnahme = new DateTime(2021, 1, 7, 9, 30, 0)
+                            ZeitpunktProbeneingang = new DateTime(2021, 1, 5, 10, 0, 0),
+                            ZeitpunktProbenentnahme = new DateTime(2021, 1, 5, 9, 30, 0)
                         },
                         new LabDataModel
                         {
@@ -397,7 +397,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                             PatientID = patient[7].EHR_ID,
                             FallID = "00000008",
                             Befund = false,
-                            Befunddatum = new DateTime(2021, 1, 1, 9, 30, 0),
+                            Befunddatum = new DateTime(2021, 1, 10, 9, 30, 0),
                             Befundkommentar = "Kommentar 1",
                             KeimID = "94500-6",
                             LabordatenID = "02",
@@ -505,7 +505,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                             PatientID = patient[10].EHR_ID,
                             FallID = "00000011",
                             Befund = false,
-                            Befunddatum = new DateTime(2021, 1, 1, 9, 30, 0),
+                            Befunddatum = new DateTime(2021, 1, 11, 9, 30, 0),
                             Befundkommentar = "Kommentar 1",
                             KeimID = "94500-6",
                             LabordatenID = "02",

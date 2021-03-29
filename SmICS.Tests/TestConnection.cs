@@ -1,4 +1,5 @@
-﻿using SmICSCoreLib.REST;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using SmICSCoreLib.REST;
 using System;
 
 namespace SmICSDataGenerator.Tests
@@ -14,7 +15,7 @@ namespace SmICSDataGenerator.Tests
             OpenehrConfig.openehrPassword = "etltestuser#01";
 
             RestClientConnector restClient = new RestClientConnector();
-            return new RestDataAccess(restClient);
+            return new RestDataAccess(NullLogger<RestDataAccess>.Instance, restClient);
         }
     }
 }

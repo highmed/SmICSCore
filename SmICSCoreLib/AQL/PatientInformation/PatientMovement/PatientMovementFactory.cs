@@ -53,10 +53,6 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
                         {
                             episodeOfCare.Ende = discharges[0].Ende;
                         }
-                        if(episodeOfCare.Ende == DateTime.MinValue)
-                        {
-                            episodeOfCare.Ende = DateTime.Now;
-                        }
                     }
                     PatID_CaseId_Combination.Add(patfallID);
                 }
@@ -108,13 +104,16 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
         }
         private void addDischargeObject(PatientStayModel patientStay, EpisodeOfCareModel episodeOfCare, List<PatientMovementModel> patientMovementList)
         {
-            if (!(episodeOfCare is null) && patientStay.Ende == episodeOfCare.Ende)
+            if (episodeOfCare.Ende != DateTime.MinValue)
             {
-                PatientMovementModel patientMovement = new PatientMovementModel(patientStay);
-                patientMovement.Beginn = episodeOfCare.Ende;
-                patientMovement.AddMovementType(2, "Entlassung");
+                if (!(episodeOfCare is null) && patientStay.Ende == episodeOfCare.Ende)
+                {
+                    PatientMovementModel patientMovement = new PatientMovementModel(patientStay);
+                    patientMovement.Beginn = episodeOfCare.Ende;
+                    patientMovement.AddMovementType(2, "Entlassung");
 
-                patientMovementList.Add(patientMovement);
+                    patientMovementList.Add(patientMovement);
+                }
             }
         }
 

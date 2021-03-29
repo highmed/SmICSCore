@@ -87,7 +87,7 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
                 List<PatientLocation> patientLocations = _restData.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(flag.Datum, flag.PatientID));
 
                 PatientLocation patientLocation = null;
-                if (patientLocation == null)
+                if (patientLocations == null)
                 {
                     _logger.LogDebug("PatientLocation - Query Response Count: {LocationCount}", null);
                     patientLocation = new PatientLocation() { Ward = "ohne Stationsangabe", Departement = "0000" };
@@ -155,14 +155,12 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
         }
         private void DecrementOverallCount(string ward)
         {
-            //EpiCurveEntryByWard[ward].Anzahl_cs -= 1;
             EpiCurveEntryByWard[ward].anzahl_gesamt -= 1;
         }
         private void IncrementCounts(string ward)
         {
             EpiCurveEntryByWard[ward].Anzahl += 1;
             EpiCurveEntryByWard[ward].anzahl_gesamt += 1;
-            //EpiCurveEntryByWard[ward].Anzahl_cs += 1;
         }
         private void DataAggregationStorageToList()
         {

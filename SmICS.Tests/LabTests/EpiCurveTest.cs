@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.Moq;
+using Microsoft.Extensions.Logging.Abstractions;
 using SmICSCoreLib.AQL;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.Lab.EpiKurve;
@@ -25,7 +26,7 @@ namespace SmICSDataGenerator.Tests.LabTests
                 PathogenCodes = new List<string>() { "94500-6", "94745-7", "94558-4" }
             };
 
-            EpiCurveFactory epiCurveFactory = new EpiCurveFactory(_data);
+            EpiCurveFactory epiCurveFactory = new EpiCurveFactory(_data, NullLogger<EpiCurveFactory>.Instance);
             List<EpiCurveModel> actual = epiCurveFactory.Process(parameter);
             List<EpiCurveModel> expected = GetExpectedEpiCurveModels();
 

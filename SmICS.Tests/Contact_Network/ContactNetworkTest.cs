@@ -1,4 +1,11 @@
-﻿using SmICSCoreLib.AQL.Contact_Nth_Network;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using SmICSCoreLib.AQL.Contact_Nth_Network;
+using SmICSCoreLib.AQL.PatientInformation;
+using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
+using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
+using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
+using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
+using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections;
@@ -23,20 +30,41 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				Endtime = new DateTime(end_year, end_month, end_day)
 			};
 
-			ContactNetworkFactory factory = new ContactNetworkFactory(_data);
-			List<ContactModel> actual = factory.Process(contactParams);
-			List<ContactModel> expected = getExpectedContactModels(expectedResultSet);
+			IPatientInformation patientInformation = CreatePatientInformation(_data);
+			ContactNetworkFactory factory = new ContactNetworkFactory(_data, NullLogger<ContactNetworkFactory>.Instance, patientInformation);
+			ContactModel actual = factory.Process(contactParams);
+			ContactModel expected = getExpectedContactModels(expectedResultSet);
 
-			Assert.Equal(expected.Count, actual.Count);
+			Assert.Equal(expected.PatientMovements.Count, actual.PatientMovements.Count);
+			Assert.Equal(expected.LaborData.Count, actual.LaborData.Count);
 
-			for (int i = 0; i < actual.Count; i++)
+			for (int i = 0; i < actual.PatientMovements.Count; i++)
 			{
-				Assert.Equal(expected[i].paID, actual[i].paID);
-				Assert.Equal(expected[i].pbID, actual[i].pbID);
-				Assert.Equal(expected[i].Beginn.ToLocalTime(), actual[i].Beginn.ToLocalTime());
-				Assert.Equal(expected[i].Ende.ToLocalTime(), actual[i].Ende.ToLocalTime());
-				Assert.Equal(expected[i].StationID, actual[i].StationID);
-				Assert.Equal(expected[i].Grad, actual[i].Grad);
+				Assert.Equal(expected.PatientMovements[i].PatientID, actual.PatientMovements[i].PatientID);
+				Assert.Equal(expected.PatientMovements[i].FallID, actual.PatientMovements[i].FallID);
+				Assert.Equal(expected.PatientMovements[i].Bewegungsart_l, actual.PatientMovements[i].Bewegungsart_l);
+				Assert.Equal(expected.PatientMovements[i].Bewegungstyp, actual.PatientMovements[i].Bewegungstyp);
+				Assert.Equal(expected.PatientMovements[i].BewegungstypID, actual.PatientMovements[i].BewegungstypID);
+				Assert.Equal(expected.PatientMovements[i].Beginn.ToString("s"), actual.PatientMovements[i].Beginn.ToString("s"));
+				Assert.Equal(expected.PatientMovements[i].Ende.ToString("g"), actual.PatientMovements[i].Ende.ToString("g"));
+				Assert.Equal(expected.PatientMovements[i].StationID, actual.PatientMovements[i].StationID);
+				Assert.Equal(expected.PatientMovements[i].Raum, actual.PatientMovements[i].Raum);
+			}
+
+			for (int i = 0; i < actual.LaborData.Count; i++)
+			{
+				Assert.Equal(expected.LaborData[i].PatientID, actual.LaborData[i].PatientID);
+				Assert.Equal(expected.LaborData[i].FallID, actual.LaborData[i].FallID);
+				Assert.Equal(expected.LaborData[i].Befund, actual.LaborData[i].Befund);
+				Assert.Equal(expected.LaborData[i].Befunddatum.ToString("s"), actual.LaborData[i].Befunddatum.ToUniversalTime().ToString("s"));
+				Assert.Equal(expected.LaborData[i].Befundkommentar, actual.LaborData[i].Befundkommentar);
+				Assert.Equal(expected.LaborData[i].KeimID, actual.LaborData[i].KeimID);
+				Assert.Equal(expected.LaborData[i].LabordatenID, actual.LaborData[i].LabordatenID);
+				Assert.Equal(expected.LaborData[i].MaterialID, actual.LaborData[i].MaterialID);
+				Assert.Equal(expected.LaborData[i].Material_l, actual.LaborData[i].Material_l);
+				Assert.Equal(expected.LaborData[i].ProbeID, actual.LaborData[i].ProbeID);
+				Assert.Equal(expected.LaborData[i].ZeitpunktProbeneingang.ToString("s"), actual.LaborData[i].ZeitpunktProbeneingang.ToUniversalTime().ToString("s"));
+				Assert.Equal(expected.LaborData[i].ZeitpunktProbenentnahme.ToString("s"), actual.LaborData[i].ZeitpunktProbenentnahme.ToUniversalTime().ToString("s"));
 			}
 		}
 
@@ -51,1400 +79,568 @@ namespace SmICSDataGenerator.Tests.Contact_Network
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-		private List<ContactModel> getExpectedContactModels(int ResultSetID)
+		private ContactModel getExpectedContactModels(int ResultSetID)
 		{
 			List<PatientIDs> patients = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
-			Dictionary<int, List<ContactModel>> ResultSet = new Dictionary<int, List<ContactModel>>
+			Dictionary<int, ContactModel> ResultSet = new Dictionary<int, ContactModel>
 			{
 				{ 
 					0, 
-					new List<ContactModel>()
+					new ContactModel()
 					{
-						new ContactModel
+						PatientMovements = new List<PatientMovementModel>
 						{
-							paID = patients[0].EHR_ID,
-							pbID = patients[1].EHR_ID,
-							Beginn = DateTime.Parse("2021-01-02 09:00:00+01:00"),
-							Ende = DateTime.Parse("2021-01-05 15:00:00+01:00"),
-							Grad = 1,
-							StationID = "Coronastation"
-						},
-						new ContactModel
-						{
-							paID = patients[0].EHR_ID,
-							pbID = patients[3].EHR_ID,
-							Beginn = DateTime.Parse("2021-01-03 09:00:00+01:00"),
-							Ende = DateTime.Parse("2021-01-05 15:00:00+01:00"),
-							Grad = 1,
-							StationID = "Coronastation"
-						},
-						new ContactModel
-						{
-							paID = patients[0].EHR_ID,
-							pbID = patients[2].EHR_ID,
-							Beginn = DateTime.Parse("2021-01-03 11:00:00+01:00"),
-							Ende = DateTime.Parse("2021-01-05 15:00:00+01:00"),
-							Grad = 1,
-							StationID = "Coronastation"
-						},
-						new ContactModel
-						{
-							paID = patients[0].EHR_ID,
-							pbID = patients[5].EHR_ID,
-							Beginn = DateTime.Parse("2021-01-04 09:00:00+01:00"),
-							Ende = DateTime.Parse("2021-01-05 15:00:00+01:00"),
-							Grad = 1,
-							StationID = "Coronastation"
-						},
-						new ContactModel
-						{
-							paID = patients[0].EHR_ID,
-							pbID = patients[4].EHR_ID,
-							Beginn = DateTime.Parse("2021-01-04 15:30:00+01:00"),
-							Ende = DateTime.Parse("2021-01-05 15:00:00+01:00"),
-							Grad = 1,
-							StationID = "Coronastation"
-						},new ContactModel
-						{
-							paID = patients[0].EHR_ID,
-							pbID = patients[6].EHR_ID,
-							Beginn = DateTime.Parse("2021-01-05 09:00:00+01:00"),
-							Ende = DateTime.Parse("2021-01-05 15:00:00+01:00"),
-							Grad = 1,
-							StationID = "Coronastation"
+							new PatientMovementModel
+							{
+								PatientID = patients[0].EHR_ID,
+								FallID = "00000001",
+								BewegungstypID = 1,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Aufnahme",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 1, 9, 0, 0),
+								Ende = new DateTime(2021, 1, 1, 9, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[0].EHR_ID,
+								FallID = "00000001",
+								BewegungstypID = 3,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Wechsel",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 1, 9, 0, 0),
+								Ende = new DateTime(2021, 1, 5, 15, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[0].EHR_ID,
+								FallID = "00000001",
+								BewegungstypID = 2,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Entlassung",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 5, 15, 0, 0),
+								Ende = new DateTime(2021, 1, 5, 15, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[1].EHR_ID,
+								FallID = "00000002",
+								BewegungstypID = 1,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Aufnahme",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 2, 9, 0, 0),
+								Ende = new DateTime(2021, 1, 2, 9, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[1].EHR_ID,
+								FallID = "00000002",
+								BewegungstypID = 3,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Wechsel",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 2, 9, 0, 0),
+								Ende = new DateTime(2021, 1, 7, 15, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[1].EHR_ID,
+								FallID = "00000002",
+								BewegungstypID = 2,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Entlassung",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 7, 15, 0, 0),
+								Ende = new DateTime(2021, 1, 7, 15, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[3].EHR_ID,
+								FallID = "00000004",
+								BewegungstypID = 1,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Aufnahme",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 3, 9, 0, 0),
+								Ende = new DateTime(2021, 1, 3, 9, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[3].EHR_ID,
+								FallID = "00000004",
+								BewegungstypID = 3,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Wechsel",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 3, 9, 0, 0),
+								Ende = new DateTime(2021, 1, 9, 15, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[3].EHR_ID,
+								FallID = "00000004",
+								BewegungstypID = 2,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Entlassung",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 9, 15, 0, 0),
+								Ende = new DateTime(2021, 1, 9, 15, 0, 0)
+							},
+							 new PatientMovementModel
+							{
+								PatientID = patients[2].EHR_ID,
+								FallID = "00000003",
+								BewegungstypID = 1,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Aufnahme",
+								Raum = "Zimmerkennung 101",
+								StationID = "Stationskennung X",
+								Beginn = new DateTime(2021, 1, 2, 9, 0, 0),
+								Ende = new DateTime(2021, 1, 2, 9, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[2].EHR_ID,
+								FallID = "00000003",
+								BewegungstypID = 3,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Wechsel",
+								Raum = "Zimmerkennung 101",
+								StationID = "Stationskennung X",
+								Beginn = new DateTime(2021, 1, 2, 9, 0, 0),
+								Ende = new DateTime(2021, 1, 3, 11, 0, 0)
+							}
+							,new PatientMovementModel
+							{
+								PatientID = patients[2].EHR_ID,
+								FallID = "00000003",
+								BewegungstypID = 3,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Wechsel",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 3, 11, 0, 0),
+								Ende = new DateTime(2021, 1, 9, 15, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[2].EHR_ID,
+								FallID = "00000003",
+								BewegungstypID = 2,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Entlassung",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 9, 15, 0, 0),
+								Ende = new DateTime(2021, 1, 9, 15, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[5].EHR_ID,
+								FallID = "00000006",
+								BewegungstypID = 1,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Aufnahme",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 4, 9, 0, 0),
+								Ende = new DateTime(2021, 1, 4, 9, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[5].EHR_ID,
+								FallID = "00000006",
+								BewegungstypID = 3,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Wechsel",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 4, 9, 0, 0),
+								Ende = DateTime.Now
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[4].EHR_ID,
+								FallID = "00000005",
+								BewegungstypID = 1,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Aufnahme",
+								Raum = "Zimmerkennung 101",
+								StationID = "Stationskennung X",
+								Beginn = new DateTime(2021, 1, 2, 9, 0, 0),
+								Ende = new DateTime(2021, 1, 2, 9, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[4].EHR_ID,
+								FallID = "00000005",
+								BewegungstypID = 3,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Wechsel",
+								Raum = "Zimmerkennung 101",
+								StationID = "Stationskennung X",
+								Beginn = new DateTime(2021, 1, 2, 9, 0, 0),
+								Ende = new DateTime(2021, 1, 4, 15, 30, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[4].EHR_ID,
+								FallID = "00000005",
+								BewegungstypID = 3,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Wechsel",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 4, 15, 30, 0),
+								Ende = new DateTime(2021, 1, 6, 16, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[4].EHR_ID,
+								FallID = "00000005",
+								BewegungstypID = 3,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Wechsel",
+								Raum = "Zimmerkennung 101",
+								StationID = "Stationskennung Y",
+								Beginn = new DateTime(2021, 1, 6, 16, 0, 0),
+								Ende = new DateTime(2021, 1, 8, 14, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[4].EHR_ID,
+								FallID = "00000005",
+								BewegungstypID = 3,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Wechsel",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 8, 14, 0, 0),
+								Ende = DateTime.Now
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[6].EHR_ID,
+								FallID = "00000007",
+								BewegungstypID = 1,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Aufnahme",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 5, 9, 0, 0),
+								Ende = new DateTime(2021, 1, 5, 9, 0, 0)
+							},
+							new PatientMovementModel
+							{
+								PatientID = patients[6].EHR_ID,
+								FallID = "00000007",
+								BewegungstypID = 3,
+								Bewegungsart_l = "Diagn./Therap.",
+								Bewegungstyp = "Wechsel",
+								Raum = "Zimmerkennung 101",
+								StationID = "Coronastation",
+								Beginn = new DateTime(2021, 1, 5, 9, 0, 0),
+								Ende = DateTime.Now
+							}
+						},	
+						LaborData = new List<LabDataModel>
+                        {
+							new LabDataModel
+							{
+								PatientID = patients[0].EHR_ID,
+								FallID = "00000001",
+								Befund = true,
+								Befunddatum = new DateTime(2021, 1, 1, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "01",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "01",
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 1, 9, 30, 0),
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 1, 10, 0, 0)
+							},
+							new LabDataModel
+							{
+								PatientID = patients[0].EHR_ID,
+								FallID = "00000001",
+								Befund = false,
+								Befunddatum = new DateTime(2021, 1, 3, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "02",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "02",
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 3, 9, 30, 0),
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 3, 10, 0, 0)
+							},new LabDataModel
+							{
+								PatientID = patients[0].EHR_ID,
+								FallID = "00000001",
+								Befund = false,
+								Befunddatum = new DateTime(2021, 1, 5, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "03",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "03",
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 5, 9, 30, 0),
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 5, 10, 0, 0)
+							},
+							new LabDataModel
+							{
+								PatientID = patients[1].EHR_ID,
+								FallID = "00000002",
+								Befund = true,
+								Befunddatum = new DateTime(2021, 1, 2, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "01",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "01",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 2, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 2, 9, 30, 0)
+							},new LabDataModel
+							{
+								PatientID = patients[1].EHR_ID,
+								FallID = "00000002",
+								Befund = false,
+								Befunddatum = new DateTime(2021, 1, 4, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "02",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "02",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 4, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 4, 9, 30, 0)
+							},
+							new LabDataModel
+							{
+								PatientID = patients[1].EHR_ID,
+								FallID = "00000002",
+								Befund = false,
+								Befunddatum = new DateTime(2021, 1, 7, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "03",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "03",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 7, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 7, 9, 30, 0)
+							},
+							new LabDataModel
+							{
+								PatientID = patients[3].EHR_ID,
+								FallID = "00000004",
+								Befund = true,
+								Befunddatum = new DateTime(2021, 1, 3, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "01",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "01",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 3, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 3, 9, 30, 0)
+							},new LabDataModel
+							{
+								PatientID = patients[3].EHR_ID,
+								FallID = "00000004",
+								Befund = false,
+								Befunddatum = new DateTime(2021, 1, 6, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "02",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "02",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 6, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 6, 9, 30, 0)
+							},
+							new LabDataModel
+							{
+								PatientID = patients[3].EHR_ID,
+								FallID = "00000004",
+								Befund = false,
+								Befunddatum = new DateTime(2021, 1, 9, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "03",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "03",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 9, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 9, 9, 30, 0)
+							},
+							 new LabDataModel
+							{
+								PatientID = patients[2].EHR_ID,
+								FallID = "00000003",
+								Befund = true,
+								Befunddatum = new DateTime(2021, 1, 3, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "01",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "01",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 3, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 3, 9, 30, 0)
+							},
+							new LabDataModel
+							{
+								PatientID = patients[2].EHR_ID,
+								FallID = "00000003",
+								Befund = false,
+								Befunddatum = new DateTime(2021, 1, 7, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "02",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "02",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 7, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 7, 9, 30, 0)
+							},new LabDataModel
+							{
+								PatientID = patients[2].EHR_ID,
+								FallID = "00000003",
+								Befund = false,
+								Befunddatum = new DateTime(2021, 1, 9, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "03",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "03",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 9, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 9, 9, 30, 0)
+							},
+							new LabDataModel
+							{
+								PatientID = patients[5].EHR_ID,
+								FallID = "00000006",
+								Befund = true,
+								Befunddatum = new DateTime(2021, 1, 4, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "01",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "01",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 4, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 4, 9, 30, 0)
+							},
+							new LabDataModel
+							{
+								PatientID = patients[5].EHR_ID,
+								FallID = "00000006",
+								Befund = false,
+								Befunddatum = new DateTime(2021, 1, 9, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "02",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "02",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 9, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 9, 9, 30, 0)
+							},
+							 new LabDataModel
+							{
+								PatientID = patients[4].EHR_ID,
+								FallID = "00000005",
+								Befund = true,
+								Befunddatum = new DateTime(2021, 1, 4, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "01",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "01",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 4, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 4, 9, 30, 0)
+							},
+							new LabDataModel
+							{
+								PatientID = patients[4].EHR_ID,
+								FallID = "00000005",
+								Befund = false,
+								Befunddatum = new DateTime(2021, 1, 8, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "02",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "02",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 8, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 8, 9, 30, 0)
+							},
+							new LabDataModel
+							{
+								PatientID = patients[6].EHR_ID,
+								FallID = "00000007",
+								Befund = true,
+								Befunddatum = new DateTime(2021, 1, 5, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "01",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "01",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 5, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 5, 9, 30, 0)
+							},
+							new LabDataModel
+							{
+								PatientID = patients[6].EHR_ID,
+								FallID = "00000007",
+								Befund = false,
+								Befunddatum = new DateTime(2021, 1, 9, 9, 30, 0),
+								Befundkommentar = "Kommentar 1",
+								KeimID = "94500-6",
+								LabordatenID = "02",
+								MaterialID = "119342007",
+								Material_l = "Salvia specimen (specimen)",
+								ProbeID = "02",
+								ZeitpunktProbeneingang = new DateTime(2021, 1, 9, 10, 0, 0),
+								ZeitpunktProbenentnahme = new DateTime(2021, 1, 9, 9, 30, 0)
+							}
 						}
-					} }	
+					}
+				}	
 			};
 
 			return ResultSet[ResultSetID];
 		}
-            /*return new List<ContactModel>()
-            {
-				new ContactModel
-				{
-					paID = patients[0].EHR_ID,
-					pbID = patients[1].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-02 09:00:00"),
-					Ende = DateTime.Parse("2021-01-05 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[0].EHR_ID,
-					pbID = patients[2].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-03 11:00:00"),
-					Ende = DateTime.Parse("2021-01-05 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[0].EHR_ID,
-					pbID = patients[3].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-03 09:00:00"),
-					Ende = DateTime.Parse("2021-01-05 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[0].EHR_ID,
-					pbID = patients[4].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-04 15:30:00"),
-					Ende = DateTime.Parse("2021-01-05 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[0].EHR_ID,
-					pbID = patients[5].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
-					Ende = DateTime.Parse("2021-01-05 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[1].EHR_ID,
-					pbID = patients[2].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-03 11:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[1].EHR_ID,
-					pbID = patients[3].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-03 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[1].EHR_ID,
-					pbID = patients[4].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-04 15:30:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[1].EHR_ID,
-					pbID = patients[5].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[1].EHR_ID,
-					pbID = ehrID.Patient23,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[1].EHR_ID,
-					pbID = ehrID.Patient24,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[1].EHR_ID,
-					pbID = ehrID.Patient25,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[1].EHR_ID,
-					pbID = ehrID.Patient26,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[1].EHR_ID,
-					pbID = ehrID.Patient29,
-					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[1].EHR_ID,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[2].EHR_ID,
-					pbID = patients[4].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-02 09:00:00"),
-					Ende = DateTime.Parse("2021-01-03 11:00:00"),
-					Grad = 1,
-					StationID = "Kardiologie"
-				},
-				new ContactModel
-				{
-					paID = patients[2].EHR_ID,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-01 09:00:00"),
-					Ende = DateTime.Parse("2021-01-03 11:00:00"),
-					Grad = 1,
-					StationID = "Kardiologie"
-				},
-				new ContactModel
-				{
-					paID = patients[2].EHR_ID,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-01 09:00:00"),
-					Ende = DateTime.Parse("2021-01-03 11:00:00"),
-					Grad = 1,
-					StationID = "Kardiologie"
-				},
-				new ContactModel
-				{
-					paID = patients[2].EHR_ID,
-					pbID = patients[3].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-03 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[2].EHR_ID,
-					pbID = patients[4].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-04 15:30:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[2].EHR_ID,
-					pbID = patients[5].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[2].EHR_ID,
-					pbID = ehrID.Patient23,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[2].EHR_ID,
-					pbID = ehrID.Patient24,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[2].EHR_ID,
-					pbID = ehrID.Patient25,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[2].EHR_ID,
-					pbID = ehrID.Patient26,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[2].EHR_ID,
-					pbID = ehrID.Patient29,
-					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[2].EHR_ID,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
-					Ende = DateTime.Parse("2021-01-07 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = patients[4].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-04 15:30:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = patients[4].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-08 14:00:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = patients[5].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = ehrID.Patient23,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = ehrID.Patient24,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = ehrID.Patient25,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = ehrID.Patient26,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = ehrID.Patient27,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = ehrID.Patient28,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = ehrID.Patient29,
-					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = ehrID.Patient31,
-					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[3].EHR_ID,
-					pbID = ehrID.Patient33,
-					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
-					Ende = DateTime.Parse("2021-01-09 15:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient27,
-					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
-					Ende = DateTime.Parse("2021-01-04 15:30:00"),
-					Grad = 1,
-					StationID = "Kardiologie"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-01 09:00:00"),
-					Ende = DateTime.Parse("2021-01-04 15:30:00"),
-					Grad = 1,
-					StationID = "Kardiologie"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-01 09:00:00"),
-					Ende = DateTime.Parse("2021-01-04 15:30:00"),
-					Grad = 1,
-					StationID = "Kardiologie"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = patients[5].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
-					Ende = DateTime.Parse("2021-01-06 16:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient23,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-06 16:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient24,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-06 16:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient25,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-06 16:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient26,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-01-06 16:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = patients[5].EHR_ID,
-					Beginn = DateTime.Parse("2021-01-04 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient23,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient24,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient25,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient26,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient27,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient28,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient29,
-					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient31,
-					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient33,
-					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[4].EHR_ID,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[5].EHR_ID,
-					pbID = ehrID.Patient23,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[5].EHR_ID,
-					pbID = ehrID.Patient24,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[5].EHR_ID,
-					pbID = ehrID.Patient25,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[5].EHR_ID,
-					pbID = ehrID.Patient26,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[5].EHR_ID,
-					pbID = ehrID.Patient27,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[5].EHR_ID,
-					pbID = ehrID.Patient28,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[5].EHR_ID,
-					pbID = ehrID.Patient29,
-					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[5].EHR_ID,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[5].EHR_ID,
-					pbID = ehrID.Patient31,
-					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[5].EHR_ID,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[5].EHR_ID,
-					pbID = ehrID.Patient33,
-					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = patients[5].EHR_ID,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient23,
-					pbID = ehrID.Patient24,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient23,
-					pbID = ehrID.Patient25,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient23,
-					pbID = ehrID.Patient26,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient23,
-					pbID = ehrID.Patient27,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient23,
-					pbID = ehrID.Patient28,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient23,
-					pbID = ehrID.Patient29,
-					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient23,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient23,
-					pbID = ehrID.Patient31,
-					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient23,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient23,
-					pbID = ehrID.Patient33,
-					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient23,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient24,
-					pbID = ehrID.Patient25,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient24,
-					pbID = ehrID.Patient26,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient24,
-					pbID = ehrID.Patient27,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient24,
-					pbID = ehrID.Patient28,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient24,
-					pbID = ehrID.Patient29,
-					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient24,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient24,
-					pbID = ehrID.Patient31,
-					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient24,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient24,
-					pbID = ehrID.Patient33,
-					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient24,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient25,
-					pbID = ehrID.Patient26,
-					Beginn = DateTime.Parse("2021-01-06 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient25,
-					pbID = ehrID.Patient27,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient25,
-					pbID = ehrID.Patient28,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient25,
-					pbID = ehrID.Patient29,
-					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient25,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient25,
-					pbID = ehrID.Patient31,
-					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient25,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient25,
-					pbID = ehrID.Patient33,
-					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient25,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient26,
-					pbID = ehrID.Patient27,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient26,
-					pbID = ehrID.Patient28,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient26,
-					pbID = ehrID.Patient29,
-					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient26,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient26,
-					pbID = ehrID.Patient31,
-					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient26,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient26,
-					pbID = ehrID.Patient33,
-					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient26,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient27,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-01 09:00:00"),
-					Ende = DateTime.Parse("2021-01-06 08:00:00"),
-					Grad = 1,
-					StationID = "Kardiologie"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient27,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-01 09:00:00"),
-					Ende = DateTime.Parse("2021-01-06 08:00:00"),
-					Grad = 1,
-					StationID = "Kardiologie"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient27,
-					pbID = ehrID.Patient31,
-					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 16:00:00"),
-					Grad = 1,
-					StationID = "Radiologie"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient27,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-03 12:00:00"),
-					Ende = DateTime.Parse("2021-01-07 16:00:00"),
-					Grad = 1,
-					StationID = "Radiologie"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient27,
-					pbID = ehrID.Patient28,
-					Beginn = DateTime.Parse("2021-01-07 16:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient27,
-					pbID = ehrID.Patient29,
-					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient27,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient27,
-					pbID = ehrID.Patient31,
-					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient27,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient27,
-					pbID = ehrID.Patient33,
-					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient27,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient28,
-					pbID = ehrID.Patient29,
-					Beginn = DateTime.Parse("2021-01-07 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient28,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient28,
-					pbID = ehrID.Patient31,
-					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient28,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient28,
-					pbID = ehrID.Patient33,
-					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient28,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient29,
-					pbID = ehrID.Patient30,
-					Beginn = DateTime.Parse("2021-01-07 14:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient29,
-					pbID = ehrID.Patient31,
-					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient29,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient29,
-					pbID = ehrID.Patient33,
-					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient29,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient30,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-01 09:00:00"),
-					Ende = DateTime.Parse("2021-01-07 14:00:00"),
-					Grad = 1,
-					StationID = "Kardiologie"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient30,
-					pbID = ehrID.Patient31,
-					Beginn = DateTime.Parse("2021-01-08 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient30,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient30,
-					pbID = ehrID.Patient33,
-					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient30,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient31,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-03 12:00:00"),
-					Ende = DateTime.Parse("2021-01-08 13:00:00"),
-					Grad = 1,
-					StationID = "Radiologie"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient31,
-					pbID = ehrID.Patient32,
-					Beginn = DateTime.Parse("2021-01-09 13:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient31,
-					pbID = ehrID.Patient33,
-					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient31,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient32,
-					pbID = ehrID.Patient33,
-					Beginn = DateTime.Parse("2021-01-09 09:00:00"),
-					Ende = DateTime.Parse("2021-01-10 20:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient32,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
-					Ende = DateTime.Parse("2021-01-10 20:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient32,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 18:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Intensivstation"
-				},
-				new ContactModel
-				{
-					paID = ehrID.Patient33,
-					pbID = ehrID.Patient34,
-					Beginn = DateTime.Parse("2021-01-10 09:00:00"),
-					Ende = DateTime.Parse("2021-02-01 00:00:00"),
-					Grad = 1,
-					StationID = "Coronastation"
-				}
+		
+		private PatientInformation CreatePatientInformation(IRestDataAccess rest)
+        {
 
-			};*/
-        
+			IPatientMovementFactory patMoveFac = new PatientMovementFactory(rest);
+			IPatientLabordataFactory patLabFac = new PatientLabordataFactory(rest);
+			ISymptomFactory symptomFac = new SymptomFactory(rest);
+			IMibiPatientLaborDataFactory mibiLabFac = new MibiPatientLaborDataFactory(rest);
+
+			return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac);
+
+		}
     }
 }

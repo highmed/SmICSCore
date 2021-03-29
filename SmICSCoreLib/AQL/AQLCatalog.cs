@@ -60,7 +60,7 @@ namespace SmICSCoreLib.AQL
                                 CONTAINS (CLUSTER l[openEHR-EHR-CLUSTER.location.v1] and CLUSTER o[openEHR-EHR-CLUSTER.organization.v0])
                                 WHERE c/name/value='Patientenaufenthalt' 
                                 and h/data[at0001]/items[at0004]/value/value <= '{ parameter.Endtime.ToString("o") }' 
-                                and (h/data[at0001]/items[at0004]/value/value >= '{ parameter.Starttime.ToString("o") }'
+                                and (h/data[at0001]/items[at0005]/value/value >= '{ parameter.Starttime.ToString("o") }'
                                 or NOT EXISTS h/data[at0001]/items[at0005]/value/value)
                                 and l/items[at0027]/value/value = '{ parameter.WardID }' 
                                 ORDER BY h/data[at0001]/items[at0004]/value/value");
@@ -85,7 +85,7 @@ namespace SmICSCoreLib.AQL
                                 WHERE c/name/value = 'Patientenaufenthalt'
                                 AND i/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)'
                                 AND e/ehr_id/value MATCHES {patientList.ToAQLMatchString()}
-                                ORDER BY e/ehr_id/value ASC, h/items[at0004]/value/value ASC");
+                                ORDER BY e/ehr_id/value ASC, h/data[at0001]/items[at0004]/value/value ASC");
         }
         public static AQLQuery PatientAdmission(EpsiodeOfCareParameter parameter)
         {
@@ -115,8 +115,8 @@ namespace SmICSCoreLib.AQL
                                     a/items[at0001]/value/id as LabordatenID,
                                     a/items[at0029]/value/defining_code/code_string as MaterialID,
                                     a/items[at0029]/value/value as Material_l,
-                                    a/items[at0034]/value/value as ZeitpunktProbenentnahme,
-                                    a/items[at0015]/value/value as ZeitpunktProbeneingang,
+                                    a/items[at0015]/value/value as ZeitpunktProbenentnahme,
+                                    a/items[at0034]/value/value as ZeitpunktProbeneingang,
                                     d/items[at0024]/value/value as Keim_l,
                                     d/items[at0024]/value/defining_code/code_string as KeimID,
                                     d/items[at0001,'Nachweis']/value/value as Befund,
