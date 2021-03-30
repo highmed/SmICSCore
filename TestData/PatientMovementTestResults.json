@@ -488,7 +488,7 @@
             "Raum": "Zimmerkennung 101",
             "StationID": "Coronastation",
             "Beginn": "2021-01-09T13:00:00",
-            "Ende": "2021-01-010T20:00:00"
+            "Ende": "2021-01-10T20:00:00"
         },
         {
             "FallID": "00000016",
@@ -497,7 +497,7 @@
             "Bewegungstyp": "Wechsel",
             "Raum": "Zimmerkennung 101",
             "StationID": "Stationskennung Y",
-            "Beginn": "2021-01-010T20:00:00",
+            "Beginn": "2021-01-10T20:00:00",
             "Ende": null
         }
     ],
@@ -531,8 +531,8 @@
             "Bewegungstyp": "Aufnahme",
             "Raum": "Zimmerkennung 101",
             "StationID": "Coronastation",
-            "Beginn": "2021-01-010T09:00:00",
-            "Ende": "2021-01-010T09:00:00"
+            "Beginn": "2021-01-10T09:00:00",
+            "Ende": "2021-01-10T09:00:00"
         },
         {
             "FallID": "00000018",
@@ -541,8 +541,8 @@
             "Bewegungstyp": "Wechsel",
             "Raum": "Zimmerkennung 101",
             "StationID": "Coronastation",
-            "Beginn": "2021-01-010T09:00:00",
-            "Ende": "2021-01-010T18:00:00"
+            "Beginn": "2021-01-10T09:00:00",
+            "Ende": "2021-01-10T18:00:00"
         },
         {
             "FallID": "00000018",
@@ -551,7 +551,7 @@
             "Bewegungstyp": "Wechsel",
             "Raum": "Zimmerkennung 101",
             "StationID": "Stationskennung Y",
-            "Beginn": "2021-01-010T18:00:00",
+            "Beginn": "2021-01-10T18:00:00",
             "Ende": null
         }
     ]

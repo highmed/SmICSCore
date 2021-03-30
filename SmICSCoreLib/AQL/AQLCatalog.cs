@@ -44,7 +44,7 @@ namespace SmICSCoreLib.AQL
                                 CONTAINS (CLUSTER l[openEHR-EHR-CLUSTER.location.v1] and CLUSTER o[openEHR-EHR-CLUSTER.organization.v0])
                                 WHERE c/name/value='Patientenaufenthalt' 
                                 and h/data[at0001]/items[at0004]/value/value <= '{ parameter.Endtime.ToString("o") }' 
-                                and (h/data[at0001]/items[at0004]/value/value >= '{ parameter.Starttime.ToString("o") }'
+                                and (h/data[at0001]/items[at0005]/value/value >= '{ parameter.Starttime.ToString("o") }'
                                 or NOT EXISTS h/data[at0001]/items[at0005]/value/value)
                                 and o/items[at0024]/value/defining_code/code_string = '{ parameter.Departement }' 
                                 and l/items[at0027]/value/value = '{ parameter.WardID }' 
@@ -131,7 +131,8 @@ namespace SmICSCoreLib.AQL
                                             and CLUSTER b[openEHR-EHR-CLUSTER.laboratory_test_panel.v0]
                                                 CONTAINS (CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1])))
                                     WHERE c/name/value = 'Virologischer Befund'
-                                    AND e/ehr_id/value MATCHES { patientList.ToAQLMatchString() }");
+                                    AND e/ehr_id/value MATCHES { patientList.ToAQLMatchString() }
+                                    ORDER BY a/items[at0015]/value/value ASC");
         }
         public static AQLQuery NECPatientLaborData(string PatientID, TimespanParameter timespan)
         {

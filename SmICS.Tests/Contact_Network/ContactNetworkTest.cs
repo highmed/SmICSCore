@@ -7,6 +7,7 @@ using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using SmICSCoreLib.REST;
+using SmICSFactory.Tests;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -74,6 +75,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
             {
 				List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
 				yield return new object[] { 1, patient[0].EHR_ID, 2021, 1, 1, 2021, 1, 10, 0 };
+				yield return new object[] { 1, patient[1].EHR_ID, 2021, 1, 1, 2021, 1, 10, 1 };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -81,556 +83,19 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 
 		private ContactModel getExpectedContactModels(int ResultSetID)
 		{
-			List<PatientIDs> patients = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
-			Dictionary<int, ContactModel> ResultSet = new Dictionary<int, ContactModel>
+			Dictionary<int, List<int>> ResultSet = new Dictionary<int, List<int>>
 			{
-				#region Test 0
 				{
-                    0, 
-					new ContactModel()
-					{
-						PatientMovements = new List<PatientMovementModel>
-						{
-							new PatientMovementModel
-							{
-								PatientID = patients[0].EHR_ID,
-								FallID = "00000001",
-								BewegungstypID = 1,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Aufnahme",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 1, 9, 0, 0),
-								Ende = new DateTime(2021, 1, 1, 9, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[0].EHR_ID,
-								FallID = "00000001",
-								BewegungstypID = 3,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Wechsel",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 1, 9, 0, 0),
-								Ende = new DateTime(2021, 1, 5, 15, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[0].EHR_ID,
-								FallID = "00000001",
-								BewegungstypID = 2,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Entlassung",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 5, 15, 0, 0),
-								Ende = new DateTime(2021, 1, 5, 15, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[1].EHR_ID,
-								FallID = "00000002",
-								BewegungstypID = 1,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Aufnahme",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 2, 9, 0, 0),
-								Ende = new DateTime(2021, 1, 2, 9, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[1].EHR_ID,
-								FallID = "00000002",
-								BewegungstypID = 3,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Wechsel",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 2, 9, 0, 0),
-								Ende = new DateTime(2021, 1, 7, 15, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[1].EHR_ID,
-								FallID = "00000002",
-								BewegungstypID = 2,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Entlassung",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 7, 15, 0, 0),
-								Ende = new DateTime(2021, 1, 7, 15, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[3].EHR_ID,
-								FallID = "00000004",
-								BewegungstypID = 1,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Aufnahme",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 3, 9, 0, 0),
-								Ende = new DateTime(2021, 1, 3, 9, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[3].EHR_ID,
-								FallID = "00000004",
-								BewegungstypID = 3,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Wechsel",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 3, 9, 0, 0),
-								Ende = new DateTime(2021, 1, 9, 15, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[3].EHR_ID,
-								FallID = "00000004",
-								BewegungstypID = 2,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Entlassung",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 9, 15, 0, 0),
-								Ende = new DateTime(2021, 1, 9, 15, 0, 0)
-							},
-							 new PatientMovementModel
-							{
-								PatientID = patients[2].EHR_ID,
-								FallID = "00000003",
-								BewegungstypID = 1,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Aufnahme",
-								Raum = "Zimmerkennung 101",
-								StationID = "Stationskennung X",
-								Beginn = new DateTime(2021, 1, 2, 9, 0, 0),
-								Ende = new DateTime(2021, 1, 2, 9, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[2].EHR_ID,
-								FallID = "00000003",
-								BewegungstypID = 3,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Wechsel",
-								Raum = "Zimmerkennung 101",
-								StationID = "Stationskennung X",
-								Beginn = new DateTime(2021, 1, 2, 9, 0, 0),
-								Ende = new DateTime(2021, 1, 3, 11, 0, 0)
-							}
-							,new PatientMovementModel
-							{
-								PatientID = patients[2].EHR_ID,
-								FallID = "00000003",
-								BewegungstypID = 3,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Wechsel",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 3, 11, 0, 0),
-								Ende = new DateTime(2021, 1, 9, 15, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[2].EHR_ID,
-								FallID = "00000003",
-								BewegungstypID = 2,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Entlassung",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 9, 15, 0, 0),
-								Ende = new DateTime(2021, 1, 9, 15, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[5].EHR_ID,
-								FallID = "00000006",
-								BewegungstypID = 1,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Aufnahme",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 4, 9, 0, 0),
-								Ende = new DateTime(2021, 1, 4, 9, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[5].EHR_ID,
-								FallID = "00000006",
-								BewegungstypID = 3,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Wechsel",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 4, 9, 0, 0),
-								Ende = DateTime.Now
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[4].EHR_ID,
-								FallID = "00000005",
-								BewegungstypID = 1,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Aufnahme",
-								Raum = "Zimmerkennung 101",
-								StationID = "Stationskennung X",
-								Beginn = new DateTime(2021, 1, 2, 9, 0, 0),
-								Ende = new DateTime(2021, 1, 2, 9, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[4].EHR_ID,
-								FallID = "00000005",
-								BewegungstypID = 3,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Wechsel",
-								Raum = "Zimmerkennung 101",
-								StationID = "Stationskennung X",
-								Beginn = new DateTime(2021, 1, 2, 9, 0, 0),
-								Ende = new DateTime(2021, 1, 4, 15, 30, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[4].EHR_ID,
-								FallID = "00000005",
-								BewegungstypID = 3,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Wechsel",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 4, 15, 30, 0),
-								Ende = new DateTime(2021, 1, 6, 16, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[4].EHR_ID,
-								FallID = "00000005",
-								BewegungstypID = 3,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Wechsel",
-								Raum = "Zimmerkennung 101",
-								StationID = "Stationskennung Y",
-								Beginn = new DateTime(2021, 1, 6, 16, 0, 0),
-								Ende = new DateTime(2021, 1, 8, 14, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[4].EHR_ID,
-								FallID = "00000005",
-								BewegungstypID = 3,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Wechsel",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 8, 14, 0, 0),
-								Ende = DateTime.Now
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[6].EHR_ID,
-								FallID = "00000007",
-								BewegungstypID = 1,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Aufnahme",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 5, 9, 0, 0),
-								Ende = new DateTime(2021, 1, 5, 9, 0, 0)
-							},
-							new PatientMovementModel
-							{
-								PatientID = patients[6].EHR_ID,
-								FallID = "00000007",
-								BewegungstypID = 3,
-								Bewegungsart_l = "Diagn./Therap.",
-								Bewegungstyp = "Wechsel",
-								Raum = "Zimmerkennung 101",
-								StationID = "Coronastation",
-								Beginn = new DateTime(2021, 1, 5, 9, 0, 0),
-								Ende = DateTime.Now
-							}
-						},	
-						LaborData = new List<LabDataModel>
-                        {
-							new LabDataModel
-							{
-								PatientID = patients[0].EHR_ID,
-								FallID = "00000001",
-								Befund = true,
-								Befunddatum = new DateTime(2021, 1, 1, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "01",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "01",
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 1, 9, 30, 0),
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 1, 10, 0, 0)
-							},
-							new LabDataModel
-							{
-								PatientID = patients[0].EHR_ID,
-								FallID = "00000001",
-								Befund = false,
-								Befunddatum = new DateTime(2021, 1, 3, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "02",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "02",
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 3, 9, 30, 0),
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 3, 10, 0, 0)
-							},new LabDataModel
-							{
-								PatientID = patients[0].EHR_ID,
-								FallID = "00000001",
-								Befund = false,
-								Befunddatum = new DateTime(2021, 1, 5, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "03",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "03",
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 5, 9, 30, 0),
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 5, 10, 0, 0)
-							},
-							new LabDataModel
-							{
-								PatientID = patients[1].EHR_ID,
-								FallID = "00000002",
-								Befund = true,
-								Befunddatum = new DateTime(2021, 1, 2, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "01",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "01",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 2, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 2, 9, 30, 0)
-							},new LabDataModel
-							{
-								PatientID = patients[1].EHR_ID,
-								FallID = "00000002",
-								Befund = false,
-								Befunddatum = new DateTime(2021, 1, 4, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "02",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "02",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 4, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 4, 9, 30, 0)
-							},
-							new LabDataModel
-							{
-								PatientID = patients[1].EHR_ID,
-								FallID = "00000002",
-								Befund = false,
-								Befunddatum = new DateTime(2021, 1, 7, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "03",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "03",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 7, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 7, 9, 30, 0)
-							},
-							new LabDataModel
-							{
-								PatientID = patients[3].EHR_ID,
-								FallID = "00000004",
-								Befund = true,
-								Befunddatum = new DateTime(2021, 1, 3, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "01",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "01",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 3, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 3, 9, 30, 0)
-							},new LabDataModel
-							{
-								PatientID = patients[3].EHR_ID,
-								FallID = "00000004",
-								Befund = false,
-								Befunddatum = new DateTime(2021, 1, 6, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "02",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "02",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 6, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 6, 9, 30, 0)
-							},
-							new LabDataModel
-							{
-								PatientID = patients[3].EHR_ID,
-								FallID = "00000004",
-								Befund = false,
-								Befunddatum = new DateTime(2021, 1, 9, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "03",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "03",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 9, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 9, 9, 30, 0)
-							},
-							 new LabDataModel
-							{
-								PatientID = patients[2].EHR_ID,
-								FallID = "00000003",
-								Befund = true,
-								Befunddatum = new DateTime(2021, 1, 3, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "01",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "01",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 3, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 3, 9, 30, 0)
-							},
-							new LabDataModel
-							{
-								PatientID = patients[2].EHR_ID,
-								FallID = "00000003",
-								Befund = false,
-								Befunddatum = new DateTime(2021, 1, 7, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "02",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "02",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 7, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 7, 9, 30, 0)
-							},new LabDataModel
-							{
-								PatientID = patients[2].EHR_ID,
-								FallID = "00000003",
-								Befund = false,
-								Befunddatum = new DateTime(2021, 1, 9, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "03",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "03",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 9, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 9, 9, 30, 0)
-							},
-							new LabDataModel
-							{
-								PatientID = patients[5].EHR_ID,
-								FallID = "00000006",
-								Befund = true,
-								Befunddatum = new DateTime(2021, 1, 4, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "01",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "01",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 4, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 4, 9, 30, 0)
-							},
-							new LabDataModel
-							{
-								PatientID = patients[5].EHR_ID,
-								FallID = "00000006",
-								Befund = false,
-								Befunddatum = new DateTime(2021, 1, 9, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "02",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "02",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 9, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 9, 9, 30, 0)
-							},
-							 new LabDataModel
-							{
-								PatientID = patients[4].EHR_ID,
-								FallID = "00000005",
-								Befund = true,
-								Befunddatum = new DateTime(2021, 1, 4, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "01",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "01",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 4, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 4, 9, 30, 0)
-							},
-							new LabDataModel
-							{
-								PatientID = patients[4].EHR_ID,
-								FallID = "00000005",
-								Befund = false,
-								Befunddatum = new DateTime(2021, 1, 8, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "02",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "02",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 8, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 8, 9, 30, 0)
-							},
-							new LabDataModel
-							{
-								PatientID = patients[6].EHR_ID,
-								FallID = "00000007",
-								Befund = true,
-								Befunddatum = new DateTime(2021, 1, 5, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "01",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "01",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 5, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 5, 9, 30, 0)
-							},
-							new LabDataModel
-							{
-								PatientID = patients[6].EHR_ID,
-								FallID = "00000007",
-								Befund = false,
-								Befunddatum = new DateTime(2021, 1, 9, 9, 30, 0),
-								Befundkommentar = "Kommentar 1",
-								KeimID = "94500-6",
-								LabordatenID = "02",
-								MaterialID = "119342007",
-								Material_l = "Salvia specimen (specimen)",
-								ProbeID = "02",
-								ZeitpunktProbeneingang = new DateTime(2021, 1, 9, 10, 0, 0),
-								ZeitpunktProbenentnahme = new DateTime(2021, 1, 9, 9, 30, 0)
-							}
-						}
-					}
-				}
-				#endregion
+                    0,
+					new List<int> { 0, 1, 3, 2, 5, 4, 6 }
+				},
+                {
+					1,
+					new List<int> { 0, 1, 3, 2, 5, 4, 6, 8, 7, 9, 11, 12, 13 }
+                }
 			};
 
-			return ResultSet[ResultSetID];
+			return CreateExpactedContactModel(ResultSet[ResultSetID]);
 		}
 		
 		private PatientInformation CreatePatientInformation(IRestDataAccess rest)
@@ -643,6 +108,25 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 
 			return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac);
 
+		}
+
+		private ContactModel CreateExpactedContactModel(List<int> contactOrder)
+        {
+			string movementPath = "../../../../TestData/PatientMovementTestResults.json";
+			string labPath = "../../../../TestData/LabDataTestResults.json";
+
+			List<PatientMovementModel> moveResults = new List<PatientMovementModel>();
+			List<LabDataModel> labDataResults = new List<LabDataModel>();
+			foreach (int i in contactOrder)
+			{
+				List<PatientMovementModel> movementResult = ExpectedResultJsonReader.ReadResults<PatientMovementModel>(movementPath, i, ExpectedType.PATIENT_MOVEMENT);
+				List<LabDataModel> labResult = ExpectedResultJsonReader.ReadResults<LabDataModel>(labPath, i, ExpectedType.LAB_DATA);
+
+				moveResults.AddRange(movementResult);
+				labDataResults.AddRange(labResult);
+			}
+			ContactModel contacts = new ContactModel { LaborData = labDataResults, PatientMovements = moveResults };
+			return contacts;
 		}
     }
 }

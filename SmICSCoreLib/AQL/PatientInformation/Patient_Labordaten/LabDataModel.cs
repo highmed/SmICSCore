@@ -23,7 +23,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten
         [JsonProperty(PropertyName = "ZeitpunktProbeneingang")]
         public DateTime ZeitpunktProbeneingang { get; set; }
         [JsonProperty(PropertyName = "Probenart")]
-        public string MaterialID { get; set; } = "Abs";
+        public string MaterialID { get; set; }
         [JsonProperty(PropertyName = "Screening")]  //Nur für Visualisierung -> nicht essentiell
         public bool screening { get; set; } = false; //Nur für Visualisierung -> nicht essentiell
         [JsonProperty(PropertyName = "Material_l")]
@@ -34,7 +34,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten
         [JsonProperty(PropertyName = "Befundkommentar")]
         public string Befundkommentar { get; set; }
         [JsonProperty(PropertyName = "KeimID")]
-        public string KeimID { get; set; } = "COV";
+        public string KeimID { get; set; }
         [JsonProperty(PropertyName = "Befunddatum")]
         public DateTime Befunddatum { get; set; } //context_time
 

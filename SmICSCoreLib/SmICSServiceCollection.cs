@@ -8,7 +8,6 @@ using SmICSCoreLib.AQL.Lab;
 using SmICSCoreLib.AQL.Lab.EpiKurve;
 using SmICSCoreLib.REST;
 using SmICSCoreLib.AQL.Algorithm;
-using SmICSCoreLib.AQL.ConnectionTest;
 using SmICSCoreLib.AQL.Algorithm.NEC;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
 using SmICSCoreLib.AQL.Patient_Stay;
@@ -42,7 +41,6 @@ namespace SmICS
             services.AddTransient<INECResultFileFactory, NECResultFileFactory>();
 
             services.AddTransient<ILabData, LabData>();
-            services.AddTransient<IConnectionTest, ConnectionTest>();
             services.AddSingleton<IAlgorithmData, AlgortihmData>();
 
             services.AddTransient<IStationaryFactory, StationaryFactory>();
