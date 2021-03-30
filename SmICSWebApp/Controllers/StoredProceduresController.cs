@@ -160,7 +160,7 @@ namespace SmICSWebApp.Controllers
         //    }
         //}
 
-
+        /*
         [Route("Patient_Count")]
         [HttpPost]
         public ActionResult<List<CountDataModel>> Patient_Count(string nachweis)
@@ -245,7 +245,7 @@ namespace SmICSWebApp.Controllers
             {
                 return ErrorHandling(e);
             }
-        }
+        }*/
 
         /*[Route("RKI_Dataset")]
         [HttpPost]
@@ -269,6 +269,7 @@ namespace SmICSWebApp.Controllers
             else { return new StatusCodeResult(500); }
         }
 
+        /*
         [Route("Patient_Symptom_TTPs")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
@@ -284,5 +285,6 @@ namespace SmICSWebApp.Controllers
                 return ErrorHandling(e);
             }
         }
+        */
     }
 }

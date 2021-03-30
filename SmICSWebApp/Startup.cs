@@ -10,7 +10,6 @@ using System.IO;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using SmICSWebApp.Data;
-using SmICSCoreLib.AQL.Patient_Stay;
 using Serilog;
 
 namespace SmICSWebApp
