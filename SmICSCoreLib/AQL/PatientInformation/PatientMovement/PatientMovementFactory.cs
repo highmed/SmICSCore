@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement.ReceiveModels;
@@ -13,9 +14,11 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
     public class PatientMovementFactory : IPatientMovementFactory
     {
         protected IRestDataAccess _restData;
-        public PatientMovementFactory(IRestDataAccess restData)
+        private ILogger<PatientMovementFactory> _logger;
+        public PatientMovementFactory(IRestDataAccess restData, ILogger<PatientMovementFactory> logger)
         {
             _restData = restData;
+            _logger = logger;
         }
         public List<PatientMovementModel> Process(PatientListParameter parameter)
         {

@@ -1,4 +1,5 @@
-﻿using SmICSCoreLib.AQL.General;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.REST;
 using System;
@@ -22,7 +23,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                 patientList = new List<string>() { ehrID }
             };
 
-            PatientLabordataFactory factory = new PatientLabordataFactory(_data);
+            PatientLabordataFactory factory = new PatientLabordataFactory(_data, NullLogger<PatientLabordataFactory>.Instance);
             List<LabDataModel> actual = factory.Process(patientParams);
             List<LabDataModel> expected = GetExpectedLabDataModels(expectedResultSet);
 

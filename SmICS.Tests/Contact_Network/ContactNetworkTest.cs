@@ -84,8 +84,9 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 			List<PatientIDs> patients = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
 			Dictionary<int, ContactModel> ResultSet = new Dictionary<int, ContactModel>
 			{
-				{ 
-					0, 
+				#region Test 0
+				{
+                    0, 
 					new ContactModel()
 					{
 						PatientMovements = new List<PatientMovementModel>
@@ -625,7 +626,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 							}
 						}
 					}
-				}	
+				}
+				#endregion
 			};
 
 			return ResultSet[ResultSetID];
@@ -634,8 +636,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 		private PatientInformation CreatePatientInformation(IRestDataAccess rest)
         {
 
-			IPatientMovementFactory patMoveFac = new PatientMovementFactory(rest);
-			IPatientLabordataFactory patLabFac = new PatientLabordataFactory(rest);
+			IPatientMovementFactory patMoveFac = new PatientMovementFactory(rest, NullLogger<PatientMovementFactory>.Instance);
+			IPatientLabordataFactory patLabFac = new PatientLabordataFactory(rest, NullLogger<PatientLabordataFactory>.Instance);
 			ISymptomFactory symptomFac = new SymptomFactory(rest);
 			IMibiPatientLaborDataFactory mibiLabFac = new MibiPatientLaborDataFactory(rest);
 

@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using Microsoft.AspNetCore.Http;
 using System;
-using Newtonsoft.Json;
 using SmICSCoreLib.AQL.PatientInformation;
 using SmICSCoreLib.AQL.Contact_Nth_Network;
 using SmICSCoreLib.AQL.Lab;
 using SmICSCoreLib.AQL.Algorithm;
-using SmICSCoreLib.AQL.ConnectionTest;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
@@ -31,17 +27,15 @@ namespace SmICSWebApp.Controllers
     {
         private readonly ILogger<StoredProceduresController> _logger;
         
-        private readonly IConnectionTest _connectionTest;
         private readonly ILabData _labData;
         private readonly IPatientInformation _patientInformation;
         private readonly IContactNetworkFactory _contact;
         private readonly IAlgorithmData _algorithm;
         private readonly IPatinet_Stay _patinet_Stay;
 
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, ILabData labData, IPatientInformation patientInformation, IContactNetworkFactory contact, IAlgorithmData algorithm, IConnectionTest connectionTest, IPatinet_Stay patinet_Stay)
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, ILabData labData, IPatientInformation patientInformation, IContactNetworkFactory contact, IAlgorithmData algorithm, IPatinet_Stay patinet_Stay)
         {
             _logger = logger;
-            _connectionTest = connectionTest;
             _labData = labData;
             _patientInformation = patientInformation;
             _contact = contact;

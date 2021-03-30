@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten.ReceiveModel;
 using SmICSCoreLib.REST;
@@ -13,8 +14,10 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten
     {
         private readonly string INCONCLUSIVE = "419984006";
         protected IRestDataAccess _restData;
-        public PatientLabordataFactory(IRestDataAccess restData)
+        private readonly ILogger<PatientLabordataFactory> _logger;
+        public PatientLabordataFactory(IRestDataAccess restData, ILogger<PatientLabordataFactory> logger)
         {
+            _logger = logger;
             _restData = restData;
         }
         public List<LabDataModel> Process(PatientListParameter parameter)

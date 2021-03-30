@@ -9,7 +9,6 @@ using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SmICSCoreLib.AQL.Contact_Nth_Network
 {
