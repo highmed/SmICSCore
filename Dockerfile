@@ -8,7 +8,7 @@ COPY ["SmICSWebApp/SmICSWebApp.csproj", "SmICSWebApp/"]
 COPY ["SmICSCoreLib/SmICSCoreLib.csproj", "SmICSCoreLib/"]
 COPY ["SmICSConnection.Test/SmICSConnection.Test.csproj", "SmICSConnection.Test/"]
 COPY ["SmICSDataGenerator.Test/SmICSDataGenerator.Test.csproj", "SmICSDataGenerator.Test/"]
-COPY ["SmICS.Tests/SmICSFactory.Test.csproj", "SmICS.Tests/"]
+COPY ["SmICS.Tests/SmICSFactory.Tests.csproj", "SmICS.Tests/"]
 RUN dotnet restore "SmICSWebApp/SmICSWebApp.csproj"
 
 WORKDIR /src/.
