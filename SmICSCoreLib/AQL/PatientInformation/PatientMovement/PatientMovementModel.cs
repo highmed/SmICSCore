@@ -36,7 +36,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.PatientMovement
             Raum = patientStay.Raum;
             FallID = patientStay.FallID;
             Bewegungsart_l = patientStay.Bewegungsart_l;
-            StationID = patientStay.StationID;
+            StationID = patientStay.StationID == null ? patientStay.FachabteilungsID : patientStay.StationID;
         }
 
         public void AddMovementType(int typeID, string typeName)

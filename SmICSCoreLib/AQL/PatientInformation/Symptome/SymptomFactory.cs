@@ -19,21 +19,21 @@ namespace SmICSCoreLib.AQL.PatientInformation.Symptome
         {
             List<SymptomModel> symptomList = new List<SymptomModel>();
 
-            List<SymptomModel> symptomList_VS = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_VS(parameter).Query);
+            List<SymptomModel> symptomList_VS = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_VS(parameter));
 
             if (symptomList_VS != null)
             {
                 symptomList = symptomList_VS;
             }
 
-            List<SymptomModel> symptomList_AS = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_AS(parameter).Query);
+            List<SymptomModel> symptomList_AS = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_AS(parameter));
 
             if (symptomList_AS != null)
             {
                 symptomList = symptomList.Concat(symptomList_AS).ToList();
             }
 
-            List<SymptomModel> symptomList_US = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_US(parameter).Query);
+            List<SymptomModel> symptomList_US = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_US(parameter));
 
             if (symptomList_US != null)
             {

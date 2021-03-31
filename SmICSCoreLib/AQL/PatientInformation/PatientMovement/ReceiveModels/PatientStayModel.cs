@@ -9,6 +9,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.PatientMovement.ReceiveModels
         public string PatientID { get; set; }
         public DateTime Beginn { get; set; }
         public DateTime Ende { get; set; }
+        
         public string Fachabteilung { get; set; }
         public string StationID { get; set; }
         public string FallID { get; set; }

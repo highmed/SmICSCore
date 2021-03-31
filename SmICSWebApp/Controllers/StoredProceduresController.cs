@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using Microsoft.AspNetCore.Http;
 using System;
-using Newtonsoft.Json;
 using SmICSCoreLib.AQL.PatientInformation;
 using SmICSCoreLib.AQL.Contact_Nth_Network;
 using SmICSCoreLib.AQL.Lab;
 using SmICSCoreLib.AQL.Algorithm;
-using SmICSCoreLib.AQL.ConnectionTest;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
@@ -25,6 +21,7 @@ using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.Patient_Stay.Count;
 using SmICSCoreLib.AQL.Patient_Stay.Cases;
 using SmICSCoreLib.AQL.Patient_Stay.WeekCase;
+using Microsoft.Extensions.Logging;
 
 namespace SmICSWebApp.Controllers
 {
@@ -33,37 +30,24 @@ namespace SmICSWebApp.Controllers
     [ApiController]
     public class StoredProceduresController : ControllerBase
     {
-        private readonly IConnectionTest _connectionTest;
+        private readonly ILogger<StoredProceduresController> _logger;
+        
         private readonly ILabData _labData;
         private readonly IPatientInformation _patientInformation;
-        private readonly IContactNetworkProcedures _contact;
+        private readonly IContactNetworkFactory _contact;
         private readonly IAlgorithmData _algorithm;
         private readonly IPatinet_Stay _patinet_Stay;
         private readonly IEmployeeInformation _employeeinformation;
 
-        public StoredProceduresController(ILabData labData, IPatientInformation patientInformation, IContactNetworkProcedures contact, IAlgorithmData algorithm, IConnectionTest connectionTest, IPatinet_Stay patinet_Stay, IEmployeeInformation employeeInfo)
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, ILabData labData, IPatientInformation patientInformation, IContactNetworkFactory contact, IAlgorithmData algorithm, IPatinet_Stay patinet_Stay)
         {
-            _connectionTest = connectionTest;
+            _logger = logger;
             _labData = labData;
             _patientInformation = patientInformation;
             _contact = contact;
             _algorithm = algorithm;
             _patinet_Stay = patinet_Stay;
             _employeeinformation = employeeInfo;
-        }
-
-        [Route("Contact_1stDegree_TTPK")]
-        [HttpPost]
-        public ActionResult<List<ContactModel>> Contact_1stDegree_TTP([FromBody] ContactParameter parameter)
-        {
-            try
-            { 
-                return _contact.Contact_1stDegree_TTP(parameter);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
         }
 
         /// <summary></summary>
@@ -74,14 +58,17 @@ namespace SmICSWebApp.Controllers
         /// <returns></returns>
         [Route("Contact_NthDegree_TTKP_Degree")]
         [HttpPost]
-        public ActionResult<List<ContactModel>> Contact_NthDegree_TTP_Degree([FromBody] ContactParameter parameter)
+        public ActionResult<ContactModel> Contact_NthDegree_TTP_Degree([FromBody] ContactParameter parameter)
         {
+            _logger.LogInformation("CALLED Contact_NthDegree_TTP_Degree with parameters: \n\r PatientID: {patID}\n\r Starttime: {start} \n\r Endtime: {end} \n\r Degree: {d} ", parameter.PatientID, parameter.Starttime, parameter.Endtime, parameter.Degree);
             try
             {
-                return _contact.Contact_NthDegree_TTP_Degree(parameter);
+                System.Diagnostics.Debug.WriteLine("CALLED Contact_NthDegree_TTKP_Degree " + parameter.PatientID + " - " + parameter.Starttime + " - " + parameter.Endtime + " - " + parameter.Degree);
+                return _contact.Process(parameter);
             }
             catch (Exception e)
             {
+                _logger.LogWarning("CALLED Contact_NthDegree_TTP_Degree:" + e.Message);
                 return ErrorHandling(e);
             }
         }
@@ -97,17 +84,68 @@ namespace SmICSWebApp.Controllers
         [HttpPost]
         public ActionResult<List<LabDataModel>> Patient_Labordaten_Ps([FromBody] PatientListParameter parameter)
         {
-            System.Diagnostics.Debug.WriteLine("\n CALLED Patient_Labordaten_Ps \n");
+            _logger.LogInformation("CALLED Patient_Labordaten_Ps with parameters: PatientIDs: {patList}", parameter.ToAQLMatchString());
             try
             {
                 return _patientInformation.Patient_Labordaten_Ps(parameter);
             }
             catch (Exception e)
             {
+                _logger.LogWarning("CALLED Patient_Labordaten_Ps:" + e.Message);
                 return ErrorHandling(e);
             }
         }
 
+
+        /// <summary></summary>
+        /// <remarks>
+        /// Gibt alle stationären Aufnahmen, Entlassungen, Stationswechsel und Prozeduren der angegeben Patienten wieder. 
+        /// Eine Prozedur wird immer nur als ein Zeitpunkt wiedergegeben, da in den meisten Fällen die genaue Dauer einer Prozedur nicht dokumentiert wird.
+        /// </remarks>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [Route("Patient_Bewegung_Ps")]
+        [HttpPost]
+        public ActionResult<List<PatientMovementModel>> Patient_Bewegung_Ps([FromBody] PatientListParameter parameter)
+        {
+            _logger.LogInformation("CALLED Patient_Bewegung_Ps with parameters: \n\r PatientIDs: {patList}", parameter.ToAQLMatchString());
+
+            try
+            {
+                return _patientInformation.Patient_Bewegung_Ps(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("CALLED Patient_Bewegung_Ps:" + e.Message);
+                return ErrorHandling(e);
+            }
+        }
+
+        /// <summary></summary>
+        /// <remarks>
+        /// Gibt die Anzahl der aggregierten virologischen Befundee für das gesamte Krankenhaus pro Tag in dem angegebenen Zeitraum zurück. Hierbei werden die für Aggregierung die Stationen berücksichtigt auf welcher die entsprechende Probe für den Nachweis entnommen wurde. Außerdem wirden für jeden Tag der gleitende Mittelwert für 7 und 28 Tage ermittelt.  
+        /// Momentan sind die virologischen Befunde auf das SARS-CoV-2 Wirus beschränkt.
+        /// Alle mit "_cs" markierten Werte sind für die virologische Auswertung irrelevant.
+        /// </remarks>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [Route("Labor_ErregerProTag_TTEsKSs")]
+        [HttpPost]
+        public ActionResult<List<EpiCurveModel>> Labor_ErregerProTag_TTEsKSs([FromBody] TimespanParameter parameter)
+        {
+            _logger.LogInformation("CALLED Labor_ErregerProTag_TTEsKSs with parameters: \n\r Starttime: {start} \n\r Endtime: {end} \n\r internal PathogenList: 94500-6, 94745-7, 94558-4", parameter.Starttime, parameter.Endtime);
+
+            try
+            {
+                EpiCurveParameter epiParams = new EpiCurveParameter() { Endtime = parameter.Endtime, Starttime = parameter.Starttime, PathogenCodes = new List<string>() { "94500-6", "94745-7", "94558-4" } };
+                return _labData.Labor_Epikurve(epiParams);
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("CALLED Labor_ErregerProTag_TTEsKSs:" + e.Message);
+                return ErrorHandling(e);
+            }
+        }
 
         //[Route("Patient_Stay_Stationary")]
         //[HttpPost]
@@ -123,7 +161,7 @@ namespace SmICSWebApp.Controllers
         //    }
         //}
 
-
+        /*
         [Route("Patient_Count")]
         [HttpPost]
         public ActionResult<List<CountDataModel>> Patient_Count(string nachweis)
@@ -134,6 +172,7 @@ namespace SmICSWebApp.Controllers
             }
             catch (Exception e)
             {
+                
                 return ErrorHandling(e);
             }
         }
@@ -159,52 +198,6 @@ namespace SmICSWebApp.Controllers
             try
             {
                 return _patinet_Stay.WeekCase(startDate, endDate);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }
-
-        /// <summary></summary>
-        /// <remarks>
-        /// Gibt alle stationären Aufnahmen, Entlassungen, Stationswechsel und Prozeduren der angegeben Patienten wieder. 
-        /// Eine Prozedur wird immer nur als ein Zeitpunkt wiedergegeben, da in den meisten Fällen die genaue Dauer einer Prozedur nicht dokumentiert wird.
-        /// </remarks>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        [Route("Patient_Bewegung_Ps")]
-        [HttpPost]
-        public ActionResult<List<PatientMovementModel>> Patient_Bewegung_Ps([FromBody] PatientListParameter parameter)
-        {
-            System.Diagnostics.Debug.WriteLine("\n CALLED Patient_Bewegung_Ps \n");
-            try
-            {
-                return _patientInformation.Patient_Bewegung_Ps(parameter);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }
-
-        /// <summary></summary>
-        /// <remarks>
-        /// Gibt die Anzahl der aggregierten virologischen Befundee für das gesamte Krankenhaus pro Tag in dem angegebenen Zeitraum zurück. Hierbei werden die für Aggregierung die Stationen berücksichtigt auf welcher die entsprechende Probe für den Nachweis entnommen wurde. Außerdem wirden für jeden Tag der gleitende Mittelwert für 7 und 28 Tage ermittelt.  
-        /// Momentan sind die virologischen Befunde auf das SARS-CoV-2 Wirus beschränkt.
-        /// Alle mit "_cs" markierten Werte sind für die virologische Auswertung irrelevant.
-        /// </remarks>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        [Route("Labor_ErregerProTag_TTEsKSs")]
-        [HttpPost]
-        public ActionResult<List<EpiCurveModel>> Labor_ErregerProTag_TTEsKSs([FromBody] TimespanParameter parameter)
-        {
-            System.Diagnostics.Debug.WriteLine("\n CALLED EPICURVE \n");
-            try
-            {
-                EpiCurveParameter epiParams = new EpiCurveParameter() { Endtime = parameter.Endtime, Starttime = parameter.Starttime, PathogenCodes = new List<string>() { "94500-6", "94745-7", "94558-4" } };
-                return _labData.Labor_Epikurve(epiParams);
             }
             catch (Exception e)
             {
@@ -253,7 +246,7 @@ namespace SmICSWebApp.Controllers
             {
                 return ErrorHandling(e);
             }
-        }
+        }*/
 
         /*[Route("RKI_Dataset")]
         [HttpPost]
@@ -356,5 +349,6 @@ namespace SmICSWebApp.Controllers
                 return ErrorHandling(e);
             }
         }
+        */
     }
 }

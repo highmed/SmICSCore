@@ -18,7 +18,7 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Stationary
 
         public List<StationaryDataModel> Process(string patientId, DateTime datum)
         {
-            List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQuery<StationaryDataReceiveModel>(AQLCatalog.Stationary(patientId, datum).Query);
+            List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQuery<StationaryDataReceiveModel>(AQLCatalog.Stationary(patientId, datum));
 
             if (stationaryDataReceives is null)
             {
@@ -31,7 +31,7 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Stationary
 
         //public List<StationaryDataModel> Process(string patientId, DateTime datum, string fallkennung)
         //{
-        //    List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQuery<StationaryDataReceiveModel>(AQLCatalog.Stationary( patientId, datum, fallkennung).Query);
+        //    List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQuery<StationaryDataReceiveModel>(AQLCatalog.Stationary( patientId, datum, fallkennung);
 
         //    if (stationaryDataReceives is null)
         //    {

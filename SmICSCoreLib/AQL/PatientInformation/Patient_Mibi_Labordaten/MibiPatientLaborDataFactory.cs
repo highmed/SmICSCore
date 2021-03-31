@@ -20,7 +20,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten
         {
             mibiLabDatas = new List<MibiLabDataModel>();
 
-            List<MetaDataReceiveModel> metaDatas = _restData.AQLQuery<MetaDataReceiveModel>(AQLCatalog.CasesWithResults(parameter).Query);
+            List<MetaDataReceiveModel> metaDatas = _restData.AQLQuery<MetaDataReceiveModel>(AQLCatalog.CasesWithResults(parameter));
 
             if (metaDatas != null)
             {
@@ -38,7 +38,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten
         {
             foreach (CaseIDReceiveModel caseID in cases)
             {
-                List<MetaDataReceiveModel> metaDatas = _restData.AQLQuery<MetaDataReceiveModel>(AQLCatalog.ReportMeta(caseID).Query);
+                List<MetaDataReceiveModel> metaDatas = _restData.AQLQuery<MetaDataReceiveModel>(AQLCatalog.ReportMeta(caseID);
 
                 getSampleData(metaDatas);
             }
@@ -48,7 +48,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten
         {
             foreach (MetaDataReceiveModel metaData in metaDatas)
             {
-                List<RequirementReceiveModel> requirements = _restData.AQLQuery<RequirementReceiveModel>(AQLCatalog.Requirements(metaData).Query);
+                List<RequirementReceiveModel> requirements = _restData.AQLQuery<RequirementReceiveModel>(AQLCatalog.Requirements(metaData));
             }
         }
 
@@ -56,7 +56,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten
         {
             foreach (MetaDataReceiveModel metaData in metaDatas)
             {
-                List<SampleReceiveModel> sampleDatas = _restData.AQLQuery<SampleReceiveModel>(AQLCatalog.SamplesFromResult(metaData).Query);
+                List<SampleReceiveModel> sampleDatas = _restData.AQLQuery<SampleReceiveModel>(AQLCatalog.SamplesFromResult(metaData));
 
                 if (sampleDatas != null)
                 {
@@ -73,7 +73,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten
         {
             foreach (SampleReceiveModel sampleData in sampleDatas)
             {
-                List<PathogenReceiveModel> pathogenDatas = _restData.AQLQuery<PathogenReceiveModel>(AQLCatalog.PathogensFromResult(metaData, sampleData).Query);
+                List<PathogenReceiveModel> pathogenDatas = _restData.AQLQuery<PathogenReceiveModel>(AQLCatalog.PathogensFromResult(metaData, sampleData));
                 
                 if (pathogenDatas != null) { 
                     createMibiLabData(pathogenDatas, sampleData, metaData);

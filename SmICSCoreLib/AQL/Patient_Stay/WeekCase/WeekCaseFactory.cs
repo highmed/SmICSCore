@@ -16,7 +16,7 @@ namespace SmICSCoreLib.AQL.Patient_Stay.WeekCase
         }
         public List<WeekCaseDataModel> Process(DateTime startDate, DateTime endDate)
         {
-            List<WeekCaseReceiveModel> weekCaseReceiveModels = _restData.AQLQuery<WeekCaseReceiveModel>(AQLCatalog.WeekCase(startDate, endDate).Query);
+            List<WeekCaseReceiveModel> weekCaseReceiveModels = _restData.AQLQuery<WeekCaseReceiveModel>(AQLCatalog.WeekCase(startDate, endDate));
 
             if (weekCaseReceiveModels is  null)
             {

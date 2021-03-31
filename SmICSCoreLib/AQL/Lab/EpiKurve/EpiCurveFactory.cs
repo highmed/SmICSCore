@@ -1,14 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.Text;
 using SmICSCoreLib.Util;
-using Newtonsoft.Json;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.Lab.EpiKurve.ReceiveModel;
-using SmICSCoreLib.AQL.Lab.EpiKurve;
 using SmICSCoreLib.REST;
+using Microsoft.Extensions.Logging;
 
 namespace SmICSCoreLib.AQL.Lab.EpiKurve
 {
@@ -20,16 +16,19 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
 
         private List<EpiCurveModel> epiCurveList;
         private SortedDictionary<DateTime, Dictionary<string, EpiCurveModel>> dataAggregationStorage;
-        private IRestDataAccess _restData;
         private Dictionary<string, PatientInfectionModel> infections;
         private Dictionary<string, EpiCurveModel> EpiCurveEntryByWard;
 
         private Dictionary<string, List<int>> mavg7;
         private Dictionary<string, List<int>> mavg28;
+        
+        private IRestDataAccess _restData;
+        private ILogger<EpiCurveFactory> _logger;
 
-        public EpiCurveFactory(IRestDataAccess restData)
+        public EpiCurveFactory(IRestDataAccess restData, ILogger<EpiCurveFactory> logger)
         {
             _restData = restData;
+            _logger = logger;
         }
         public List<EpiCurveModel> Process(EpiCurveParameter parameter)
         {
@@ -60,8 +59,8 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
         }
         private void CreateDailyEntries(DateTime date, EpiCurveParameter parameter)
         {
-            System.Diagnostics.Debug.WriteLine("Flag - Query: " + date.ToString());
-            List<FlagTimeModel> flagTimes = _restData.AQLQuery<FlagTimeModel>(AQLCatalog.LaborEpiCurve(date, parameter).Query);
+            _logger.LogDebug("Flag - Query Paramters: Datum: {Date} \r PathogenList: {pathogens}", date.ToString(), parameter.PathogenCodesToAqlMatchString());
+            List<FlagTimeModel> flagTimes = _restData.AQLQuery<FlagTimeModel>(AQLCatalog.LaborEpiCurve(date, parameter));
 
             if (flagTimes == null)
             {
@@ -83,15 +82,20 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
         {
             foreach (FlagTimeModel flag in flagTimes)
             {
-                System.Diagnostics.Debug.WriteLine("PatientLocation - Query: " + flag.PatientID + " - " + date.ToString());
-                
-                PatientLocation patientLocation = _restData.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(flag.Datum, flag.PatientID).Query)[0];
+                _logger.LogDebug("PatientLocation - Query Paramters: PatientID: {PatientID} \r Datum: {Date}", flag.PatientID, flag.Datum.ToString());
 
-                if(patientLocation == null)
+                List<PatientLocation> patientLocations = _restData.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(flag.Datum, flag.PatientID));
+
+                PatientLocation patientLocation = null;
+                if (patientLocations == null)
                 {
+                    _logger.LogDebug("PatientLocation - Query Response Count: {LocationCount}", null);
                     patientLocation = new PatientLocation() { Ward = "ohne Stationsangabe", Departement = "0000" };
                 }
-
+                else
+                {
+                    patientLocation = patientLocations[0];
+                }
                 SetBasicDailyEpiCurveEntries(flag, patientLocation, date);
                 AggregateFlagInformation(flag, patientLocation);
 
@@ -151,14 +155,12 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
         }
         private void DecrementOverallCount(string ward)
         {
-            //EpiCurveEntryByWard[ward].Anzahl_cs -= 1;
             EpiCurveEntryByWard[ward].anzahl_gesamt -= 1;
         }
         private void IncrementCounts(string ward)
         {
             EpiCurveEntryByWard[ward].Anzahl += 1;
             EpiCurveEntryByWard[ward].anzahl_gesamt += 1;
-            //EpiCurveEntryByWard[ward].Anzahl_cs += 1;
         }
         private void DataAggregationStorageToList()
         {
@@ -241,72 +243,6 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
             };
         }
 
-
-
-
-        #region old code
-        /*  private void TemporaryDataStorageConstructor(TimespanParameter parameter)
-          {
-              SortedDictionary<DateTime, int> active = new SortedDictionary<DateTime, int>();
-              SortedDictionary<DateTime, int> sum = new SortedDictionary<DateTime, int>();
-
-              //Prefills the dictionaries
-              for (DateTime date = parameter.Starttime.Date; date.Date <= parameter.Endtime.Date; date = date.AddDays(1))
-              {
-                  active.Add(date, 0);
-                  sum.Add(date, 0);
-              }
-
-              dataAggregationStorage = new Dictionary<string, SortedDictionary<DateTime, int>> { { "active", active }, { "sum", sum } };
-          }
-
-          private void DataAggregation(List<FlagTimeModel> positiveFlagTimes, List<FlagTimeModel> negativeFlagTimes)
-          {
-              foreach (FlagTimeModel flagTime in positiveFlagTimes)
-              {
-                  dataAggregationStorage["active"][flagTime.Zeitpunkt.Date] += flagTime.Flag ? 1 : 0;
-                  dataAggregationStorage["sum"][flagTime.Zeitpunkt.Date] += flagTime.Flag ? 1 : 0;
-              }
-
-              foreach (FlagTimeModel flagTime in negativeFlagTimes)
-              {
-                  dataAggregationStorage["sum"][flagTime.Zeitpunkt.Date] -= flagTime.Flag ? 1 : 0;
-              }
-          }
-
-          private void ReturnValueConstructor(TimespanParameter timespan)
-          {
-              epiCurveList = new List<EpiCurveModel>();
-              List<int> last7days = new List<int>();
-              List<int> last7days_overall = new List<int>();
-              List<int> last28days = new List<int>();
-              List<int> last28days_overall = new List<int>();
-
-              for (DateTime date = timespan.Starttime.Date; date.Date <= timespan.Endtime.Date; date = date.AddDays(1))
-              {
-                  if (date.Date < timespan.Endtime.Date)
-                  {
-                      dataAggregationStorage["sum"][date.AddDays(1.0)] += dataAggregationStorage["sum"][date];
-                  }
-
-                  EpiCurveModel epiModel = new EpiCurveModel();
-                  epiModel.Datum = date;
-                  epiModel.ErregerID = "COV";
-                  epiModel.ErregerBEZK = "Sars-CoV-2";
-                  epiModel.Anzahl = dataAggregationStorage["active"][date];
-                  epiModel.Anzahl_cs = 0;
-                  epiModel.MAVG7 = MovingAverage.Calculate(last7days, dataAggregationStorage["active"][date], 7);
-                  epiModel.MAVG28 = MovingAverage.Calculate(last28days, dataAggregationStorage["active"][date], 28); ;
-                  epiModel.anzahl_gesamt = dataAggregationStorage["sum"][date]; ;
-                  epiModel.anzahl_gesamt_av7 = MovingAverage.Calculate(last7days_overall, dataAggregationStorage["sum"][date], 7); ;
-                  epiModel.anzahl_gesamt_av28 = MovingAverage.Calculate(last28days_overall, dataAggregationStorage["sum"][date], 28); ;
-                  epiModel.StationID = "klinik";
-
-                  epiCurveList.Add(epiModel);
-              };
-          }
-      }*/
-        #endregion
     }
     internal enum Purpose
     {

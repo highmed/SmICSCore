@@ -54,7 +54,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"q\": \"SELECT e/ehr_id/value as PatientID, h/data[at0001]/items[at0004]/value/value as Beginn, h/data[at0001]/items[at0005]/value/value as Ende FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] CONTAINS ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] CONTAINS (CLUSTER l[openEHR-EHR-CLUSTER.location.v1] and CLUSTER o[openEHR-EHR-CLUSTER.organization.v0]) WHERE c/name/value='Patientenaufenthalt' and h/data[at0001]/items[at0004]/value/value <= '<Endtime>' and (h/data[at0001]/items[at0004]/value/value >= '<Starttime>' or NOT EXISTS h/data[at0001]/items[at0005]/value/value) and o/items[at0024]/value/defining_code/code_string = '<Fachabteilungsschlüssel>' and l/items[at0027]/value/value = '<Station>' and not e/ehr_id/value = '<ehrID>' ORDER BY h/data[at0001]/items[at0004]/value/value ASC\"\r\n}",
+							"raw": "{\r\n  \"q\": \"SELECT e/ehr_id/value as PatientID, h/data[at0001]/items[at0004]/value/value as Beginn, h/data[at0001]/items[at0005]/value/value as Ende FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] CONTAINS ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] CONTAINS (CLUSTER l[openEHR-EHR-CLUSTER.location.v1] and CLUSTER o[openEHR-EHR-CLUSTER.organization.v0]) WHERE c/name/value='Patientenaufenthalt' and h/data[at0001]/items[at0004]/value/value <= '<Endtime>' and (h/data[at0001]/items[at0005]/value/value >= '<Starttime>' or NOT EXISTS h/data[at0001]/items[at0005]/value/value) and o/items[at0024]/value/defining_code/code_string = '<Fachabteilungsschlüssel>' and l/items[at0027]/value/value = '<Station>' and not e/ehr_id/value = '<ehrID>' ORDER BY h/data[at0001]/items[at0004]/value/value ASC\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -113,7 +113,7 @@
 					"response": []
 				},
 				{
-					"name": "PatientEpisodeOfCare",
+					"name": "PatientAdmission",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -125,7 +125,40 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"q\": \"SELECT p/data[at0001]/items[at0071]/value/value as Beginn, b/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Ende FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] CONTAINS (ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.admission.v0] and ADMIN_ENTRY b[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) WHERE c/name/value = 'Stationärer Versorgungsfall' and e/ehr_id/value = '<ehrID>' and c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value = '<FallID>'\"\r\n}",
+							"raw": "{\r\n  \"q\": \"SELECT p/data[at0001]/items[at0071]/value/value as Beginn FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] CONTAINS ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.admission.v0] WHERE c/name/value = 'Stationärer Versorgungsfall' and e/ehr_id/value = '<ehrID>' and c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value = '<FallID>'\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_uri}}/query/aql",
+							"host": [
+								"{{api_uri}}"
+							],
+							"path": [
+								"query",
+								"aql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PatientDischarge",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"q\": \"SELECT b/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Ende FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] CONTAINS ADMIN_ENTRY b[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0] WHERE c/name/value = 'Stationärer Versorgungsfall' and e/ehr_id/value = '<ehrID>' and c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value = '<FallID>'\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -234,7 +267,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"q\": \"SELECT e/ehr_id/value as PatientID, c/context/start_time/value as Befunddatum, y/items[at0001]/value/value as FallID, a/items[at0001]/value/id as LabordatenID, a/items[at0029]/value/defining_code/code_string as MaterialID, a/items[at0029]/value/value as Material_l, a/items[at0034]/value/value as ZeitpunktProbenentnahme, a/items[at0015]/value/value as ZeitpunktProbeneingang, d/items[at0024]/value/value as Keim_l, d/items[at0024]/value/defining_code/code_string as KeimID, d/items[at0001,'Nachweis']/value/value as Befund, d/items[at0001,'Nachweis']/value/defining_code/code_string as BefundCode, d/items[at0001,'Quantitatives Ergebnis']/value/magnitude as Viruslast, l/data[at0001]/events[at0002]/data[at0003]/items[at0101]/value/value as Befundkommentar FROM EHR e CONTAINS COMPOSITION c CONTAINS (CLUSTER y[openEHR-EHR-CLUSTER.case_identification.v0] and OBSERVATION l[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] CONTAINS (CLUSTER a[openEHR-EHR-CLUSTER.specimen.v1] and CLUSTER b[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] CONTAINS (CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]))) WHERE c/name/value = 'Virologischer Befund' AND e/ehr_id/value MATCHES { '<ehrID' }\"\r\n}",
+							"raw": "{\r\n  \"q\": \"SELECT e/ehr_id/value as PatientID, c/context/start_time/value as Befunddatum, y/items[at0001]/value/value as FallID, a/items[at0001]/value/id as LabordatenID, a/items[at0029]/value/defining_code/code_string as MaterialID, a/items[at0029]/value/value as Material_l, a/items[at0015]/value/value as ZeitpunktProbenentnahme, a/items[at0034]/value/value as ZeitpunktProbeneingang, d/items[at0024]/value/value as Keim_l, d/items[at0024]/value/defining_code/code_string as KeimID, d/items[at0001,'Nachweis']/value/value as Befund, d/items[at0001,'Nachweis']/value/defining_code/code_string as BefundCode, d/items[at0001,'Quantitatives Ergebnis']/value/magnitude as Viruslast, l/data[at0001]/events[at0002]/data[at0003]/items[at0101]/value/value as Befundkommentar FROM EHR e CONTAINS COMPOSITION c CONTAINS (CLUSTER y[openEHR-EHR-CLUSTER.case_identification.v0] and OBSERVATION l[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] CONTAINS (CLUSTER a[openEHR-EHR-CLUSTER.specimen.v1] and CLUSTER b[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] CONTAINS (CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]))) WHERE c/name/value = 'Virologischer Befund' AND e/ehr_id/value MATCHES { '<ehrID' } ORDER BY a/items[at0015]/value/value ASC\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

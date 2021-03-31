@@ -17,7 +17,7 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Count
 
         public List<CountDataModel> Process(string nachweis)
         {
-            List<CountDataReceiveModel> countDataReceiveModels = _restData.AQLQuery<CountDataReceiveModel>(AQLCatalog.Count(nachweis).Query);
+            List<CountDataReceiveModel> countDataReceiveModels = _restData.AQLQuery<CountDataReceiveModel>(AQLCatalog.Count(nachweis));
 
             if (countDataReceiveModels is null )
             {

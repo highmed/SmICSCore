@@ -10,7 +10,7 @@ using System.IO;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using SmICSWebApp.Data;
-using SmICSCoreLib.AQL.Patient_Stay;
+using Serilog;
 
 namespace SmICSWebApp
 {
@@ -32,7 +32,6 @@ namespace SmICSWebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSmICSLibrary();
-            services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<DataService>();
                      
             services.AddSwaggerGen(c =>
@@ -79,6 +78,8 @@ namespace SmICSWebApp
 
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 

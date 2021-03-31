@@ -4,6 +4,6 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network
 {
     public interface IContactNetworkFactory
     {
-        List<ContactModel> Process(ContactParameter parameter);
+        ContactModel Process(ContactParameter parameter);
     }
 }
