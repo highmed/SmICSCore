@@ -78,7 +78,7 @@ docker run --name smics_visualisierung --network smics-net -d -p 3231:3231 smics
 ```
 
 If you want to change the ports through which the applications are accessible, you have to change the first port in ```-p 9787:9787``` and/or ```-p 3231:3231```.
-
+<!--
 **Build & Run Process - Docker Compose**
 Edit the ```args: repo:``` in the ```docker-compose.yml``` and enter your connection string to you openEHR REST API.
 
@@ -86,4 +86,4 @@ Edit the ```args: repo:``` in the ```docker-compose.yml``` and enter your connec
 docker-compose up -d
 ```
 
-The SmICS Core Componentes should know be reachable via ```http://localhost:9787``` and the SmICS Visualisierungs Componentents via ```http://localhost:3231`` on the machine where you installed the Docker Container. 
+The SmICS Core Componentes should know be reachable via ```http://localhost:9787``` and the SmICS Visualisierungs Componentents via ```http://localhost:3231`` on the machine where you installed the Docker Container. -->
