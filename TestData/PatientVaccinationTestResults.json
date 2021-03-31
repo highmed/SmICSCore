@@ -1,0 +1,62 @@
+{
+  "0": [
+    {
+      "DokumentationsID": "2020-08-13T10:24:08Z",
+      "Impfstoff": "Rotavirus vaccine",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "Impfung_gegen": "Disease caused by Rotavirus",
+      "Abwesendheit": null
+    }
+    ],
+  "1": [
+    {
+      "DokumentationsID": "2020-01-16T10:24:08Z",
+      "Impfstoff": "Influenza virus vaccine",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "Impfung_gegen": "Influenza",
+      "Abwesendheit": null
+    }
+  ],
+  "2": [
+    {
+      "DokumentationsID": "2020-01-28T10:24:08Z",
+      "Impfstoff": "Influenza virus vaccine",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "Impfung_gegen": "Influenza",
+      "Abwesendheit": null
+    }
+  ],
+  "3": [
+    {
+      "DokumentationsID": "2020-01-28T10:24:08Z",
+      "Impfstoff": "Influenza virus vaccine",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "Impfung_gegen": "Influenza",
+      "Abwesendheit": null
+    }
+  ],
+  "4": [
+    {
+      "DokumentationsID": "2020-02-17T10:24:08Z",
+      "Impfstoff": "Human papillomavirus vaccine",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "Impfung_gegen": "Disease caused by Rotavirus",
+      "Abwesendheit": null
+    }
+  ],
+  "5": [
+    {
+      "DokumentationsID": "2020-02-17T10:24:08Z",
+      "Impfstoff": "Human papillomavirus vaccine",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "Impfung_gegen": "Disease caused by Rotavirus",
+      "Abwesendheit": null
+    }
+  ]
+}

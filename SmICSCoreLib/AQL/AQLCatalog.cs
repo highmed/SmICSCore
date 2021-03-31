@@ -279,9 +279,10 @@ namespace SmICSCoreLib.AQL
 
         public static AQLQuery PatientVaccination(PatientListParameter patientList)
         {
-            return new AQLQuery("PatientVaccination", $@"SELECT e/ehr_id/value as PatientID, 
+            return new AQLQuery("PatientVaccination", $@"SELECT e/ehr_id/value as PatientID,
+                                c/context/start_time/value as DokumentationsID,
                                 a/description[at0017]/items[at0020]/value as Impfstoff, 
-                                x/items[at0164]/value as Dosierungsreihnfolge, 
+                                x/items[at0164]/value as Dosierungsreihenfolge, 
                                 x/items[at0144]/value as Dosiermenge, 
                                 a/description[at0017]/items[at0021]/value as Impfung_gegen 
                                 FROM EHR e 

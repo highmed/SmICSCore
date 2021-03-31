@@ -1,4 +1,5 @@
-﻿using SmICSCoreLib.AQL.General;
+﻿using Microsoft.Extensions.Logging;
+using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections;
@@ -11,14 +12,16 @@ namespace SmICSCoreLib.AQL.PatientInformation.Vaccination
     public class VaccinationFactory : IVaccinationFactory
     {
         private IRestDataAccess _restData;
-        public VaccinationFactory(IRestDataAccess restData)
+        private readonly ILogger<VaccinationFactory> _logger;
+        public VaccinationFactory(IRestDataAccess restData, ILogger<VaccinationFactory> logger)
         {
+            _logger = logger;
             _restData = restData;
         }
         public List<VaccinationModel> Process(PatientListParameter parameter)
         {
 
-            List<VaccinationModel> vaccList = _restData.AQLQuery<VaccinationModel>(AQLCatalog.PatientVaccination(parameter).Query);
+            List<VaccinationModel> vaccList = _restData.AQLQuery<VaccinationModel>(AQLCatalog.PatientVaccination(parameter));
 
             if (vaccList is null)
             {

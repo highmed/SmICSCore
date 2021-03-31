@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.Moq;
+using Microsoft.Extensions.Logging.Abstractions;
 using SmICSCoreLib.AQL;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
@@ -25,7 +26,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                 patientList = new List<string>() { ehrID }
             };
 
-            SymptomFactory factory = new SymptomFactory(_data);
+            SymptomFactory factory = new SymptomFactory(_data, NullLogger<SymptomFactory>.Instance);
             List<SymptomModel> actual = factory.Process(patientParams);
             List<SymptomModel> expected = GetExpectedSymptomModels(ResultSetID);
 
@@ -52,7 +53,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
             public IEnumerator<object[]> GetEnumerator()
             {
                 List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
-                for (int i = 0; i <= 15; i++)
+                for (int i = 0; i <= 33; i++)
                 {
                     yield return new object[] { patient[i].EHR_ID, i };
                 }
@@ -64,7 +65,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
         private List<SymptomModel> GetExpectedSymptomModels(int ResultSetID)
         {
             string path = "../../../../TestData/PatientSymptomTestResults.json";
-            List<SymptomModel> result = ExpectedResultJsonReader.ReadResults<SymptomModel>(path, ResultSetID, ExpectedType.PATIENT_MOVEMENT);
+            List<SymptomModel> result = ExpectedResultJsonReader.ReadResults<SymptomModel>(path, ResultSetID, ExpectedType.PATIENT_SYMPTOM);
             return result;
         }
 

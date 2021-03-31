@@ -1,4 +1,5 @@
-﻿using SmICSCoreLib.AQL.General;
+﻿using Microsoft.Extensions.Logging;
+using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections;
@@ -11,8 +12,10 @@ namespace SmICSCoreLib.AQL.PatientInformation.Symptome
     public class SymptomFactory : ISymptomFactory
     {
         private IRestDataAccess _restData;
-        public SymptomFactory(IRestDataAccess restData)
+        private readonly ILogger<SymptomFactory> _logger;
+        public SymptomFactory(IRestDataAccess restData, ILogger<SymptomFactory> logger)
         {
+            _logger = logger;
             _restData = restData;
         }
         public List<SymptomModel> Process(PatientListParameter parameter)

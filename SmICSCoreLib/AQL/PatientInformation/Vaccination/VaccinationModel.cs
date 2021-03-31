@@ -9,10 +9,12 @@ namespace SmICSCoreLib.AQL.PatientInformation.Vaccination
     {
         [JsonProperty(PropertyName ="PatientenID")]
         public string PatientenID { get; set; }
+        [JsonProperty(PropertyName = "DokumentationsID")]
+        public DateTime DokumentationsID { get; set; }
         [JsonProperty(PropertyName = "Impfstoff")]
         public string Impfstoff { get; set; }
         [JsonProperty(PropertyName = "Dosierungsreihnfolge")]
-        public string Dosierungsreihnfolge { get; set; }
+        public string Dosierungsreihenfolge { get; set; }
         [JsonProperty(PropertyName = "Dosiermenge")]
         public string Dosiermenge { get; set; }
         [JsonProperty(PropertyName = "Impfung gegen")]
