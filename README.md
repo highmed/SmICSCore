@@ -60,15 +60,17 @@ docker build --build-arg repo="http://localhost:8080/ehrbase/rest/openehr/v1" --
 docker run --name smics_core --network smics-net -d -p 9787:9787 smics
 ```
 
+```http://localhost:8080/ehrbase/rest/openehr/v1``` must be exchanged for the valid link to the openEHR REST API from the openEHR repository.
+```$USERNAME``` and ```$PASSWORD``` must be exchanged for valid user credentials from the openEHR repository.
+
 If the SmICSCore container stops building because of failing test (especially if the openEHR Repository is ehrbase), the following lines needs to be commented in the <ins>Dockerfile</ins> to build the container without the tests.
+
 
 ```
 RUN dotnet test "SmICSConnection.Test" --logger:trx -c Release
 RUN dotnet test "SmICSDataGenerator.Test" --logger:trx -c Release
 RUN dotnet test "SmICS.Tests" --logger:trx -c Release
 ```
-
-The argument variable ```repo``` contains the connection string to the openEHR REST API of the local openEHR repository.
 
 **Run Process - Docker**
 
