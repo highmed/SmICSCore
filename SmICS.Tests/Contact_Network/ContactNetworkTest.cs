@@ -73,7 +73,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 		{
 			public IEnumerator<object[]> GetEnumerator()
             {
-				List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
+				List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
 				yield return new object[] { 1, patient[0].EHR_ID, 2021, 1, 1, 2021, 1, 10, 0 };
 				yield return new object[] { 1, patient[1].EHR_ID, 2021, 1, 1, 2021, 1, 10, 1 };
             }
