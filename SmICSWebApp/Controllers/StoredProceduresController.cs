@@ -12,6 +12,11 @@ using SmICSCoreLib.AQL.ConnectionTest;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.AQL.PatientInformation.Vaccination;
+using SmICSCoreLib.AQL.Employees.ContactTracing;
+using SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl;
+using SmICSCoreLib.AQL.Employees.PersonData;
+using SmICSCoreLib.AQL.Employees;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.Lab.EpiKurve;
 using SmICSCoreLib.AQL.Algorithm.NEC;
@@ -34,8 +39,9 @@ namespace SmICSWebApp.Controllers
         private readonly IContactNetworkProcedures _contact;
         private readonly IAlgorithmData _algorithm;
         private readonly IPatinet_Stay _patinet_Stay;
+        private readonly IEmployeeInformation _employeeinformation;
 
-        public StoredProceduresController(ILabData labData, IPatientInformation patientInformation, IContactNetworkProcedures contact, IAlgorithmData algorithm, IConnectionTest connectionTest, IPatinet_Stay patinet_Stay)
+        public StoredProceduresController(ILabData labData, IPatientInformation patientInformation, IContactNetworkProcedures contact, IAlgorithmData algorithm, IConnectionTest connectionTest, IPatinet_Stay patinet_Stay, IEmployeeInformation employeeInfo)
         {
             _connectionTest = connectionTest;
             _labData = labData;
@@ -43,6 +49,7 @@ namespace SmICSWebApp.Controllers
             _contact = contact;
             _algorithm = algorithm;
             _patinet_Stay = patinet_Stay;
+            _employeeinformation = employeeInfo;
         }
 
         [Route("Contact_1stDegree_TTPK")]
@@ -270,15 +277,79 @@ namespace SmICSWebApp.Controllers
             else { return new StatusCodeResult(500); }
         }
 
-        [Route("Patient_Symptom_TTPs")]
+        [Route("Patient_Symptom")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
         [HttpPost]
-        public ActionResult<List<SymptomModel>> Patient_Symptom_TTPs([FromBody] PatientListParameter parameter)
+        public ActionResult<List<SymptomModel>> Patient_Symptom([FromBody] PatientListParameter parameter)
         {
             try
             {
-                return _patientInformation.Patient_Symptom_TTPs(parameter);
+                return _patientInformation.Patient_Symptom(parameter);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
+
+        [Route("Patient_Vaccination")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
+        [HttpPost]
+        public ActionResult<List<VaccinationModel>> Patient_Vaccination([FromBody] PatientListParameter parameter)
+        {
+            try
+            {
+                return _patientInformation.Patient_Vaccination(parameter);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
+
+        [Route("Employee_ContactTracing")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
+        [HttpPost]
+        public ActionResult<List<ContactTracingModel>> Employee_ContactTracing([FromBody] PatientListParameter parameter)
+        {
+            try
+            {
+                return _employeeinformation.Employee_ContactTracing(parameter);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
+
+        [Route("Employee_PersonData")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
+        [HttpPost]
+        public ActionResult<List<PersonDataModel>> Employee_PersonData([FromBody] PatientListParameter parameter)
+        {
+            try
+            {
+                return _employeeinformation.Employee_PersonData(parameter);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
+
+        [Route("Employee_PersInfoInfecCtrl")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
+        [HttpPost]
+        public ActionResult<List<PersInfoInfecCtrlModel>> Employee_PersInfoInfecCtrl([FromBody] PatientListParameter parameter)
+        {
+            try
+            {
+                return _employeeinformation.Employee_PersInfoInfecCtrl(parameter);
             }
             catch (Exception e)
             {

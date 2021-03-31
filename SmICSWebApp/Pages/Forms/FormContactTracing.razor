@@ -7,6 +7,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Logging
 @using Newtonsoft.Json.Linq
+@using SmICSCoreLib.AQL.Employees.ContactTracing
 
 @inject ILogger<FormContactTracing> Logger
 
@@ -193,7 +194,7 @@
     private bool disabled;
     private string message;
     private string messageStyles = "visibility:hidden";
-    private ContactTracing contact_tracing = new ContactTracing();
+    private ContactTracingModel contact_tracing = new ContactTracingModel();
 
     private void HandleValidSubmit()
     {
@@ -205,7 +206,7 @@
             messageStyles = "color:green";
             ContactTracingService.ContactTracingDataStorage(o);
             message = "Das Formular wurde übermittelt.";
-            //message = o.ToString();
+
         } catch (Exception ex)
         {
             Logger.LogError("Formular Übermittlungsproblem: {Message}", ex.Message);
@@ -214,37 +215,5 @@
             message = "Es wurde ein fehler festgestellt beim Übermitteln des Formulars.";
         }
     }
-    public class ContactTracing
-    {
-        [Required]
-        public string bericht_id { get; set; }
-        [Required]
-        public string event_kennung { get; set; }
-        [Required]
-        public string event_art { get; set; }
-        [Required]
-        public string art_der_person { get; set; }
-        [Required]
-        public string event_kategorie { get; set; }
-
-        public string kontakt_kommentar { get; set; }
-
-        public string beschreibung { get; set; }
-        [Required]
-        public Nullable<DateTime> beginn { get; set; } = null;
-        [Required]
-        public Nullable<DateTime> ende { get; set; } = null;
-        [Required]
-        public string ort { get; set; }
-        [Required]
-        public string gesamtdauer { get; set; }
-        [Required]
-        public string abstand { get; set; }
-        [Required]
-        public string schutzkleidung { get; set; }
-        [Required]
-        public string person { get; set; }
-        public string kommentar { get; set; }
-
-    }
-     }
+    
+}

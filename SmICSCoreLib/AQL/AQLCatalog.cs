@@ -3,6 +3,7 @@ using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.Lab.EpiKurve;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten.ReceiveModel;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
+using SmICSCoreLib.AQL.Employees;
 using SmICSCoreLib.Util;
 using System;
 using System.Collections;
@@ -187,17 +188,41 @@ namespace SmICSCoreLib.AQL
         }
         public static AQLQuery PatientSymptom_VS(PatientListParameter patientList)
         {
-            return new AQLQuery($"SELECT e/ehr_id/value as PatientenID, a/data[at0190]/events[at0191]/data[at0192]/items[at0001]/value/value as NameDesSymptoms, a/data[at0190]/events[at0191]/data[at0192/items[at0151]/value/value as Lokalisation, a/ data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value as Beginn, a/ data[at0190]/events[at0191]/data[at0192]/items[at0021]/value/value as Schweregrad, a/ data[at0190]/events[at0191]/data[at0192]/items[at0161] as Rueckgang FROM EHR e CONTAINS COMPOSITION c CONTAINS OBSERVATION a[openEHR-EHR-OBSERVATION.symptom_sign.v0] WHERE c/archetype_details/template_id='Symptom' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
+            return new AQLQuery($@"SELECT e/ehr_id/value as PatientenID,
+                                c/context/start_time/value as BefundDatum,
+                                a/data[at0190]/events[at0191]/data[at0192]/items[at0001]/value/value as NameDesSymptoms, 
+                                a/data[at0190]/events[at0191]/data[at0192/items[at0151]/value/value as Lokalisation, 
+                                a/ data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value as Beginn, 
+                                a/ data[at0190]/events[at0191]/data[at0192]/items[at0021]/value/value as Schweregrad, 
+                                a/ data[at0190]/events[at0191]/data[at0192]/items[at0161] as Rueckgang 
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c 
+                                CONTAINS OBSERVATION a[openEHR-EHR-OBSERVATION.symptom_sign.v0] 
+                                WHERE c/archetype_details/template_id='Symptom' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
         }
 
         public static AQLQuery PatientSymptom_AS(PatientListParameter patientList)
         {
-            return new AQLQuery($"SELECT e/ehr_id/value as PatientenID, a/data[at0001]/items[at0002]/value/value as AusschlussAussage, a/ data[at0001]/items[at0003]/value/value as Diagnose FROM EHR e CONTAINS COMPOSITION c CONTAINS EVALUATION a[openEHR-EHR-EVALUATION.exclusion_specific.v1] WHERE c/archetype_details/template_id='Symptom' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
+            return new AQLQuery($@"SELECT e/ehr_id/value as PatientenID,
+                                c/context/start_time/value as BefundDatum,
+                                a/data[at0001]/items[at0002]/value/value as AusschlussAussage, 
+                                a/ data[at0001]/items[at0003]/value/value as Diagnose 
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c 
+                                CONTAINS EVALUATION a[openEHR-EHR-EVALUATION.exclusion_specific.v1] 
+                                WHERE c/archetype_details/template_id='Symptom' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
         }
 
         public static AQLQuery PatientSymptom_US(PatientListParameter patientList)
         {
-            return new AQLQuery($"SELECT e/ehr_id/value as PatientenID, a/data[at0001]/items[at0002]/value/value as UnbekanntesSymptom, a/ data[at0001]/items[at0005]/value/value as AussageFehlendeInfo FROM EHR e CONTAINS COMPOSITION c CONTAINS EVALUATION a[openEHR-EHR-EVALUATION.absence.v2] WHERE c/archetype_details/template_id='Symptom' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
+            return new AQLQuery($@"SELECT e/ehr_id/value as PatientenID,
+                                c/context/start_time/value as BefundDatum,
+                                a/data[at0001]/items[at0002]/value/value as UnbekanntesSymptom, 
+                                a/ data[at0001]/items[at0005]/value/value as AussageFehlendeInfo 
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c 
+                                CONTAINS EVALUATION a[openEHR-EHR-EVALUATION.absence.v2] 
+                                WHERE c/archetype_details/template_id='Symptom' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
         }
         //untested
         public static AQLQuery AntibiogramFromPathogen(MetaDataReceiveModel metaData, SampleReceiveModel sampleData, PathogenReceiveModel pathogenData)
@@ -233,6 +258,36 @@ namespace SmICSCoreLib.AQL
         public static AQLQuery WeekCase(DateTime startDate, DateTime endDate)
         {
             return new AQLQuery($"SELECT COUNT(DISTINCT e/ehr_id/value) as Anzahl_Faelle FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1] CONTAINS (CLUSTER x[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] and CLUSTER p[openEHR-EHR-CLUSTER.specimen.v1]) WHERE c/name/value='Virologischer Befund' and x/items[at0001,'Nachweis']/value/value='positiv' and x/items[at0024,'Virus']/value/value='SARS-Cov-2' and p/items[at0015]/value/value >= '{startDate.Date.ToString("yyyy-MM-dd")}' and p/items[at0015]/value/value <= '{endDate.Date.ToString("yyyy-MM-dd")}' ");
+        }
+
+        public static AQLQuery PatientVaccination(PatientListParameter patientList)
+        {
+            return new AQLQuery($@"SELECT e/ehr_id/value as PatientID, 
+                                a/description[at0017]/items[at0020]/value as Impfstoff, 
+                                x/items[at0164]/value as Dosierungsreihnfolge, 
+                                x/items[at0144]/value as Dosiermenge, 
+                                a/description[at0017]/items[at0021]/value as Impfung_gegen 
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c 
+                                CONTAINS COMPOSITION s[openEHR-EHR-COMPOSITION.registereintrag.v1] 
+                                CONTAINS ACTION a[openEHR-EHR-ACTION.medication.v1] 
+                                CONTAINS (CLUSTER x[openEHR-EHR-CLUSTER.dosage.v1]) 
+                                WHERE c/archetype_details/template_id='Impfstatus' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
+        }
+
+        public static AQLQuery EmployeeContactTracing(PatientListParameter patientList)
+        {
+            return new AQLQuery($@"");
+        }
+
+        public static AQLQuery EmployeePersInfoInfecCtrl(PatientListParameter patientList)
+        {
+            return new AQLQuery($@"");
+        }
+
+        public static AQLQuery EmployeePersonData(PatientListParameter patientList)
+        {
+            return new AQLQuery($@"");
         }
     }
 }

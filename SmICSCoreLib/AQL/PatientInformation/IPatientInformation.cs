@@ -4,6 +4,7 @@ using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace SmICSCoreLib.AQL.PatientInformation
         List<LabDataModel> Patient_Labordaten_Ps(PatientListParameter parameter);
         List<PatientMovementModel> Patient_Bewegung_Ps(PatientListParameter parameter);
         List<MibiLabDataModel> MibiLabData(PatientListParameter parameter);
-        List<SymptomModel> Patient_Symptom_TTPs(PatientListParameter parameter);
+        List<SymptomModel> Patient_Symptom(PatientListParameter parameter);
+        List<VaccinationModel> Patient_Vaccination(PatientListParameter parameter);
     }
 }

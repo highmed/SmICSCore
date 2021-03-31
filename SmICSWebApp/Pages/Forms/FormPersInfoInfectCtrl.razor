@@ -7,6 +7,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Logging
 @using Newtonsoft.Json.Linq
+@using SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl
 
 @inject ILogger<FormPersInfoInfectCtrl> Logger
 
@@ -223,7 +224,7 @@
 @code{ private bool disabled;
     private string message;
     private string messageStyles = "visibility:hidden";
-    private PersonInformationInfectionControl informationControl = new PersonInformationInfectionControl();
+    private PersInfoInfecCtrlModel informationControl = new PersInfoInfecCtrlModel();
 
     private void HandleValidSubmit()
     {
@@ -231,6 +232,7 @@
         try
         {
             JObject o = (JObject)JToken.FromObject(informationControl);
+            PersInfoInfectCtrlService.PersInfoInfectCtrlServiceDataStorage(o);
             disabled = true;
             messageStyles = "color:green";
             //message = "Das Formular wurde übermittelt.";
@@ -243,53 +245,6 @@
             messageStyles = "color:red";
             message = "Es wurde ein fehler festgestellt beim Übermitteln des Formulars.";
         }
-    }
-    public class PersonInformationInfectionControl
-    {
-        [Required]
-        public string berichtID { get; set; }
-        [Required]
-        public string symp_vorhanden { get; set; }
-        [Required]
-        public Nullable<DateTime> symp_auftreten { get; set; } = null;
-        [Required]
-        public string bez_symp { get; set; }
-
-        public string allg_kommentar { get; set; }
-
-        public bool erreg_nachweis { get; set; } = false;
-        [Required]
-        public string erreg_name { get; set; }
-        [Required]
-        public Nullable<DateTime> zeitpunkt_kennzeichnung { get; set; } = null;
-
-        public bool erreg_Nachweis_klinik { get; set; } = false;
-        [Required]
-        public Nullable<DateTime> zuletzt_aktuell { get; set; } = null;
-
-        public bool freigetsellt { get; set; } = false;
-        [Required]
-        public string grund { get; set; }
-        [Required]
-        public string beschreibung { get; set; }
-        [Required]
-        public Nullable<DateTime> start_freistellung { get; set; } = null;
-        [Required]
-        public Nullable<DateTime> wiederaufnahme { get; set; } = null;
-
-        public string kommentar_freistellung { get; set; }
-
-        public bool meldung { get; set; } = false;
-        [Required]
-        public string ereignis { get; set; }
-        [Required]
-        public string beschreibung_ereignis { get; set; }
-        [Required]
-        public Nullable<DateTime> datum_meldung { get; set; } = null;
-        [Required]
-        public string grund_meldung { get; set; }
-
-        public string meldung_kommentar { get; set; }
     }
 
     void CheckboxClicked(object checkedValue)

@@ -7,6 +7,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Logging
 @using Newtonsoft.Json.Linq
+@using SmICSCoreLib.AQL.Employees.PersonData
 
 @inject ILogger<FormPersonInformation> Logger
 
@@ -188,14 +189,14 @@
                 @message
             </p>
         </EditForm>
-</div>
+    </div>
 </div>
 
 @code{
     private bool disabled;
     private string message;
     private string messageStyles = "visibility:hidden";
-    private Person information = new Person();
+    private PersonDataModel information = new PersonDataModel();
 
     private void HandleValidSubmit()
     {
@@ -203,7 +204,7 @@
         try
         {
             JObject o = (JObject)JToken.FromObject(information);
-            ContactTracingService.ContactTracingDataStorage(o);
+            PersonInformationService.PersonInformationDataStorage(o);
             disabled = true;
             messageStyles = "color:green";
             //message = "Das Formular wurde übermittelt.";
@@ -217,42 +218,5 @@
             messageStyles = "color:red";
             message = "Es wurde ein fehler festgestellt beim Übermitteln des Formulars.";
         }
-    }
-    public class Person
-    {
-        [Required]
-        public string personID { get; set; }
-        [Required]
-        public string art_der_person { get; set; }
-        [Required]
-        public string titel { get; set; }
-        [Required]
-        public string vorname { get; set; }
-        [Required]
-        public string weiterer_vorname { get; set; }
-        [Required]
-        public string nachname { get; set; }
-        [Required]
-        public string suffix { get; set; }
-        [Required]
-        public Nullable<DateTime> geburtsdatum { get; set; } = null;
-        [Required]
-        public string zeile { get; set; }
-        [Required]
-        public string stadt { get; set; }
-        [Required]
-        public string plz { get; set; }
-        [Required]
-        public string kontakttyp { get; set; }
-        [Required]
-        public string nummer { get; set; }
-        [Required]
-        public string fach_bez { get; set; }
-        [Required]
-        public string zeile_heil { get; set; }
-        [Required]
-        public string stadt_heil { get; set; }
-        [Required]
-        public string plz_heil { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using SmICSWebApp.Data;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.IdentityModel.Tokens;
 using System.IO;
+using SmICSCoreLib.REST;
 
 namespace SmICSWebApp.Data
 {
@@ -18,35 +19,60 @@ namespace SmICSWebApp.Data
              {
                  if(createEntry != null)
                  {
-                    string json = File.ReadAllText("FormTemplates/ContactTracingReport.json");
-                    dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
 
-                    //jsonObj["context"]["other_context"]["items"][0]["value"]["value"]= JObject.Parse(createEntry.ToString())["personID"];
-                    //jsonObj["content"][0]["data"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["art_der_person"];
-                    
+                    string filepath = @"../SmICSWebApp/Data/FormTemplates/Bericht_zur_Kontaktverfolgung.json";
+                    string readResult = string.Empty;
+                    string writeResult = string.Empty;
+                    using (StreamReader r = new StreamReader(filepath))
+                    {
+                        var json = r.ReadToEnd();
+                        var jobj = JObject.Parse(json);
+                        readResult = jobj.ToString();
 
-                    jsonObj["bericht_zur_kontaktverfolgung/context/bericht_id"] = JObject.Parse(createEntry.ToString())["bericht_id"];
-                    jsonObj["bericht_zur_kontaktverfolgung/context/eventsummary/event-kennung"] = JObject.Parse(createEntry.ToString())["event_kennung"];
-                    jsonObj["bericht_zur_kontaktverfolgung/context/eventsummary/event-art"] = JObject.Parse(createEntry.ToString())["event_art"];
-                    jsonObj["bericht_zur_kontaktverfolgung/context/eventsummary/beteiligte_personen:0/art_der_person"] = JObject.Parse(createEntry.ToString())["art_der_person"];
-                    jsonObj["bericht_zur_kontaktverfolgung/context/eventsummary/event-kategorie"] = JObject.Parse(createEntry.ToString())["event_kategorie"];
-                    jsonObj["bericht_zur_kontaktverfolgung/context/eventsummary/kommentar"] = JObject.Parse(createEntry.ToString())["kontakt_kommentar"];
-                    jsonObj["bericht_zur_kontaktverfolgung/kontakt:0/beschreibung"] = JObject.Parse(createEntry.ToString())["beschreibung"];
-                    jsonObj["bericht_zur_kontaktverfolgung/kontakt:0/beginn"] = JObject.Parse(createEntry.ToString())["beginn"];
-                    jsonObj["bericht_zur_kontaktverfolgung/kontakt:0/ende"] = JObject.Parse(createEntry.ToString())["ende"];
-                    jsonObj["bericht_zur_kontaktverfolgung/kontakt:0/ort"] = JObject.Parse(createEntry.ToString())["ort"];
-                    jsonObj["bericht_zur_kontaktverfolgung/kontakt:0/gesamtdauer"] = JObject.Parse(createEntry.ToString())["gesamtdauer"];
-                    jsonObj["bericht_zur_kontaktverfolgung/kontakt:0/abstand"] = JObject.Parse(createEntry.ToString())["abstand"];
-                    jsonObj["bericht_zur_kontaktverfolgung/kontakt:0/schutzkleidung:0/schutzkleidung:0"] = JObject.Parse(createEntry.ToString())["schutzkleidung"];
-                    jsonObj["bericht_zur_kontaktverfolgung/kontakt:0/schutzkleidung:0/person|code"] = JObject.Parse(createEntry.ToString())["person"];
-                    jsonObj["bericht_zur_kontaktverfolgung/kontakt:0/kommentar"] = JObject.Parse(createEntry.ToString())["kommentar"];
+                        jobj["context"]["other_context"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["bericht_id"];
+                        jobj["context"]["other_context"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["bericht_id"];
+                        jobj["context"]["other_context"]["items"][1]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["event_kennung"];
+                        jobj["context"]["other_context"]["items"][1]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["event_art"];
+                        jobj["context"]["other_context"]["items"][1]["items"][2]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["art_der_person"];
+                        jobj["context"]["other_context"]["items"][1]["items"][4]["value"]["value"] = JObject.Parse(createEntry.ToString())["event_kategorie"];
+                        jobj["context"]["other_context"]["items"][1]["items"][5]["value"]["value"] = JObject.Parse(createEntry.ToString())["kontakt_kommentar"];
+                        jobj["content"][0]["description"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["beschreibung"];
+                        jobj["content"][0]["description"]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["beginn"];
+                        jobj["content"][0]["description"]["items"][2]["value"]["value"] = JObject.Parse(createEntry.ToString())["ende"];
+                        jobj["content"][0]["description"]["items"][3]["value"]["value"] = JObject.Parse(createEntry.ToString())["ort"];
+                        jobj["content"][0]["description"]["items"][4]["value"]["value"] = JObject.Parse(createEntry.ToString())["gesamtdauer"];
+                        jobj["content"][0]["description"]["items"][5]["value"]["value"] = JObject.Parse(createEntry.ToString())["abstand"];
+                        jobj["content"][0]["description"]["items"][6]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["schutzkleidung"];
+                        jobj["content"][0]["description"]["items"][6]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["person"];
 
-                    string output = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);
-                    File.WriteAllText("FormTemplates/ContactTracingReport.json", output); 
+                        string person = (string)JObject.Parse(createEntry.ToString())["person"];
+
+                        if (person != "Indexperson")
+                        {
+                            jobj["content"][0]["description"]["items"][6]["items"][1]["value"]["defining_code"]["code_string"] = "at0004";
+                        }else
+                        {
+                            jobj["content"][0]["description"]["items"][6]["items"][1]["value"]["defining_code"]["code_string"] = "at0003";
+                        }
+
+                        jobj["content"][0]["description"]["items"][7]["value"]["value"] = JObject.Parse(createEntry.ToString())["kommentar"];
+                        //foreach (var item in jobj.Properties())
+                        //{
+                        //    item.Value = item.Value.ToString().Replace("v1", "v2");
+                        //}
+                        writeResult = jobj.ToString();
+                        //Console.WriteLine(writeResult);
+                        
+                    }
+                    //System.Diagnostics.Debug.WriteLine(readResult);
+                    File.WriteAllText(filepath, writeResult);
+
+                    //string ehr_id = await IRestDataAccess.CreateEhrIDWithStatus("SmICS", "Mitarbeiter");
+                    //CreateComposition(ehr_id, writeResult);
                 }
 
-             }
-             catch (Exception ex)
+            }
+             catch (Exception)
              {
 
              }
