@@ -45,24 +45,39 @@ Installation: https://docs.docker.com/engine/install/ and if necessary: https://
 ___
 ## Execution
 
-Clone this Repository as whole and build form the root folder.
-
-**Build Process - Docker**
-
+Clone these two repositories:
 ```
-docker build --build-arg repo="http://localhost:8080/ehrbase/rest/openehr/v1"  -t smics .
-docker build -t smics-visualisierung .
+git clone https://github.com/highmed/SmICSCore.git
+git clone https://github.com/highmed/SmICSVisualisierung.git
 ```
-The argument variable ```repo``` contains the connection string to the openEHR REST API.
 
-**Run Process - Docker**
+**Build & Run Process - Docker**
+Within each local git repository following commands need to be executed. **You need to start with the SmICSCore Repository**
+
 ```
 docker network create smics-net
-docker run --name smics_core --network smics-net -d -p 80:80 smics
-docker run --name smics_visualisierung --network smics-net -d -p 8080:3231 smicsvisualisierung
+docker build --build-arg repo="http://localhost:8080/ehrbase/rest/openehr/v1" --build-arg user=$USERNAME --build-arg passwd=$PASSWORD  -t smics .
+docker run --name smics_core --network smics-net -d -p 9787:9787 smics
 ```
 
-If you want to change the ports through which the applications are accessible, you have to change the first port in ```-p 80:80``` and/or ```-p 8080:3231```.
+If the SmICSCore container stops building because of failing test (especially if the openEHR Repository is ehrbase), the following lines needs to be commented in the <ins>Dockerfile</ins> to build the container without the tests.
+
+```
+RUN dotnet test "SmICSConnection.Test" --logger:trx -c Release
+RUN dotnet test "SmICSDataGenerator.Test" --logger:trx -c Release
+RUN dotnet test "SmICS.Tests" --logger:trx -c Release
+```
+
+The argument variable ```repo``` contains the connection string to the openEHR REST API of the local openEHR repository.
+
+**Run Process - Docker**
+
+```
+docker build -t smicsvisualisierung .
+docker run --name smics_visualisierung --network smics-net -d -p 3231:3231 smicsvisualisierung
+```
+
+If you want to change the ports through which the applications are accessible, you have to change the first port in ```-p 9787:9787``` and/or ```-p 3231:3231```.
 
 **Build & Run Process - Docker Compose**
 Edit the ```args: repo:``` in the ```docker-compose.yml``` and enter your connection string to you openEHR REST API.
@@ -71,4 +86,4 @@ Edit the ```args: repo:``` in the ```docker-compose.yml``` and enter your connec
 docker-compose up -d
 ```
 
-The SmICS Core Componentes should know be reachable via ```http://localhost``` and the SmICS Visualisierungs Componentents via ```http://localhost:8080``` on the machine where you installed the Docker Container. 
+The SmICS Core Componentes should know be reachable via ```http://localhost:9787``` and the SmICS Visualisierungs Componentents via ```http://localhost:3231`` on the machine where you installed the Docker Container. 
