@@ -328,7 +328,7 @@
             "Raum": "Zimmerkennung 101",
             "StationID": "Radiologie",
             "Beginn": "2021-01-06T08:00:00",
-            "Ende": "2021-01-07T16:00:00",
+            "Ende": "2021-01-07T16:00:00"
         },
         {
             "FallID": "00000011",
