@@ -205,7 +205,7 @@ namespace SmICSCoreLib.AQL
         }
         public static AQLQuery PatientSymptom_VS(PatientListParameter patientList)
         {
-            return new AQLQuery($@"SELECT e/ehr_id/value as PatientenID,
+            return new AQLQuery("PatientSymptom_VS", $@"SELECT e/ehr_id/value as PatientenID,
                                 c/context/start_time/value as BefundDatum,
                                 a/data[at0190]/events[at0191]/data[at0192]/items[at0001]/value/value as NameDesSymptoms, 
                                 a/data[at0190]/events[at0191]/data[at0192/items[at0151]/value/value as Lokalisation, 
@@ -220,7 +220,7 @@ namespace SmICSCoreLib.AQL
 
         public static AQLQuery PatientSymptom_AS(PatientListParameter patientList)
         {
-            return new AQLQuery($@"SELECT e/ehr_id/value as PatientenID,
+            return new AQLQuery("PatientSymptom_AS", $@"SELECT e/ehr_id/value as PatientenID,
                                 c/context/start_time/value as BefundDatum,
                                 a/data[at0001]/items[at0002]/value/value as AusschlussAussage, 
                                 a/ data[at0001]/items[at0003]/value/value as Diagnose 
@@ -232,7 +232,7 @@ namespace SmICSCoreLib.AQL
 
         public static AQLQuery PatientSymptom_US(PatientListParameter patientList)
         {
-            return new AQLQuery($@"SELECT e/ehr_id/value as PatientenID,
+            return new AQLQuery("PatientSymptom_US", $@"SELECT e/ehr_id/value as PatientenID,
                                 c/context/start_time/value as BefundDatum,
                                 a/data[at0001]/items[at0002]/value/value as UnbekanntesSymptom, 
                                 a/ data[at0001]/items[at0005]/value/value as AussageFehlendeInfo 
@@ -279,7 +279,7 @@ namespace SmICSCoreLib.AQL
 
         public static AQLQuery PatientVaccination(PatientListParameter patientList)
         {
-            return new AQLQuery($@"SELECT e/ehr_id/value as PatientID, 
+            return new AQLQuery("PatientVaccination", $@"SELECT e/ehr_id/value as PatientID, 
                                 a/description[at0017]/items[at0020]/value as Impfstoff, 
                                 x/items[at0164]/value as Dosierungsreihnfolge, 
                                 x/items[at0144]/value as Dosiermenge, 
@@ -294,17 +294,17 @@ namespace SmICSCoreLib.AQL
 
         public static AQLQuery EmployeeContactTracing(PatientListParameter patientList)
         {
-            return new AQLQuery($@"");
+            return new AQLQuery("EmployeeContactTracing", $@"");
         }
 
         public static AQLQuery EmployeePersInfoInfecCtrl(PatientListParameter patientList)
         {
-            return new AQLQuery($@"");
+            return new AQLQuery("EmployeePersInfoInfecCtrl", $@"");
         }
 
         public static AQLQuery EmployeePersonData(PatientListParameter patientList)
         {
-            return new AQLQuery($@"");
+            return new AQLQuery("EmployeePersonData", $@"");
         }
     }
 }

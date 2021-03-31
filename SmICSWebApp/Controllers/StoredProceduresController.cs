@@ -22,6 +22,7 @@ using SmICSCoreLib.AQL.Patient_Stay.Count;
 using SmICSCoreLib.AQL.Patient_Stay.Cases;
 using SmICSCoreLib.AQL.Patient_Stay.WeekCase;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace SmICSWebApp.Controllers
 {
@@ -39,7 +40,7 @@ namespace SmICSWebApp.Controllers
         private readonly IPatinet_Stay _patinet_Stay;
         private readonly IEmployeeInformation _employeeinformation;
 
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, ILabData labData, IPatientInformation patientInformation, IContactNetworkFactory contact, IAlgorithmData algorithm, IPatinet_Stay patinet_Stay)
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, ILabData labData, IPatientInformation patientInformation, IContactNetworkFactory contact, IAlgorithmData algorithm, IPatinet_Stay patinet_Stay, IEmployeeInformation employeeInfo)
         {
             _logger = logger;
             _labData = labData;
@@ -161,7 +162,7 @@ namespace SmICSWebApp.Controllers
         //    }
         //}
 
-        /*
+        
         [Route("Patient_Count")]
         [HttpPost]
         public ActionResult<List<CountDataModel>> Patient_Count(string nachweis)
@@ -246,7 +247,7 @@ namespace SmICSWebApp.Controllers
             {
                 return ErrorHandling(e);
             }
-        }*/
+        }
 
         /*[Route("RKI_Dataset")]
         [HttpPost]
@@ -349,6 +350,5 @@ namespace SmICSWebApp.Controllers
                 return ErrorHandling(e);
             }
         }
-        */
     }
 }
