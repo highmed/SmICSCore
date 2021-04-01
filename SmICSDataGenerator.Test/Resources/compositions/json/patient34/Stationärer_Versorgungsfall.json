@@ -104,7 +104,7 @@
                 "archetype_node_id": "at0003",
                 "value": {
                     "_type": "DV_TEXT",
-                    "value": "00000001"
+                    "value": "00000018"
                 }
             }]
         }
@@ -175,96 +175,10 @@
                 "archetype_node_id": "at0071",
                 "value": {
                     "_type": "DV_DATE_TIME",
-                    "value": "2021-01-01T09:00:00"
+                    "value": "2021-01-10T09:00:00"
                 }
             }]
         }
-    },{
-        "_type": "ADMIN_ENTRY",
-        "name": {
-            "_type": "DV_TEXT",
-            "value": "Entlassungsdaten"
-        },
-        "archetype_details": {
-            "archetype_id":{
-                "value": "openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0"
-            },
-            "rm_version": "1.0.4"
-        },
-        "archetype_node_id": "openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0",
-        "language":{
-            "terminology_id":{
-                "value": "ISO_639-1"
-            },
-            "code_string": "de"
-        },
-        "encoding": {
-            "terminology_id":{
-                "value": "IANA_character-sets"
-            },
-            "code_string": "UTF-8"
-        },
-        "subject": {
-            "_type": "PARTY_SELF"
-        },
-        "data": {
-            "_type": "ITEM_TREE",
-            "name": {
-                "_type": "DV_TEXT",
-                "value": "Tree"
-            },
-            "archetype_node_id": "at0001",
-            "items":[{
-                "_type": "ELEMENT",
-                "name": {
-                    "_type": "DV_TEXT",
-                    "value": "Art der Entlassung"
-                },
-                "archetype_node_id": "at0040",
-                "value": {
-                    "_type": "DV_TEXT",
-                    "value": "freiwillig"
-                }
-            },{
-                "_type": "ELEMENT",
-                "name": {
-                    "_type": "DV_TEXT",
-                    "value": "Klinischer Zustand des Patienten"
-                },
-                "archetype_node_id": "at0002",
-                "value": {
-                    "_type": "DV_CODED_TEXT",
-                    "value": "Geheilt",
-                    "defining_code": {
-                        "terminology_id": {
-                            "value": "local"
-                        },
-                        "code_string": "at0003"
-                    }
-                }
-            },{
-                "_type": "ELEMENT",
-                "name": {
-                    "_type": "DV_TEXT",
-                    "value": "Datum/Uhrzeit der Entlassung"
-                },
-                "archetype_node_id": "at0011",
-                "value": {
-                    "_type": "DV_DATE_TIME",
-                    "value": "2021-01-05T15:00:00"
-                }
-            },{
-                "_type": "ELEMENT",
-                "name": {
-                    "_type": "DV_TEXT",
-                    "value": "Zusätzliche Informationen"
-                },
-                "archetype_node_id": "at0050",
-                "value": {
-                    "_type": "DV_TEXT",
-                    "value": "Information"
-                }
-            }]
-        }
-    }]
+    }
+    ]
 }

@@ -53,7 +53,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
             public IEnumerator<object[]> GetEnumerator()
             {
                 List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
-                for (int i = 0; i <= 33; i++)
+                for (int i = 0; i <= 16; i++)
                 {
                     yield return new object[] { patient[i].EHR_ID, i };
                 }

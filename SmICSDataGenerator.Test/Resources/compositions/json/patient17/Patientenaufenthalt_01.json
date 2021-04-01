@@ -89,7 +89,7 @@
                     "archetype_node_id": "at0001",
                     "value": {
                         "_type": "DV_TEXT",
-                        "value": "00000017"
+                        "value": "00000001"
                     }
                 }]
             },{
@@ -164,8 +164,19 @@
                 "archetype_node_id": "at0004",
                 "value":{
                     "_type": "DV_DATE_TIME",
-                    "value": "2021-01-10T09:00:00"
+                    "value": "2021-01-01T09:00:00"
                 }
+            },{
+               "_type": "ELEMENT",
+                "name": {
+                    "_type": "DV_TEXT",
+                    "value": "Ende"
+                },
+                "archetype_node_id": "at0005",
+                "value":{
+                    "_type": "DV_DATE_TIME",
+                    "value": "2021-01-05T15:00:00"
+                } 
             },{
                 "_type": "ELEMENT",
                 "name": {

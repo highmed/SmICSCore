@@ -51,11 +51,11 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                 List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
                 
                 yield return new object[] { patient[3].EHR_ID, 3 };
-                yield return new object[] { patient[6].EHR_ID, 6 };
-                yield return new object[] { patient[8].EHR_ID, 8 };
+                yield return new object[] { patient[5].EHR_ID, 5 };
+                yield return new object[] { patient[7].EHR_ID, 7 };
+                yield return new object[] { patient[13].EHR_ID, 13 };
                 yield return new object[] { patient[14].EHR_ID, 14 };
                 yield return new object[] { patient[15].EHR_ID, 15 };
-                yield return new object[] { patient[16].EHR_ID, 16 };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
