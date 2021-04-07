@@ -7,6 +7,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Logging
 @using Newtonsoft.Json.Linq
+@using SmICSCoreLib.AQL.Employees
 @using SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl
 
 @inject ILogger<FormPersInfoInfectCtrl> Logger
@@ -48,7 +49,7 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Auftreten von Symptomen oder Anzeichen:</label></div>
                             <div class="tb">
-                                <InputDate @bind-Value="informationControl.symp_auftreten" @bind-Value:format="dd/MM/yyyy HH:ii:ss" disabled="@disabled" />
+                                <InputText type="datetime-local" @bind-Value="informationControl.symp_auftreten" @bind-Value:format="dd/MM/yyyy HH:ii:ss" disabled="@disabled" />
                             </div>
                         </div>
                     </div>
@@ -96,7 +97,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Zeitpunkt der Kennzeichnung:</label></div>
                         <div class="tb">
-                            <InputDate @bind-Value="informationControl.zeitpunkt_kennzeichnung" disabled="@disabled" />
+                            <InputText type="datetime-local" @bind-Value="informationControl.zeitpunkt_kennzeichnung" disabled="@disabled" />
                         </div>
                     </div>
                     <div class="tr">
@@ -110,7 +111,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Zuletzt aktualisiert:</label></div>
                         <div class="tb">
-                            <InputDate @bind-Value="informationControl.zuletzt_aktuell" disabled="@disabled" />
+                            <InputText type="datetime-local" @bind-Value="informationControl.zuletzt_aktuell" disabled="@disabled" />
                         </div>
                     </div>
                 </div>
@@ -194,7 +195,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Datum der Meldung:</label></div>
                         <div class="tb">
-                            <InputDate @bind-Value="informationControl.datum_meldung" disabled="@disabled"></InputDate>
+                            <InputText type="datetime-local" @bind-Value="informationControl.datum_meldung" disabled="@disabled"></InputText>
                         </div>
                     </div>
                     <div class="tr">
@@ -235,8 +236,7 @@
             PersInfoInfectCtrlService.PersInfoInfectCtrlServiceDataStorage(o);
             disabled = true;
             messageStyles = "color:green";
-            //message = "Das Formular wurde übermittelt.";
-            message = o.ToString();
+            message = "Das Formular wurde übermittelt.";
         }
         catch (Exception ex)
         {

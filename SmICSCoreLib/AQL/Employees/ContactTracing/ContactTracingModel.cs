@@ -11,6 +11,9 @@ namespace SmICSCoreLib.AQL.Employees.ContactTracing
         [JsonProperty(PropertyName = "bericht_id")]
         [Required]
         public string bericht_id { get; set; }
+        [JsonProperty(PropertyName = "dokumentations_id")]
+        [Required]
+        public DateTime dokumentations_id { get; set; } = DateTime.Now;
         [JsonProperty(PropertyName = "event_kennung")]
         [Required]
         public string event_kennung { get; set; }
@@ -29,10 +32,10 @@ namespace SmICSCoreLib.AQL.Employees.ContactTracing
         public string beschreibung { get; set; }
         [JsonProperty(PropertyName = "beginn")]
         [Required]
-        public Nullable<DateTime> beginn { get; set; } = null;
+        public string beginn { get; set; } = null;
         [JsonProperty(PropertyName = "ende")]
         [Required]
-        public Nullable<DateTime> ende { get; set; } = null;
+        public string ende { get; set; }
         [JsonProperty(PropertyName = "ort")]
         [Required]
         public string ort { get; set; }

@@ -11,12 +11,15 @@ namespace SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl
         [JsonProperty(PropertyName = "berichtID")]
         [Required]
         public string berichtID { get; set; }
+        [JsonProperty(PropertyName = "dokumentations_id")]
+        [Required]
+        public DateTime dokumentations_id { get; set; } = DateTime.Now;
         [JsonProperty(PropertyName = "symp_vorhanden")]
         [Required]
         public string symp_vorhanden { get; set; }
         [JsonProperty(PropertyName = "symp_auftreten")]
         [Required]
-        public Nullable<DateTime> symp_auftreten { get; set; } = null;
+        public string symp_auftreten { get; set; }
         [JsonProperty(PropertyName = "bez_symp")]
         [Required]
         public string bez_symp { get; set; }
@@ -29,12 +32,12 @@ namespace SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl
         public string erreg_name { get; set; }
         [JsonProperty(PropertyName = "zeitpunkt_kennzeichnung")]
         [Required]
-        public Nullable<DateTime> zeitpunkt_kennzeichnung { get; set; } = null;
+        public string zeitpunkt_kennzeichnung { get; set; }
         [JsonProperty(PropertyName = "erreg_Nachweis_klinik")]
         public bool erreg_Nachweis_klinik { get; set; } = false;
         [JsonProperty(PropertyName = "zuletzt_aktuell")]
         [Required]
-        public Nullable<DateTime> zuletzt_aktuell { get; set; } = null;
+        public string zuletzt_aktuell { get; set; }
         [JsonProperty(PropertyName = "freigetsellt")]
         public bool freigetsellt { get; set; } = false;
         [JsonProperty(PropertyName = "grund")]
@@ -61,7 +64,7 @@ namespace SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl
         public string beschreibung_ereignis { get; set; }
         [JsonProperty(PropertyName = "datum_meldung")]
         [Required]
-        public Nullable<DateTime> datum_meldung { get; set; } = null;
+        public string datum_meldung { get; set; }
         [JsonProperty(PropertyName = "grund_meldung")]
         [Required]
         public string grund_meldung { get; set; }

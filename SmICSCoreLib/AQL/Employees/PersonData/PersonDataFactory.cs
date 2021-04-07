@@ -18,7 +18,7 @@ namespace SmICSCoreLib.AQL.Employees.PersonData
         public List<PersonDataModel> Process(PatientListParameter parameter)
         {
 
-            List<PersonDataModel> ctList = _restData.AQLQuery<PersonDataModel>(AQLCatalog.EmployeePersonData(parameter).Query);
+            List<PersonDataModel> ctList = _restData.AQLQuery<PersonDataModel>(AQLCatalog.EmployeePersonData(parameter));
 
             if (ctList is null)
             {

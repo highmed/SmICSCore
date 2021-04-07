@@ -11,6 +11,9 @@ namespace SmICSCoreLib.AQL.Employees.PersonData
         [JsonProperty(PropertyName = "personID")]
         [Required]
         public string personID { get; set; }
+        [JsonProperty(PropertyName = "dokumentations_id")]
+        [Required]
+        public DateTime dokumentations_id { get; set; } = DateTime.Now;
         [JsonProperty(PropertyName = "art_der_person")]
         [Required]
         public string art_der_person { get; set; }

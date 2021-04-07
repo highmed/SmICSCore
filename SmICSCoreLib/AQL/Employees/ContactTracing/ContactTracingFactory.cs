@@ -18,7 +18,7 @@ namespace SmICSCoreLib.AQL.Employees.ContactTracing
         public List<ContactTracingModel> Process(PatientListParameter parameter)
         {
 
-            List<ContactTracingModel> ctList = _restData.AQLQuery<ContactTracingModel>(AQLCatalog.EmployeeContactTracing(parameter).Query);
+            List<ContactTracingModel> ctList = _restData.AQLQuery<ContactTracingModel>(AQLCatalog.EmployeeContactTracing(parameter));
 
             if (ctList is null)
             {
