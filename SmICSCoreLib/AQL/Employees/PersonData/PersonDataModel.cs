@@ -13,7 +13,7 @@ namespace SmICSCoreLib.AQL.Employees.PersonData
         public string personID { get; set; }
         [JsonProperty(PropertyName = "dokumentations_id")]
         [Required]
-        public DateTime dokumentations_id { get; set; } = DateTime.Now;
+        public DateTime dokumentations_id { get; set; }
         [JsonProperty(PropertyName = "art_der_person")]
         [Required]
         public string art_der_person { get; set; }

@@ -13,12 +13,12 @@ namespace SmICSWebApp.Data
 {
     public class ContactTracingService
     {
-        public static void ContactTracingDataStorage(JObject createEntry)
+        public void ContactTracingDataStorage(JObject createEntry)
         {
-             try
-             {
-                 if(createEntry != null)
-                 {
+            try
+            {
+                if (createEntry != null)
+                {
 
                     string filepath = @"../SmICSWebApp/Data/FormTemplates/Bericht_zur_Kontaktverfolgung.json";
                     string readResult = string.Empty;
@@ -50,33 +50,31 @@ namespace SmICSWebApp.Data
                         if (person != "Indexperson")
                         {
                             jobj["content"][0]["description"]["items"][6]["items"][1]["value"]["defining_code"]["code_string"] = "at0004";
-                        }else
+                        }
+                        else
                         {
                             jobj["content"][0]["description"]["items"][6]["items"][1]["value"]["defining_code"]["code_string"] = "at0003";
                         }
 
                         jobj["content"][0]["description"]["items"][7]["value"]["value"] = JObject.Parse(createEntry.ToString())["kommentar"];
-                        //foreach (var item in jobj.Properties())
-                        //{
-                        //    item.Value = item.Value.ToString().Replace("v1", "v2");
-                        //}
+
                         writeResult = jobj.ToString();
                         //Console.WriteLine(writeResult);
-                        
+
                     }
                     //System.Diagnostics.Debug.WriteLine(readResult);
                     File.WriteAllText(filepath, writeResult);
 
-                    //string ehr_id = await IRestDataAccess.CreateEhrIDWithStatus("SmICS", "Mitarbeiter");
+                    //string ehr_id = IRestDataAccess.CreateEhrIDWithStatus("SmICSTest", "Patient35");
                     //CreateComposition(ehr_id, writeResult);
                 }
 
             }
-             catch (Exception)
-             {
+            catch (Exception)
+            {
 
-             }
-           
+            }
+
         }
     }
 }

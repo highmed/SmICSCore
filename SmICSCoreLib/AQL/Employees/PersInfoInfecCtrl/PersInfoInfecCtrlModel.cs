@@ -13,7 +13,7 @@ namespace SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl
         public string berichtID { get; set; }
         [JsonProperty(PropertyName = "dokumentations_id")]
         [Required]
-        public DateTime dokumentations_id { get; set; } = DateTime.Now;
+        public DateTime dokumentations_id { get; set; }
         [JsonProperty(PropertyName = "symp_vorhanden")]
         [Required]
         public string symp_vorhanden { get; set; }

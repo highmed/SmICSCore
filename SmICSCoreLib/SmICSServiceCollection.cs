@@ -34,6 +34,7 @@ namespace SmICS
             services.AddTransient<IPatientLabordataFactory, PatientLabordataFactory>();
             services.AddTransient<IMibiPatientLaborDataFactory, MibiPatientLaborDataFactory>();
             services.AddTransient<ISymptomFactory, SymptomFactory>();
+            services.AddTransient<IVaccinationFactory, VaccinationFactory>();
 
             services.AddTransient<IPatientInformation, PatientInformation>();
 
