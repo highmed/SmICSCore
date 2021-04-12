@@ -197,7 +197,6 @@ namespace SmICSWebApp.Data
             }
             return patNoskumalList;
         }
-
         public List<Patient> GetNoskumalByContact(List<Patient> allNoskumalPat, List<CountDataModel> allPositivPat)
         {
             List<Patient> patNoskumalList = new List<Patient>();
@@ -225,7 +224,6 @@ namespace SmICSWebApp.Data
 
             return patNoskumalList;
         }
-
         public List<PatientMovementModel> PatientBewegungen(List<CountDataModel> allPositivPat, PatientMovementModel movment)
         {
             List<PatientMovementModel> allMovments = new();
@@ -263,7 +261,6 @@ namespace SmICSWebApp.Data
 
             return allMovments;
         }
-
         public int PatStay(List<CountDataModel> positivPat)
         {
             double start;
@@ -386,10 +383,21 @@ namespace SmICSWebApp.Data
                 String urlImpfung = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Impfquotenmonitoring.xlsx?__blob=publicationFile";
                 var resultImpfung = GetStringFromRki(urlImpfung);
 
-                bericht.gesamtImpfung = resultImpfung.Tables[1].Rows[20][2].ToString();
-                bericht.erstImpfung = resultImpfung.Tables[1].Rows[20][8].ToString().Substring(0, 4);
-                bericht.zweitImpfung = resultImpfung.Tables[1].Rows[20][14].ToString().Substring(0, 4);
-
+                if (resultImpfung != null)
+                {
+                    try
+                    {
+                        bericht.gesamtImpfung = resultImpfung.Tables[1].Rows[21][2].ToString();
+                        bericht.erstImpfung = resultImpfung.Tables[1].Rows[21][5].ToString().Substring(0, 4);
+                        bericht.zweitImpfung = resultImpfung.Tables[1].Rows[21][8].ToString().Substring(0, 4);
+                        bericht.ImpfStatus = true;
+                    }
+                    catch (Exception)
+                    {
+                        bericht.ImpfStatus = false;
+                    }
+                }
+                
                 bericht.stand = result.Tables[0].Rows[1][0].ToString().Substring(7);
                 bericht.rWert7Tage = GetRValue(2);
                 bericht.rWert7TageVortag = GetRValue(3);

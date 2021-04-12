@@ -11,8 +11,15 @@
 
     @if (@standAktuell == false)
     {
-        <p><em>Daten werden geladen...</em></p>
-        <div class="spinner"></div>
+        @if (status == true)
+        {
+            <p><em>Daten werden geladen...</em></p>
+            <div class="spinner"></div> }
+        else
+        {
+            <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
+            <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+        }
     }
 
     else
@@ -69,7 +76,9 @@
             </div>
 
             <div class="col-6">
-                <div class="row" style="justify-content: flex-end; text-align: center;">
+                @if(impfStatus == true) 
+                {
+                    <div class="row" style="justify-content: flex-end; text-align: center;">
                     <div class="col-md-4 col-xxl-3 d-flex">
                         <div class="card flex-fill">
                             <div class="card-header">
@@ -104,6 +113,7 @@
                         </div>
                     </div>
                 </div>
+                }
             </div>
         </div>
 
@@ -129,40 +139,42 @@
                         </div>
                         <div class="card-body">
                             <p> Datenstand @stand</p>
-                            <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                                <table class="table table-bordered table-hover mb-0">
-                                    <thead style="background-color: #7FBDD2;">
-                                        <tr>
-                                            <th scope="col">Bundesland</th>
-                                            <th scope="col">Gesamt Fälle</th>
-                                            <th scope="col">Fälle letzte 7 Tage</th>
-                                            <th scope="col">Fälle pro 100000 EW</th>
-                                            <th scope="col">7-Tage-Inzi­denz</th>
-                                            <th scope="col">Gesamt Todesfälle</th>
-                                            <th scope="col">Todesfälle letzte 7 Tage</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var state in @bundeslaender)
-                                        {
-                                            <tr>
-                                                <th scope="row">
-                                                    <a href="/district/@state.blAttribute.bundesland">
-                                                        @state.blAttribute.bundesland
-                                                    </a>
-                                                </th>
-                                                <td>@state.blAttribute.fallzahlGesamt</td>
-                                                <td>@state.blAttribute.faelle7BL</td>
-                                                <td>@state.blAttribute.faellePro100000Ew</td>
-                                                <td>@state.blAttribute.inzidenz7Tage</td>
-                                                <td>@state.blAttribute.todesfaelle</td>
-                                                <td>@state.blAttribute.todesfaelle7BL</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
+                            <div class="tableFixHead">
+                                <div class="">
 
+                                    <table class="table table-bordered table-hover mb-0">
+                                        <thead style="background-color: #7FBDD2;">
+                                            <tr>
+                                                <th scope="col">Bundesland</th>
+                                                <th scope="col">Gesamt Fälle</th>
+                                                <th scope="col">Fälle letzte 7 Tage</th>
+                                                <th scope="col">Fälle pro 100000 EW</th>
+                                                <th scope="col">7-Tage-Inzi­denz</th>
+                                                <th scope="col">Gesamt Todesfälle</th>
+                                                <th scope="col">Todesfälle letzte 7 Tage</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var state in @bundeslaender)
+                                            {
+                                                <tr>
+                                                    <td scope="row">
+                                                        <a href="/district/@state.blAttribute.bundesland">
+                                                            @state.blAttribute.bundesland
+                                                        </a>
+                                                    </td>
+                                                    <td>@state.blAttribute.fallzahlGesamt</td>
+                                                    <td>@state.blAttribute.faelle7BL</td>
+                                                    <td>@state.blAttribute.faellePro100000Ew</td>
+                                                    <td>@state.blAttribute.inzidenz7Tage</td>
+                                                    <td>@state.blAttribute.todesfaelle</td>
+                                                    <td>@state.blAttribute.todesfaelle7BL</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -403,6 +415,8 @@
     private string todesfaelleVortag;
     private bool standAktuell;
     private bool blStandAktuell;
+    private bool status;
+    private bool impfStatus;
     private string inzidenzColor;
     private string rWertColor;
     private string gesamtImpfung;
@@ -416,9 +430,19 @@
 
     protected override async Task OnInitializedAsync()
     {
+        status = true;
         datum = DateTime.Now;
         await Task.Run(SetRKIData);
         await Task.Run(GetRKIData);
+        GetStatus();
+    }
+
+    private void GetStatus()
+    {
+        if (standAktuell == false)
+        {
+            status = false;
+        }
     }
 
     private void SetRKIData()
@@ -439,7 +463,10 @@
             todesfaelle = dailyReport.bericht.todesfaelle;
             todesfaelleVortag = dailyReport.bericht.todesfaelleVortag;
             standAktuell = dailyReport.bericht.standAktuell;
+            //standAktuell = false;
             blStandAktuell = dailyReport.bericht.blStandAktuell;
+            impfStatus = dailyReport.bericht.ImpfStatus;
+            //impfStatus = false;
             gesamtImpfung = dailyReport.bericht.gesamtImpfung;
             erstImpfung = dailyReport.bericht.erstImpfung;
             zweittImpfung = dailyReport.bericht.zweitImpfung;
@@ -472,6 +499,7 @@
         catch (Exception ex)
         {
             Console.WriteLine(ex);
+            status = false;
             rWert7Tage = "k.A.";
             inzidenz7Tage = "k.A.";
             inzidenzColor = "#F35C58";

@@ -12,8 +12,15 @@
 
     @if (allSymGroup == null)
     {
-        <p><em>Daten werden geladen...</em></p>
-        <div class="spinner"></div>
+        @if (status == true)
+        {
+            <p><em>Daten werden geladen...</em></p>
+            <div class="spinner"></div> }
+        else
+        {
+            <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
+            <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+        }
     }
     else
     {
@@ -356,6 +363,7 @@
     private int second = 0;
     private int indexFirst = 1;
     private int indexSec = 1;
+    private bool status;
     Dictionary<string, Dictionary<string, int>> allSymGroup;
 
     List<SymptomModel> patListBySym;
@@ -368,12 +376,17 @@
 
     protected override async Task OnInitializedAsync()
     {
+        status = true;
         await Task.Run(GetAllSym);
     }
 
     private void GetAllSym()
     {
         allSymGroup = symptom.GetAllSymGroup(symptomData.datum);
+        if (allSymGroup == null)
+        {
+            status = false;
+        }
     }
 
     private void GetPatListBySta(string symptomName, string station)

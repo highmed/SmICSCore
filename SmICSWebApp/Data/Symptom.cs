@@ -24,8 +24,15 @@ namespace SmICSWebApp.Data
 
         public List<SymptomModel> GetAllSymptom()
         {
-            List<SymptomModel> symptomListe = _patientInformation.Patient_Symptom();
-            return symptomListe;
+            try
+            {
+                List<SymptomModel> symptomListe = _patientInformation.Patient_Symptom();
+                return symptomListe;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public List<SymptomModel> GetAllPatBySym(string symptom, DateTime datum)
@@ -107,15 +114,22 @@ namespace SmICSWebApp.Data
         {
             Dictionary<string, Dictionary<string, int>> allSymGroup = new Dictionary<string, Dictionary<string, int>>();
             List<SymptomModel> symptomListe = GetAllSymptom();
-            foreach (var item in symptomListe)
+            if (symptomListe != null)
             {
-                Dictionary<string, int> symGroup = GetSymGroup(item.NameDesSymptoms, datum);
-                if (symGroup.Count != 0)
+                foreach (var item in symptomListe)
                 {
-                    allSymGroup.Add(item.NameDesSymptoms, symGroup);
+                    Dictionary<string, int> symGroup = GetSymGroup(item.NameDesSymptoms, datum);
+                    if (symGroup.Count != 0)
+                    {
+                        allSymGroup.Add(item.NameDesSymptoms, symGroup);
+                    }
                 }
+                return allSymGroup;
             }
-            return allSymGroup;
+            else
+            {
+                return null;
+            }
         }
 
         public List<StationaryDataModel> GetPatStationary(string patientId, string fallId)

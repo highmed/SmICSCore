@@ -42,6 +42,9 @@ namespace SmICSWebApp.Data
 
         [JsonProperty(PropertyName = "gesamtImpfung")]
         public string gesamtImpfung { get; set; }
+        
+        [JsonProperty(PropertyName = "ImpfStatus")]
+        public bool ImpfStatus { get; set; }
 
         [JsonProperty(PropertyName = "erstImpfung")]
         public string erstImpfung { get; set; }

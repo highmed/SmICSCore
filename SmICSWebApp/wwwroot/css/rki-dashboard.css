@@ -32,13 +32,13 @@
 
 #head-info {
     background-color: #4D7FA0;
-    color: Whit
-}
-#head-info h6{
-    text-align: center;
 }
 
-#body-info{
+    #head-info h6 {
+        text-align: center;
+    }
+
+#body-info {
     text-align: center;
 }
 
@@ -46,3 +46,19 @@
     width: 100%;
     height: 200px;
 }
+
+.tableFixHead {
+    overflow-y: auto;
+    height: 400px;
+}
+
+    .tableFixHead table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .tableFixHead th {
+        position: sticky;
+        top: 0;
+        background: #7FBDD2;
+    }

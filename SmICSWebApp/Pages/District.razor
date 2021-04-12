@@ -108,39 +108,38 @@
                       
                         <div class="card-body">
                             <p>Datenstand @stand</p>
-
-                            <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                                <table class="table table-bordered table-striped mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Landkreis</th>
-                                            <th scope="col">Stadt</th>
-                                            <th scope="col">Gesamt Fälle</th>
-                                            <th scope="col">Fälle letzte 7 Tage</th>
-                                            <th scope="col">Fälle pro 100000 EW</th>
-                                            <th scope="col">7-Tage-Inzi­denz</th>
-                                            <th scope="col">Gesamt Todes­fälle</th>
-                                            <th scope="col">Todesfälle letzte 7 Tage</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        @foreach (var district in lkArray)
-                                        {
+                            <div class="tableFixHead">
+                               <table class="table table-bordered table-hover mb-0">
+                                        <thead>
                                             <tr>
-                                                <td scope="row">@district.landkreis</td>
-                                                <td>@district.stadt</td>
-                                                <td>@district.fallzahlGesamt</td>
-                                                <td>@district.faelle7Lk</td>
-                                                <td>@district.faellePro100000Ew</td>
-                                                <td>@district.inzidenz7Tage</td>
-                                                <td>@district.todesfaelle</td>
-                                                <td>@district.todesfaelle7Lk</td>
+                                                <th scope="col">Landkreis</th>
+                                                <th scope="col">Stadt</th>
+                                                <th scope="col">Gesamt Fälle</th>
+                                                <th scope="col">Fälle letzte 7 Tage</th>
+                                                <th scope="col">Fälle pro 100000 EW</th>
+                                                <th scope="col">7-Tage-Inzi­denz</th>
+                                                <th scope="col">Gesamt Todes­fälle</th>
+                                                <th scope="col">Todesfälle letzte 7 Tage</th>
                                             </tr>
-                                        }
+                                        </thead>
+                                        <tbody>
 
-                                    </tbody>
-                                </table>
+                                            @foreach (var district in lkArray)
+                                            {
+                                                <tr>
+                                                    <td scope="row">@district.landkreis</td>
+                                                    <td>@district.stadt</td>
+                                                    <td>@district.fallzahlGesamt</td>
+                                                    <td>@district.faelle7Lk</td>
+                                                    <td>@district.faellePro100000Ew</td>
+                                                    <td>@district.inzidenz7Tage</td>
+                                                    <td>@district.todesfaelle</td>
+                                                    <td>@district.todesfaelle7Lk</td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>  
                             </div>
                         </div>
                     </div>
