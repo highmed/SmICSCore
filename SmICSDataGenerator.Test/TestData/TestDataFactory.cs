@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SmICSCoreLib.AQL;
 using SmICSCoreLib.REST;
@@ -19,7 +20,7 @@ namespace SmICSCoreLib.Tests.TestData
         [Fact]
         public async void CreateTemplates()
         {
-            List<string> templateIDs = new List<string>() { "Virologischer Befund", "Stationärer Versorgungsfall", "Symptome", "Impfstatus", "Patientenaufenthalt" };
+            List<string> templateIDs = new List<string>() { "Virologischer Befund", "Stationärer Versorgungsfall", "Symptom", "Impfstatus", "Patientenaufenthalt" };
 
             RestDataAccess _data = CreateDataAccess();
 
@@ -45,7 +46,7 @@ namespace SmICSCoreLib.Tests.TestData
                     if (id == "Stationärer Versorgungsfall" || id == "Patientenaufenthalt" || id == "Virologischer Befund")
                     {
                         XmlDocument xmlDoc = new XmlDocument();
-                        xmlDoc.Load(@"../../../Resources/templates/" + id.Replace(" ", "_") + ".opt");
+                        xmlDoc.Load(@"../../../../TestData/templates/" + id.Replace(" ", "_") + ".opt");
 
                         StringWriter stringWriter = new StringWriter();
                         XmlTextWriter xmlWriter = new XmlTextWriter(stringWriter);
@@ -90,7 +91,7 @@ namespace SmICSCoreLib.Tests.TestData
 
                 ehr_id = GetEHR_ID(response);
 
-                string[] compositions = Directory.GetFiles(@"../../../Resources/compositions/json/patient" + patientNo + "/");
+                string[] compositions = Directory.GetFiles(@"../../../../TestData/compositions/json/patient" + patientNo + "/");
                 foreach (string comp in compositions)
                 {
                     using (StreamReader reader = new StreamReader(comp))
@@ -104,25 +105,27 @@ namespace SmICSCoreLib.Tests.TestData
                 patientObj.Add(new JProperty("Patient", "Patient" + patientNo));
                 patientArray.Add(patientObj); ;
             }
-            JSONFileStream.JSONWriter.Write(patientArray, @"../../../Resources/", "GeneratedEHRIDs");
+            JSONFileStream.JSONWriter.Write(patientArray, @"../../../../TestData/", "GeneratedEHRIDs");
         }
 
         private string ExistsPatient(RestDataAccess _data, string patientNo)
         {
-            List<Patient> patient = _data.AQLQuery<Patient>(AQLCatalog.GetEHRID(patientNo).Query);
+            List<Patient> patient = _data.AQLQuery<Patient>(AQLCatalog.GetEHRID(patientNo));
             return patient != null ? patient[0].PatientID : null;
         }
 
         private RestDataAccess CreateDataAccess()
         {
+            OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
+            OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
+            OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
             //OpenehrConfig.openehrEndpoint = "http://localhost:8080/ehrbase/rest/openehr/v1";
-            //OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHRDB");
-            OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
-            OpenehrConfig.openehrUser = "etltestuser";
-            OpenehrConfig.openehrPassword = "etltestuser#01";
+            //OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
+            //OpenehrConfig.openehrUser = "etltestuser";
+            //OpenehrConfig.openehrPassword = "etltestuser#01";
 
             RestClientConnector restClient = new RestClientConnector();
-            return new RestDataAccess(restClient);
+            return new RestDataAccess(NullLogger<RestDataAccess>.Instance, restClient);
 
         }
 

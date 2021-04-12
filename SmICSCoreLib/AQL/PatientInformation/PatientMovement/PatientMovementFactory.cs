@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement.ReceiveModels;
@@ -13,9 +14,11 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
     public class PatientMovementFactory : IPatientMovementFactory
     {
         protected IRestDataAccess _restData;
-        public PatientMovementFactory(IRestDataAccess restData)
+        private ILogger<PatientMovementFactory> _logger;
+        public PatientMovementFactory(IRestDataAccess restData, ILogger<PatientMovementFactory> logger)
         {
             _restData = restData;
+            _logger = logger;
         }
         public List<PatientMovementModel> Process(PatientListParameter parameter)
         {
@@ -43,12 +46,16 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
                 if (!PatID_CaseId_Combination.Contains(patfallID))
                 {
 
-                    List<EpisodeOfCareModel> episodeOfCareList = _restData.AQLQuery<EpisodeOfCareModel>(AQLCatalog.EpisodeOfCare(episodeOfCareParam));
-
+                    List<EpisodeOfCareModel> episodeOfCareList = _restData.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParam));
+                    List<EpisodeOfCareModel> discharges = _restData.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParam));
                     if (!(episodeOfCareList is null))
                     {
                         //result.First because there can be just one admission/discharge timestamp for each case
                         episodeOfCare = episodeOfCareList[0];
+                        if(discharges != null)
+                        {
+                            episodeOfCare.Ende = discharges[0].Ende;
+                        }
                     }
                     PatID_CaseId_Combination.Add(patfallID);
                 }
@@ -70,16 +77,17 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
         private void addMovementTypeByDateComparison(PatientStayModel patientStay, List<PatientMovementModel> patientMovementList)
         {
             PatientMovementModel patientMovement = new PatientMovementModel(patientStay);
-            if (patientMovement.Beginn == patientMovement.Ende || patientMovement.Ende == DateTime.MinValue)
+            if (patientMovement.Beginn == patientMovement.Ende)
             {
-                if (patientMovement.Ende == DateTime.MinValue)
-                {
-                    patientMovement.Ende = patientMovement.Beginn;
-                }
+                
                 patientMovement.AddMovementType(4, "Behandlung");
             }
             else
             {
+                if (patientMovement.Ende == DateTime.MinValue)
+                {
+                    patientMovement.Ende = DateTime.Now;
+                }
                 patientMovement.AddMovementType(3, "Wechsel");
             }
             patientMovementList.Add(patientMovement);
@@ -99,13 +107,16 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
         }
         private void addDischargeObject(PatientStayModel patientStay, EpisodeOfCareModel episodeOfCare, List<PatientMovementModel> patientMovementList)
         {
-            if (!(episodeOfCare is null) && patientStay.Ende == episodeOfCare.Ende)
+            if (episodeOfCare.Ende != DateTime.MinValue)
             {
-                PatientMovementModel patientMovement = new PatientMovementModel(patientStay);
-                patientMovement.Beginn = episodeOfCare.Ende;
-                patientMovement.AddMovementType(2, "Entlassung");
+                if (!(episodeOfCare is null) && patientStay.Ende == episodeOfCare.Ende)
+                {
+                    PatientMovementModel patientMovement = new PatientMovementModel(patientStay);
+                    patientMovement.Beginn = episodeOfCare.Ende;
+                    patientMovement.AddMovementType(2, "Entlassung");
 
-                patientMovementList.Add(patientMovement);
+                    patientMovementList.Add(patientMovement);
+                }
             }
         }
 

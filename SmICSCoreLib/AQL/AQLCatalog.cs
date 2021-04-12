@@ -44,7 +44,7 @@ namespace SmICSCoreLib.AQL
                                 CONTAINS (CLUSTER l[openEHR-EHR-CLUSTER.location.v1] and CLUSTER o[openEHR-EHR-CLUSTER.organization.v0])
                                 WHERE c/name/value='Patientenaufenthalt' 
                                 and h/data[at0001]/items[at0004]/value/value <= '{ parameter.Endtime.ToString("o") }' 
-                                and (h/data[at0001]/items[at0004]/value/value >= '{ parameter.Starttime.ToString("o") }'
+                                and (h/data[at0001]/items[at0005]/value/value >= '{ parameter.Starttime.ToString("o") }'
                                 or NOT EXISTS h/data[at0001]/items[at0005]/value/value)
                                 and o/items[at0024]/value/defining_code/code_string = '{ parameter.Departement }' 
                                 and l/items[at0027]/value/value = '{ parameter.WardID }' 
@@ -60,7 +60,7 @@ namespace SmICSCoreLib.AQL
                                 CONTAINS (CLUSTER l[openEHR-EHR-CLUSTER.location.v1] and CLUSTER o[openEHR-EHR-CLUSTER.organization.v0])
                                 WHERE c/name/value='Patientenaufenthalt' 
                                 and h/data[at0001]/items[at0004]/value/value <= '{ parameter.Endtime.ToString("o") }' 
-                                and (h/data[at0001]/items[at0004]/value/value >= '{ parameter.Starttime.ToString("o") }'
+                                and (h/data[at0001]/items[at0005]/value/value >= '{ parameter.Starttime.ToString("o") }'
                                 or NOT EXISTS h/data[at0001]/items[at0005]/value/value)
                                 and l/items[at0027]/value/value = '{ parameter.WardID }' 
                                 ORDER BY h/data[at0001]/items[at0004]/value/value");
@@ -85,16 +85,24 @@ namespace SmICSCoreLib.AQL
                                 WHERE c/name/value = 'Patientenaufenthalt'
                                 AND i/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)'
                                 AND e/ehr_id/value MATCHES {patientList.ToAQLMatchString()}
-                                ORDER BY e/ehr_id/value ASC, h/items[at0004]/value/value ASC");
+                                ORDER BY e/ehr_id/value ASC, h/data[at0001]/items[at0004]/value/value ASC");
         }
-        public static AQLQuery EpisodeOfCare(EpsiodeOfCareParameter parameter)
+        public static AQLQuery PatientAdmission(EpsiodeOfCareParameter parameter)
         {
-            return new AQLQuery("EpisodeOfCare",$@"SELECT p/data[at0001]/items[at0071]/value/value as Beginn, 
-                                b/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Ende 
+            return new AQLQuery("PatientAdmission", $@"SELECT p/data[at0001]/items[at0071]/value/value as Beginn
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
-                                CONTAINS (ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
-                                and ADMIN_ENTRY b[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
+                                CONTAINS ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
+                                WHERE c/name/value = 'Stationärer Versorgungsfall' 
+                                and e/ehr_id/value = '{ parameter.PatientID }' 
+                                and c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value = '{ parameter.CaseID }'");
+        }
+        public static AQLQuery PatientDischarge(EpsiodeOfCareParameter parameter)
+        {
+            return new AQLQuery("PatientDischarge", $@"SELECT b/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Ende 
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
+                                CONTAINS ADMIN_ENTRY b[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0] 
                                 WHERE c/name/value = 'Stationärer Versorgungsfall' 
                                 and e/ehr_id/value = '{ parameter.PatientID }' 
                                 and c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value = '{ parameter.CaseID }'");
@@ -107,8 +115,8 @@ namespace SmICSCoreLib.AQL
                                     a/items[at0001]/value/id as LabordatenID,
                                     a/items[at0029]/value/defining_code/code_string as MaterialID,
                                     a/items[at0029]/value/value as Material_l,
-                                    a/items[at0034]/value/value as ZeitpunktProbenentnahme,
-                                    a/items[at0015]/value/value as ZeitpunktProbeneingang,
+                                    a/items[at0015]/value/value as ZeitpunktProbenentnahme,
+                                    a/items[at0034]/value/value as ZeitpunktProbeneingang,
                                     d/items[at0024]/value/value as Keim_l,
                                     d/items[at0024]/value/defining_code/code_string as KeimID,
                                     d/items[at0001,'Nachweis']/value/value as Befund,
@@ -123,7 +131,8 @@ namespace SmICSCoreLib.AQL
                                             and CLUSTER b[openEHR-EHR-CLUSTER.laboratory_test_panel.v0]
                                                 CONTAINS (CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1])))
                                     WHERE c/name/value = 'Virologischer Befund'
-                                    AND e/ehr_id/value MATCHES { patientList.ToAQLMatchString() }");
+                                    AND e/ehr_id/value MATCHES { patientList.ToAQLMatchString() }
+                                    ORDER BY a/items[at0015]/value/value ASC");
         }
         public static AQLQuery NECPatientLaborData(string PatientID, TimespanParameter timespan)
         {

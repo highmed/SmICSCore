@@ -8,7 +8,6 @@ using SmICSCoreLib.AQL.Lab;
 using SmICSCoreLib.AQL.Lab.EpiKurve;
 using SmICSCoreLib.REST;
 using SmICSCoreLib.AQL.Algorithm;
-using SmICSCoreLib.AQL.ConnectionTest;
 using SmICSCoreLib.AQL.Algorithm.NEC;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
 using SmICSCoreLib.AQL.Patient_Stay;
@@ -28,20 +27,20 @@ namespace SmICS
             
             services.AddTransient<IPatientMovementFactory, PatientMovementFactory>();
             services.AddTransient<IPatientLabordataFactory, PatientLabordataFactory>();
+            services.AddTransient<IMibiPatientLaborDataFactory, MibiPatientLaborDataFactory>();
+            services.AddTransient<ISymptomFactory, SymptomFactory>();
+
+            services.AddTransient<IPatientInformation, PatientInformation>();
+
             services.AddTransient<IContactNetworkFactory, ContactNetworkFactory>();
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();
-            services.AddTransient<ISymptomFactory, SymptomFactory>();
-            services.AddTransient<IMibiPatientLaborDataFactory, MibiPatientLaborDataFactory>();
             
             services.AddTransient<INECCombinedFactory, NECCombinedFactory>();
 
             services.AddTransient<INECResultDataFactory, NECResultDataFactory>();
             services.AddTransient<INECResultFileFactory, NECResultFileFactory>();
 
-            services.AddTransient<IPatientInformation, PatientInformation>();
-            services.AddTransient<IContactNetworkProcedures, ContactNetworkProcedures>();
             services.AddTransient<ILabData, LabData>();
-            services.AddTransient<IConnectionTest, ConnectionTest>();
             services.AddSingleton<IAlgorithmData, AlgortihmData>();
 
             services.AddTransient<IStationaryFactory, StationaryFactory>();

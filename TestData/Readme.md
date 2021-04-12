@@ -35,7 +35,7 @@ CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
         and CLUSTER o[openEHR-EHR-CLUSTER.organization.v0]) 
 WHERE c/name/value='Patientenaufenthalt' 
     and h/data[at0001]/items[at0004]/value/value <= '<Endtime>' 
-        and (h/data[at0001]/items[at0004]/value/value >= '<Starttime>' 
+        and (h/data[at0001]/items[at0005]/value/value >= '<Starttime>' 
         or NOT EXISTS h/data[at0001]/items[at0005]/value/value) 
         and o/items[at0024]/value/defining_code/code_string = '<Fachabteilungsschlüssel>' 
         and l/items[at0027]/value/value = '<Station>' 
@@ -45,7 +45,7 @@ ORDER BY h/data[at0001]/items[at0004]/value/value ASC
 
 ## 2. Patient Movements
 
-The patient movements are calculated from two queries. The first query returns for every patient <ins>every</ins> recorded patient stay on different wards within the hospital. The second query needs to be executed for every patient in comination with the returend "FallID" from the first query. It returns the dates for the patient admission and discharge. With that information the patient stay will be divided in the different patient stays for each "FallID".
+The patient movements are calculated from three queries. The first query returns for every patient <ins>every</ins> recorded patient stay on different wards within the hospital. The second query needs to be executed for every patient in comination with the returend "FallID" from the first query. It returns the dates for the patient admission. On the other hand the third query returns all discharge dates for the patient. With that information the patient stay will be divided in the different patient stays for each "FallID".
 
 ```
 SELECT e/ehr_id/value as PatientID,
@@ -66,16 +66,24 @@ CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
 WHERE c/name/value = 'Patientenaufenthalt' 
     AND i/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)' 
     AND e/ehr_id/value MATCHES { 'ehrID' } 
-ORDER BY e/ehr_id/value ASC, h/items[at0004]/value/value ASC
+ORDER BY e/ehr_id/value ASC, h/data[at0001]/items[at0004]/value/value ASC
 ```
 
 ```
-SELECT p/data[at0001]/items[at0071]/value/value as Beginn, 
-    b/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Ende 
+SELECT p/data[at0001]/items[at0071]/value/value as Beginn 
 FROM EHR e 
 CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
-    CONTAINS (ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
-    and ADMIN_ENTRY b[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
+    CONTAINS ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.admission.v0]  
+WHERE c/name/value = 'Stationärer Versorgungsfall' 
+    and e/ehr_id/value = '<ehrID>' 
+    and c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value = '<FallID>'
+```
+
+```
+SELECT b/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Ende 
+FROM EHR e 
+CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
+    CONTAINS ADMIN_ENTRY b[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
 WHERE c/name/value = 'Stationärer Versorgungsfall' 
     and e/ehr_id/value = '<ehrID>' 
     and c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value = '<FallID>'
@@ -110,6 +118,7 @@ CONTAINS COMPOSITION c
             CONTAINS (CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]))) 
 WHERE c/name/value = 'Virologischer Befund' 
     AND e/ehr_id/value MATCHES { '<ehrID' }
+ORDER BY a/items[at0034]/value/value ASC
 ```
 
 ## 4. Epidemiological curve

@@ -35,6 +35,7 @@ namespace SmICSCoreLib.REST
                     return null;
                 }
                 _logger.LogInformation("Received AQL Result From {Query}", query.Name);
+                _logger.LogDebug("AQL Result: {Result}", response.Content.ReadAsStringAsync().Result);
                 return openEHRJSONSerializer<T>.ReceiveModelConstructor(response);
             }
             else
