@@ -33,6 +33,7 @@ namespace SmICSWebApp
             services.AddServerSideBlazor();
             services.AddSmICSLibrary();
             services.AddSingleton<DataService>();
+            services.AddSingleton<ContactTracingService>();
                      
             services.AddSwaggerGen(c =>
             {

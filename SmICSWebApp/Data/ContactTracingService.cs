@@ -1,18 +1,21 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using SmICSWebApp.Data;
-using Microsoft.OpenApi.Expressions;
-using Microsoft.IdentityModel.Tokens;
 using System.IO;
 using SmICSCoreLib.REST;
+using System.Net.Http;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
+using SmICSCoreLib.AQL.Employees.ContactTracing;
 
 namespace SmICSWebApp.Data
 {
     public class ContactTracingService
     {
+        private IRestDataAccess _restData;
+        public ContactTracingService(IRestDataAccess restData)
+        {
+            _restData = restData;
+        }
         public void ContactTracingDataStorage(JObject createEntry)
         {
             try
@@ -65,14 +68,32 @@ namespace SmICSWebApp.Data
                     //System.Diagnostics.Debug.WriteLine(readResult);
                     File.WriteAllText(filepath, writeResult);
 
-                    //string ehr_id = IRestDataAccess.CreateEhrIDWithStatus("SmICSTest", "Patient35");
-                    //CreateComposition(ehr_id, writeResult);
+
+                    using (var content = new StringContent(JsonConvert.SerializeObject(writeResult), System.Text.Encoding.UTF8, filepath))
+                    {
+                        HttpResponseMessage result = _restData.CreateEhrIDWithStatus("SmICSTest", "Patient35").Result;
+                        string ehr_id = result.IsSuccessStatusCode.ToString();
+
+                        if (ehr_id != null)
+                        {
+                            HttpResponseMessage responseMessage = _restData.CreateComposition(ehr_id, writeResult).Result;
+                            if (responseMessage.StatusCode != System.Net.HttpStatusCode.Created)
+                            {
+                                string returnValue = responseMessage.Content.ReadAsStringAsync().Result;
+                                throw new Exception($"Failed to POST data: ({responseMessage.StatusCode}): {returnValue}");
+                            }
+                        }
+                        else
+                            throw new Exception($"Failed to POST data");
+
+                    }
+
                 }
 
             }
             catch (Exception)
             {
-
+                throw new Exception($"Failed to POST data");
             }
 
         }
