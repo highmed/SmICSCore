@@ -6,6 +6,8 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
 using SmICSCoreLib.AQL.Employees.ContactTracing;
+using System.Collections.Generic;
+using SmICSCoreLib.AQL;
 
 namespace SmICSWebApp.Data
 {
@@ -16,7 +18,7 @@ namespace SmICSWebApp.Data
         {
             _restData = restData;
         }
-        public void ContactTracingDataStorage(JObject createEntry)
+        public void ContactTracingDataStorage(JObject createEntry, string ehr_id)
         {
             try
             {
@@ -32,6 +34,7 @@ namespace SmICSWebApp.Data
                         var jobj = JObject.Parse(json);
                         readResult = jobj.ToString();
 
+                        jobj["context"]["start_time"]["value"] = JObject.Parse(createEntry.ToString())["dokumentations_id"];
                         jobj["context"]["other_context"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["bericht_id"];
                         jobj["context"]["other_context"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["bericht_id"];
                         jobj["context"]["other_context"]["items"][1]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["event_kennung"];
@@ -68,26 +71,7 @@ namespace SmICSWebApp.Data
                     //System.Diagnostics.Debug.WriteLine(readResult);
                     File.WriteAllText(filepath, writeResult);
 
-
-                    using (var content = new StringContent(JsonConvert.SerializeObject(writeResult), System.Text.Encoding.UTF8, filepath))
-                    {
-                        HttpResponseMessage result = _restData.CreateEhrIDWithStatus("SmICSTest", "Patient35").Result;
-                        string ehr_id = result.IsSuccessStatusCode.ToString();
-
-                        if (ehr_id != null)
-                        {
-                            HttpResponseMessage responseMessage = _restData.CreateComposition(ehr_id, writeResult).Result;
-                            if (responseMessage.StatusCode != System.Net.HttpStatusCode.Created)
-                            {
-                                string returnValue = responseMessage.Content.ReadAsStringAsync().Result;
-                                throw new Exception($"Failed to POST data: ({responseMessage.StatusCode}): {returnValue}");
-                            }
-                        }
-                        else
-                            throw new Exception($"Failed to POST data");
-
-                    }
-
+                    SaveComposition(ehr_id, writeResult);
                 }
 
             }
@@ -97,5 +81,59 @@ namespace SmICSWebApp.Data
             }
 
         }
+
+        public void SaveComposition(string subjectID, string writeResult)
+        {
+            string ehr_id = ExistsSubject(_restData, subjectID);
+            System.Diagnostics.Debug.WriteLine(ehr_id);
+
+            if (ehr_id == null)
+            {
+                string ehr_status = GetLastPatientStatus(_restData);
+                System.Diagnostics.Debug.WriteLine(ehr_status);
+                if (ehr_status != null)
+                {
+                    string ehr_statusNr = ehr_status.Remove(0, 6);
+                    System.Diagnostics.Debug.WriteLine(ehr_statusNr);
+                    HttpResponseMessage result = _restData.CreateEhrIDWithStatus("SmICSTest", "Patient" + ehr_statusNr + 1).Result;
+                    ehr_id = result.Headers.ETag.ToString();
+                    System.Diagnostics.Debug.WriteLine(ehr_id);
+                }
+                else
+                {
+                    throw new Exception($"Failed to POST data");
+                }
+                
+            }
+
+            HttpResponseMessage responseMessage = _restData.CreateComposition(ehr_id, writeResult).Result;
+            System.Diagnostics.Debug.WriteLine(responseMessage);
+            if (responseMessage.StatusCode != System.Net.HttpStatusCode.Created)
+            {
+                string returnValue = responseMessage.Content.ReadAsStringAsync().Result;
+                throw new Exception($"Failed to POST data: ({responseMessage.StatusCode}): {returnValue}");
+            }
+            else
+                throw new Exception($"Failed to POST data");
+        }
+
+        private string ExistsSubject(IRestDataAccess _data, string subjectID)
+        {
+            List<Employee> subject = _data.AQLQuery<Employee>(AQLCatalog.GetEHRID(subjectID));
+            return subject != null ? subject[0].EmployeeID : null;
+        }
+
+        private string GetLastPatientStatus(IRestDataAccess _data)
+        {
+            List<Employee> patient = _data.AQLQuery<Employee>(AQLCatalog.GetLastEHRStatus());
+            return patient != null ? patient[0].EmployeeStatus : null;
+        }
+
+        private class Employee
+        {
+            public string EmployeeID { get; set; }
+            public string EmployeeStatus { get; set; }
+        }
     }
+    
 }

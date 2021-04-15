@@ -23,12 +23,23 @@
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="deph_2">
+                <span class="span">Mitarbeiterdaten</span>
+                <div class="table">
+                    <div class="tr">
+                        <div class="tb tb_bez"><label>Mitarbeiter ID:</label></div>
+                        <div class="tb">
+                            <InputText @bind-Value="ehr_id" disabled="@disabled" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="deph_2">
                 <span class="span">Context</span>
                 <div class="table">
                     <div class="tr">
                         <div class="tb tb_bez"><label>Bericht ID:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="contact_tracing.bericht_id" disabled="@disabled"/>
+                            <InputText @bind-Value="contact_tracing.bericht_id" disabled="@disabled" />
                         </div>
                     </div>
                 </div>
@@ -196,16 +207,18 @@
     private string message;
     private string messageStyles = "visibility:hidden";
     private ContactTracingModel contact_tracing = new ContactTracingModel();
+    private string ehr_id;
 
     private void HandleValidSubmit()
     {
 
         try
         {
+            contact_tracing.dokumentations_id = DateTime.Now;
             JObject o = (JObject)JToken.FromObject(contact_tracing);
             disabled = true;
             messageStyles = "color:green";
-            ContactTracingService.ContactTracingDataStorage(o);
+            ContactTracingService.ContactTracingDataStorage(o, ehr_id);
             message = "Das Formular wurde übermittelt.";
 
         } catch (Exception ex)
@@ -216,5 +229,5 @@
             message = "Es wurde ein fehler festgestellt beim Übermitteln des Formulars.";
         }
     }
-    
+
 }

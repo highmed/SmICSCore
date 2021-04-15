@@ -20,7 +20,7 @@ namespace SmICSCoreLib.Tests.TestData
         [Fact]
         public async void CreateTemplates()
         {
-            List<string> templateIDs = new List<string>() { "Virologischer Befund", "Stationärer Versorgungsfall", "Symptome", "Impfstatus", "Patientenaufenthalt" };
+            List<string> templateIDs = new List<string>() { "Virologischer Befund", "Stationärer Versorgungsfall", "Symptome", "Impfstatus", "Patientenaufenthalt", "Bericht zur Kontaktverfolgung" };
 
             RestDataAccess _data = CreateDataAccess();
 

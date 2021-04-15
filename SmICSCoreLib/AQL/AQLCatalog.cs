@@ -385,6 +385,11 @@ namespace SmICSCoreLib.AQL
                                 CLUSTER h[openEHR-EHR-CLUSTER.individual_professional.v0])
                                 WHERE c/archetype_details/template_id='Personendaten' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
         }
+
+        public static AQLQuery GetLastEHRStatus()
+        {
+            return new AQLQuery("GetLastEHRStatus", $@"");
+        }
     }
 }
  
