@@ -74,10 +74,8 @@ namespace SmICSWebApp.Data
             {
                 client.endPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=BL='" +
                     bl + "'&outFields=*&outSR=4326&f=json&returnGeometry=false";
-
                 string response = client.GetResponse();
                 var obj = JsonConvert.DeserializeObject<District>(response);
-
                 return obj;
             }
             catch (Exception)
@@ -91,15 +89,12 @@ namespace SmICSWebApp.Data
             {
                 client.endPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=GEN='" +
                 gen + "'&outFields=*&outSR=4326&f=json&returnGeometry=false";
-
                 string response = client.GetResponse();
                 var obj = JsonConvert.DeserializeObject<District>(response);
-
                 return obj;
             }
             catch (Exception)
             {
-
                 return null;
             }
         }
@@ -112,13 +107,24 @@ namespace SmICSWebApp.Data
         }
         public List<PatientMovementModel> GetPatMovement(string patientId)
         {
-            List<string> patientList = new List<string>();
+            List<string> patientList = new();
             patientList.Add(patientId);
             PatientListParameter patListParameter = new();
             patListParameter.patientList = patientList;
             List<PatientMovementModel> patientMovement = _patientInformation.Patient_Bewegung_Ps(patListParameter);
             return patientMovement;
         }
+
+        public List<PatientMovementModel> GetPatMovementFromStation(List<string> patientList, string station, DateTime starttime, DateTime endtime)
+        {
+            //List<string> patientList = new();
+            //patientList.Add(patientId);
+            PatientListParameter patListParameter = new();
+            patListParameter.patientList = patientList;
+            List<PatientMovementModel> patientMovement = _patientInformation.Patient_Bewegung_Station(patListParameter, station, starttime, endtime);
+            return patientMovement;
+        }
+
         public List<CountDataModel> GetCovidPat(string nachweis)
         {
             List<CountDataModel> covidPat = _patinet_Stay.CovidPat(nachweis);
@@ -161,16 +167,16 @@ namespace SmICSWebApp.Data
             List<SymptomModel> symptomListe = _patientInformation.Symptoms_By_PatientId(patientId, datum);
             return symptomListe;
         }
-        public List<Patient> GetAllNoskumalPat(List<CountDataModel> positivPat)
+        public List<Patient> GetAllNoskumalPat(List<CountDataModel> positivPatList)
         {
-            List<Patient> patNoskumalList = new List<Patient>();
+            List<Patient> patNoskumalList = new();
             List<string> symptomList = new List<string>(new string[] { "Chill (finding)", "Cough (finding)", "Dry cough (finding)",
             "Diarrhea (finding)", "Fever (finding)", "Fever greater than 100.4 Fahrenheit", "38° Celsius (finding)", "Nausea (finding)",
             "Pain in throat (finding)"});
 
-            foreach (CountDataModel countData in positivPat)
+            foreach (CountDataModel positivPat in positivPatList)
             {
-                List<StationaryDataModel> statPatList = GetStationaryPat(countData.PatientID, countData.Fallkennung, countData.Zeitpunkt_des_Probeneingangs);
+                List<StationaryDataModel> statPatList = GetStationaryPat(positivPat.PatientID, positivPat.Fallkennung, positivPat.Zeitpunkt_des_Probeneingangs);
 
                 if (statPatList != null || statPatList.Count != 0)
                 {
@@ -179,7 +185,7 @@ namespace SmICSWebApp.Data
                         List<SymptomModel> symptoms = GetAllSymByPat(statPatient.PatientID, statPatient.Datum_Uhrzeit_der_Aufnahme);
                         if (symptoms is null || symptoms.Count == 0)
                         {
-                            patNoskumalList.Add(new Patient(countData.PatientID, countData.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
+                            patNoskumalList.Add(new Patient(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
                         }
                         else
                         {
@@ -187,7 +193,7 @@ namespace SmICSWebApp.Data
                             {
                                 if (!symptomList.Contains(symptom.NameDesSymptoms))
                                 {
-                                    patNoskumalList.Add(new Patient(countData.PatientID, countData.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
+                                    patNoskumalList.Add(new Patient(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
                                 }
                             }
                         }
@@ -199,68 +205,56 @@ namespace SmICSWebApp.Data
         }
         public List<Patient> GetNoskumalByContact(List<Patient> allNoskumalPat, List<CountDataModel> allPositivPat)
         {
-            List<Patient> patNoskumalList = new List<Patient>();
-            List<PatientMovementModel> positivPatMove = new();
-            List<PatientMovementModel> allMovment = new();
-            List<PatientMovementModel> posPatBewegungen = new();
-            List<PatientMovementModel> nosPatBewegungen = new();
+            List<Patient> patNoskumalList = new ();
 
             foreach (var patient in allNoskumalPat)
             {
-                List<PatientMovementModel> patBewegung = GetPatMovement(patient.PatientID);
-                if (patBewegung.Count != 0)
+                List<PatientMovementModel> patBewegungen = GetPatMovement(patient.PatientID);
+                if (patBewegungen.Count != 0)
                 {
-                    foreach (var item in patBewegung)
+                    foreach (var bewegung in patBewegungen)
                     {
-                        nosPatBewegungen.Add(item);
-                    }
-                }
-            }
-
-            foreach (var noskumalPat in nosPatBewegungen)
-            {
-                allMovment = PatientBewegungen(allPositivPat, noskumalPat);
-            }
-
-            return patNoskumalList;
-        }
-        public List<PatientMovementModel> PatientBewegungen(List<CountDataModel> allPositivPat, PatientMovementModel movment)
-        {
-            List<PatientMovementModel> allMovments = new();
-            List<PatientMovementModel> posPatMovments = new();
-
-            foreach (var patient in allPositivPat)
-            {
-                if (patient.PatientID != movment.PatientID)
-                {
-                    List<PatientMovementModel> patBewegung = GetPatMovement(patient.PatientID);
-                    if (patBewegung.Count != 0)
-                    {
-                        foreach (var item in patBewegung)
+                        if (bewegung.Beginn < bewegung.Ende.AddMinutes(-15))
                         {
-                            posPatMovments.Add(item);
+                            List <PatientMovementModel> patientMovement = FindContact(allPositivPat, bewegung.PatientID, 
+                                bewegung.Fachabteilung, bewegung.Beginn, bewegung.Ende);
+
+                            if (patientMovement.Count != 0)
+                            {
+                                patNoskumalList.Add(patient);
+                            }
                         }
                     }
                 }
             }
+            return patNoskumalList;
+        }
+        public List<PatientMovementModel> FindContact(List<CountDataModel> allPositivPat, string patientID, string station, DateTime beginn, DateTime ende  ) {
 
-            foreach (var posPatMovment in posPatMovments)
+            List <PatientMovementModel> patientMovement = new();
+            List<string> patientList = new();
+
+            foreach (var positivPat in allPositivPat)
             {
-                if (posPatMovment.Fachabteilung == movment.Fachabteilung)
-                {
-                    if (posPatMovment.Beginn <= movment.Beginn &&
-                        posPatMovment.Ende >= movment.Ende ||
-                        posPatMovment.Beginn >= movment.Beginn &&
-                        posPatMovment.Ende <= movment.Ende)
-                    {
-                        allMovments.Add(posPatMovment);
-                    }
-
-                }
+                patientList.Add(positivPat.PatientID);
             }
 
-            return allMovments;
+            List<PatientMovementModel> patBewegungen = GetPatMovementFromStation(patientList, station, beginn, ende);
+            if (patBewegungen.Count != 0)
+            {
+                foreach (var patBewegung in patBewegungen)
+                {
+                    if (patBewegung.PatientID != patientID &&
+                        patBewegung.Beginn < patBewegung.Ende.AddMinutes(-15))
+                    {
+                        patientMovement.Add(patBewegung);
+                    }
+                }    
+            }            
+            return patientMovement;
         }
+
+        //
         public int PatStay(List<CountDataModel> positivPat)
         {
             double start;
@@ -333,16 +327,14 @@ namespace SmICSWebApp.Data
                     attr.bundesland = result.Tables[0].Rows[i][0].ToString();
                     try
                     {
-                        //For Testing
-                        //State state = GetState("");
                         State state = GetState(attr.bundesland);
-                        if (state.features != null)
+                        if (state.Features != null)
                         {
-                            attr.fallzahlGesamt = state.features[0].attributes.Fallzahl;
-                            attr.faelle7BL = state.features[0].attributes.cases7_bl;
-                            attr.faellePro100000Ew = state.features[0].attributes.FaellePro100000Ew;
-                            attr.todesfaelle = state.features[0].attributes.Todesfaelle;
-                            attr.todesfaelle7BL = state.features[0].attributes.death7_bl;
+                            attr.fallzahlGesamt = state.Features[0].Attributes.Fallzahl;
+                            attr.faelle7BL = state.Features[0].Attributes.Cases7_bl;
+                            attr.faellePro100000Ew = state.Features[0].Attributes.FaellePro100000Ew;
+                            attr.todesfaelle = state.Features[0].Attributes.Todesfaelle;
+                            attr.todesfaelle7BL = state.Features[0].Attributes.Death7_bl;
                             bericht.blStandAktuell = true;
 
                             District district = GetDistricts(attr.bundesland);
@@ -403,6 +395,8 @@ namespace SmICSWebApp.Data
                 bericht.rWert7TageVortag = GetRValue(3);
                 bericht.inzidenz7Tage = result.Tables[0].Rows[21][2].ToString().Substring(0, 5);
                 bericht.inzidenz7TageVortag = result.Tables[0].Rows[21][2].ToString().Substring(0, 5);
+
+                //TODO:Separate from Excel table 
                 var dataRows = result.Tables[2].Rows;
                 bericht.fallzahl = result.Tables[2].Rows[dataRows.Count - 1][1].ToString();
                 bericht.fallzahlVortag = result.Tables[2].Rows[dataRows.Count - 1][3].ToString();
@@ -479,11 +473,9 @@ namespace SmICSWebApp.Data
         }
         public string SeMapColor(string inzidenz)
         {
-            string farbe;
+            string farbe;          
+            int zahl = (int)Convert.ToInt64(Math.Floor(Convert.ToDouble(inzidenz)));
 
-            NumberFormatInfo provider = new();
-            provider.NumberDecimalSeparator = ",";
-            double zahl = Convert.ToDouble(inzidenz, provider);
             if (zahl > 100)
             {
                 farbe = "#671212";

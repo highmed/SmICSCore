@@ -48,6 +48,10 @@ namespace SmICSCoreLib.AQL.Patient_Stay
         {
             return _stationaryFactory.ProcessFromCase(patientId, fallId);
         }
+        public List<StationaryDataModel> StayFromDate(DateTime datum)
+        {
+            return _stationaryFactory.ProcessFromDate(datum);
+        }
 
     }
 }

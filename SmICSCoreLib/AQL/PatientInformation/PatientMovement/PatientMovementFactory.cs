@@ -31,6 +31,17 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
             return ReturValueConstrutor(patientStayList);
         }
 
+        public List<PatientMovementModel> ProcessFromStation(PatientListParameter parameter, string station, DateTime starttime, DateTime endtime)
+        {
+            List<PatientStayModel> patientStayList = _restData.AQLQuery<PatientStayModel>(AQLCatalog.PatientStayFromStation(parameter, station, starttime, endtime));
+            if (patientStayList is null)
+            {
+                return new List<PatientMovementModel>();
+            }
+
+            return ReturValueConstrutor(patientStayList);
+        }
+
         private List<PatientMovementModel> ReturValueConstrutor(List<PatientStayModel> patientStayList)
         {
             List<PatientMovementModel> patientMovementList = new List<PatientMovementModel>();

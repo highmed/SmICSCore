@@ -22,8 +22,23 @@ namespace SmICSWebApp.Data
             _paient_Stay = paient_Stay;
         }
 
-        public List<SymptomModel> GetAllSymptom()
+        public List<StationaryDataModel> GetAllPatByDate(DateTime datum)
         {
+            List<StationaryDataModel> patStationary ;
+            try
+            {
+                patStationary = _paient_Stay.StayFromDate(datum);
+                return patStationary;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        
+        }
+
+        public List<SymptomModel> GetAllSymptom()
+        {          
             try
             {
                 List<SymptomModel> symptomListe = _patientInformation.Patient_Symptom();

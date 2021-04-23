@@ -40,6 +40,18 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Stationary
             return StationaryConstructor(stationaryDataReceives);
         }
 
+        public List<StationaryDataModel> ProcessFromDate(DateTime datum)
+        {
+            List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQuery<StationaryDataReceiveModel>(AQLCatalog.StayFromDate(datum));
+
+            if (stationaryDataReceives is null)
+            {
+                return new List<StationaryDataModel>();
+            }
+
+            return StationaryConstructor(stationaryDataReceives);
+        }
+
         private List<StationaryDataModel> StationaryConstructor(List<StationaryDataReceiveModel> stationaryDataReceives)
         {
             List<StationaryDataModel> stationaryDataModels = new List<StationaryDataModel>();

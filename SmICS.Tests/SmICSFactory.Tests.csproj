@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmICSCoreLib\SmICSCoreLib.csproj" />
+    <ProjectReference Include="..\SmICSWebApp\SmICSWebApp.csproj" />
   </ItemGroup>
 
 </Project>

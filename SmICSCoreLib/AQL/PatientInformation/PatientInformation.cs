@@ -32,6 +32,11 @@ namespace SmICSCoreLib.AQL.PatientInformation
         public List<PatientMovementModel> Patient_Bewegung_Ps(PatientListParameter parameter)
         {
             return _patMoveFac.Process(parameter);
+        } 
+        
+        public List<PatientMovementModel> Patient_Bewegung_Station(PatientListParameter parameter, string station, DateTime starttime, DateTime endtime)
+        {
+            return _patMoveFac.ProcessFromStation(parameter, station, starttime, endtime);
         }
         
         public List<LabDataModel> Patient_Labordaten_Ps(PatientListParameter parameter)
@@ -53,7 +58,7 @@ namespace SmICSCoreLib.AQL.PatientInformation
         {
             return _symptomFac.ProcessNoParam();
         }
-
+        
         public List<SymptomModel> Patient_By_Symptom(string symptom)
         {
             return _symptomFac.PatientBySymptom(symptom);

@@ -31,12 +31,12 @@
 
 
 #head-info {
-    background-color: #4D7FA0;
+    background-color: #8CA2AE;
 }
 
-    #head-info h6 {
-        text-align: center;
-    }
+#head-info h6 {
+    text-align: center;
+}
 
 #body-info {
     text-align: center;
@@ -60,5 +60,15 @@
     .tableFixHead th {
         position: sticky;
         top: 0;
-        background: #7FBDD2;
+        background: #EAEAEA;
     }
+
+#bologna-list .nav-link {
+    background-color: #4AA0CA;
+    margin: 0px 5px 0px 5px;
+}
+
+
+#bologna-list a {
+    color: white;
+}

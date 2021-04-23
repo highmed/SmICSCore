@@ -14,6 +14,7 @@ namespace SmICSCoreLib.AQL.Patient_Stay
         List<CountDataModel> CovidPat(string nachweis);
         List<CaseDataModel> Case(DateTime date);
         List<WeekCaseDataModel> WeekCase(DateTime startDate, DateTime endDate);
+        List<StationaryDataModel> StayFromDate(DateTime datum);
         List<StationaryDataModel> StayFromCase(string patientId, string fallId);
 
     }

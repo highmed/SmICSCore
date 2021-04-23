@@ -87,6 +87,58 @@ namespace SmICSCoreLib.AQL
                                 AND e/ehr_id/value MATCHES {patientList.ToAQLMatchString()}
                                 ORDER BY e/ehr_id/value ASC, h/data[at0001]/items[at0004]/value/value ASC");
         }
+
+        public static AQLQuery PatientStayFromStation(PatientListParameter patientList, string station, DateTime starttime, DateTime endtime)
+        {
+            return new AQLQuery("PatientStay", $@"SELECT e/ehr_id/value as PatientID,
+                                i/items[at0001]/value/value as FallID,
+                                h/data[at0001]/items[at0004]/value/value as Beginn,
+                                h/data[at0001]/items[at0005]/value/value as Ende,
+                                h/data[at0001]/items[at0006]/value/value as Bewegungsart_l,
+                                s/items[at0027]/value/value as StationID,
+                                s/items[at0029]/value/value as Raum,
+                                f/items[at0024]/value/value as Fachabteilung,
+                                f/items[at0024]/value/defining_code/code_string as FachabteilungsID
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] 
+                                    CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0]
+                                    AND ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]
+                                        CONTAINS (CLUSTER s[openEHR-EHR-CLUSTER.location.v1]
+                                        AND CLUSTER f[openEHR-EHR-CLUSTER.organization.v0]))
+                                WHERE c/name/value = 'Patientenaufenthalt'
+                                AND i/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)'
+                                AND h/data[at0001]/items[at0004]/value/value <= '{ endtime.ToString("o") }' 
+                                and (h/data[at0001]/items[at0005]/value/value >= '{ starttime.ToString("o") }'
+                                or NOT EXISTS h/data[at0001]/items[at0005]/value/value)
+                                AND e/ehr_id/value MATCHES {patientList.ToAQLMatchString()}
+                                AND Fachabteilung =  '{ station }'
+                                ORDER BY e/ehr_id/value ASC, h/data[at0001]/items[at0004]/value/value ASC");
+        }
+        //public static AQLQuery PatientStayFromStation(PatientListParameter patientList, string station)
+        //{
+        //    return new AQLQuery("PatientStay", $@"SELECT e/ehr_id/value as PatientID,
+        //                        i/items[at0001]/value/value as FallID,
+        //                        h/data[at0001]/items[at0004]/value/value as Beginn,
+        //                        h/data[at0001]/items[at0005]/value/value as Ende,
+        //                        h/data[at0001]/items[at0006]/value/value as Bewegungsart_l,
+        //                        s/items[at0027]/value/value as StationID,
+        //                        s/items[at0029]/value/value as Raum,
+        //                        f/items[at0024]/value/value as Fachabteilung,
+        //                        f/items[at0024]/value/defining_code/code_string as FachabteilungsID
+        //                        FROM EHR e 
+        //                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] 
+        //                            CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0]
+        //                            AND ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]
+        //                                CONTAINS (CLUSTER s[openEHR-EHR-CLUSTER.location.v1]
+        //                                AND CLUSTER f[openEHR-EHR-CLUSTER.organization.v0]))
+        //                        WHERE c/name/value = 'Patientenaufenthalt'
+        //                        AND i/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)'
+        //                        AND e/ehr_id/value MATCHES {patientList.ToAQLMatchString()}
+        //                        AND Fachabteilung =  '{ station }'
+        //                        ORDER BY e/ehr_id/value ASC, h/data[at0001]/items[at0004]/value/value ASC");
+        //}
+
+
         public static AQLQuery PatientAdmission(EpsiodeOfCareParameter parameter)
         {
             return new AQLQuery("PatientAdmission", $@"SELECT p/data[at0001]/items[at0071]/value/value as Beginn
@@ -221,18 +273,18 @@ namespace SmICSCoreLib.AQL
         public static AQLQuery Stationary(string patientId, string fallkennung, DateTime datum)
         {
             return new AQLQuery("Stationary", $"SELECT e/ehr_id/value as PatientID, " +
-                                $"c/context/other_context[at0001]/items[at0003]/value/value  as FallID, " +
-                                $"g/data[at0001]/items[at0071]/value/value  as Datum_Uhrzeit_der_Aufnahme, " +
-                                $"z/data[at0001]/items[at0011]/value/value as Datum_Uhrzeit_der_Entlassung, " +
-                                $"g/data[at0001]/items[at0049]/value/value as Aufnahmeanlass, " +
-                                $"z/data[at0001]/items[at0040]/value/value as Art_der_Entlassung, " +
-                                $"g/data[at0001]/items[at0013,'Versorgungsfallgrund']/value/value as Versorgungsfallgrund " +
+                                $"c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value  as FallID, " +
+                                $"r/data[at0001]/items[at0071]/value/value  as Datum_Uhrzeit_der_Aufnahme, " +
+                                $"p/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Datum_Uhrzeit_der_Entlassung, " +
+                                $"r/data[at0001]/items[at0049,'Aufnahmeanlass']/value/value as Aufnahmeanlass, " +
+                                $"p/data[at0001]/items[at0040]/value/value as Art_der_Entlassung, " +
+                                $"r/data[at0001]/items[at0013]/value/value as Versorgungsfallgrund " +
                                 $"FROM EHR e " +
-                                $"CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v0] " +
-                                $"CONTAINS (ADMIN_ENTRY g[openEHR-EHR-ADMIN_ENTRY.admission.v0] and ADMIN_ENTRY z[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) " +
-                                $"WHERE c/name/value='Stationärer Versorgungsfall' and e/ehr_id/value='{patientId}' and  " +
-                                $"g/data[at0001]/items[at0071]/value/value < '{datum.Date.AddDays(-3).ToString("yyyy-MM-dd")}' and " +
-                                $"c/context/other_context[at0001]/items[at0003]/value/value='{fallkennung}'");
+                                $"CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] " +
+                                $"CONTAINS (ADMIN_ENTRY r[openEHR-EHR-ADMIN_ENTRY.admission.v0] CONTAINS (CLUSTER w[openEHR-EHR-CLUSTER.location.v1]) and ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0])  " +
+                                $"where PatientID='{patientId}' and  " +
+                                $"Datum_Uhrzeit_der_Aufnahme <= '{datum.Date.AddDays(-4).ToString("yyyy-MM-dd")}' and " +
+                                $"FallID='{fallkennung}'");
         }
 
         public static AQLQuery Case(DateTime date)
@@ -242,20 +294,29 @@ namespace SmICSCoreLib.AQL
 
         public static AQLQuery WeekCase(DateTime startDate, DateTime endDate)
         {
-            return new AQLQuery("WeekCase",$"SELECT COUNT(DISTINCT e/ehr_id/value) as Anzahl_Faelle FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1] CONTAINS (CLUSTER x[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] and CLUSTER p[openEHR-EHR-CLUSTER.specimen.v1]) WHERE c/name/value='Virologischer Befund' and x/items[at0001,'Nachweis']/value/value='positiv' and x/items[at0024,'Virus']/value/value='SARS-Cov-2' and p/items[at0015]/value/value >= '{startDate.Date.ToString("yyyy-MM-dd")}' and p/items[at0015]/value/value <= '{endDate.Date.ToString("yyyy-MM-dd")}' ");
+            return new AQLQuery("WeekCase",$"SELECT COUNT(DISTINCT e/ehr_id/value) as Anzahl_Faelle" +
+                                $" FROM EHR e " +
+                                $"CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1] " +
+                                $"CONTAINS (CLUSTER x[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] and " +
+                                $"CLUSTER p[openEHR-EHR-CLUSTER.specimen.v1]) " +
+                                $"WHERE c/name/value='Virologischer Befund' and " +
+                                $"x/items[at0001,'Nachweis']/value/value='positiv' and" +
+                                $" x/items[at0024,'Virus']/value/value='SARS-Cov-2' and " +
+                                $"p/items[at0015]/value/value >= '{startDate.Date.ToString("yyyy-MM-dd")}' and " +
+                                $"p/items[at0015]/value/value <= '{endDate.Date.ToString("yyyy-MM-dd")}' ");
         }
 
         public static AQLQuery SymptomsByPatient(string patientId, DateTime datum)
         {
             return new AQLQuery("SymptomsByPatient", $@"SELECT e/ehr_id/value as PatientenID, 
-                                t/data[at0190]/events[at0191]/data[at0192]/items[at0001]/value/value as NameDesSymptoms, 
-                                t/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value as Beginn, 
-                                t/data[at0190]/events[at0191]/data[at0192]/items[at0161]/value/value as Rueckgang " +
+                                k/data[at0190]/events[at0191]/data[at0192]/items[at0001]/value/value as NameDesSymptoms, 
+                                k/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value as Beginn, 
+                                k/data[at0190]/events[at0191]/data[at0192]/items[at0161]/value/value as Rueckgang " +
                                 $"FROM EHR e " +
-                                $"CONTAINS COMPOSITION c [openEHR-EHR-COMPOSITION.registereintrag.v1] " +
-                                $"CONTAINS OBSERVATION t[openEHR-EHR-OBSERVATION.symptom_sign.v0] " +
-                                $"WHERE c/name/value='COVID-19 Symptom' and  PatientenID='{patientId}' " +
-                                $"and Beginn = '{datum.Date.ToString("yyyy-MM-dd")}'");
+                                $"CONTAINS COMPOSITION c " +
+                                $"CONTAINS OBSERVATION k[openEHR-EHR-OBSERVATION.symptom_sign.v0] " +
+                                $"where PatientenID='{patientId}' " +
+                                $"and Beginn like '{datum.Date.ToString("yyyy-MM-dd").Insert(10,"*")}'");
         }
        
         public static AQLQuery StayFromCase(string patientId, string fallId)
@@ -272,6 +333,22 @@ namespace SmICSCoreLib.AQL
                                     CONTAINS (ADMIN_ENTRY j[openEHR-EHR-ADMIN_ENTRY.admission.v0] and 
                                     ADMIN_ENTRY w[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
                                     WHERE PatientID='{patientId}' and FallID='{fallId}'");
+        }
+
+        public static AQLQuery StayFromDate(DateTime datum)
+        {
+            return new AQLQuery("StayFromCase", $@"SELECT e/ehr_id/value as PatientID, 
+                                    c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value as FallID,
+                                    j/data[at0001]/items[at0071]/value/value  as Datum_Uhrzeit_der_Aufnahme,
+                                    j/data[at0001]/items[at0013]/value/value as Versorgungsfallgrund, 
+                                    j/data[at0001]/items[at0049,'Aufnahmeanlass']/value/value as Aufnahmeanlass,
+                                    w/data[at0001]/items[at0040]/value/value as Art_der_Entlassung, 
+                                    w/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Datum_Uhrzeit_der_Entlassung
+                                    FROM EHR e 
+                                    CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
+                                    CONTAINS (ADMIN_ENTRY j[openEHR-EHR-ADMIN_ENTRY.admission.v0] and 
+                                    ADMIN_ENTRY w[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
+                                    WHERE Datum_Uhrzeit_der_Aufnahme like '{datum.Date.ToString("yyyy-MM-dd").Insert(10, "*")}'");
         }
 
         public static AQLQuery CovidPat(string nachweis)

@@ -9,6 +9,8 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Stationary
         List<StationaryDataModel> Process(string patientId, string fallkennung, DateTime datum);
 
         List<StationaryDataModel> ProcessFromCase(string patientId, string fallId);
+        
+        List<StationaryDataModel> ProcessFromDate(DateTime datum);
 
     }
 }
