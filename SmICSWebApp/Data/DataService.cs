@@ -413,6 +413,10 @@ namespace SmICSWebApp.Data
         public void SerializeRkiData()
         {
             string path = @"../SmICSWebApp/Resources/statistik/json";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
             string filename = DateTime.Now.ToString("yyyy-MM-dd");
             string filePath = path + "/" + filename + ".json";
 
