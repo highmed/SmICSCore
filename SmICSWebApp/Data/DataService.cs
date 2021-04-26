@@ -510,7 +510,6 @@ namespace SmICSWebApp.Data
                 farbe = "#FFFFFF";
                 return farbe;
             }
-
         }
         public string SetCaseColor(double tag, double vortag)
         {
@@ -535,7 +534,6 @@ namespace SmICSWebApp.Data
                 color = "#5591BB";
                 return color;
             }
-
         }
 
     }
