@@ -172,6 +172,25 @@ footer.page-footer a {
     right: 0.75rem;
     top: 0.5rem;
 }
+/*New*/
+.containter_content {
+    display: flex;
+    align-items: center;
+    background-image: url("../resources/home.jpeg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 1;
+    margin-top: 2%;
+}
+/*.welcome_text {
+    margin: 2%;
+    margin-left: 50%;
+    background-color: #15317E;
+    opacity: 0.8;
+    color: antiquewhite;
+    padding: 2%;
+    margin-bottom: 20%;
+}*/
 
 @media (max-width: 767.98px) {
     .main .top-row:not(.auth) {
@@ -184,6 +203,17 @@ footer.page-footer a {
 
     .main .top-row a, .main .top-row .btn-link {
         margin-left: 0;
+    }
+
+    .welcome_text {
+        margin: 2%;
+        margin-left: 20%;
+        background-color: #15317E;
+        opacity: 0.8;
+        color: antiquewhite;
+        padding: 2%;
+        margin-bottom: 20%;
+        box-shadow: 0px 2px 5px rgb(0,0,0, 0.3);
     }
 }
 
@@ -238,5 +268,16 @@ footer.page-footer a {
             transform: rotate(360deg)
         }
 
+    }
+
+    .welcome_text {
+        margin: 2%;
+        margin-left: 45%;
+        background-color: #15317E;
+        opacity: 0.8;
+        color: antiquewhite;
+        padding: 2%;
+        margin-bottom: 20%;
+        box-shadow: 0px 3px 6px rgb(0,0,0, 0.3);
     }
 }
