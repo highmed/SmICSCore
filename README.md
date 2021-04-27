@@ -56,8 +56,8 @@ Within each local git repository following commands need to be executed. **You n
 
 ```
 docker network create smics-net
-docker build --build-arg repo="http://localhost:8080/ehrbase/rest/openehr/v1" --build-arg user=$USERNAME --build-arg passwd=$PASSWORD  -t smics .
-docker run --name smics_core --network smics-net -d -p 9787:9787 smics
+docker build --build-arg repo="http://localhost:8080/ehrbase/rest/openehr/v1" --build-arg user="$USERNAME" --build-arg passwd="$PASSWORD"  -t smics .
+docker run --name smics_core --network smics-net -e OPENEHR_DB="http://localhost:8080/ehrbase/rest/openehr/v1" -e OPENEHR_USER="$USERNAME" -e OPENEHR_PASSWD="$PASSWORD" -d -p 9787:9787 smics
 ```
 
 ```http://localhost:8080/ehrbase/rest/openehr/v1``` must be exchanged for the valid link to the openEHR REST API from the openEHR repository.

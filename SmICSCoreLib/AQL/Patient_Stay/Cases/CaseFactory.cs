@@ -14,9 +14,9 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Cases
         {
             _restData = restData ;
         }
-        public List<CaseDataModel> Process( DateTime date)
+        public List<CaseDataModel> Process( DateTime datum)
         {
-            List<CaseDataReceiveModel> caseDataReceiveModels = _restData.AQLQuery<CaseDataReceiveModel>(AQLCatalog.Case(date));
+            List<CaseDataReceiveModel> caseDataReceiveModels = _restData.AQLQuery<CaseDataReceiveModel>(AQLCatalog.Case(datum));
 
             if (caseDataReceiveModels is null)
             {

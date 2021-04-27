@@ -42,5 +42,45 @@ namespace SmICSCoreLib.AQL.PatientInformation.Symptome
 
             return symptomList;
         }
+
+        public List<SymptomModel> ProcessNoParam()
+        {
+            List<SymptomModel> symptomList = new List<SymptomModel>();
+
+            List<SymptomModel> symptomList_VS = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom());
+
+            if (symptomList_VS != null)
+            {
+                symptomList = symptomList_VS;
+            }
+            return symptomList;
+        }
+
+        public List<SymptomModel> PatientBySymptom(string symptom)
+        {
+            List<SymptomModel> symptomList = new List<SymptomModel>();
+
+            List<SymptomModel> symptomList_VS = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientBySymptom(symptom));
+
+            if (symptomList_VS != null)
+            {
+                symptomList = symptomList_VS;
+            }
+            return symptomList;
+        }
+
+        public List<SymptomModel> SymptomByPatient(string patientId, DateTime datum)
+        {
+            List<SymptomModel> symptomList = new List<SymptomModel>();
+
+            List<SymptomModel> symptomList_VS = _restData.AQLQuery<SymptomModel>(AQLCatalog.SymptomsByPatient(patientId, datum));
+
+            if (symptomList_VS != null)
+            {
+                symptomList = symptomList_VS;
+            }
+            return symptomList;
+        }
+
     }
 }

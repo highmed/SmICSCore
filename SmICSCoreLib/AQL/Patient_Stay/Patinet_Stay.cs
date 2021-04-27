@@ -29,30 +29,29 @@ namespace SmICSCoreLib.AQL.Patient_Stay
             return _caseFactory.Process(date);
         }
 
-        public List<CountDataModel> Count(string nachweis)
+        public List<CountDataModel> CovidPat(string nachweis)
         {
             return _countFactory.Process(nachweis);
         }
 
-        public List<StationaryDataModel> Stationary_Stay(string patientId, DateTime datum)
+        public List<StationaryDataModel> Stationary_Stay(string patientId, string fallkennung, DateTime datum)
         {
-            return _stationaryFactory.Process(patientId, datum);
+            return _stationaryFactory.Process(patientId, fallkennung, datum);
         }
-
-        //Wenn die Fallkennung vorhanden ist
-        //public List<StationaryDataModel> Stationary_Stay(string patientId, DateTime datum, string fallkennung)
-        //{
-        //    return _stationaryFactory.Process(patientId, datum, fallkennung);
-        //}
 
         public List<WeekCaseDataModel> WeekCase(DateTime startDate, DateTime endDate)
         {
             return _weekCaseFactory.Process(startDate, endDate);
         }
 
-        /*   public int CountInt() 
-           {
-               return _countFactory.ProcessInt();
-           }*/
+        public List<StationaryDataModel> StayFromCase(string patientId, string fallId)
+        {
+            return _stationaryFactory.ProcessFromCase(patientId, fallId);
+        }
+        public List<StationaryDataModel> StayFromDate(DateTime datum)
+        {
+            return _stationaryFactory.ProcessFromDate(datum);
+        }
+
     }
 }

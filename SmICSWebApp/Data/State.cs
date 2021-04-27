@@ -5,13 +5,13 @@ namespace SmICSWebApp.Data
     public class State
     {
         [JsonProperty(PropertyName = "features")]
-        public StateFeature[] features { get; set; }
+        public StateFeature[] Features { get; set; }
     }
 
     public class StateFeature
     {
         [JsonProperty(PropertyName = "attributes")]
-        public StateAttributes attributes { get; set; }
+        public StateAttributes Attributes { get; set; }
     }
 
     public class StateAttributes
@@ -35,13 +35,13 @@ namespace SmICSWebApp.Data
         public float FaellePro100000Ew { get; set; } 
         
         [JsonProperty(PropertyName = "cases7_bl")]
-        public float cases7_bl { get; set; }
+        public float Cases7_bl { get; set; }
 
         [JsonProperty(PropertyName = "Death")]
         public int Todesfaelle { get; set; }
         
         [JsonProperty(PropertyName = "death7_bl")]
-        public int death7_bl { get; set; }
+        public int Death7_bl { get; set; }
 
         [JsonProperty(PropertyName = "cases7_bl_per_100k")]
         public float Faelle7BlPro100K { get; set; }
