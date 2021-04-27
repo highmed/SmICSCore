@@ -1,11 +1,42 @@
 ﻿@page "/"
 
 <h1>Herzlich Willkommen</h1>
-<h2>{Username}</h2>
+@*<h2>{Username}</h2>*@
 
-<div class="fixed-bottom" style="margin-bottom: 6rem">
-    <img src="/resources/CODEX_Logo.png" width="200"/>
-    <img src="/resources/NUM_Logo.png" width="200" />
-    <img src="/resources/BFAST_Logo.png" width="200" />
-    <!--<img src="/resources/Logo_MII.png" width="200" />-->
+<div class="containter_content">
+    <div class="welcome_text">
+        Das Smart Infection Control System (SmICS) ist ein klinisches Anwendungssystem, das es erlaubt, Patientendaten,
+        stationäre Patientenaufenthalte und Laborbefunddaten räumlich und zeitlich aufgelöst interaktiv zu visualisieren.
+        Durch eine algorithmische Auswertung von Patientenbewegungen im Klinikum und Erregernachweisen im zeitlich-räumlichen Kontext
+        soll die Anwendung bei der Detektion, Analyse und Surveillance von Erregern, Erregerclustern und noskomialen Ausbrüchen unterstützen.
+        <br /><br />
+        Initial im HiGHmed-Projekt der Medizininformatik-Initiative entworfen und entwickelt für mikrobiologische Erreger,
+        wurde das SmICS als Kernkomponente des im Rahmen des Projektes B-FAST (Netzwerk Universitätsmedizin) zu entwickelnden Systems
+        Co-Surv zur COVID-19 Surveillance auf virologische Erreger angepasst, um Funktionen erweitert. Das SmICS ist eine offene,
+        auf dem Interoperabilitätsstandard „openEHR" basierende Anwendung.
+        <br /><br />
+        <span class="oi oi-chevron-right" aria-hidden="true">
+            &nbsp;
+        </span>
+        Durch einen Klick auf den Schriftzug „Visualisierung" gelangen Sie zur interaktiven SmICS-Visualisierung.
+        Dort klicken Sie bitte, nach Eingabe Ihrer Suchparameter, zum initialen Laden der Ansichten auf das „Aktualisieren"-Icon, das Sie am oberen rechten Rand finden.
+        Über einen Klick auf das nebenliegenden „Balken"-Icon gelangen Sie zurück zu dieser Startseite.
+        <br /><br />
+        <span class="oi oi-chevron-right" aria-hidden="true">
+            &nbsp;
+        </span>
+        Durch einen Klick auf den Schriftzug „Statistik" öffnet sich eine Übersicht über die aktuelle deutschlandweite,
+        regionale und krankenhausweite COVID-19-Fallzahlentwicklung.
+    </div>
 </div>
+
+<div class="fixed-bottom" style="margin-bottom: 6rem" id="logobackground">
+    <img src="/resources/Logo_CODEX_rgb_cropped.png" width="20%" height="10%" class="logo_img" />
+    <img src="/resources/BFAST_Logo.png" width="15%" height="10%" class="logo_img"/>
+    <img src="/resources/NUM_Logo.png" width="15%" height="10%" class="logo_img"/>
+    <img src="/resources/Logo_MII.png" width="15%" height="10%" class="logo_img"/>
+    <img src="/resources/BMBF_Logo.png" width="15%" height="10%" class="logo_img"/>
+
+</div>
+
+
