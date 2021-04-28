@@ -1,0 +1,386 @@
+﻿using ExcelDataReader;
+using Newtonsoft.Json;
+using SmICSCoreLib.JSONFileStream;
+using SmICSCoreLib.StatistikDataModels;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SmICSCoreLib.StatistikServices
+{
+    public class RkiRestApi
+    {
+        private readonly RestClient client = new ();
+
+        //Get Data From RKI REST API
+        public State GetAllStates()
+        {
+            try
+            {
+                client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/Coronaf%C3%A4lle_in_den_Bundesl%C3%A4ndern/FeatureServer/0/query?" +
+              "where=1=1&outFields=OBJECTID_1, LAN_ew_GEN, LAN_ew_BEZ, LAN_ew_EWZ, Fallzahl, faelle_100000_EW, Death, cases7_bl_per_100k, Aktualisierung&returnGeometry=false&outSR=4326&f=json";
+
+                string response = client.GetResponse();
+                var obj = JsonConvert.DeserializeObject<State>(response);
+
+                return obj;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
+        public State GetStateByName(string bl)
+        {
+            try
+            {
+                client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/Coronaf%C3%A4lle_in_den_Bundesl%C3%A4ndern/FeatureServer/0/query?where=LAN_ew_GEN='" +
+                bl + "'&outFields=OBJECTID_1, LAN_ew_GEN, LAN_ew_BEZ, LAN_ew_EWZ, Fallzahl,cases7_bl, faelle_100000_EW, Death, death7_bl, cases7_bl_per_100k, Aktualisierung&returnGeometry=false&outSR=4326&f=json";
+
+                string response = client.GetResponse();
+                var obj = JsonConvert.DeserializeObject<State>(response);
+
+                return obj;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public District GetDistrictsByStateName(string bl)
+        {
+            try
+            {
+                client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=BL='" +
+                    bl + "'&outFields=*&outSR=4326&f=json&returnGeometry=false";
+
+                string response = client.GetResponse();
+                var obj = JsonConvert.DeserializeObject<District>(response);
+
+                return obj;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public District GetDistrictByName(string gen)
+        {
+            try
+            {
+                client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=GEN='" +
+                gen + "'&outFields=*&outSR=4326&f=json&returnGeometry=false";
+
+                string response = client.GetResponse();
+                var obj = JsonConvert.DeserializeObject<District>(response);
+
+                return obj;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
+        public static DataSet GetDataSetFromLink(String url)
+        {
+            var client = new WebClient();
+            try
+            {
+                var fullPath = Path.GetTempFileName();
+                client.DownloadFile(url, fullPath);
+
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                using var stream = File.Open(fullPath, FileMode.Open, FileAccess.Read);
+                using var reader = ExcelReaderFactory.CreateReader(stream);
+                var result = reader.AsDataSet();
+
+                return result;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        //Get Data From RKI Resources and write it as a DailyReport
+        public static string GetRValue(int vlaue)
+        {
+            string rValu;
+            try
+            {
+                String url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Projekte_RKI/Nowcasting_Zahlen.xlsx?__blob=publicationFile";
+                var result = GetDataSetFromLink(url);
+                var dataRows = result.Tables[1].Rows;
+                return rValu = result.Tables[1].Rows[dataRows.Count - vlaue][10].ToString();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+        }
+
+        public Bericht GetBerichtFromUrl(string url)
+        {
+            Bericht bericht = new();
+            var result = GetDataSetFromLink(url);
+
+            if (result != null)
+            {
+                try
+                {
+
+                    ArrayList bundeslaender = new ();
+                    ArrayList landkreise = new ();
+                    for (int i = 5; i < 21; i++)
+                    {
+                        Bundesland bundesland = new();
+                        BlAttribute attr = new();
+
+                        attr.Bundesland = result.Tables[0].Rows[i][0].ToString();
+                        try
+                        {
+                            State state = GetStateByName(attr.Bundesland);
+                            if (state.Features != null)
+                            {
+                                attr.FallzahlGesamt = state.Features[0].Attributes.Fallzahl;
+                                attr.Faelle7BL = state.Features[0].Attributes.Cases7_bl;
+                                attr.FaellePro100000Ew = state.Features[0].Attributes.FaellePro100000Ew;
+                                attr.Todesfaelle = state.Features[0].Attributes.Todesfaelle;
+                                attr.Todesfaelle7BL = state.Features[0].Attributes.Death7_bl;
+                                bericht.BlStandAktuell = true;
+
+                                District district = GetDistrictByName(attr.Bundesland);
+                                if (district.Features != null)
+                                {
+                                    landkreise = new ArrayList();
+                                    foreach (var lk in district.Features)
+                                    {
+                                        Landkreis landkreisObj = new();
+                                        landkreisObj.LandkreisName = lk.DistrictAttributes.County;
+                                        landkreisObj.Stadt = lk.DistrictAttributes.GEN;
+                                        landkreisObj.FallzahlGesamt = lk.DistrictAttributes.Cases;
+                                        landkreisObj.Faelle7Lk = lk.DistrictAttributes.Cases7_lk;
+                                        landkreisObj.FaellePro100000Ew = lk.DistrictAttributes.Cases_per_100k;
+                                        landkreisObj.Inzidenz7Tage = (float)(Math.Round(lk.DistrictAttributes.Cases7_per_100k, 2));
+                                        landkreisObj.Todesfaelle = lk.DistrictAttributes.Deaths;
+                                        landkreisObj.Todesfaelle7Lk = lk.DistrictAttributes.Death7_lk;
+
+                                        landkreise.Add(landkreisObj);
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            bericht.BlStandAktuell = false;
+                        }
+                        attr.Inzidenz7Tage = result.Tables[0].Rows[i][2].ToString().Substring(0, 5);
+                        attr.Farbe = SeMapColor(attr.Inzidenz7Tage);
+                        Landkreis[] lkArray = (Landkreis[])landkreise.ToArray(typeof(Landkreis));
+                        bundesland.Landkreis = lkArray;
+                        bundesland.BlAttribute = attr;
+                        bundeslaender.Add(bundesland);
+                    }
+                    Bundesland[] blArray = (Bundesland[])bundeslaender.ToArray(typeof(Bundesland));
+                    bericht.Bundesland = blArray;
+
+                    String urlImpfung = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Impfquotenmonitoring.xlsx?__blob=publicationFile";
+                    var resultImpfung = GetDataSetFromLink(urlImpfung);
+
+                    bericht.GesamtImpfung = resultImpfung.Tables[1].Rows[21][2].ToString();
+                    bericht.ErstImpfung = resultImpfung.Tables[1].Rows[21][5].ToString().Substring(0, 4);
+                    bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[21][8].ToString().Substring(0, 4);
+
+                    bericht.Stand = result.Tables[0].Rows[1][0].ToString().Substring(7);
+                    bericht.RWert7Tage = GetRValue(2);
+                    bericht.RWert7TageVortag = GetRValue(3);
+                    bericht.Inzidenz7Tage = result.Tables[0].Rows[21][2].ToString().Substring(0, 5);
+                    bericht.Inzidenz7TageVortag = result.Tables[0].Rows[21][2].ToString().Substring(0, 5);
+
+                    //TODO:Separate from Excel table 
+                    var dataRows = result.Tables[2].Rows;
+                    bericht.Fallzahl = result.Tables[2].Rows[dataRows.Count - 1][1].ToString();
+                    bericht.FallzahlVortag = result.Tables[2].Rows[dataRows.Count - 1][3].ToString();
+                    bericht.Todesfaelle = result.Tables[2].Rows[dataRows.Count - 1][4].ToString();
+                    bericht.TodesfaelleVortag = result.Tables[2].Rows[dataRows.Count - 1][5].ToString();
+                    bericht.StandAktuell = true;
+
+                    return bericht;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                bericht.StandAktuell = false;
+                return null;
+            }
+        }
+
+        public bool SerializeRkiData()
+        {
+            string path = @"../SmICSWebApp/Resources/statistik/json";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path); 
+            }
+
+            string filename = DateTime.Now.ToString("yyyy-MM-dd");
+            string filePath = path + "/" + filename + ".json";
+            bool status = false; 
+            string url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile";
+            if (!File.Exists(filePath))
+            {
+                DailyReport dailyReport = new();
+                Bericht bericht = GetBerichtFromUrl(url);
+
+                if (bericht != null)
+                {
+                    dailyReport.Bericht = bericht;
+                    JSONWriter.Write(dailyReport, path, filename);
+                    status = true;
+                }
+                else
+                {
+                    status = false;
+                }
+            }
+            else
+            {
+                try
+                {
+                    DailyReport lastReport = DeserializeRkiData(DateTime.Now);
+                    bool standAktuell = lastReport.Bericht.StandAktuell;
+                    if (standAktuell == false)
+                    {
+                        DailyReport dailyReport = new();
+                        Bericht bericht = GetBerichtFromUrl(url);
+                        if (bericht != null)
+                        {
+                            dailyReport.Bericht = bericht;
+                            JSONWriter.Write(dailyReport, path, filename);
+                            status = true;
+                        }
+                        else
+                        {
+                            status = false;
+                        }
+                        
+                    }
+                    else
+                    {
+                        string stand = lastReport.Bericht.Stand.Substring(0, 10);
+                        string date = DateTime.Now.ToString("dd.MM.yyyy");
+                        if (stand != date)
+                        {
+                            DailyReport dailyReport = new();
+                            Bericht bericht = GetBerichtFromUrl(url);
+                            dailyReport.Bericht = bericht;
+                            JSONWriter.Write(dailyReport, path, filename);
+                            status = true;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    status = false;
+                }
+            }
+
+            return status;
+        }
+
+        public static DailyReport DeserializeRkiData(DateTime datum)
+        {
+            string path = @"../SmICSWebApp/Resources/statistik/json/" + datum.ToString("yyyy-MM-dd") + ".json";
+            try
+            {
+                DailyReport dailyReport = JSONReader<DailyReport>.ReadObject(path);
+                return dailyReport;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public static string SeMapColor(string inzidenz)
+        {
+            string farbe;
+            int zahl = (int)Convert.ToInt64(Math.Floor(Convert.ToDouble(inzidenz)));
+
+            if (zahl > 100)
+            {
+                farbe = "#671212";
+                return farbe;
+            }
+            if (zahl < 100 && zahl > 75)
+            {
+                farbe = "#951214";
+                return farbe;
+            }
+            if (zahl < 75 && zahl > 50)
+            {
+                farbe = "#D43624";
+                return farbe;
+            }
+            if (zahl < 50 && zahl > 25)
+            {
+                farbe = "#FFB534";
+                return farbe;
+            }
+            if (zahl < 25 && zahl > 5)
+            {
+                farbe = "#FFF380";
+                return farbe;
+            }
+            else
+            {
+                farbe = "#FFFFFF";
+                return farbe;
+            }
+
+        }
+
+        public static string SetCaseColor(double tag, double vortag)
+        {
+            string color;
+            if (tag < vortag)
+            {
+                color = "#66C166";
+                return color;
+            }
+            if (tag == vortag)
+            {
+                color = "#FFC037";
+                return color;
+            }
+            if (tag > vortag)
+            {
+                color = "#F35C58";
+                return color;
+            }
+            else
+            {
+                color = "#5591BB";
+                return color;
+            }
+
+        }
+    }
+}
