@@ -49,8 +49,8 @@ namespace SmICSWebApp
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
-            OpenehrConfig.openehrUser = "etltestuser";
-            OpenehrConfig.openehrPassword = "etltestuser#01";
+            OpenehrConfig.openehrUser = "smics";
+            OpenehrConfig.openehrPassword = "b+KzsSFD?cgdW2UA";
             OpenehrConfig.openehrAdaptor = "BETTER";
 
             /*OpenehrConfig.openehrEndpoint = "https://172.0.0.1:8080/ehrbase/rest/openehr/v1";

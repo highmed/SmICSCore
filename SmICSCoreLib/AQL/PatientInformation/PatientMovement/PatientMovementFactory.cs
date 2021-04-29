@@ -118,12 +118,12 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
         }
         private void addDischargeObject(PatientStayModel patientStay, EpisodeOfCareModel episodeOfCare, List<PatientMovementModel> patientMovementList)
         {
-            if (episodeOfCare.Ende != DateTime.MinValue)
+            if (episodeOfCare != null)
             {
-                if (!(episodeOfCare is null) && patientStay.Ende == episodeOfCare.Ende)
+                if (episodeOfCare.Ende.HasValue && patientStay.Ende == episodeOfCare.Ende)
                 {
                     PatientMovementModel patientMovement = new PatientMovementModel(patientStay);
-                    patientMovement.Beginn = episodeOfCare.Ende;
+                    patientMovement.Beginn = episodeOfCare.Ende.Value;
                     patientMovement.AddMovementType(2, "Entlassung");
 
                     patientMovementList.Add(patientMovement);
