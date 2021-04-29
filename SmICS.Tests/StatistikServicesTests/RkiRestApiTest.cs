@@ -15,6 +15,6 @@ namespace SmICSFactory.Tests.StatistikServicesTests
             State state = rkiRestApi.GetAllStates();
 
             Assert.NotNull(state);
-    }
+        }   
     }
 }

@@ -11,6 +11,11 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using SmICSWebApp.Data;
 using Serilog;
+using Quartz.Spi;
+using Quartz;
+using Quartz.Impl;
+using SmICSCoreLib.StatistikServices.CronJob;
+using SmICSCoreLib.StatistikServices;
 
 namespace SmICSWebApp
 {
@@ -32,8 +37,16 @@ namespace SmICSWebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSmICSLibrary();
-            services.AddSingleton<DataService>();
+            services.AddSingleton<DataService>();  
+            services.AddSingleton<RkiRestApi>();
             services.AddSingleton<Symptom>();
+
+            //CronJob
+            services.AddSingleton<IJobFactory, QuartzJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            services.AddSingleton<JobGetReport>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 29 12 ? * *"));
+            services.AddHostedService<QuartzHostedService>();
 
             services.AddSwaggerGen(c =>
             {

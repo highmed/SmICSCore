@@ -5,6 +5,7 @@
 @using SmICSCoreLib.AQL.Patient_Stay.Count;
 
 @inject DataService dataService
+@inject IJSRuntime JSRuntime
 
 <h3>Statistik (Prototyp)</h3>
 
@@ -106,7 +107,7 @@
                                                 <tr>
                                                     <th scope="row">
                                                         Wahrscheinliche Nosokomiale Infektion
-                                                        <a href="" @onmouseover="() => ShowSecondText()" @onclick:preventDefault style="color:red">
+                                                         <a href="" @onmouseover="() => ShowSecondText()" @onclick:preventDefault style="color:red">
                                                             *
                                                         </a>
                                                     </th>
@@ -174,7 +175,7 @@
                                             </p>
                                         }
 
-                                        @if (firstText == false && secondText == true )
+                                        @if (firstText == false && secondText == true)
                                         {
                                             <p style="font-size:0.8em">
                                                 *eine Wahrscheinliche Nosokomiale Infektion ist, wenn der Patient bei stationärer Aufnahme negativ auf SARS-CoV-2
@@ -332,4 +333,5 @@
             secondText = false;
         }
     }
+
 }

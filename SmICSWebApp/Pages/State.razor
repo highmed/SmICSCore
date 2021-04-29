@@ -1,16 +1,16 @@
 ﻿@page "/state"
 
-@using SmICSWebApp.Data
-@using Helper
+@using SmICSCoreLib.StatistikDataModels
+@using SmICSCoreLib.StatistikServices
 @using System;
-@inject DataService dataService
-@inject IJSRuntime JS
+
+@inject RkiRestApi rkiRestApi
 
 <h3>Statistik (Prototyp)</h3>
 
 <div class="card">
-   <StatistikNav>
-   </StatistikNav>
+    <StatistikNav>
+    </StatistikNav>
 
     <div class="card-body">
         <div>
@@ -166,16 +166,16 @@
                                                         {
                                                             <tr>
                                                                 <td scope="row">
-                                                                    <a href="/district/@state.blAttribute.bundesland">
-                                                                        @state.blAttribute.bundesland
+                                                                    <a href="/district/@state.BlAttribute.Bundesland">
+                                                                        @state.BlAttribute.Bundesland
                                                                     </a>
                                                                 </td>
-                                                                <td>@state.blAttribute.fallzahlGesamt</td>
-                                                                <td>@state.blAttribute.faelle7BL</td>
-                                                                <td>@state.blAttribute.faellePro100000Ew</td>
-                                                                <td>@state.blAttribute.inzidenz7Tage</td>
-                                                                <td>@state.blAttribute.todesfaelle</td>
-                                                                <td>@state.blAttribute.todesfaelle7BL</td>
+                                                                <td>@state.BlAttribute.FallzahlGesamt</td>
+                                                                <td>@state.BlAttribute.Faelle7BL</td>
+                                                                <td>@state.BlAttribute.FaellePro100000Ew</td>
+                                                                <td>@state.BlAttribute.Inzidenz7Tage</td>
+                                                                <td>@state.BlAttribute.Todesfaelle</td>
+                                                                <td>@state.BlAttribute.Todesfaelle7BL</td>
                                                             </tr>
                                                         }
                                                     </tbody>
@@ -457,42 +457,42 @@
 
     private void SetRKIData()
     {
-        dataService.SerializeRkiData();
+        rkiRestApi.SerializeRkiData();
     }
 
     private void GetRKIData()
     {
         try
         {
-            dailyReport = dataService.DeserializeRkiData(datum);
-            stand = dailyReport.bericht.stand;
-            rWert7Tage = dailyReport.bericht.rWert7Tage;
-            inzidenz7Tage = dailyReport.bericht.inzidenz7Tage;
-            fallzahl = dailyReport.bericht.fallzahl;
-            fallzahlVortag = dailyReport.bericht.fallzahlVortag;
-            todesfaelle = dailyReport.bericht.todesfaelle;
-            todesfaelleVortag = dailyReport.bericht.todesfaelleVortag;
-            standAktuell = dailyReport.bericht.standAktuell;
-            blStandAktuell = dailyReport.bericht.blStandAktuell;
-            impfStatus = dailyReport.bericht.ImpfStatus;
-            gesamtImpfung = dailyReport.bericht.gesamtImpfung;
-            erstImpfung = dailyReport.bericht.erstImpfung;
-            zweittImpfung = dailyReport.bericht.zweitImpfung;
+            dailyReport = rkiRestApi.DeserializeRkiData(datum);
+            stand = dailyReport.Bericht.Stand;
+            rWert7Tage = dailyReport.Bericht.RWert7Tage;
+            inzidenz7Tage = dailyReport.Bericht.Inzidenz7Tage;
+            fallzahl = dailyReport.Bericht.Fallzahl;
+            fallzahlVortag = dailyReport.Bericht.FallzahlVortag;
+            todesfaelle = dailyReport.Bericht.Todesfaelle;
+            todesfaelleVortag = dailyReport.Bericht.TodesfaelleVortag;
+            standAktuell = dailyReport.Bericht.StandAktuell;
+            blStandAktuell = dailyReport.Bericht.BlStandAktuell;
+            impfStatus = dailyReport.Bericht.ImpfStatus;
+            gesamtImpfung = dailyReport.Bericht.GesamtImpfung;
+            erstImpfung = dailyReport.Bericht.ErstImpfung;
+            zweittImpfung = dailyReport.Bericht.ZweitImpfung;
 
-            bundeslaender = dailyReport.bericht.bundesland;
+            bundeslaender = dailyReport.Bericht.Bundesland;
             if (bundeslaender != null)
             {
                 foreach (var bundesland in bundeslaender)
                 {
-                    farbe.Add(bundesland.blAttribute.farbe);
+                    farbe.Add(bundesland.BlAttribute.Farbe);
                 }
             }
 
-            lastReport = dataService.DeserializeRkiData(datum.AddDays(-1));
+            lastReport = rkiRestApi.DeserializeRkiData(datum.AddDays(-1));
             if (lastReport != null)
             {
-                inzidenz7TageVortag = lastReport.bericht.inzidenz7Tage;
-                rWert7TageVortag = lastReport.bericht.rWert7Tage;
+                inzidenz7TageVortag = lastReport.Bericht.Inzidenz7Tage;
+                rWert7TageVortag = lastReport.Bericht.RWert7Tage;
             }
             else
             {
@@ -500,8 +500,8 @@
                 rWert7TageVortag = rWert7Tage;
             }
 
-            inzidenzColor = dataService.SetCaseColor(double.Parse(inzidenz7Tage), double.Parse(inzidenz7TageVortag));
-            rWertColor = dataService.SetCaseColor(double.Parse(rWert7Tage), double.Parse(rWert7TageVortag));
+            inzidenzColor = rkiRestApi.SetCaseColor(double.Parse(inzidenz7Tage), double.Parse(inzidenz7TageVortag));
+            rWertColor = rkiRestApi.SetCaseColor(double.Parse(rWert7Tage), double.Parse(rWert7TageVortag));
 
         }
         catch (Exception ex)
@@ -517,12 +517,12 @@
 
     private void GetLastReport()
     {
-        bundeslaender = lastReport.bericht.bundesland;
-        blStandAktuell = lastReport.bericht.blStandAktuell;
-        stand = lastReport.bericht.stand;
+        bundeslaender = lastReport.Bericht.Bundesland;
+        blStandAktuell = lastReport.Bericht.BlStandAktuell;
+        stand = lastReport.Bericht.Stand;
         foreach (var bundesland in bundeslaender)
         {
-            farbe.Add(bundesland.blAttribute.farbe);
+            farbe.Add(bundesland.BlAttribute.Farbe);
         }
     }
 

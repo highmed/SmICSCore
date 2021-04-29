@@ -4,13 +4,9 @@ using SmICSCoreLib.JSONFileStream;
 using SmICSCoreLib.StatistikDataModels;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmICSCoreLib.StatistikServices
 {
@@ -115,7 +111,7 @@ namespace SmICSCoreLib.StatistikServices
         }
 
         //Get Data From RKI Resources and write it as a DailyReport
-        public static string GetRValue(int vlaue)
+        public string GetRValue(int vlaue)
         {
             string rValu;
             try
@@ -162,8 +158,8 @@ namespace SmICSCoreLib.StatistikServices
                                 attr.Todesfaelle7BL = state.Features[0].Attributes.Death7_bl;
                                 bericht.BlStandAktuell = true;
 
-                                District district = GetDistrictByName(attr.Bundesland);
-                                if (district.Features != null)
+                                District district = GetDistrictsByStateName(attr.Bundesland);
+                                if (district.Features != null && district.Features.Length!=0)
                                 {
                                     landkreise = new ArrayList();
                                     foreach (var lk in district.Features)
@@ -190,7 +186,7 @@ namespace SmICSCoreLib.StatistikServices
                         attr.Inzidenz7Tage = result.Tables[0].Rows[i][2].ToString().Substring(0, 5);
                         attr.Farbe = SeMapColor(attr.Inzidenz7Tage);
                         Landkreis[] lkArray = (Landkreis[])landkreise.ToArray(typeof(Landkreis));
-                        bundesland.Landkreis = lkArray;
+                        bundesland.Landkreise = lkArray;
                         bundesland.BlAttribute = attr;
                         bundeslaender.Add(bundesland);
                     }
@@ -199,10 +195,20 @@ namespace SmICSCoreLib.StatistikServices
 
                     String urlImpfung = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Impfquotenmonitoring.xlsx?__blob=publicationFile";
                     var resultImpfung = GetDataSetFromLink(urlImpfung);
-
-                    bericht.GesamtImpfung = resultImpfung.Tables[1].Rows[21][2].ToString();
-                    bericht.ErstImpfung = resultImpfung.Tables[1].Rows[21][5].ToString().Substring(0, 4);
-                    bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[21][8].ToString().Substring(0, 4);
+                    if (resultImpfung != null)
+                    {
+                        try
+                        {
+                            bericht.GesamtImpfung = resultImpfung.Tables[1].Rows[21][2].ToString();
+                            bericht.ErstImpfung = resultImpfung.Tables[1].Rows[21][5].ToString().Substring(0, 4);
+                            bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[21][8].ToString().Substring(0, 4);
+                            bericht.ImpfStatus = true;
+                        }
+                        catch (Exception)
+                        {
+                            bericht.ImpfStatus = false;
+                        }
+                    }
 
                     bericht.Stand = result.Tables[0].Rows[1][0].ToString().Substring(7);
                     bericht.RWert7Tage = GetRValue(2);
@@ -266,6 +272,9 @@ namespace SmICSCoreLib.StatistikServices
                 {
                     DailyReport lastReport = DeserializeRkiData(DateTime.Now);
                     bool standAktuell = lastReport.Bericht.StandAktuell;
+                    string stand = lastReport.Bericht.Stand.Substring(0, 10);
+                    string date = DateTime.Now.ToString("dd.MM.yyyy");
+                    
                     if (standAktuell == false)
                     {
                         DailyReport dailyReport = new();
@@ -279,21 +288,19 @@ namespace SmICSCoreLib.StatistikServices
                         else
                         {
                             status = false;
-                        }
-                        
+                        }      
+                    }
+                    else if (stand != date)
+                    {
+                        DailyReport dailyReport = new();
+                        Bericht bericht = GetBerichtFromUrl(url);
+                        dailyReport.Bericht = bericht;
+                        JSONWriter.Write(dailyReport, path, filename);
+                        status = true;
                     }
                     else
                     {
-                        string stand = lastReport.Bericht.Stand.Substring(0, 10);
-                        string date = DateTime.Now.ToString("dd.MM.yyyy");
-                        if (stand != date)
-                        {
-                            DailyReport dailyReport = new();
-                            Bericht bericht = GetBerichtFromUrl(url);
-                            dailyReport.Bericht = bericht;
-                            JSONWriter.Write(dailyReport, path, filename);
-                            status = true;
-                        }
+                        status = true;
                     }
                 }
                 catch (Exception)
@@ -305,7 +312,7 @@ namespace SmICSCoreLib.StatistikServices
             return status;
         }
 
-        public static DailyReport DeserializeRkiData(DateTime datum)
+        public DailyReport DeserializeRkiData(DateTime datum)
         {
             string path = @"../SmICSWebApp/Resources/statistik/json/" + datum.ToString("yyyy-MM-dd") + ".json";
             try
@@ -357,7 +364,7 @@ namespace SmICSCoreLib.StatistikServices
 
         }
 
-        public static string SetCaseColor(double tag, double vortag)
+        public string SetCaseColor(double tag, double vortag)
         {
             string color;
             if (tag < vortag)

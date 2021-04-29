@@ -1,8 +1,10 @@
 ﻿@page "/district/{lb}"
 
 @using System.Collections;
-@using SmICSWebApp.Data
-@inject DataService dataService
+@using SmICSCoreLib.StatistikDataModels
+@using SmICSCoreLib.StatistikServices
+
+@inject RkiRestApi rkiRestApi
 @inject IJSRuntime JS
 
 <h3>Statistik (Prototyp)</h3>
@@ -81,7 +83,7 @@
                         </div>
                     </div>
                     <br>
-                 
+
                     <div class="row">
                         @if (@blStandAktuell == false)
                         {
@@ -134,14 +136,14 @@
                                                     @foreach (var district in lkArray)
                                                     {
                                                         <tr>
-                                                            <td scope="row">@district.landkreis</td>
-                                                            <td>@district.stadt</td>
-                                                            <td>@district.fallzahlGesamt</td>
-                                                            <td>@district.faelle7Lk</td>
-                                                            <td>@district.faellePro100000Ew</td>
-                                                            <td>@district.inzidenz7Tage</td>
-                                                            <td>@district.todesfaelle</td>
-                                                            <td>@district.todesfaelle7Lk</td>
+                                                            <td scope="row">@district.LandkreisName</td>
+                                                            <td>@district.Stadt</td>
+                                                            <td>@district.FallzahlGesamt</td>
+                                                            <td>@district.Faelle7Lk</td>
+                                                            <td>@district.FaellePro100000Ew</td>
+                                                            <td>@district.Inzidenz7Tage</td>
+                                                            <td>@district.Todesfaelle</td>
+                                                            <td>@district.Todesfaelle7Lk</td>
                                                         </tr>
                                                     }
 
@@ -359,7 +361,7 @@
                         }
                     </div>
                     <br>
-                    
+
                     <div class="row">
 
                     </div>
@@ -405,54 +407,54 @@
     {
         try
         {
-            dailyReport = dataService.DeserializeRkiData(datum);
-            stand = dailyReport.bericht.stand;
-            rWert7Tage = dailyReport.bericht.rWert7Tage;
-            standAktuell = dailyReport.bericht.standAktuell;
-            blStandAktuell = dailyReport.bericht.blStandAktuell;
+            dailyReport = rkiRestApi.DeserializeRkiData(datum);
+            stand = dailyReport.Bericht.Stand;
+            rWert7Tage = dailyReport.Bericht.RWert7Tage;
+            standAktuell = dailyReport.Bericht.StandAktuell;
+            blStandAktuell = dailyReport.Bericht.BlStandAktuell;
 
-            bundeslaender = dailyReport.bericht.bundesland;
+            bundeslaender = dailyReport.Bericht.Bundesland;
             foreach (var bundesland in bundeslaender)
             {
-                if (bundesland.blAttribute.bundesland == lb)
+                if (bundesland.BlAttribute.Bundesland == lb)
                 {
-                    fallzahl = bundesland.blAttribute.fallzahlGesamt;
-                    todesfaelle = bundesland.blAttribute.todesfaelle;
-                    inzidenz7Tage = bundesland.blAttribute.inzidenz7Tage;
-                    lkArray = bundesland.landkreis;
+                    fallzahl = bundesland.BlAttribute.FallzahlGesamt;
+                    todesfaelle = bundesland.BlAttribute.Todesfaelle;
+                    inzidenz7Tage = bundesland.BlAttribute.Inzidenz7Tage;
+                    lkArray = bundesland.Landkreise;
                 }
             }
 
             foreach (var bundesland in bundeslaender)
             {
-                farbe.Add(bundesland.blAttribute.farbe);
+                farbe.Add(bundesland.BlAttribute.Farbe);
             }
 
-            lastReport = dataService.DeserializeRkiData(datum.AddDays(-1));
+            lastReport = rkiRestApi.DeserializeRkiData(datum.AddDays(-1));
             if (lastReport != null)
             {
-                lastBundeslaender = lastReport.bericht.bundesland;
+                lastBundeslaender = lastReport.Bericht.Bundesland;
                 foreach (var lastBundesland in lastBundeslaender)
                 {
-                    if (lastBundesland.blAttribute.bundesland == lb)
+                    if (lastBundesland.BlAttribute.Bundesland == lb)
                     {
-                        int vortag = lastBundesland.blAttribute.fallzahlGesamt;
+                        int vortag = lastBundesland.BlAttribute.FallzahlGesamt;
                         fallzahlVortag = fallzahl - vortag;
-                        int vortag2 = lastBundesland.blAttribute.todesfaelle;
+                        int vortag2 = lastBundesland.BlAttribute.Todesfaelle;
                         todesfaelleVortag = todesfaelle - vortag2;
-                        inzidenz7TageVortag = lastBundesland.blAttribute.inzidenz7Tage;
-                        lkArrayLast = lastBundesland.landkreis;
+                        inzidenz7TageVortag = lastBundesland.BlAttribute.Inzidenz7Tage;
+                        lkArrayLast = lastBundesland.Landkreise;
                     }
                 }
-                rWert7TageVortag = lastReport.bericht.rWert7Tage;
+                rWert7TageVortag = lastReport.Bericht.RWert7Tage;
             }
             else
             {
                 lastBundeslaender = bundeslaender;
             }
 
-            inzidenzColor = dataService.SetCaseColor(double.Parse(inzidenz7Tage), double.Parse(inzidenz7TageVortag));
-            rWertColor = dataService.SetCaseColor(double.Parse(rWert7Tage), double.Parse(rWert7TageVortag));
+            inzidenzColor = rkiRestApi.SetCaseColor(double.Parse(inzidenz7Tage), double.Parse(inzidenz7TageVortag));
+            rWertColor = rkiRestApi.SetCaseColor(double.Parse(rWert7Tage), double.Parse(rWert7TageVortag));
         }
         catch (Exception ex)
         {
@@ -463,8 +465,8 @@
     private void GetLastReport()
     {
         lkArray = lkArrayLast;
-        blStandAktuell = lastReport.bericht.blStandAktuell;
-        stand = lastReport.bericht.stand;
+        blStandAktuell = lastReport.Bericht.BlStandAktuell;
+        stand = lastReport.Bericht.Stand;
     }
 
 }

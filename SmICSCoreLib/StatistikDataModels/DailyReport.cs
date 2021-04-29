@@ -4,121 +4,121 @@ namespace SmICSCoreLib.StatistikDataModels
 {
     public class DailyReport
     {
-        [JsonProperty(PropertyName = "bericht")]
+        [JsonProperty(PropertyName = "Bericht")]
         public Bericht Bericht { get; set; }
     }
 
     public class Bericht
     {
-        [JsonProperty(PropertyName = "stand")]
+        [JsonProperty(PropertyName = "Stand")]
         public string Stand { get; set; }
 
-        [JsonProperty(PropertyName = "standAktuell")]
+        [JsonProperty(PropertyName = "StandAktuell")]
         public bool StandAktuell { get; set; }
 
-        [JsonProperty(PropertyName = "fallzahl")]
+        [JsonProperty(PropertyName = "Fallzahl")]
         public string Fallzahl { get; set; }
 
-        [JsonProperty(PropertyName = "fallzahlVortag")]
+        [JsonProperty(PropertyName = "FallzahlVortag")]
         public string FallzahlVortag { get; set; }
 
-        [JsonProperty(PropertyName = "todesfaelle")]
+        [JsonProperty(PropertyName = "Todesfaelle")]
         public string Todesfaelle { get; set; }
 
-        [JsonProperty(PropertyName = "todesfaelleVortag")]
+        [JsonProperty(PropertyName = "TodesfaelleVortag")]
         public string TodesfaelleVortag { get; set; }
 
-        [JsonProperty(PropertyName = "rWert7Tage")]
+        [JsonProperty(PropertyName = "RWert7Tage")]
         public string RWert7Tage { get; set; }
 
-        [JsonProperty(PropertyName = "rWert7TageVortag")]
+        [JsonProperty(PropertyName = "RWert7TageVortag")]
         public string RWert7TageVortag { get; set; }
 
-        [JsonProperty(PropertyName = "inzidenz7Tage")]
+        [JsonProperty(PropertyName = "Inzidenz7Tage")]
         public string Inzidenz7Tage { get; set; }
 
-        [JsonProperty(PropertyName = "inzidenz7TageVortag")]
+        [JsonProperty(PropertyName = "Inzidenz7TageVortag")]
         public string Inzidenz7TageVortag { get; set; }
 
-        [JsonProperty(PropertyName = "gesamtImpfung")]
+        [JsonProperty(PropertyName = "GesamtImpfung")]
         public string GesamtImpfung { get; set; }
 
         [JsonProperty(PropertyName = "ImpfStatus")]
         public bool ImpfStatus { get; set; }
 
-        [JsonProperty(PropertyName = "erstImpfung")]
+        [JsonProperty(PropertyName = "ErstImpfung")]
         public string ErstImpfung { get; set; }
 
-        [JsonProperty(PropertyName = "zweitImpfung")]
+        [JsonProperty(PropertyName = "ZweitImpfung")]
         public string ZweitImpfung { get; set; }
 
-        [JsonProperty(PropertyName = "bundesland")]
+        [JsonProperty(PropertyName = "Bundesland")]
         public Bundesland[] Bundesland { get; set; }
 
-        [JsonProperty(PropertyName = "blStandAktuell")]
+        [JsonProperty(PropertyName = "BlStandAktuell")]
         public bool BlStandAktuell { get; set; }
     }
 
     public class Bundesland
     {
-        [JsonProperty(PropertyName = "blAttribute")]
+        [JsonProperty(PropertyName = "BlAttribute")]
         public BlAttribute BlAttribute { get; set; }
 
-        [JsonProperty(PropertyName = "landkreis")]
-        public Landkreis[] Landkreis { get; set; }
+        [JsonProperty(PropertyName = "Landkreise")]
+        public Landkreis[] Landkreise { get; set; }
     }
 
     public class Landkreis
     {
-        [JsonProperty(PropertyName = "stadt")]
+        [JsonProperty(PropertyName = "Stadt")]
         public string Stadt { get; set; }
 
         [JsonProperty(PropertyName = "LandkreisName")]
         public string LandkreisName { get; set; }
 
-        [JsonProperty(PropertyName = "fallzahlGesamt")]
+        [JsonProperty(PropertyName = "FallzahlGesamt")]
         public int FallzahlGesamt { get; set; }
 
-        [JsonProperty(PropertyName = "faelle7Lk")]
+        [JsonProperty(PropertyName = "Faelle7Lk")]
         public float Faelle7Lk { get; set; }
 
-        [JsonProperty(PropertyName = "faellePro100000Ew")]
+        [JsonProperty(PropertyName = "FaellePro100000Ew")]
         public float FaellePro100000Ew { get; set; }
 
-        [JsonProperty(PropertyName = "inzidenz7Tage")]
+        [JsonProperty(PropertyName = "Inzidenz7Tage")]
         public float Inzidenz7Tage { get; set; }
 
-        [JsonProperty(PropertyName = "todesfaelle")]
+        [JsonProperty(PropertyName = "Todesfaelle")]
         public int Todesfaelle { get; set; }
 
-        [JsonProperty(PropertyName = "todesfaelle7Lk")]
+        [JsonProperty(PropertyName = "Todesfaelle7Lk")]
         public int Todesfaelle7Lk { get; set; }
     }
 
     public class BlAttribute
     {
-        [JsonProperty(PropertyName = "bundesland")]
+        [JsonProperty(PropertyName = "Bundesland")]
         public string Bundesland { get; set; }
 
-        [JsonProperty(PropertyName = "fallzahlGesamt")]
+        [JsonProperty(PropertyName = "FallzahlGesamt")]
         public int FallzahlGesamt { get; set; }
 
-        [JsonProperty(PropertyName = "faelle7BL")]
+        [JsonProperty(PropertyName = "Faelle7BL")]
         public float Faelle7BL { get; set; }
 
-        [JsonProperty(PropertyName = "faellePro100000Ew")]
+        [JsonProperty(PropertyName = "FaellePro100000Ew")]
         public float FaellePro100000Ew { get; set; }
 
-        [JsonProperty(PropertyName = "todesfaelle")]
+        [JsonProperty(PropertyName = "Todesfaelle")]
         public int Todesfaelle { get; set; }
 
-        [JsonProperty(PropertyName = "todesfaelle7BL")]
+        [JsonProperty(PropertyName = "Todesfaelle7BL")]
         public int Todesfaelle7BL { get; set; }
 
-        [JsonProperty(PropertyName = "inzidenz7Tage")]
+        [JsonProperty(PropertyName = "Inzidenz7Tage")]
         public string Inzidenz7Tage { get; set; }
 
-        [JsonProperty(PropertyName = "farbe")]
+        [JsonProperty(PropertyName = "Farbe")]
         public string Farbe { get; set; }
     }
 }
