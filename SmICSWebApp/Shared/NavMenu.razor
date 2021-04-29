@@ -1,4 +1,6 @@
 ﻿@inject NavigationManager navigation
+@inject AuthenticationStateProvider AuthState
+@attribute [Authorize]
 
 <nav class="navbar navbar-expand-lg shadow-sm fixed-top">
     <div class="collapse navbar-collapse">
@@ -10,24 +12,25 @@
                 <NavLink class="nav-link" href="state">
                     <span class="oi oi-vertical-align-bottom" aria-hidden="true"></span> Statistik (Prototyp)
                 </NavLink>
-            </li>           
+            </li>
             <li class="nav-item">
                 <NavLink class="nav-link" href="http://localhost:3231" Match="NavLinkMatch.All">
                     <span class="oi oi-eye" aria-hidden="true"></span> Visualisierung
                 </NavLink>
             </li>
             <!--<li class="nav-item">
-                <NavLink class="nav-link" href="/swagger/index.html" Match="NavLinkMatch.All">
-                    <span class="oi oi-list" aria-hidden="true"></span> REST API
-                </NavLink>
-            </li>-->
+            <NavLink class="nav-link" href="/swagger/index.html" Match="NavLinkMatch.All">
+                <span class="oi oi-list" aria-hidden="true"></span> REST API
+            </NavLink>
+        </li>-->
         </ul>
-        </div>
-    </nav>
+        <a href="/Logout"><button type="button" class="btn btn-primary">Logout</button></a>
+    </div>
+</nav>
 
 @code {
     private string visuLink = "";
-
+    private string Username = "Anonymous User";
     protected override void OnInitialized()
     {
 
@@ -35,9 +38,22 @@
         string[] splitted = baseURL.Split(':');
         string http = splitted[0] + ":";
         string url = splitted[1];
-        string port = ":"+ "3231";
+        string port = ":" + "3231";
 
         visuLink = http + url + port;
 
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState.GetAuthenticationStateAsync();
+
+        Username =
+            state.User.Claims
+                 .Where(c => c.Type.Equals("name"))
+                 .Select(c => c.Value)
+                 .FirstOrDefault() ?? string.Empty;
+
+        await base.OnInitializedAsync();
     }
 }

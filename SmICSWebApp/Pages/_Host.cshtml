@@ -1,8 +1,21 @@
-﻿@page "/"
+﻿@page "/{handler?}"
+@model _HostAuthModel
+
 @namespace SmICSWebApp.Pages
+
+@using Microsoft.AspNetCore.Authentication
+@using SmICSWebApp.Authentication
+
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = null;
+}
+
+@{ var tokens = new TokenProvider
+    {
+        AccessToken = await HttpContext.GetTokenAsync("access_token"),
+        RefreshToken = await HttpContext.GetTokenAsync("refresh_token")
+    };
 }
 
 <!DOCTYPE html>
@@ -21,7 +34,7 @@
 </head>
 <body>
     <app>
-        <component type="typeof(App)" render-mode="ServerPrerendered" />
+        <component type="typeof(App)" param-InitialState="tokens" render-mode="ServerPrerendered" />
     </app>
 
     <div id="blazor-error-ui">

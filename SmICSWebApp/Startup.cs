@@ -11,6 +11,13 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using SmICSWebApp.Data;
 using Serilog;
+using Microsoft.AspNetCore.Authorization;
+using SmICSWebApp.Authentication;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Threading.Tasks;
 
 namespace SmICSWebApp
 {
@@ -27,6 +34,81 @@ namespace SmICSWebApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<TokenProvider>();
+
+            /*services.AddAuthentication(
+               CertificateAuthenticationDefaults.AuthenticationScheme)
+           .AddCertificate(options =>
+           {
+               options.AllowedCertificateTypes = CertificateTypes.All;
+           });*/
+
+            /*services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+            .AddCookie("Cookies")
+            .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+            {
+                options.Authority = Configuration["oidc:Authority"];
+                options.ClientId = Configuration["oidc:ClientId"];
+                options.ClientSecret = Configuration["oidc:ClientSecret"];
+
+                options.ResponseType = "code";
+                options.Scope.Clear();
+                options.Scope.Add("openid");
+
+                options.ClaimsIssuer = "User";
+                options.RequireHttpsMetadata = false;
+
+                options.SaveTokens = true;
+                options.GetClaimsFromUserInfoEndpoint = true;
+
+                options.Events = new OpenIdConnectEvents
+                {
+
+                    //OnRedirectToIdentityProviderForSignOut = (context) =>
+                    //{
+
+                    //};
+
+                    OnAccessDenied = context =>
+                    {
+                        context.HandleResponse();
+                        context.Response.Redirect("/");
+                        return Task.CompletedTask;
+                    }
+                };
+            });*/
+
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = "oidc";
+            })
+                    .AddCookie("Cookies")
+                    .AddOpenIdConnect("oidc", options =>
+                    {
+                        options.Authority = "https://demo.identityserver.io/";
+                        options.ClientId = "interactive.confidential.short"; // 75 seconds
+                        options.ClientSecret = "secret";
+                        options.ResponseType = "code";
+                        options.SaveTokens = true;
+                        options.GetClaimsFromUserInfoEndpoint = true;
+                        options.Scope.Add("offline_access");
+
+                        options.Events = new OpenIdConnectEvents
+                        {
+                            OnAccessDenied = context =>
+                            {
+                                context.HandleResponse();
+                                context.Response.Redirect("/");
+                                return Task.CompletedTask;
+                            }
+                        };
+                    });
             services.AddControllers();
             services.AddControllers().AddNewtonsoftJson();
             services.AddRazorPages();
@@ -43,15 +125,30 @@ namespace SmICSWebApp
                 c.IncludeXmlComments(xmlPath);
             });
 
+            services.AddMvcCore(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                             .RequireAuthenticatedUser()
+                             .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
+
+
+
+            services.AddSingleton<BlazorServerAuthStateCache>();
+            services.AddScoped<AuthenticationStateProvider, BlazorServerAuthState>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
+            //OpenehrConfig.openehrUser = "smics";
+            //OpenehrConfig.openehrPassword = "b+KzsSFD?cgdW2UA";
+
             OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
-            OpenehrConfig.openehrUser = "smics";
-            OpenehrConfig.openehrPassword = "b+KzsSFD?cgdW2UA";
-            OpenehrConfig.openehrAdaptor = "BETTER";
+            OpenehrConfig.openehrUser = "etltestuser";
+            OpenehrConfig.openehrPassword = "etltestuser#01";
 
             /*OpenehrConfig.openehrEndpoint = "https://172.0.0.1:8080/ehrbase/rest/openehr/v1";
             OpenehrConfig.openehrUser = "test";
@@ -85,12 +182,15 @@ namespace SmICSWebApp
 
             app.UseSerilogRequestLogging();
 
+            app.UseAuthentication();
             app.UseRouting();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
                 endpoints.MapBlazorHub();
+                endpoints.MapControllers();
                 endpoints.MapFallbackToPage("/_Host");
             });
         }
