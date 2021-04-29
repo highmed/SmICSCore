@@ -45,7 +45,7 @@ namespace SmICSWebApp
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             services.AddSingleton<JobGetReport>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 29 12 ? * *"));
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 00 12 ? * *"));
             services.AddHostedService<QuartzHostedService>();
 
             services.AddSwaggerGen(c =>
