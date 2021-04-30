@@ -12,22 +12,22 @@
     width: 70%;
 }
 
-    .mapdiv path {
-        /*fill: #e2e8ee;*/
-        fill: #084594;
-        fill-opacity: 1;
-        fill-rule: evenodd;
-        stroke: #FFFFFF;
-        stroke-opacity: 0.7;
-        stroke-width: 2px;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        transition: fill 0.3s;
-    }
+.mapdiv path {
+    /*fill: #e2e8ee;*/
+    fill: #084594;
+    fill-opacity: 1;
+    fill-rule: evenodd;
+    stroke: #FFFFFF;
+    stroke-opacity: 0.7;
+    stroke-width: 2px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: fill 0.3s;
+}
 
-    .mapdiv :hover {
-        fill: #e0eafc;
-    }
+.mapdiv :hover {
+    fill: #e0eafc;
+}
 
 
 #head-info {
@@ -52,23 +52,49 @@
     height: 400px;
 }
 
-    .tableFixHead table {
-        border-collapse: collapse;
-        width: 100%;
-    }
+.tableFixHead table {
+    border-collapse: collapse;
+    width: 100%;
+}
 
-    .tableFixHead th {
-        position: sticky;
-        top: 0;
-        background: #EAEAEA;
-    }
+.tableFixHead th {
+    position: sticky;
+    top: 0;
+    background: #EAEAEA
+}
 
 #bologna-list .nav-link {
     background-color: #4AA0CA;
     margin: 0px 5px 0px 5px;
 }
 
+#bologna-list .nav-link:hover {
+    background-color: #2786AB;
+}
+    
+#bologna-list .nav-link:active {
+    background-color: #2786AB;
+}
+
+#bologna-list .nav-link:focus {
+    background-color: #2786AB;
+}
 
 #bologna-list a {
     color: white;
+}
+
+#head-info-nav {
+    padding: 5px 15px;
+}
+
+#body-info-nav {
+    padding: 5px 15px 10px 15px;
+}
+
+#body-info-nav .navbar{
+    border-top: none;
+}
+#body-info-nav row{
+    margin: 0px;
 }

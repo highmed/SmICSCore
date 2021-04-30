@@ -151,7 +151,7 @@ namespace SmICSCoreLib.StatistikServices
                             State state = GetStateByName(attr.Bundesland);
                             if (state.Features != null)
                             {
-                                attr.FallzahlGesamt = state.Features[0].Attributes.Fallzahl;
+                                attr.FallzahlGesamt = state.Features[0].Attributes.Fallzahl; 
                                 attr.Faelle7BL = state.Features[0].Attributes.Cases7_bl;
                                 attr.FaellePro100000Ew = state.Features[0].Attributes.FaellePro100000Ew;
                                 attr.Todesfaelle = state.Features[0].Attributes.Todesfaelle;
@@ -199,7 +199,7 @@ namespace SmICSCoreLib.StatistikServices
                     {
                         try
                         {
-                            bericht.GesamtImpfung = resultImpfung.Tables[1].Rows[21][2].ToString();
+                            bericht.GesamtImpfung = Convert.ToDouble(resultImpfung.Tables[1].Rows[21][2]).ToString("#,##");
                             bericht.ErstImpfung = resultImpfung.Tables[1].Rows[21][5].ToString().Substring(0, 4);
                             bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[21][8].ToString().Substring(0, 4);
                             bericht.ImpfStatus = true;
@@ -218,10 +218,10 @@ namespace SmICSCoreLib.StatistikServices
 
                     //TODO:Separate from Excel table 
                     var dataRows = result.Tables[2].Rows;
-                    bericht.Fallzahl = result.Tables[2].Rows[dataRows.Count - 1][1].ToString();
-                    bericht.FallzahlVortag = result.Tables[2].Rows[dataRows.Count - 1][3].ToString();
-                    bericht.Todesfaelle = result.Tables[2].Rows[dataRows.Count - 1][4].ToString();
-                    bericht.TodesfaelleVortag = result.Tables[2].Rows[dataRows.Count - 1][5].ToString();
+                    bericht.Fallzahl = Convert.ToDouble(result.Tables[2].Rows[dataRows.Count - 1][1]).ToString("#,##");
+                    bericht.FallzahlVortag = Convert.ToDouble(result.Tables[2].Rows[dataRows.Count - 1][3]).ToString("#,##");
+                    bericht.Todesfaelle = Convert.ToDouble(result.Tables[2].Rows[dataRows.Count - 1][4]).ToString("#,##");
+                    bericht.TodesfaelleVortag = Convert.ToDouble(result.Tables[2].Rows[dataRows.Count - 1][5]).ToString("#,##");
                     bericht.StandAktuell = true;
 
                     return bericht;
