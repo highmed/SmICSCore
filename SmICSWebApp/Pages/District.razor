@@ -382,9 +382,9 @@
     private string inzidenz7Tage;
     private string inzidenz7TageVortag;
     private string stand;
-    private int fallzahl;
+    private string fallzahl;
     private int fallzahlVortag;
-    private int todesfaelle;
+    private string todesfaelle;
     private int todesfaelleVortag;
     private Bundesland[] bundeslaender = new Bundesland[16];
     private Bundesland[] lastBundeslaender = new Bundesland[16];
@@ -410,6 +410,7 @@
             dailyReport = rkiRestApi.DeserializeRkiData(datum);
             stand = dailyReport.Bericht.Stand;
             rWert7Tage = dailyReport.Bericht.RWert7Tage;
+            rWert7TageVortag = dailyReport.Bericht.RWert7TageVortag;
             standAktuell = dailyReport.Bericht.StandAktuell;
             blStandAktuell = dailyReport.Bericht.BlStandAktuell;
 
@@ -438,23 +439,22 @@
                 {
                     if (lastBundesland.BlAttribute.Bundesland == lb)
                     {
-                        int vortag = lastBundesland.BlAttribute.FallzahlGesamt;
-                        fallzahlVortag = fallzahl - vortag;
-                        int vortag2 = lastBundesland.BlAttribute.Todesfaelle;
-                        todesfaelleVortag = todesfaelle - vortag2;
+                        string vortag = lastBundesland.BlAttribute.FallzahlGesamt;
+                        fallzahlVortag = Int32.Parse(fallzahl.Replace(".", "").Trim()) - Int32.Parse(vortag.Replace(".", "").Trim());
+                        string vortag2 = lastBundesland.BlAttribute.Todesfaelle;
+                        todesfaelleVortag = Int32.Parse(todesfaelle.Replace(".", "").Trim()) - Int32.Parse(vortag2.Replace(".", "").Trim());
                         inzidenz7TageVortag = lastBundesland.BlAttribute.Inzidenz7Tage;
                         lkArrayLast = lastBundesland.Landkreise;
                     }
                 }
-                rWert7TageVortag = lastReport.Bericht.RWert7Tage;
             }
             else
             {
                 lastBundeslaender = bundeslaender;
             }
 
-            inzidenzColor = rkiRestApi.SetCaseColor(double.Parse(inzidenz7Tage), double.Parse(inzidenz7TageVortag));
-            rWertColor = rkiRestApi.SetCaseColor(double.Parse(rWert7Tage), double.Parse(rWert7TageVortag));
+            inzidenzColor = rkiRestApi.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
+            rWertColor = rkiRestApi.SetCaseColor(rWert7Tage, rWert7TageVortag);
         }
         catch (Exception ex)
         {

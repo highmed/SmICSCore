@@ -212,7 +212,7 @@
 
     private void LoadRValue()
     {
-        rValue = rkiRestApi.GetRValue(2);
+        rValue = rkiRestApi.GetRValue(2).Replace(",", ".");
         if (rValue == null)
         {
             rValue = ".k.A";

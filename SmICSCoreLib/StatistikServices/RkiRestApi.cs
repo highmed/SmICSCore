@@ -137,7 +137,6 @@ namespace SmICSCoreLib.StatistikServices
             {
                 try
                 {
-
                     ArrayList bundeslaender = new ();
                     ArrayList landkreise = new ();
                     for (int i = 5; i < 21; i++)
@@ -151,13 +150,14 @@ namespace SmICSCoreLib.StatistikServices
                             State state = GetStateByName(attr.Bundesland);
                             if (state.Features != null)
                             {
-                                attr.FallzahlGesamt = state.Features[0].Attributes.Fallzahl; 
-                                attr.Faelle7BL = state.Features[0].Attributes.Cases7_bl;
-                                attr.FaellePro100000Ew = state.Features[0].Attributes.FaellePro100000Ew;
-                                attr.Todesfaelle = state.Features[0].Attributes.Todesfaelle;
-                                attr.Todesfaelle7BL = state.Features[0].Attributes.Death7_bl;
+                                attr.FallzahlGesamt = state.Features[0].Attributes.Fallzahl.ToString("#,##"); 
+                                attr.Faelle7BL = state.Features[0].Attributes.Cases7_bl.ToString("#,##");
+                                attr.FaellePro100000Ew = state.Features[0].Attributes.FaellePro100000Ew.ToString("#,##");
+                                attr.Todesfaelle = state.Features[0].Attributes.Todesfaelle.ToString("#,##");
+                                attr.Todesfaelle7BL = state.Features[0].Attributes.Death7_bl.ToString("0.##");
+                                attr.Inzidenz7Tage = (state.Features[0].Attributes.Faelle7BlPro100K).ToString("0.##").Replace(",", ".");
                                 bericht.BlStandAktuell = true;
-
+                                attr.Farbe = SeMapColor(attr.Inzidenz7Tage);
                                 District district = GetDistrictsByStateName(attr.Bundesland);
                                 if (district.Features != null && district.Features.Length!=0)
                                 {
@@ -167,12 +167,12 @@ namespace SmICSCoreLib.StatistikServices
                                         Landkreis landkreisObj = new();
                                         landkreisObj.LandkreisName = lk.DistrictAttributes.County;
                                         landkreisObj.Stadt = lk.DistrictAttributes.GEN;
-                                        landkreisObj.FallzahlGesamt = lk.DistrictAttributes.Cases;
-                                        landkreisObj.Faelle7Lk = lk.DistrictAttributes.Cases7_lk;
-                                        landkreisObj.FaellePro100000Ew = lk.DistrictAttributes.Cases_per_100k;
-                                        landkreisObj.Inzidenz7Tage = (float)(Math.Round(lk.DistrictAttributes.Cases7_per_100k, 2));
-                                        landkreisObj.Todesfaelle = lk.DistrictAttributes.Deaths;
-                                        landkreisObj.Todesfaelle7Lk = lk.DistrictAttributes.Death7_lk;
+                                        landkreisObj.FallzahlGesamt = lk.DistrictAttributes.Cases.ToString("#,##");
+                                        landkreisObj.Faelle7Lk = lk.DistrictAttributes.Cases7_lk.ToString("#,##");
+                                        landkreisObj.FaellePro100000Ew = lk.DistrictAttributes.Cases_per_100k.ToString("#,##");
+                                        landkreisObj.Inzidenz7Tage = lk.DistrictAttributes.Cases7_per_100k.ToString("0.##").Replace(",", ".");
+                                        landkreisObj.Todesfaelle = lk.DistrictAttributes.Deaths.ToString("#,##");
+                                        landkreisObj.Todesfaelle7Lk = lk.DistrictAttributes.Death7_lk.ToString("0.##");
 
                                         landkreise.Add(landkreisObj);
                                     }
@@ -183,8 +183,6 @@ namespace SmICSCoreLib.StatistikServices
                         {
                             bericht.BlStandAktuell = false;
                         }
-                        attr.Inzidenz7Tage = result.Tables[0].Rows[i][2].ToString().Substring(0, 5);
-                        attr.Farbe = SeMapColor(attr.Inzidenz7Tage);
                         Landkreis[] lkArray = (Landkreis[])landkreise.ToArray(typeof(Landkreis));
                         bundesland.Landkreise = lkArray;
                         bundesland.BlAttribute = attr;
@@ -200,8 +198,8 @@ namespace SmICSCoreLib.StatistikServices
                         try
                         {
                             bericht.GesamtImpfung = Convert.ToDouble(resultImpfung.Tables[1].Rows[21][2]).ToString("#,##");
-                            bericht.ErstImpfung = resultImpfung.Tables[1].Rows[21][5].ToString().Substring(0, 4);
-                            bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[21][8].ToString().Substring(0, 4);
+                            bericht.ErstImpfung = resultImpfung.Tables[1].Rows[21][5].ToString().Substring(0, 4).Replace(",", ".");
+                            bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[21][8].ToString().Substring(0, 4).Replace(",", ".");
                             bericht.ImpfStatus = true;
                         }
                         catch (Exception)
@@ -211,10 +209,10 @@ namespace SmICSCoreLib.StatistikServices
                     }
 
                     bericht.Stand = result.Tables[0].Rows[1][0].ToString().Substring(7);
-                    bericht.RWert7Tage = GetRValue(2);
-                    bericht.RWert7TageVortag = GetRValue(3);
-                    bericht.Inzidenz7Tage = result.Tables[0].Rows[21][2].ToString().Substring(0, 5);
-                    bericht.Inzidenz7TageVortag = result.Tables[0].Rows[21][2].ToString().Substring(0, 5);
+                    bericht.RWert7Tage = GetRValue(2).Replace(",", ".");
+                    bericht.RWert7TageVortag = GetRValue(3).Replace(",", ".");
+                    bericht.Inzidenz7Tage = result.Tables[0].Rows[21][2].ToString().Substring(0, 5).Replace(",", ".");
+                    bericht.Inzidenz7TageVortag = result.Tables[0].Rows[21][2].ToString().Substring(0, 5).Replace(",", ".");
 
                     //TODO:Separate from Excel table 
                     var dataRows = result.Tables[2].Rows;
@@ -329,6 +327,8 @@ namespace SmICSCoreLib.StatistikServices
         public static string SeMapColor(string inzidenz)
         {
             string farbe;
+            int index = inzidenz.IndexOf(".");
+            inzidenz =inzidenz.Substring(0, index);
             int zahl = (int)Convert.ToInt64(Math.Floor(Convert.ToDouble(inzidenz)));
 
             if (zahl > 100)
@@ -364,20 +364,26 @@ namespace SmICSCoreLib.StatistikServices
 
         }
 
-        public string SetCaseColor(double tag, double vortag)
+        public string SetCaseColor(string tag, string vortag)
         {
+            tag = tag.Replace(".", "").Trim();
+            vortag = vortag.Replace(".", "").Trim();
+            double tagToDouble = double.Parse(tag);
+            double vortagToDouble = double.Parse(vortag);
+
             string color;
-            if (tag < vortag)
+
+            if (tagToDouble < vortagToDouble)
             {
                 color = "#66C166";
                 return color;
             }
-            if (tag == vortag)
+            if (tagToDouble == vortagToDouble)
             {
                 color = "#FFC037";
                 return color;
             }
-            if (tag > vortag)
+            if (tagToDouble > vortagToDouble)
             {
                 color = "#F35C58";
                 return color;

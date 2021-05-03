@@ -77,22 +77,22 @@ namespace SmICSCoreLib.StatistikDataModels
         public string LandkreisName { get; set; }
 
         [JsonProperty(PropertyName = "FallzahlGesamt")]
-        public int FallzahlGesamt { get; set; }
+        public string FallzahlGesamt { get; set; }
 
         [JsonProperty(PropertyName = "Faelle7Lk")]
-        public float Faelle7Lk { get; set; }
+        public string Faelle7Lk { get; set; }
 
         [JsonProperty(PropertyName = "FaellePro100000Ew")]
-        public float FaellePro100000Ew { get; set; }
+        public string FaellePro100000Ew { get; set; }
 
         [JsonProperty(PropertyName = "Inzidenz7Tage")]
-        public float Inzidenz7Tage { get; set; }
+        public string Inzidenz7Tage { get; set; }
 
         [JsonProperty(PropertyName = "Todesfaelle")]
-        public int Todesfaelle { get; set; }
+        public string Todesfaelle { get; set; }
 
         [JsonProperty(PropertyName = "Todesfaelle7Lk")]
-        public int Todesfaelle7Lk { get; set; }
+        public string Todesfaelle7Lk { get; set; }
     }
 
     public class BlAttribute
@@ -101,19 +101,19 @@ namespace SmICSCoreLib.StatistikDataModels
         public string Bundesland { get; set; }
 
         [JsonProperty(PropertyName = "FallzahlGesamt")]
-        public int FallzahlGesamt { get; set; }
+        public string FallzahlGesamt { get; set; }
 
         [JsonProperty(PropertyName = "Faelle7BL")]
-        public float Faelle7BL { get; set; }
+        public string Faelle7BL { get; set; }
 
         [JsonProperty(PropertyName = "FaellePro100000Ew")]
-        public float FaellePro100000Ew { get; set; }
+        public string FaellePro100000Ew { get; set; }
 
         [JsonProperty(PropertyName = "Todesfaelle")]
-        public int Todesfaelle { get; set; }
+        public string Todesfaelle { get; set; }
 
         [JsonProperty(PropertyName = "Todesfaelle7BL")]
-        public int Todesfaelle7BL { get; set; }
+        public string Todesfaelle7BL { get; set; }
 
         [JsonProperty(PropertyName = "Inzidenz7Tage")]
         public string Inzidenz7Tage { get; set; }

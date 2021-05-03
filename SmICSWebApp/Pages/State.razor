@@ -468,6 +468,8 @@
             stand = dailyReport.Bericht.Stand;
             rWert7Tage = dailyReport.Bericht.RWert7Tage;
             inzidenz7Tage = dailyReport.Bericht.Inzidenz7Tage;
+            inzidenz7TageVortag = dailyReport.Bericht.Inzidenz7TageVortag;
+            rWert7TageVortag = dailyReport.Bericht.RWert7TageVortag;
             fallzahl = dailyReport.Bericht.Fallzahl;
             fallzahlVortag = dailyReport.Bericht.FallzahlVortag;
             todesfaelle = dailyReport.Bericht.Todesfaelle;
@@ -488,21 +490,23 @@
                 }
             }
 
-            lastReport = rkiRestApi.DeserializeRkiData(datum.AddDays(-1));
-            if (lastReport != null)
+            try
             {
-                inzidenz7TageVortag = lastReport.Bericht.Inzidenz7Tage;
-                rWert7TageVortag = lastReport.Bericht.RWert7Tage;
+                lastReport = rkiRestApi.DeserializeRkiData(datum.AddDays(-1));
+                if (lastReport != null)
+                {
+                    inzidenz7TageVortag = lastReport.Bericht.Inzidenz7Tage;
+                    //rWert7TageVortag = lastReport.Bericht.RWert7Tage;
+                }
             }
-            else
+            catch (Exception)
             {
+
                 inzidenz7TageVortag = inzidenz7Tage;
-                rWert7TageVortag = rWert7Tage;
             }
 
-            inzidenzColor = rkiRestApi.SetCaseColor(double.Parse(inzidenz7Tage), double.Parse(inzidenz7TageVortag));
-            rWertColor = rkiRestApi.SetCaseColor(double.Parse(rWert7Tage), double.Parse(rWert7TageVortag));
-
+            inzidenzColor = rkiRestApi.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
+            rWertColor = rkiRestApi.SetCaseColor(inzidenz7TageVortag, inzidenz7TageVortag);
         }
         catch (Exception ex)
         {
