@@ -466,16 +466,16 @@
         {
             dailyReport = rkiRestApi.DeserializeRkiData(datum);
             stand = dailyReport.Bericht.Stand;
-            rWert7Tage = dailyReport.Bericht.RWert7Tage;
-            inzidenz7Tage = dailyReport.Bericht.Inzidenz7Tage;
-            inzidenz7TageVortag = dailyReport.Bericht.Inzidenz7TageVortag;
-            rWert7TageVortag = dailyReport.Bericht.RWert7TageVortag;
+            standAktuell = dailyReport.Bericht.StandAktuell;
+            blStandAktuell = dailyReport.Bericht.BlStandAktuell;
             fallzahl = dailyReport.Bericht.Fallzahl;
             fallzahlVortag = dailyReport.Bericht.FallzahlVortag;
             todesfaelle = dailyReport.Bericht.Todesfaelle;
             todesfaelleVortag = dailyReport.Bericht.TodesfaelleVortag;
-            standAktuell = dailyReport.Bericht.StandAktuell;
-            blStandAktuell = dailyReport.Bericht.BlStandAktuell;
+            inzidenz7Tage = dailyReport.Bericht.Inzidenz7Tage;
+            inzidenz7TageVortag = dailyReport.Bericht.Inzidenz7TageVortag;
+            rWert7Tage = dailyReport.Bericht.RWert7Tage;
+            rWert7TageVortag = dailyReport.Bericht.RWert7TageVortag;
             impfStatus = dailyReport.Bericht.ImpfStatus;
             gesamtImpfung = dailyReport.Bericht.GesamtImpfung;
             erstImpfung = dailyReport.Bericht.ErstImpfung;
@@ -506,7 +506,7 @@
             }
 
             inzidenzColor = rkiRestApi.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
-            rWertColor = rkiRestApi.SetCaseColor(inzidenz7TageVortag, inzidenz7TageVortag);
+            rWertColor = rkiRestApi.SetCaseColor(rWert7Tage, rWert7TageVortag);
         }
         catch (Exception ex)
         {
