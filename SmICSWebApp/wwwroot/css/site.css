@@ -175,12 +175,12 @@ footer.page-footer a {
 /*New*/
 .containter_content {
     display: flex;
-    align-items: center;
-    background-image: url("../resources/home.jpeg");
+    flex-direction: column;
+    background-image: url("../resources/coronavirus.jpg");
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: 72% 90%;
+    background-position: right;
     opacity: 1;
-    margin-top: 2%;
 }
 /*.welcome_text {
     margin: 2%;
@@ -282,16 +282,28 @@ footer.page-footer a {
 
     .welcome_text {
         margin: 2%;
-        margin-left: 45%;
+        margin-right: 40%;
         background-color: #15317E;
         opacity: 0.8;
         color: antiquewhite;
         padding: 2%;
-        margin-bottom: 10%;
+        margin-bottom: 12%;
         box-shadow: 0px 3px 6px rgb(0,0,0, 0.3);
     }
 
     .logo_img {
+        margin-bottom: 0%;
+        margin-left: 1%;
+    }
+
+    .welcome_header {
+        margin-left: 2%;
+    }
+
+    #logobackground {
+        background-color: aliceblue;
+        text-align: right;
+        padding-right: 2%;
         margin-bottom: 0%;
     }
 }
