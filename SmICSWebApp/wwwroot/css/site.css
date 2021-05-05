@@ -298,6 +298,8 @@ footer.page-footer a {
 
     .welcome_header {
         margin-left: 2%;
+        color: #637492;
+        text-shadow: 1px 1px 5px lightgrey;
     }
 
     #logobackground {
