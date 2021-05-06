@@ -4,6 +4,7 @@ using SmICSCoreLib.JSONFileStream;
 using SmICSCoreLib.StatistikDataModels;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Net;
@@ -395,5 +396,6 @@ namespace SmICSCoreLib.StatistikServices
             }
 
         }
+   
     }
 }

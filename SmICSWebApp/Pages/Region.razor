@@ -3,6 +3,7 @@
 @using SmICSCoreLib.StatistikDataModels
 @using SmICSCoreLib.StatistikServices
 @using System.ComponentModel.DataAnnotations
+@using System
 
 @inject RkiRestApi rkiRestApi
 
@@ -18,7 +19,7 @@
 
                 @if (lkArray == null)
                 {
-                    @if (status == true )
+                    @if (status == true)
                     {
                         <p><em>Daten werden geladen...</em></p>
                         <div class="spinner"></div> }
@@ -31,7 +32,7 @@
                 else
                 {
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-5">
                             <div class="card flex-fill">
                                 <div class="card-header" style="padding-top: 10px;">
                                     <h5 class="card-title">Vergleich Region-Bundesland</h5>
@@ -126,11 +127,13 @@
                             </div>
                         </div>
 
-                       
+                        <div class="col-7">
+                            <div class="card flex-fill">
+                                @*<Chart Config="_config"></Chart>*@
+                            </div>
+                        </div>
                     </div>
-
                 }
-
             </div>
         </div>
     </div>
@@ -146,6 +149,8 @@
     private string stand;
     private string rValue = "";
     private bool status;
+    private Dictionary<string, int> rkiDatenBl;
+    private Dictionary<string, int> rkiDatenLk;
 
 
     private int anzahlFaelle;
@@ -158,7 +163,6 @@
         data.gen = "Stuttgart";
         await Task.Run(LoadRValue);
         await Task.Run(LoadRkiData);
-
     }
 
     private void LoadRkiData()
