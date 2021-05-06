@@ -396,6 +396,36 @@ namespace SmICSCoreLib.StatistikServices
             }
 
         }
-   
+
+
+        public Dictionary<string, int> GetDatas(string url, int iKey, int laenge, int tabelle, int key, int value)
+        {
+            var result = GetDataSetFromLink(url);
+            Dictionary<string, int> rkiDaten = new();
+            if (result != null)
+            {
+                try
+                {
+                    var dataColumns = result.Tables[3].Columns;
+                    for (int i = iKey; i < laenge; i++)
+                    {
+                        string datum = result.Tables[tabelle].Rows[key][i].ToString().Substring(0, 10);
+                        int fallzahlen = int.Parse(result.Tables[tabelle].Rows[value][i].ToString());
+                        rkiDaten.Add(datum, fallzahlen);
+                    }
+
+                    return rkiDaten;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }
