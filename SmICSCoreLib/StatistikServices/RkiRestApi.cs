@@ -328,8 +328,11 @@ namespace SmICSCoreLib.StatistikServices
         public static string SeMapColor(string inzidenz)
         {
             string farbe;
-            int index = inzidenz.IndexOf(".");
-            inzidenz =inzidenz.Substring(0, index);
+            if (inzidenz.Contains("."))
+            {
+                int index = inzidenz.IndexOf(".");
+                inzidenz = inzidenz.Substring(0, index);
+            }
             int zahl = (int)Convert.ToInt64(Math.Floor(Convert.ToDouble(inzidenz)));
 
             if (zahl > 100)
