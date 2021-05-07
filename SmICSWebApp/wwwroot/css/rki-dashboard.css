@@ -89,12 +89,34 @@
 }
 
 #body-info-nav {
-    padding: 5px 15px 10px 15px;
+    padding: 5px 15px 20px 15px;
+    background-color: rgba(0,0,0,.03);
 }
 
 #body-info-nav .navbar{
     border-top: none;
+    background: none;
 }
 #body-info-nav row{
     margin: 0px;
+}
+
+#card-nav {
+    border: none;
+    border-right-style: ridge;
+    border-radius: 0;
+}
+
+#navbar-nav {
+    border-top: none;
+    padding-bottom: 0;
+}
+
+
+#card-head {
+    padding: 0.2rem 0.75rem
+}
+
+#card-bod {
+    border-top-style: ridge;
 }
