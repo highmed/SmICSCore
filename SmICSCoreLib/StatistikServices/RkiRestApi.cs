@@ -328,39 +328,54 @@ namespace SmICSCoreLib.StatistikServices
         public static string SeMapColor(string inzidenz)
         {
             string farbe;
-            if (inzidenz.Contains("."))
+            try
             {
-                int index = inzidenz.IndexOf(".");
-                inzidenz = inzidenz.Substring(0, index);
-            }
-            int zahl = (int)Convert.ToInt64(Math.Floor(Convert.ToDouble(inzidenz)));
+                if (inzidenz.Contains("."))
+                {
+                    int index = inzidenz.IndexOf(".");
+                    if (index == 0)
+                    {
+                        inzidenz = "0";
+                    }
+                    else
+                    {
+                        inzidenz = inzidenz.Substring(0, index);
+                    }
+                }
+                int zahl = (int)Convert.ToInt64(Math.Floor(Convert.ToDouble(inzidenz)));
 
-            if (zahl > 100)
-            {
-                farbe = "#671212";
-                return farbe;
+                if (zahl >= 100)
+                {
+                    farbe = "#671212";
+                    return farbe;
+                }
+                if (zahl < 100 && zahl >= 75)
+                {
+                    farbe = "#951214";
+                    return farbe;
+                }
+                if (zahl < 75 && zahl >= 50)
+                {
+                    farbe = "#D43624";
+                    return farbe;
+                }
+                if (zahl < 50 && zahl >= 25)
+                {
+                    farbe = "#FFB534";
+                    return farbe;
+                }
+                if (zahl < 25 && zahl >= 5)
+                {
+                    farbe = "#FFF380";
+                    return farbe;
+                }
+                else
+                {
+                    farbe = "#FFFFFF";
+                    return farbe;
+                }
             }
-            if (zahl < 100 && zahl > 75)
-            {
-                farbe = "#951214";
-                return farbe;
-            }
-            if (zahl < 75 && zahl > 50)
-            {
-                farbe = "#D43624";
-                return farbe;
-            }
-            if (zahl < 50 && zahl > 25)
-            {
-                farbe = "#FFB534";
-                return farbe;
-            }
-            if (zahl < 25 && zahl > 5)
-            {
-                farbe = "#FFF380";
-                return farbe;
-            }
-            else
+            catch (Exception)
             {
                 farbe = "#FFFFFF";
                 return farbe;
