@@ -1,0 +1,49 @@
+﻿@page "/MiBi"
+
+<h3>MibiView</h3>
+
+<div class="row">
+    <label for="stationDropdown">Station</label>
+    <select id="stationDropdow">
+        <option>Station 1</option>
+        <option>Station 2</option>
+        <option>Station 3</option>
+        <option>Station 4</option>
+    </select>
+    <label for="pathogenDropdown">Erreger</label>
+    <select id="pathogenDropdown">
+        <option>MRSA</option>
+        <option>3 MRGN</option>
+        <option>4 MRGN</option>
+        <option>VRE </option>
+    </select>
+    <label for="startdate">Start</label>
+    <InputDate id="startdate" Value="DateTime.Now"/>
+    <label for="enddate">Ende</label>
+    <InputDate id="enddate" Value="DateTime.Now"/>
+    <button type="button" @onclick="Click">Suche</button>
+</div>
+
+@if (data != null)
+{
+    <div>
+        <table>
+            <thead>
+
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <div>
+        EpiKurve
+    </div>
+}
+
+@code {
+    private void Click()
+    {
+        
+    }
+}
