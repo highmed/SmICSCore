@@ -15,6 +15,7 @@ using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.Patient_Stay.Count;
 using SmICSCoreLib.AQL.Patient_Stay.Cases;
 using SmICSCoreLib.AQL.Patient_Stay.WeekCase;
+using SmICSCoreLib.AQL.DOD_Interface;
 
 namespace SmICS
 {
@@ -42,7 +43,8 @@ namespace SmICS
 
             services.AddTransient<ILabData, LabData>();
             services.AddSingleton<IAlgorithmData, AlgortihmData>();
-
+            
+            services.AddTransient<BuildBasicInput>();
             services.AddTransient<IStationaryFactory, StationaryFactory>();
             services.AddTransient<IPatinet_Stay, Patinet_Stay>();
             services.AddTransient<ICountFactory, CountFactory>();

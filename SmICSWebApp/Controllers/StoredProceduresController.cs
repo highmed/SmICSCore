@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.IO;
 using SmICSCoreLib.AQL.PatientInformation;
 using SmICSCoreLib.AQL.Contact_Nth_Network;
 using SmICSCoreLib.AQL.Lab;
@@ -17,6 +18,9 @@ using SmICSCoreLib.AQL.Patient_Stay.Count;
 using SmICSCoreLib.AQL.Patient_Stay.Cases;
 using SmICSCoreLib.AQL.Patient_Stay.WeekCase;
 using Microsoft.Extensions.Logging;
+using SmICSCoreLib.AQL.DOD_Interface;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace SmICSWebApp.Controllers
 {
@@ -32,8 +36,9 @@ namespace SmICSWebApp.Controllers
         private readonly IContactNetworkFactory _contact;
         private readonly IAlgorithmData _algorithm;
         private readonly IPatinet_Stay _patinet_Stay;
+        private readonly BuildBasicInput _buildBasicInput;
 
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, ILabData labData, IPatientInformation patientInformation, IContactNetworkFactory contact, IAlgorithmData algorithm, IPatinet_Stay patinet_Stay)
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, ILabData labData, IPatientInformation patientInformation, IContactNetworkFactory contact, IAlgorithmData algorithm, IPatinet_Stay patinet_Stay, BuildBasicInput buildBasicInput)
         {
             _logger = logger;
             _labData = labData;
@@ -41,6 +46,7 @@ namespace SmICSWebApp.Controllers
             _contact = contact;
             _algorithm = algorithm;
             _patinet_Stay = patinet_Stay;
+            _buildBasicInput = buildBasicInput;
         }
 
         /// <summary></summary>
@@ -280,5 +286,130 @@ namespace SmICSWebApp.Controllers
             }
         }
         */
+
+        /// <summary></summary>
+        /// <remarks>
+        /// Erstellung einer Infektionsentwicklungskurve und Aufruf des RKI-Algorithmus mit der.
+        /// Infektionsentwicklungskurve als Parameter.
+        /// </remarks>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [Route("DODInterface")]
+        [HttpGet]
+        public JObject DodInterface()
+        {
+            try
+            {
+                DateTime anfang_00 = new DateTime(2020, 3, 1);
+                DateTime ende_00 = new DateTime(2021, 3, 1);
+                anfang_00 = new DateTime(2020, 3, 1);
+                ende_00 = new DateTime(2021, 5, 1);
+                string pathForCSharp = Directory.GetCurrentDirectory().Replace(@"\", @"\\");
+                string pathForR = Directory.GetCurrentDirectory().Replace(@"\", @"/");
+                pathForCSharp = pathForCSharp.Insert(pathForCSharp.Length, @"\\");
+                pathForR = pathForR.Insert(pathForR.Length, @"/");
+                //C:\\Users\\waldstein1\\Source\\Repos\\SmICSCore\\SmICSWebApp\\
+                //C:/Users/waldstein1/Source/Repos/SmICSCore/SmICSWebApp/
+
+                // Build a time series from data received using AQL and call DOD Algorithm
+                // version for Covid 19
+                if (!true)
+                {
+                    // The following method call requires:
+                    // - TimespanParameter, constructed using the DateTimes anfang_00 and ende_00,
+                    // - string "microbiological"/"virological" for pathogen type,
+                    int[][] epochs_and_observed = _buildBasicInput.getTimeSeriesForDiseaseOutbreakDetectionAlgorithm(new TimespanParameter{Starttime = anfang_00, Endtime = ende_00}, "virological");
+                }
+                else if (true)
+                {
+                    int[] epochs_extension = new int[336];
+                    int[] observed_extension = new int[336];
+
+                    //string path_for_extension_test_data = "C:\\Users\\waldstein1\\Ordner\\BFAST\\Dateien\\DOD_Interface\\";
+                    string path_for_extension_test_data = pathForCSharp + "..\\SmICSCoreLib\\AQL\\DOD_Interface\\";
+                    string inp_filename_for_extension_test_data = "DOD_Covid_19_Input_00000.dat";
+                    string current_line;
+
+                    try
+                    {
+                        System.IO.StreamReader inp_file_for_extension_test_data = new System.IO.StreamReader(path_for_extension_test_data + inp_filename_for_extension_test_data);
+
+                        for(int o = 0; o < observed_extension.Length; o++)
+                        {
+                            current_line = inp_file_for_extension_test_data.ReadLine();
+
+                            observed_extension[o] = (int) Convert.ToInt64(current_line.Substring(0, 8));
+                        }
+
+                        for(int o = 0; o < epochs_extension.Length; o++)
+                        {
+                            current_line = inp_file_for_extension_test_data.ReadLine();
+
+                            epochs_extension[o] = (int) Convert.ToInt64(current_line.Substring(0, 8));
+                        }
+
+                        inp_file_for_extension_test_data.Close();
+                    }
+                    catch
+                    {
+                        System.Diagnostics.Debug.WriteLine("Cannot read surveillance time series data from file.");
+                    }
+
+                    int[][] epochs_and_observed_extension = new [] {epochs_extension, observed_extension};
+
+                    //string cur_path_of_r_script = "C:\\Users\\waldstein1\\source\\repos\\SmICSCore\\SmICSCoreLib\\AQL\\DOD_Interface\\";
+                    string cur_path_of_r_script = pathForCSharp + "..\\SmICSCoreLib\\AQL\\DOD_Interface\\";
+                    string cur_json_inp_name = "./variables_for_r_transfer_script.json"; //CAUTION: This parameter must be the same as in cur_r_transfer_file_name
+                    string cur_r_transfer_file_name = "R_Script_00010.R";
+                    System.Diagnostics.Debug.WriteLine("");
+                    System.Diagnostics.Debug.WriteLine("");
+                    System.Diagnostics.Debug.WriteLine(cur_r_transfer_file_name);
+                    System.Diagnostics.Debug.WriteLine("");
+                    System.Diagnostics.Debug.WriteLine("");
+                    string cur_path_of_r_exec = "C:\\Program Files\\R\\R-4.0.5\\bin\\";
+                    string cur_r_out_file_name = "./Variables_for_Visualization.json"; //CAUTION: This parameter must be the same as in cur_r_transfer_file_name
+                    string cur_path_of_r_script_for_r = cur_path_of_r_script.Replace(@"\\", @"/");
+
+                    // Parameters for DOD algorithm can be defined using this variable.
+                    // For details compare previous versions.
+                    string cur_rParameter  = "";
+                    // Here this parameter is used for passing the DODInterface directory.
+                    cur_rParameter += pathForR + "../SmICSCoreLib/AQL/DOD_Interface/";
+
+                    JObject dODAlgorithmResultJson = ConsoleApp_00004.DODInterface.RunDODAlgorithmCovid19Extension(cur_path_of_r_script,
+                                                                                                                   epochs_and_observed_extension,
+                                                                                                                   epochs_and_observed_extension[0].Length,
+                                                                                                                   epochs_and_observed_extension[0].Length,
+                                                                                                                   cur_json_inp_name,
+                                                                                                                   cur_r_transfer_file_name,
+                                                                                                                   cur_path_of_r_exec,
+                                                                                                                   cur_r_out_file_name,
+                                                                                                                   cur_rParameter);
+
+                    return dODAlgorithmResultJson;
+                }
+                else
+                {
+                    List<string> stringForJson = new  List<string>{"This", "is", "a", "standard", "output"};
+
+                    return null; //(JObject) JsonConvert.SerializeObject(stringForJson);
+                }
+
+                //
+            }
+            catch (Exception e)
+            {
+                ErrorHandling(e);
+                System.Diagnostics.Debug.WriteLine("");
+                System.Diagnostics.Debug.WriteLine("");
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                System.Diagnostics.Debug.WriteLine("");
+                System.Diagnostics.Debug.WriteLine("");
+
+                List<string> stringForJson = new  List<string>{"This", "is", "an", "exception", "output"};
+
+                return null; //(JObject) JsonConvert.SerializeObject(stringForJson);
+            }
+        }
     }
 }
