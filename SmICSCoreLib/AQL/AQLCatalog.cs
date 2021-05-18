@@ -147,7 +147,7 @@ namespace SmICSCoreLib.AQL
                                 CONTAINS ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
                                 WHERE c/name/value = 'Stationärer Versorgungsfall' 
                                 and e/ehr_id/value = '{ parameter.PatientID }' 
-                                and c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value = '{ parameter.CaseID }'");
+                                and c/context/other_context[at0001]/items[at0003]/value/value = '{ parameter.CaseID }'");
         }
         public static AQLQuery PatientDischarge(EpsiodeOfCareParameter parameter)
         {
@@ -157,7 +157,7 @@ namespace SmICSCoreLib.AQL
                                 CONTAINS ADMIN_ENTRY b[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0] 
                                 WHERE c/name/value = 'Stationärer Versorgungsfall' 
                                 and e/ehr_id/value = '{ parameter.PatientID }' 
-                                and c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value = '{ parameter.CaseID }'");
+                                and c/context/other_context[at0001]/items[at0003]/value/value = '{ parameter.CaseID }'");
         }
         public static AQLQuery PatientLaborData(PatientListParameter patientList)
         {
