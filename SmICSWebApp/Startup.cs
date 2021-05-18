@@ -46,10 +46,10 @@ namespace SmICSWebApp
             /*services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = "oidc";
             })
             .AddCookie("Cookies")
-            .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+            .AddOpenIdConnect("oidc", options =>
             {
                 options.Authority = Configuration["oidc:Authority"];
                 options.ClientId = Configuration["oidc:ClientId"];
@@ -117,14 +117,6 @@ namespace SmICSWebApp
             services.AddSingleton<DataService>();
             services.AddSingleton<Symptom>();
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AQL API", Version = "v1" });
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
-            });
-
             services.AddMvcCore(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -133,7 +125,13 @@ namespace SmICSWebApp
                 options.Filters.Add(new AuthorizeFilter(policy));
             });
 
-
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AQL API", Version = "v1" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             services.AddSingleton<BlazorServerAuthStateCache>();
             services.AddScoped<AuthenticationStateProvider, BlazorServerAuthState>();
@@ -177,12 +175,12 @@ namespace SmICSWebApp
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "AQL API");
             });
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseSerilogRequestLogging();
 
             app.UseAuthentication();
+            app.UseSerilogRequestLogging();
             app.UseRouting();
 
             app.UseAuthorization();
