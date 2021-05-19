@@ -80,8 +80,12 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
         }
         private void PopulateDailyEpicCurve(List<FlagTimeModel> flagTimes, DateTime date)
         {
+            int i = 0;
             foreach (FlagTimeModel flag in flagTimes)
             {
+                Console.WriteLine("FlagModel: " + i);
+                i += 1;
+
                 _logger.LogDebug("PatientLocation - Query Paramters: PatientID: {PatientID} \r Datum: {Date}", flag.PatientID, flag.Datum.ToString());
 
                 List<PatientLocation> patientLocations = _restData.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(flag.Datum, flag.PatientID));
@@ -95,6 +99,10 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
                 else
                 {
                     patientLocation = patientLocations[0];
+                    if(patientLocation.Ward == null)
+                    {
+                        patientLocation.Ward = patientLocation.Departement;
+                    }
                 }
                 SetBasicDailyEpiCurveEntries(flag, patientLocation, date);
                 AggregateFlagInformation(flag, patientLocation);
@@ -108,11 +116,11 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
             {
                 EpiCurveEntryByWard.Add(COMPLETE_CLINIC, InitializeNewEpiCurveModel(flag, COMPLETE_CLINIC, date));
             }
-            if (!EpiCurveEntryByWard.ContainsKey(patientLocation.Ward) && flag.HasFlag())
+            if (patientLocation.Ward != null && !EpiCurveEntryByWard.ContainsKey(patientLocation.Ward) && flag.HasFlag())
             {
                 EpiCurveEntryByWard.Add(patientLocation.Ward, InitializeNewEpiCurveModel(flag, patientLocation.Ward, date));
             }
-            if(!mavg28.ContainsKey(patientLocation.Ward) && !mavg7.ContainsKey(patientLocation.Ward))
+            if (patientLocation.Ward != null && !mavg28.ContainsKey(patientLocation.Ward) && !mavg7.ContainsKey(patientLocation.Ward))
             {
                 mavg7.Add(patientLocation.Ward, new List<int>());
                 mavg28.Add(patientLocation.Ward, new List<int>());

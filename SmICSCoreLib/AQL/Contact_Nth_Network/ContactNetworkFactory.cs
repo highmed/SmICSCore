@@ -77,6 +77,10 @@ namespace SmICSCoreLib.AQL.Contact_Nth_Network
             
             foreach (PatientWardModel patientWard in PatientWardList)
             {
+                if(patientWard.Ende == DateTime.MinValue)
+                {
+                    patientWard.Ende = DateTime.Now;
+                }
                 ContactPatientsParameter secondQueryParameter = SecondParameterConstructor(patientWard, parameter);
                 List<ContactPatientModel> contactPatientList  = null;
                 if (patientWard.StationID == null)
