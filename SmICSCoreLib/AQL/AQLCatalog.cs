@@ -159,7 +159,7 @@ namespace SmICSCoreLib.AQL
                                 and e/ehr_id/value = '{ parameter.PatientID }' 
                                 and c/context/other_context[at0001]/items[at0003]/value/value = '{ parameter.CaseID }'");
         }
-        public static AQLQuery PatientLaborData(PatientListParameter patientList)
+        public static AQLQuery PatientLaborData(PatientListParameter patientList, PathogenParameterList pathogenList)
         {
             return new AQLQuery("PatientLaborData",$@"SELECT e/ehr_id/value as PatientID,
                                     c/context/start_time/value as Befunddatum,
@@ -184,6 +184,7 @@ namespace SmICSCoreLib.AQL
                                                 CONTAINS (CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1])))
                                     WHERE c/name/value = 'Virologischer Befund'
                                     AND e/ehr_id/value MATCHES { patientList.ToAQLMatchString() }
+                                    AND d/items[at0024]/value/defining_code/code_string MATCHES { pathogenList.ToAQLMatchString() }
                                     ORDER BY a/items[at0015]/value/value ASC");
         }
         public static AQLQuery NECPatientLaborData(string PatientID, TimespanParameter timespan)
