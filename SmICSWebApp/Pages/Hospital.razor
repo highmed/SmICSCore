@@ -10,13 +10,12 @@
 <h3>Statistik (Prototyp)</h3>
 
 <div class="card">
-    <StatistikNav>
-    </StatistikNav>
+    <div class="row">
+        <StatistikNav>
+        </StatistikNav>
 
-    <div class="card-body">
-        <div>
+        <div class="card-body col-10">
             <div style="padding: 0px 0px 100px 0px;">
-
                 @if (allPositivTest == null)
                 {
                     @if (status == true)
@@ -107,7 +106,7 @@
                                                 <tr>
                                                     <th scope="row">
                                                         Wahrscheinliche Nosokomiale Infektion
-                                                         <a href="" @onmouseover="() => ShowSecondText()" @onclick:preventDefault style="color:red">
+                                                        <a href="" @onmouseover="() => ShowSecondText()" @onclick:preventDefault style="color:red">
                                                             *
                                                         </a>
                                                     </th>
@@ -177,13 +176,13 @@
 
                                         @if (firstText == false && secondText == true)
                                         {
-                                    <p style="font-size:0.8em">
-                                        *eine Wahrscheinliche Nosokomiale Infektion ist, wenn der Patient bei stationärer Aufnahme negativ auf SARS-CoV-2
-                                        getestet war und hat keine SARS-CoV-2 Symptome gezeigt. Und hat erstmal eine positive PCR für oder den
-                                        kulturellen Nachweis von SARS-CoV-2 ab Tag 4 nach stationärer Aufnahme. Und es besteht ein klassisch
-                                        infektionsepidemiologischer Zusammenhang (Ort-Zeit-Kontext) zu einem nachgewiesen infizierten potentiellen im
-                                        Zeitraum der Inkubationszeit (2-14 Tage VOR Beginn der Symptome oder Probenahme) im Krankenhaus.
-                                    </p>
+                                            <p style="font-size:0.8em">
+                                                *eine Wahrscheinliche Nosokomiale Infektion ist, wenn der Patient bei stationärer Aufnahme negativ auf SARS-CoV-2
+                                                getestet war und hat keine SARS-CoV-2 Symptome gezeigt. Und hat erstmal eine positive PCR für oder den
+                                                kulturellen Nachweis von SARS-CoV-2 ab Tag 4 nach stationärer Aufnahme. Und es besteht ein klassisch
+                                                infektionsepidemiologischer Zusammenhang (Ort-Zeit-Kontext) zu einem nachgewiesen infizierten potentiellen im
+                                                Zeitraum der Inkubationszeit (2-14 Tage VOR Beginn der Symptome oder Probenahme) im Krankenhaus.
+                                            </p>
                                         }
                                     </div>
                                 </div>
@@ -222,7 +221,6 @@
                     </div>
 
                 }
-
             </div>
         </div>
     </div>

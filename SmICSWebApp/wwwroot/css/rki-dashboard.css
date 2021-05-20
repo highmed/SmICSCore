@@ -63,25 +63,25 @@
     background: #EAEAEA
 }
 
-#bologna-list .nav-link {
+/*#blog-list .nav-link {
     background-color: #4AA0CA;
     margin: 0px 5px 0px 5px;
-}
+}*/
 
-#bologna-list .nav-link:hover {
+#blog-list .nav-link:hover {
     background-color: #2786AB;
 }
     
-#bologna-list .nav-link:active {
+#blog-list .nav-link:active {
     background-color: #2786AB;
 }
 
-#bologna-list .nav-link:focus {
+#blog-list .nav-link:focus {
     background-color: #2786AB;
 }
 
-#bologna-list a {
-    color: white;
+#blog-list a {
+    color: black;
 }
 
 #head-info-nav {
