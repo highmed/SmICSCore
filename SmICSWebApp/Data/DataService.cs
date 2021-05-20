@@ -69,10 +69,10 @@ namespace SmICSWebApp.Data
             return allPositivTest;
         }
        
-        public List<CountDataModel> GetPositivPat(List<CountDataModel> allPositivPat)
+        public List<CountDataModel> GetPositivPat(List<CountDataModel> allPositivTest)
         {
-            List<CountDataModel> positivPat = new List<CountDataModel>();
-            foreach (CountDataModel countData in allPositivPat)
+            List<CountDataModel> positivPat = new();
+            foreach (CountDataModel countData in allPositivTest)
             {
                 if (!positivPat.Contains(countData))
                 {

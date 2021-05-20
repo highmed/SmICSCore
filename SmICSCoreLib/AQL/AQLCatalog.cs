@@ -361,7 +361,7 @@ namespace SmICSCoreLib.AQL
                                 OBSERVATION z[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
                                 CONTAINS (CLUSTER a[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] and CLUSTER m [openEHR-EHR-CLUSTER.specimen.v1])) 
                                 WHERE  a/items[at0001,'Nachweis']/value/defining_code/code_string='{nachweis}'and 
-                                a/items[at0024]/value/defining_code/code_string MATCHES {{'94500-6','94558-4', '94745-7'}}");
+                                a/items[at0024]/value/defining_code/code_string MATCHES {{'94500-6','94558-4', '94745-7'}} ORDER BY Zeitpunkt_des_Probeneingangs ASC");
         }
 
         public static AQLQuery PatientBySymptom(string symptom)
