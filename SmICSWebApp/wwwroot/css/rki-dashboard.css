@@ -63,21 +63,26 @@
     background: #EAEAEA
 }
 
+
 /*#blog-list .nav-link {
     background-color: #4AA0CA;
     margin: 0px 5px 0px 5px;
 }*/
 
-#blog-list .nav-link:hover {
-    background-color: #2786AB;
+#nav-head {
+    border-top: none;
 }
-    
+
+#blog-list .nav-link:hover {
+    background-color: #35A8E0;
+}
+
 #blog-list .nav-link:active {
-    background-color: #2786AB;
+    background-color: #35A8E0;
 }
 
 #blog-list .nav-link:focus {
-    background-color: #2786AB;
+    background-color: #35A8E0;
 }
 
 #blog-list a {
