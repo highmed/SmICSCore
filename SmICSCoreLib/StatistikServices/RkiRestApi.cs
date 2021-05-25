@@ -137,20 +137,23 @@ namespace SmICSCoreLib.StatistikServices
             {
                 try
                 {
-                    ArrayList bundeslaender = new ();
-                    ArrayList landkreise = new ();
-                    for (int i = 5; i < 21; i++)
+                    ArrayList bundeslaender = new();
+                    ArrayList landkreise = new();
+                    for (int i = 0; i < 16; i++)
                     {
                         Bundesland bundesland = new();
                         BlAttribute attr = new();
+                        string[] bundes = new string[] { "Baden-Württemberg", "Bayern", "Berlin","Brandenburg", "Bremen", "Hamburg",
+                        "Hessen", "Mecklenburg-Vorpommern", "Niedersachsen", "Nordrhein-Westfalen", "Rheinland-Pfalz", "Saarland",
+                        "Sachsen", "Sachsen-Anhalt", "Schleswig-Holstein", "Thüringen"};
 
-                        attr.Bundesland = result.Tables[0].Rows[i][0].ToString();
+                        attr.Bundesland = bundes[i];
                         try
                         {
                             State state = GetStateByName(attr.Bundesland);
                             if (state.Features != null)
                             {
-                                attr.FallzahlGesamt = state.Features[0].Attributes.Fallzahl.ToString("#,##"); 
+                                attr.FallzahlGesamt = state.Features[0].Attributes.Fallzahl.ToString("#,##");
                                 attr.Faelle7BL = state.Features[0].Attributes.Cases7_bl.ToString("#,##");
                                 attr.FaellePro100000Ew = state.Features[0].Attributes.FaellePro100000Ew.ToString("#,##");
                                 attr.Todesfaelle = state.Features[0].Attributes.Todesfaelle.ToString("#,##");
@@ -159,7 +162,7 @@ namespace SmICSCoreLib.StatistikServices
                                 bericht.BlStandAktuell = true;
                                 attr.Farbe = SeMapColor(attr.Inzidenz7Tage);
                                 District district = GetDistrictsByStateName(attr.Bundesland);
-                                if (district.Features != null && district.Features.Length!=0)
+                                if (district.Features != null && district.Features.Length != 0)
                                 {
                                     landkreise = new ArrayList();
                                     foreach (var lk in district.Features)
@@ -211,15 +214,18 @@ namespace SmICSCoreLib.StatistikServices
                     bericht.Stand = result.Tables[0].Rows[1][0].ToString().Substring(7);
                     bericht.RWert7Tage = GetRValue(2).Replace(",", ".");
                     bericht.RWert7TageVortag = GetRValue(3).Replace(",", ".");
-                    bericht.Inzidenz7Tage = result.Tables[0].Rows[21][2].ToString().Substring(0, 5).Replace(",", ".");
-                    bericht.Inzidenz7TageVortag = result.Tables[0].Rows[21][2].ToString().Substring(0, 5).Replace(",", ".");
+
+                    var dataColumns = result.Tables[2].Columns;
+                    bericht.Inzidenz7Tage = result.Tables[2].Rows[19][dataColumns.Count - 1].ToString().Substring(0, 5).Replace(",", ".");
+                    bericht.Inzidenz7TageVortag = result.Tables[2].Rows[19][dataColumns.Count - 2].ToString().Substring(0, 5).Replace(",", ".");
+
 
                     //TODO:Separate from Excel table 
-                    var dataRows = result.Tables[2].Rows;
-                    bericht.Fallzahl = Convert.ToDouble(result.Tables[2].Rows[dataRows.Count - 1][1]).ToString("#,##");
-                    bericht.FallzahlVortag = Convert.ToDouble(result.Tables[2].Rows[dataRows.Count - 1][3]).ToString("#,##");
-                    bericht.Todesfaelle = Convert.ToDouble(result.Tables[2].Rows[dataRows.Count - 1][4]).ToString("#,##");
-                    bericht.TodesfaelleVortag = Convert.ToDouble(result.Tables[2].Rows[dataRows.Count - 1][5]).ToString("#,##");
+                    var dataRows = result.Tables[0].Rows;
+                    bericht.Fallzahl = Convert.ToDouble(result.Tables[0].Rows[dataRows.Count - 1][1]).ToString("#,##");
+                    bericht.FallzahlVortag = Convert.ToDouble(result.Tables[0].Rows[dataRows.Count - 1][3]).ToString("#,##");
+                    bericht.Todesfaelle = Convert.ToDouble(result.Tables[0].Rows[dataRows.Count - 1][4]).ToString("#,##");
+                    bericht.TodesfaelleVortag = Convert.ToDouble(result.Tables[0].Rows[dataRows.Count - 1][5]).ToString("#,##");
                     bericht.StandAktuell = true;
 
                     return bericht;
