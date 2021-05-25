@@ -54,7 +54,7 @@
                                                 <div class="card-body" id="body-info">
                                                     <h6 class="card-title"> Neue Fälle </h6>
                                                     <span class="h5 d-inline-block mt-1 mb-3"> 2 </span>
-                                                    <h6 class="card-title"> Todes Fälle </h6>
+                                                    <h6 class="card-title"> Todesfälle </h6>
                                                     <span class="h5 d-inline-block mt-1 mb-3"> 0 </span>
                                                     <h6 class="card-title"> Genesen </h6>
                                                     <span class="h5 d-inline-block mt-1 mb-3"> 15 </span>
@@ -76,7 +76,7 @@
                                         <div class="col-md-4 col-xxl-3 d-flex">
                                             <div class="card flex-fill">
                                                 <div class="card-body" id="body-info">
-                                                    <h6 class="card-title"> Durchgeführte Test </h6>
+                                                    <h6 class="card-title"> Durchgeführte Tests </h6>
                                                     <span class="h5 d-inline-block mt-1 mb-3"> 500 </span>
                                                     @*<p class="mb-2"> Positiv 10 </p>
                                                     <p class="mb-2"> Negativ 490 </p>*@
@@ -384,7 +384,7 @@
                     Title = new OptionsTitle
                     {
                         Display = false,
-                        Text = "ChartJs.Blazor Pie Chart"
+                        //Text = "ChartJs.Blazor Pie Chart"
                     }
                 }
             };
@@ -563,7 +563,7 @@
 
         IDataset<int> posivtivDataset = new LineDataset<int>(sortDictPositiv.Values)
         {
-            Label = "Positivte Tests",
+            Label = "Positive Tests",
             BackgroundColor = "#B41F2A",
             BorderColor = "#B41F2A",
             Fill = FillingMode.Disabled
@@ -571,7 +571,7 @@
 
         IDataset<int> negativDataset = new LineDataset<int>(sortDictNegativ.Values)
         {
-            Label = "Negativ Tests",
+            Label = "Negative Tests",
             BackgroundColor = "",
             BorderColor = "#14477b",
             Fill = FillingMode.Disabled
