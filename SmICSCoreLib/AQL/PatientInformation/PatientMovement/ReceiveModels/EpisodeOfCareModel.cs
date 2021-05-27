@@ -7,6 +7,6 @@ namespace SmICSCoreLib.AQL.PatientInformation.PatientMovement.ReceiveModels
     public class EpisodeOfCareModel
     {
         public DateTime Beginn { get; set; }
-        public DateTime Ende { get; set; }
+        public DateTime? Ende { get; set; }
     }
 }
