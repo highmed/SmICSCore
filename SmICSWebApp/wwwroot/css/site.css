@@ -172,27 +172,8 @@ footer.page-footer a {
     right: 0.75rem;
     top: 0.5rem;
 }
-/*New*/
-.containter_content {
-    display: flex;
-    align-items: center;
-    background-image: url("../resources/home.jpeg");
-    background-repeat: no-repeat;
-    background-size: contain;
-    opacity: 1;
-    margin-top: 2%;
-}
-/*.welcome_text {
-    margin: 2%;
-    margin-left: 50%;
-    background-color: #15317E;
-    opacity: 0.8;
-    color: antiquewhite;
-    padding: 2%;
-    margin-bottom: 20%;
-}*/
 
-@media (max-width: 767.98px) {
+@media (max-width: 899px) {
     .main .top-row:not(.auth) {
         display: none;
     }
@@ -219,15 +200,34 @@ footer.page-footer a {
     }
 
     .logo_img {
-        margin-bottom: 5%;
+        margin-bottom: 10%;
     }
 
     #logobackground {
         background-color: aliceblue;
+        text-align: center;
+        margin-bottom: 1%;
+    }
+
+    .containter_content {
+        display: flex;
+        flex-direction: column;
+        background-image: url("../resources/coronavirus.jpg");
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: top;
+        opacity: 1;
+    }
+
+    .welcome_header {
+        margin-left: 2%;
+        color: white;
+        font-size: 20px;
+        padding-top: 5%;
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 900px) {
     app {
         flex-direction: row;
     }
@@ -280,18 +280,42 @@ footer.page-footer a {
 
     }
 
+    .containter_content {
+        display: flex;
+        flex-direction: column;
+        background-image: url("../resources/coronavirus.jpg");
+        background-repeat: no-repeat;
+        background-size: 72% 90%;
+        background-position: right;
+        opacity: 1;
+    }
+
     .welcome_text {
         margin: 2%;
-        margin-left: 45%;
+        margin-right: 40%;
         background-color: #15317E;
         opacity: 0.8;
         color: antiquewhite;
         padding: 2%;
-        margin-bottom: 10%;
+        margin-bottom: 15%;
         box-shadow: 0px 3px 6px rgb(0,0,0, 0.3);
     }
 
     .logo_img {
+        margin-bottom: 0%;
+        margin-left: 1%;
+    }
+
+    .welcome_header {
+        margin-left: 2%;
+        color: #637492;
+        text-shadow: 1px 1px 5px lightgrey;
+    }
+
+    #logobackground {
+        background-color: aliceblue;
+        text-align: right;
+        padding-right: 2%;
         margin-bottom: 0%;
     }
 }

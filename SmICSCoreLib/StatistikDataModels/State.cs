@@ -49,4 +49,37 @@ namespace SmICSCoreLib.StatistikDataModels
         [JsonProperty(PropertyName = "Aktualisierung")]
         public long Aktualisierung { get; set; }
     }
+
+    public class StateData
+    {
+        [JsonProperty(PropertyName = "features")]
+        public StateDataFeature[] DataFeature { get; set; }
+    }
+
+    public class StateDataFeature
+    {
+        [JsonProperty(PropertyName = "attributes")]
+        public StateDataAttributes DataAttributes { get; set; }
+    }
+
+    public class StateDataAttributes
+    {
+        [JsonProperty(PropertyName = "BundeslandId")]
+        public int BundeslandId { get; set; }
+
+        [JsonProperty(PropertyName = "AnzFall")]
+        public int AnzFall { get; set; }
+
+        [JsonProperty(PropertyName = "AnzFallNeu")]
+        public int AnzFallNeu { get; set; }
+
+        [JsonProperty(PropertyName = "AnzTodesfall")]
+        public int AnzTodesfall { get; set; }
+
+        [JsonProperty(PropertyName = "AnzTodesfallNeu")]
+        public int AnzTodesfallNeu { get; set; }
+
+        [JsonProperty(PropertyName = "Inz7T")]
+        public float Inz7T { get; set; }
+    }
 }

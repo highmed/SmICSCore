@@ -21,7 +21,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten
         [JsonProperty(PropertyName = "Eingangsdatum")]
         public DateTime ZeitpunktProbenentnahme { get; set; }
         [JsonProperty(PropertyName = "ZeitpunktProbeneingang")]
-        public DateTime ZeitpunktProbeneingang { get; set; }
+        public DateTime? ZeitpunktProbeneingang { get; set; }
         [JsonProperty(PropertyName = "Probenart")]
         public string MaterialID { get; set; }
         [JsonProperty(PropertyName = "Screening")]  //Nur für Visualisierung -> nicht essentiell
