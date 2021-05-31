@@ -39,7 +39,10 @@ namespace SmICSWebApp.Data
                         jobj["context"]["other_context"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["bericht_id"];
                         jobj["context"]["other_context"]["items"][1]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["event_kennung"];
                         jobj["context"]["other_context"]["items"][1]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["event_art"];
-                        jobj["context"]["other_context"]["items"][1]["items"][2]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["art_der_person"];
+                        jobj["context"]["other_context"]["items"][1]["items"][2]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["art_der_person_1"];
+                        jobj["context"]["other_context"]["items"][1]["items"][2]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["art_der_person_1_ID"];
+                        jobj["context"]["other_context"]["items"][1]["items"][3]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["art_der_person_2"];
+                        jobj["context"]["other_context"]["items"][1]["items"][3]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["art_der_person_2_ID"];
                         jobj["context"]["other_context"]["items"][1]["items"][4]["value"]["value"] = JObject.Parse(createEntry.ToString())["event_kategorie"];
                         jobj["context"]["other_context"]["items"][1]["items"][5]["value"]["value"] = JObject.Parse(createEntry.ToString())["kontakt_kommentar"];
                         jobj["content"][0]["description"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["beschreibung"];

@@ -13,7 +13,11 @@
 @inject ContactTracingService ContactTracingService
 
 
- 
+<div class="zurueck-bottom">
+    <NavLink class="nav-link" href="contactIndex" Match="NavLinkMatch.All">
+        <span class="oi oi-chevron-left" aria-hidden="true">&nbsp;</span> zur&uuml;ck
+    </NavLink>
+</div> 
 
 <div class="con">
     <div class="deph_1">
@@ -63,16 +67,43 @@
                         </div>
                     </div>
                     <div class="deph_4">
-                        <span class="span">Beteiligte Personen</span>
+                        <span class="span">Beteiligte Personen (Person 1)</span>
                         <div class="table">
                             <div class="tr">
                                 <div class="tb tb_bez"><label>Art der Person :</label></div>
                                 <div class="tb">
-                                    <InputSelect @bind-Value="contact_tracing.art_der_person" disabled="@disabled">
+                                    <InputSelect @bind-Value="contact_tracing.art_der_person_1" disabled="@disabled">
                                         <option selected disabled>Bitte wählen Sie aus</option>
                                         <option value="Kontaktperson">Kontaktperson</option>
                                         <option value="Indexperson">Indexperson</option>
                                     </InputSelect>
+                                </div>
+                            </div>
+                            <div class="tr">
+                                <div class="tb tb_bez"><label>ID der Person :</label></div>
+                                <div class="tb">
+                                    <InputText @bind-Value="contact_tracing.art_der_person_1_ID" disabled="@disabled" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deph_4">
+                        <span class="span">Beteiligte Personen (Person 2)</span>
+                        <div class="table">
+                            <div class="tr">
+                                <div class="tb tb_bez"><label>Art der Person :</label></div>
+                                <div class="tb">
+                                    <InputSelect @bind-Value="contact_tracing.art_der_person_2" disabled="@disabled">
+                                        <option selected disabled>Bitte wählen Sie aus</option>
+                                        <option value="Kontaktperson">Kontaktperson</option>
+                                        <option value="Indexperson">Indexperson</option>
+                                    </InputSelect>
+                                </div>
+                            </div>
+                            <div class="tr">
+                                <div class="tb tb_bez"><label>ID der Person :</label></div>
+                                <div class="tb">
+                                    <InputText @bind-Value="contact_tracing.art_der_person_2_ID" disabled="@disabled" />
                                 </div>
                             </div>
                         </div>

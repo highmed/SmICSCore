@@ -171,16 +171,10 @@ label.css-label {
 
 .index-text {
     background-color: #0086b3;
-    opacity: 0.9;
+    opacity: 1;
     color: azure;
     padding: 2%;
     margin: 2%;
-}
-
-.index-button {
-    width: 30%;
-    height: 30%;
-    box-shadow: 0px 2px 5px rgb(53,168,224, 0.3);
 }
 
 .index-button:hover {
@@ -189,8 +183,64 @@ label.css-label {
 
 .index-button-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-items: center;
+    align-content: space-between;
+    margin-left: 2%;
+    margin-top: 2%;
+}
+
+.welcome_text_form {
+    margin-left: 2%;
+    margin-right: 2%;
+    opacity: 1;
+}
+
+.welcome_header_form {
+    margin-left: 2%;
+    color: #637492;
+    text-shadow: 1px 1px 5px lightgrey;
+}
+.zurueck-bottom {
+    font-size: 20px;
+}
+
+@media (max-width: 1625px) {
+    .form-image {
+        display: flex;
+        flex-direction: column;
+        opacity: 0.8;
+        padding-bottom: 10%;
+    }
+
+    .index-button {
+        width: auto;
+        height: auto;
+        box-shadow: 0px 2px 5px rgb(53,168,224, 0.3);
+        margin-bottom: 2%;
+        padding: 2%;
+    }
+    
+}
+
+@media (min-width: 1624px){
+
+    .form-image {
+        display: flex;
+        flex-direction: column;
+        background-image: url("../resources/Neuro.jpg");
+        background-repeat: no-repeat;
+        background-size: auto;
+        background-position: 85% 50%;
+        opacity: 0.8;
+        padding-bottom: 10%;
+    }
+
+    .index-button {
+        width: 30%;
+        height: 30%;
+        box-shadow: 0px 2px 5px rgb(53,168,224, 0.3);
+        margin-bottom: 2%;
+        padding: 1%;
+    }
 }

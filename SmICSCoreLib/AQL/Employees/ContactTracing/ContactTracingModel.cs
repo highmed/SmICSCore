@@ -20,9 +20,18 @@ namespace SmICSCoreLib.AQL.Employees.ContactTracing
         [JsonProperty(PropertyName = "event_art")]
         [Required]
         public string event_art { get; set; }
-        [JsonProperty(PropertyName = "art_der_person")]
+        [JsonProperty(PropertyName = "art_der_person_1")]
         [Required]
-        public string art_der_person { get; set; }
+        public string art_der_person_1 { get; set; }
+        [JsonProperty(PropertyName = "art_der_person_1_ID")]
+        [Required]
+        public string art_der_person_1_ID { get; set; }
+        [JsonProperty(PropertyName = "art_der_person_2")]
+        [Required]
+        public string art_der_person_2 { get; set; }
+        [JsonProperty(PropertyName = "art_der_person_2_ID")]
+        [Required]
+        public string art_der_person_2_ID { get; set; }
         [JsonProperty(PropertyName = "event_kategorie")]
         [Required]
         public string event_kategorie { get; set; }
