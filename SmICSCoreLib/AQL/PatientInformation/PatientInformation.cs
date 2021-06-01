@@ -51,7 +51,7 @@ namespace SmICSCoreLib.AQL.PatientInformation
             return _mibiLabFac.Process(parameter);
         }
         
-        public List<SymptomModel> Patient_Symptom_TTPs(PatientListParameter parameter)
+        public List<SymptomModel> Patient_Symptom(PatientListParameter parameter)
         {
             return _symptomFac.Process(parameter);
         }
