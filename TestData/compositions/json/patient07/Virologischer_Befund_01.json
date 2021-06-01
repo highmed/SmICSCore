@@ -48,7 +48,7 @@
         "_type": "EVENT_CONTEXT",
         "start_time": {
             "_type": "DV_DATE_TIME",
-            "value": "2021-01-03T09:30:00Z"
+            "value": "2020-02-10T21:47:45Z"
         },
         "setting":{
             "_type": "DV_CODED_TEXT",
@@ -87,7 +87,7 @@
                 "archetype_node_id": "at0005",
                 "value": {
                     "_type": "DV_TEXT",
-                    "value": "Endbefund"
+                    "value": "Zwischenbefund"
                 }
             },{
                 "_type": "CLUSTER",
@@ -111,7 +111,7 @@
                     "archetype_node_id": "at0001",
                     "value":{
                         "_type": "DV_TEXT",
-                        "value": "00000001"
+                        "value": "00000025"
                     }
                 }]
             }]
@@ -160,43 +160,65 @@
                 },
                 "archetype_details": {
                     "archetype_id":{
-                        "value": "openEHR-EHR-CLUSTER.location.v1"
+                        "value": "openEHR-EHR-CLUSTER.organization.v0"
                     },
                     "rm_version": "1.0.4"
                 },
-                "archetype_node_id": "openEHR-EHR-CLUSTER.location.v1",
+                "archetype_node_id": "openEHR-EHR-CLUSTER.organization.v0",
                 "items":[{
                     "_type": "ELEMENT",
                     "name": {
                         "_type": "DV_TEXT",
-                        "value": "Standorttyp"
+                        "value": "Typ"
                     },
-                    "archetype_node_id": "at0040",
+                    "archetype_node_id": "at0051",
                     "value": {
                         "_type": "DV_TEXT",
-                        "value": "OL"
+                        "value": "Stationär"
                     }
                 },{
                     "_type": "ELEMENT",
                     "name": {
                         "_type": "DV_TEXT",
-                        "value": "Standortbeschreibung"
+                        "value": "Organisationsschlüssel"
+                    },
+                    "archetype_node_id": "at0024",
+                    "value": {
+                        "_type": "DV_TEXT",
+                        "value": "000145"
+                    }
+                },{
+                    "_type": "ELEMENT",
+                    "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Name"
+                    },
+                    "archetype_node_id": "at0052",
+                    "value": {
+                        "_type": "DV_TEXT",
+                        "value": "Name der Organisationseinheit"
+                    }
+                },{
+                    "_type": "ELEMENT",
+                    "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Aktiv/Inaktiv"
+                    },
+                    "archetype_node_id": "at0050",
+                    "value": {
+                        "_type": "DV_BOOLEAN",
+                        "value": true
+                    }
+                },{
+                    "_type": "ELEMENT",
+                    "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Zusätzliche Beschreibung"
                     },
                     "archetype_node_id": "at0046",
                     "value": {
                         "_type": "DV_TEXT",
-                        "value": "Sonstige Fachabteilung"
-                    }
-                },{
-                    "_type": "ELEMENT",
-                    "name":{
-                        "_type": "DV_TEXT",
-                        "value": "Standortschlüssel"
-                    },
-                    "archetype_node_id": "at0048",
-                    "value": {
-                        "_type": "DV_TEXT",
-                        "value": "3700"
+                        "value": "Beschreibung 1"
                     }
                 }]
             },{
@@ -247,43 +269,65 @@
                     },
                     "archetype_details": {
                         "archetype_id":{
-                            "value": "openEHR-EHR-CLUSTER.location.v1"
+                            "value": "openEHR-EHR-CLUSTER.organization.v0"
                         },
                         "rm_version": "1.0.4"
                     },
-                    "archetype_node_id": "openEHR-EHR-CLUSTER.location.v1",
+                    "archetype_node_id": "openEHR-EHR-CLUSTER.organization.v0",
                     "items":[{
                         "_type": "ELEMENT",
                         "name": {
                             "_type": "DV_TEXT",
-                            "value": "Standorttyp"
+                            "value": "Typ"
                         },
-                        "archetype_node_id": "at0040",
+                        "archetype_node_id": "at0051",
                         "value": {
                             "_type": "DV_TEXT",
-                            "value": "OL"
+                            "value": "Stationär"
                         }
                     },{
                         "_type": "ELEMENT",
                         "name": {
                             "_type": "DV_TEXT",
-                            "value": "Standortbeschreibung"
+                            "value": "Organisationsschlüssel"
+                        },
+                        "archetype_node_id": "at0024",
+                        "value": {
+                            "_type": "DV_TEXT",
+                            "value": "000145"
+                        }
+                    },{
+                        "_type": "ELEMENT",
+                        "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Name"
+                        },
+                        "archetype_node_id": "at0052",
+                        "value": {
+                            "_type": "DV_TEXT",
+                            "value": "Name der Organisationseinheit"
+                        }
+                    },{
+                        "_type": "ELEMENT",
+                        "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Aktiv/Inaktiv"
+                        },
+                        "archetype_node_id": "at0050",
+                        "value": {
+                            "_type": "DV_BOOLEAN",
+                            "value": true
+                        }
+                    },{
+                        "_type": "ELEMENT",
+                        "name": {
+                            "_type": "DV_TEXT",
+                            "value": "Zusätzliche Beschreibung"
                         },
                         "archetype_node_id": "at0046",
                         "value": {
                             "_type": "DV_TEXT",
-                            "value": "Kardiologie"
-                        }
-                    },{
-                        "_type": "ELEMENT",
-                        "name":{
-                            "_type": "DV_TEXT",
-                            "value": "Standortschlüssel"
-                        },
-                        "archetype_node_id": "at0048",
-                        "value": {
-                            "_type": "DV_TEXT",
-                            "value": "0300"
+                            "value": "Beschreibung 1"
                         }
                     }]
                 }]
@@ -374,7 +418,7 @@
                             "archetype_node_id": "at0001",
                             "value": {
                                 "_type": "DV_IDENTIFIER",
-                                "id": "02"
+                                "id": "01"
                             }
                         },{
                             "_type": "ELEMENT",
@@ -385,7 +429,7 @@
                             "archetype_node_id": "at0088",
                             "value": {
                                 "_type": "DV_IDENTIFIER",
-                                "id": "02"
+                                "id": "24"
                             }
                         },{
                             "_type": "ELEMENT",
@@ -396,7 +440,7 @@
                             "archetype_node_id": "at0034",
                             "value":{
                                 "_type": "DV_DATE_TIME",
-                                "value": "2021-01-03T10:00:00Z"
+                                "value": "2020-02-14T20:47:45Z"
                             }
                         },{
                             "_type": "ELEMENT",
@@ -449,7 +493,7 @@
                             "archetype_node_id": "at0015",
                             "value": {
                                 "_type": "DV_DATE_TIME",
-                                "value": "2021-01-03T09:30:00Z"
+                                "value": "2020-02-14T18:47:45Z"
                             }
                         },{
                             "_type": "ELEMENT",
@@ -548,7 +592,7 @@
                                 "archetype_node_id": "at0001",
                                 "value": {
                                     "_type": "DV_CODED_TEXT",
-                                    "value": "Not detected (qualifier value)",
+                                    "value": "Not detected (qualifier value)",
                                     "defining_code": {
                                         "terminology_id": {
                                             "value": "SNOMED Clinical Terms"
