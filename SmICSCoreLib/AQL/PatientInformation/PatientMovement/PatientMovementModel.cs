@@ -27,6 +27,9 @@ namespace SmICSCoreLib.AQL.PatientInformation.PatientMovement
         [JsonProperty(PropertyName = "StationID")]
         public string StationID { get; set; }
 
+        [JsonProperty(PropertyName = "Fachabteilung")]
+        public string Fachabteilung { get; set; }
+
         public PatientMovementModel() { }
         public PatientMovementModel(PatientStayModel patientStay)
         {
@@ -37,6 +40,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.PatientMovement
             FallID = patientStay.FallID;
             Bewegungsart_l = patientStay.Bewegungsart_l;
             StationID = patientStay.StationID == null ? patientStay.FachabteilungsID : patientStay.StationID;
+            Fachabteilung = patientStay.Fachabteilung;
         }
 
         public void AddMovementType(int typeID, string typeName)

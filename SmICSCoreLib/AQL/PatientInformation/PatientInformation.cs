@@ -30,31 +30,52 @@ namespace SmICSCoreLib.AQL.PatientInformation
             _symptomFac = symptomFac;
             _vaccFac = vaccFac;
         }
+       
         public List<PatientMovementModel> Patient_Bewegung_Ps(PatientListParameter parameter)
         {
             return _patMoveFac.Process(parameter);
+        } 
+        
+        public List<PatientMovementModel> Patient_Bewegung_Station(PatientListParameter parameter, string station, DateTime starttime, DateTime endtime)
+        {
+            return _patMoveFac.ProcessFromStation(parameter, station, starttime, endtime);
         }
-
-
+        
         public List<LabDataModel> Patient_Labordaten_Ps(PatientListParameter parameter)
         {
             return _patLabFac.Process(parameter);
         }
-
+        
         public List<MibiLabDataModel> MibiLabData(PatientListParameter parameter)
         {
             return _mibiLabFac.Process(parameter);
         }
-
-        public List<SymptomModel> Patient_Symptom(PatientListParameter parameter)
+        
+        public List<SymptomModel> Patient_Symptom_TTPs(PatientListParameter parameter)
         {
             return _symptomFac.Process(parameter);
+        }
+        
+        public List<SymptomModel> Patient_Symptom()
+        {
+            return _symptomFac.ProcessNoParam();
+        }
+        
+        public List<SymptomModel> Patient_By_Symptom(string symptom)
+        {
+            return _symptomFac.PatientBySymptom(symptom);
+        }
+
+        public List<SymptomModel> Symptoms_By_PatientId(string patientId, DateTime datum)
+        {
+            return _symptomFac.SymptomByPatient(patientId, datum);
         }
 
         public List<VaccinationModel> Patient_Vaccination(PatientListParameter parameter)
         {
             return _vaccFac.Process(parameter);
         }
+
     }
 
 }

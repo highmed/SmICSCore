@@ -12,7 +12,7 @@ namespace SmICSFactory.Tests
     {
         public static List<T> ReadResults<T>(string path, int resultNo, ExpectedType type)
         {
-            List<PatientIDs> patients = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
+            List<PatientIDs> patients = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
 
             using (StreamReader reader = new StreamReader(path))
             {

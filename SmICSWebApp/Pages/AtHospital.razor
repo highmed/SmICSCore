@@ -1,0 +1,240 @@
+﻿@page "/atHospital"
+
+@using System;
+@using SmICSCoreLib.AQL.Patient_Stay.Stationary
+@using SmICSCoreLib.AQL.PatientInformation.PatientMovement
+@using System.ComponentModel.DataAnnotations
+@inject SmICSWebApp.Data.Symptom symptom
+
+<h3>Statistik (Prototyp)</h3>
+
+<div class="card">
+    <StatistikNav>
+    </StatistikNav>
+
+    <div class="card-body">
+        <div>
+            <div style="padding: 30px 0px 100px 0px;">
+
+
+                @if (patStationary == null)
+                {
+                    @if (status == true)
+                    {
+                        <p><em>Daten werden geladen...</em></p>
+                        <div class="spinner"></div> }
+                    else
+                    {
+                        <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
+                        <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+                    }
+                }
+                else
+                {
+                    <div class="row">
+                        <br>
+                        <div class="col-12 d-flex">
+                            <div class="card flex-fill">
+                                <div class="card-header">
+                                    <h5 class="card-title">Patienten Tabelle </h5>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-bordered table-hover mb-0">
+                                        <thead style="background-color: #7FBDD2;">
+                                            <tr>
+                                                <th scope="col">
+                                                    <EditForm Model="@patData">
+                                                        <label>Aufgenommen am: </label>
+                                                        <InputDate @bind-Value="@patData.datum"></InputDate>
+                                                        <button @onclick="GetAllPat">Aktualisieren</button>
+                                                    </EditForm>
+                                                </th>
+                                                <th scope="col">FallID</th>
+                                                <th scope="col">PatientenID</th>
+                                                <th scope="col">Aufnahmeanlass</th>
+                                                <th scope="col">Versorgungsfallgrund</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var patient in patStationary)
+                                            {
+                                                <tr>
+                                                    <th scope="row">@patData.datum.Date.ToString("dd-MM-yyyy")</th>
+                                                    <td>@patient.FallID</td>
+                                                    <td>
+                                                        <a href="" @onclick="() => GetPatMovement(patient.PatientID)" @onclick:preventDefault>
+                                                            @patient.PatientID
+                                                        </a>
+                                                    </td>
+                                                    <td>@patient.Aufnahmeanlass</td>
+                                                    <td>@patient.Versorgungsfallgrund</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                    @if (patStationary.Count == 0)
+                                    {
+                                        <p>Am @patData.datum.ToString("dd.MM.yyyy") wurden keine neuen Patienten Aufgenommen</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-8 d-flex">
+                            <div class="card flex-fill">
+                                <div class="card-header">
+                                    <h5 class="card-title">Patient Ansicht</h5>
+                                </div>
+
+                                <div class="card-body">
+
+                                    @if (patMovtList != null && patMovtList.Count() != 0)
+                                    {
+                                        <div class="row">
+                                            <table class="table table-bordered table-hover mb-0">
+                                                <thead style="background-color: #7FBDD2;">
+                                                    <tr>
+                                                        <th scope="col">Daten</th>
+                                                        <th scope="col">Patient</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">PatientID</th>
+                                                        <td>@patientMovement.PatientID</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">FallID</th>
+                                                        <td>@patientMovement.FallID</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Fachabteilung</th>
+                                                        <td>@patientMovement.Fachabteilung</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">StationID</th>
+                                                        <td>@patientMovement.StationID</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Bewegungstyp</th>
+                                                        <td>@patientMovement.Bewegungstyp</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Raum</th>
+                                                        <td>@patientMovement.Raum</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Beginn</th>
+                                                        <td>@patientMovement.Beginn</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Ende</th>
+                                                        <td>@patientMovement.Ende</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+
+                                            <div class="col-sm-12 col-md-5">
+                                                <div class="dataTables_info">Bewegung @indexFirst von @moveCount </div>
+                                            </div>
+
+                                            <div class="col-sm-12 col-md-7">
+                                                <div class="dataTables_paginate paging_simple_numbers">
+                                                    <ul class="pagination" style="justify-content: flex-end;">
+                                                        <li class="paginate_button page-item previous">
+                                                            <a href="" @onclick="PrevFirst" @onclick:preventDefault class="page-link">Zurück</a>
+                                                        </li>
+                                                        <li class="paginate_button page-item next">
+                                                            <a href="" @onclick="NextFirst" @onclick:preventDefault class="page-link">Weiter</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p>Kein Patient aus der Patienten Tabelle ausgewählt!</p>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    PatData patData = new PatData();
+    List<StationaryDataModel> patStationary = new();
+    List<PatientMovementModel> patMovtList;
+    PatientMovementModel patientMovement;
+    private int moveCount;
+    private int first = 0;
+    private int second = 0;
+    private int indexFirst = 1;
+    private int indexSec = 1;
+    private bool status;
+
+    protected override async Task OnInitializedAsync()
+    {
+        status = true;
+        await Task.Run(GetAllPat);
+    }
+
+    private void GetAllPat()
+    {
+        patStationary = symptom.GetAllPatByDate(patData.datum);
+        if (patStationary == null)
+        {
+            status = false;
+        }
+    }
+
+    private void GetPatMovement(string patientId)
+    {
+        patMovtList = symptom.GetPatMovement(patientId);
+        moveCount = patMovtList.Count();
+
+        if (moveCount != 0)
+        {
+            patientMovement = patMovtList.First();
+        }
+    }
+
+    private void NextFirst()
+    {
+        if (first + 1 < moveCount)
+        {
+            patientMovement = patMovtList.ElementAt(first + 1);
+            first += 1;
+            indexFirst += 1;
+        }
+    }
+
+    private void PrevFirst()
+    {
+        if (first - 1 > -1)
+        {
+            patientMovement = patMovtList.ElementAt(first - 1);
+            first -= 1;
+            indexFirst -= 1;
+        }
+    }
+
+    public class PatData
+    {
+        [Required]
+        public DateTime datum = DateTime.Now.Date;
+
+    }
+
+}

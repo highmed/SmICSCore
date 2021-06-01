@@ -6,9 +6,11 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Stationary
 {
     public interface IStationaryFactory
     {
-        List<StationaryDataModel> Process(string patientId, DateTime datum);
+        List<StationaryDataModel> Process(string patientId, string fallkennung, DateTime datum);
 
-        //Wenn die Fallkennung vorhanden ist
-        //List<StationaryDataModel> Process(string patientId, DateTime datum, string fallkenung);
+        List<StationaryDataModel> ProcessFromCase(string patientId, string fallId);
+        
+        List<StationaryDataModel> ProcessFromDate(DateTime datum);
+
     }
 }

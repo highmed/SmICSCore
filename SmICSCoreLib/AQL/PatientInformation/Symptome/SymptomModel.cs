@@ -9,10 +9,17 @@ namespace SmICSCoreLib.AQL.PatientInformation.Symptome
     {
         [JsonProperty(PropertyName ="PatientenID")]
         public string PatientenID { get; set; }
+
+        [JsonProperty(PropertyName = "BefundID")]
+        public string BefundID { get; set; }
         [JsonProperty(PropertyName = "BefundDatum")]
         public DateTime BefundDatum { get; set; }
         [JsonProperty(PropertyName = "NameDesSymptoms")]
         public string NameDesSymptoms { get; set; }
+
+        [JsonProperty(PropertyName = "Anzahl_Patienten")]
+        public int Anzahl_Patienten { get; set; }
+
         [JsonProperty(PropertyName = "Lokalisation")]
         public string Lokalisation { get; set; }
         [JsonProperty(PropertyName = "Beginn")]

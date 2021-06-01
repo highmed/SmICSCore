@@ -169,7 +169,7 @@ namespace SmICSWebApp.Controllers
         {
             try
             {
-                return _patinet_Stay.Count(nachweis);
+                return _patinet_Stay.CovidPat(nachweis);
             }
             catch (Exception e)
             {

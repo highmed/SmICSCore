@@ -31,6 +31,17 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
             return ReturValueConstrutor(patientStayList);
         }
 
+        public List<PatientMovementModel> ProcessFromStation(PatientListParameter parameter, string station, DateTime starttime, DateTime endtime)
+        {
+            List<PatientStayModel> patientStayList = _restData.AQLQuery<PatientStayModel>(AQLCatalog.PatientStayFromStation(parameter, station, starttime, endtime));
+            if (patientStayList is null)
+            {
+                return new List<PatientMovementModel>();
+            }
+
+            return ReturValueConstrutor(patientStayList);
+        }
+
         private List<PatientMovementModel> ReturValueConstrutor(List<PatientStayModel> patientStayList)
         {
             List<PatientMovementModel> patientMovementList = new List<PatientMovementModel>();
@@ -107,12 +118,12 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
         }
         private void addDischargeObject(PatientStayModel patientStay, EpisodeOfCareModel episodeOfCare, List<PatientMovementModel> patientMovementList)
         {
-            if (episodeOfCare.Ende != DateTime.MinValue)
+            if (episodeOfCare != null)
             {
-                if (!(episodeOfCare is null) && patientStay.Ende == episodeOfCare.Ende)
+                if (episodeOfCare.Ende.HasValue && patientStay.Ende == episodeOfCare.Ende)
                 {
                     PatientMovementModel patientMovement = new PatientMovementModel(patientStay);
-                    patientMovement.Beginn = episodeOfCare.Ende;
+                    patientMovement.Beginn = episodeOfCare.Ende.Value;
                     patientMovement.AddMovementType(2, "Entlassung");
 
                     patientMovementList.Add(patientMovement);

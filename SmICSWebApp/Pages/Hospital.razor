@@ -1,0 +1,335 @@
+﻿@page "/hospital"
+
+@using SmICSWebApp.Data
+@using System.Collections.Generic;
+@using SmICSCoreLib.AQL.Patient_Stay.Count;
+
+@inject DataService dataService
+
+<h3>Statistik (Prototyp)</h3>
+
+<div class="card">
+    <StatistikNav>
+    </StatistikNav>
+
+    <div class="card-body">
+        <div>
+            <div style="padding: 0px 0px 100px 0px;">
+
+                @if (allPositivTest == null)
+                {
+                    @if (status == true)
+                    {
+                        <p><em>Daten werden geladen...</em></p>
+                        <div class="spinner"></div> }
+                    else
+                    {
+                        <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
+                        <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+                    }
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="card flex-fill">
+                                <div class="card-header" style="padding-top: 10px;">
+                                    <h5 class="card-title">Fallzahlen im Krankenhaus</h5>
+
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-wrapper-scroll-y" style="padding-bottom: 20px;">
+                                        <table class="table table-bordered table-hover mb-0">
+                                            <thead style="background-color: #7FBDD2;">
+                                                <tr>
+                                                    <th scope="col">Aktuelle Fallzahlen</th>
+                                                    <th scope="col">Fallzahl gesamt</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">Laborbestätigt</th>
+                                                    <td>@allPositivPat.Count()</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Mitgebrachte Fälle</th>
+                                                    <td>@anzahlFaelle</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th scope="row">
+                                                        Mögliche Nosokomiale Infektion
+                                                        <a href="" @onmouseover="() => ShowFirstText()" @onclick:preventDefault style="color:red">
+                                                            *
+                                                        </a>
+                                                    </th>
+                                                    @if (@allNoskumalPat.Count() > 0)
+                                                    {
+                                                        if (showNosk == false)
+                                                        {
+                                                            <td>
+                                                                @allNoskumalPat.Count()
+                                                                <br>
+                                                                <a href="" @onclick="() => ShowNoskIDs()" @onclick:preventDefault style="color:red">
+                                                                    Anzeigen
+                                                                </a>
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>
+                                                                @allNoskumalPat.Count()
+                                                                <br>
+                                                                <a href="" @onclick="() => ShowNoskIDs()" @onclick:preventDefault style="color:red">
+                                                                    Ausblenden
+                                                                </a>
+                                                            </td>
+                                                        }
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>@allNoskumalPat.Count()</td>
+                                                    }
+                                                </tr>
+                                                @if (showNosk == true)
+                                                {
+                                                    @foreach (var patient in @allNoskumalPat)
+                                                    {
+                                                        <tr>
+                                                            <th scope="row" style="color:red">@patient.PatientID </th>
+                                                            <td> </td>
+                                                        </tr>
+                                                    }
+                                                }
+
+                                                <tr>
+                                                    <th scope="row">
+                                                        Wahrscheinliche Nosokomiale Infektion
+                                                        <a href="" @onmouseover="() => ShowSecondText()" @onclick:preventDefault style="color:red">
+                                                            *
+                                                        </a>
+                                                    </th>
+
+                                                    @if (noskumalPatByContact.Count() > 0)
+                                                    {
+                                                        if (showNoskByCont == false)
+                                                        {
+                                                            <td>
+                                                                @noskumalPatByContact.Count()
+                                                                <br>
+                                                                <a href="" @onclick="() => ShowNoskContIDs()" @onclick:preventDefault style="color:red">
+                                                                    Anzeigen
+                                                                </a>
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>
+                                                                @noskumalPatByContact.Count()
+                                                                <br>
+                                                                <a href="" @onclick="() => ShowNoskContIDs()" @onclick:preventDefault style="color:red">
+                                                                    Ausblenden
+                                                                </a>
+                                                            </td>
+                                                        }
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <td> @noskumalPatByContact.Count() </td>
+                                                    }
+
+                                                </tr>
+                                                @if (showNoskByCont == true)
+                                                {
+                                                    @foreach (var noskPatient in noskumalPatByContact)
+                                                    {
+                                                        <tr>
+                                                            <th scope="row" style="color:red">@noskPatient.PatientID </th>
+                                                            <td> </td>
+                                                        </tr>
+                                                    }
+                                                }
+
+                                                <tr>
+                                                    <th scope="row">Anzahl positiver Tests</th>
+                                                    <td>@allPositivTest.Count()</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Anzahl negativer Tests</th>
+                                                    <td>@allNegativPat.Count()</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+
+                                        <br>
+                                        @if (firstText == true && secondText == false)
+                                        {
+                                            <p style="font-size:0.8em">
+                                                *eine Mögliche Nosokomiale Infektion ist, wenn der Patient war bei stationärer Aufnahme negativ auf SARS-CoV-2
+                                                getestet war und hat keine Symptome aus der Symptomliste unten. Und hat erstmal eine positive PCR von SARS-CoV-2
+                                                ab Tag 4 nach stationärer Aufnahme.
+                                            </p>
+                                        }
+
+                                        @if (firstText == false && secondText == true )
+                                        {
+                                            <p style="font-size:0.8em">
+                                                *eine Wahrscheinliche Nosokomiale Infektion ist, wenn der Patient bei stationärer Aufnahme negativ auf SARS-CoV-2
+                                                getestet war und hat keine Symptome aus der Symptomliste unten. Und hat erstmal eine positive PCR für oder den
+                                                kulturellen Nachweis von SARS-CoV-2 ab Tag 4 nach stationärer Aufnahme. Und es besteht ein klassisch
+                                                infektionsepidemiologischer Zusammenhang (Ort-Zeit-Kontext) zu einem nachgewiesen infizierten potentiellen im
+                                                Zeitraum der Inkubationszeit (2-14 Tage VOR Beginn der Symptome oder Probenahme) im Krankenhaus.
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div>
+                                <div class="card flex-fill">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Aufenthalt im Krankenhaus</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-bordered table-hover mb-0">
+                                            <thead style="background-color: #7FBDD2;">
+                                                <tr>
+                                                    <th scope="col">Aktuelle Fallzahlen </th>
+                                                    <th scope="col">Anzahl gesamt</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">Anzahl aufgenommener Patienten</th>
+                                                    <td>@allPositivPat.Count()</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Anzahl Patiententage</th>
+                                                    <td>@anzahlPatTage</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<CountDataModel> allPositivTest;
+    private List<CountDataModel> allNegativPat;
+    private List<CountDataModel> allPositivPat;
+    private List<Patient> allNoskumalPat;
+    private List<Patient> noskumalPatByContact;
+    private int anzahlFaelle;
+    private int anzahlPatTage;
+    private bool status;
+    private bool showNosk;
+    private bool showNoskByCont;
+    private bool firstText;
+    private bool secondText;
+
+    protected override async Task OnInitializedAsync()
+    {
+        status = true;
+        showNosk = false;
+        showNoskByCont = false;
+        await Task.Run(LoadEhrData);
+    }
+
+    private void LoadEhrData()
+    {
+        try
+        {
+            allPositivTest = dataService.GetAllPositivTest();
+            allPositivPat = dataService.GetPositivPat(allPositivTest);
+            allNegativPat = dataService.GetNegativPat();
+            allNoskumalPat = dataService.GetAllNoskumalPat(allPositivTest);
+            noskumalPatByContact = dataService.GetNoskumalByContact(allNoskumalPat, allPositivPat);
+            anzahlFaelle = allPositivPat.Count() - allNoskumalPat.Count();
+            anzahlPatTage = dataService.PatStay(allPositivPat);
+            status = true;
+        }
+        catch (Exception)
+        {
+            status = false;
+        }
+
+    }
+
+    private void ShowNoskIDs()
+    {
+        if (allNoskumalPat.Count > 0)
+        {
+            if (showNosk == false)
+            {
+                showNosk = true;
+            }
+            else
+            {
+                showNosk = false;
+            }
+        }
+        else
+        {
+            showNosk = false;
+        }
+    }
+
+    private void ShowNoskContIDs()
+    {
+        if (noskumalPatByContact.Count > 0)
+        {
+            if (showNoskByCont == false)
+            {
+                showNoskByCont = true;
+            }
+            else
+            {
+                showNoskByCont = false;
+            }
+        }
+        else
+        {
+            showNoskByCont = false;
+        }
+    }
+
+    private void ShowFirstText()
+    {
+        if (firstText == false)
+        {
+            secondText = false;
+            firstText = true;
+        }
+        else
+        {
+            firstText = false;
+        }
+    }
+
+    private void ShowSecondText()
+    {
+        if (secondText == false)
+        {
+            firstText = false;
+            secondText = true;
+        }
+        else
+        {
+            secondText = false;
+        }
+    }
+}

@@ -23,7 +23,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten.ReceiveModel
         [JsonProperty(PropertyName = "ZeitpunktProbenentnahme")]
         public DateTime ZeitpunktProbenentnahme { get; set; }
         [JsonProperty(PropertyName = "ZeitpunktProbeneingang")]
-        public DateTime ZeitpunktProbeneingang { get; set; }
+        public DateTime? ZeitpunktProbeneingang { get; set; }
         [JsonProperty(PropertyName = "Befundzeit")]
         public DateTime Befundzeit { get; set; }
         [JsonProperty(PropertyName = "MaterialID")]
