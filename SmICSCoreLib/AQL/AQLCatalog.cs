@@ -321,18 +321,38 @@ namespace SmICSCoreLib.AQL
        
         public static AQLQuery StayFromCase(string patientId, string fallId)
         {
-            return new AQLQuery("StayFromCase", $@"SELECT e/ehr_id/value as PatientID, 
-                                    c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value as FallID,
-                                    j/data[at0001]/items[at0071]/value/value  as Datum_Uhrzeit_der_Aufnahme,
-                                    j/data[at0001]/items[at0013]/value/value as Versorgungsfallgrund, 
-                                    j/data[at0001]/items[at0049,'Aufnahmeanlass']/value/value as Aufnahmeanlass,
-                                    w/data[at0001]/items[at0040]/value/value as Art_der_Entlassung, 
-                                    w/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Datum_Uhrzeit_der_Entlassung
-                                    FROM EHR e 
-                                    CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
-                                    CONTAINS (ADMIN_ENTRY j[openEHR-EHR-ADMIN_ENTRY.admission.v0] and 
-                                    ADMIN_ENTRY w[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
-                                    WHERE PatientID='{patientId}' and FallID='{fallId}'");
+            return new AQLQuery("StayFromCase", $@"SELECT e/ehr_id/value as PatientID,
+                                 c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value as FallID,
+                                 u/data[at0001]/items[at0013]/value/value as Versorgungsfallgrund,
+                                 u/data[at0001]/items[at0049,'Aufnahmeanlass']/value/value as Aufnahmeanlass,
+                                 u/data[at0001]/items[at0071]/value/value as Datum_Uhrzeit_der_Aufnahme,
+                                 f/data[at0001]/items[at0040]/value/value as Art_der_Entlassung,
+                                 f/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Datum_Uhrzeit_der_Entlassung,
+                                 d/items[at0027]/value/value as Station
+                                 FROM EHR e
+                                 CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1]
+                                 CONTAINS (ADMIN_ENTRY u[openEHR-EHR-ADMIN_ENTRY.admission.v0] and ADMIN_ENTRY f[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0] and CLUSTER d[openEHR-EHR-CLUSTER.location.v1])
+                                 WHERE PatientID='{patientId}' and FallID='{fallId}'"
+                
+                
+                
+                //"StayFromCase", $@"SELECT e/ehr_id/value as PatientID, 
+                //                    c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value as FallID,
+                //                    j/data[at0001]/items[at0071]/value/value  as Datum_Uhrzeit_der_Aufnahme,
+                //                    j/data[at0001]/items[at0013]/value/value as Versorgungsfallgrund, 
+                //                    j/data[at0001]/items[at0049,'Aufnahmeanlass']/value/value as Aufnahmeanlass,
+                //                    w/data[at0001]/items[at0040]/value/value as Art_der_Entlassung, 
+                //                    w/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Datum_Uhrzeit_der_Entlassung,
+                //                    i/items[at0027]/value/value as Station
+                //                    FROM EHR e 
+                //                    CONTAINS COMPOSITION c#Stationärer_Versorgungsfall 
+                //                    CONTAINS (ADMIN_ENTRY j#Aufnahmedaten CONTAINS (CLUSTER i#Vorheriger_Patientenstandort__vor_Aufnahme_) and 
+                //                    ADMIN_ENTRY w#Entlassungsdaten) 
+                //                    WHERE PatientID='{patientId}' and FallID='{fallId}'"
+                                    
+                                    
+                                    
+                                    );
         }
 
         public static AQLQuery StayFromDate(DateTime datum)

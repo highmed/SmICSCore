@@ -125,3 +125,8 @@
 #card-bod {
     border-top-style: ridge;
 }
+
+#daily-row .card-body {
+    padding-left: 0.50rem;
+    padding-right: 0.50rem;
+}

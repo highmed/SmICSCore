@@ -3,6 +3,7 @@
 @using SmICSWebApp.Data
 @using System.Collections.Generic;
 @using SmICSCoreLib.AQL.Patient_Stay.Count;
+@using SmICSCoreLib.AQL.Patient_Stay.Stationary
 @using ChartJs.Blazor.LineChart
 @using ChartJs.Blazor.PieChart
 
@@ -37,7 +38,6 @@
                             <div class="card flex-fill">
                                 <div class="card-header" style="background-color: #14477b; color: white;">
                                     <div class="row">
-                                        @*<img src="./resources/iconfinder.png" style=" width: 35px; height: 35px;" />*@
                                         <div class="col-7">
                                             <h5 class="card-title">Tägliche Lage</h5>
                                         </div>
@@ -46,28 +46,27 @@
                                         </div>
                                     </div>
                                 </div>
-                              
+
                                 <div class="card-body">
-                                    <div class="row">
+                                    <div class="row" id="daily-row">
                                         <div class="col-md-3 col-xxl-3 d-flex">
                                             <div class="card flex-fill">
                                                 <div class="card-body" id="body-info">
                                                     <h6 class="card-title"> Neue Fälle </h6>
-                                                    <span class="h5 d-inline-block mt-1 mb-3"> 2 </span>
+                                                    <span class="h5 d-inline-block mt-1 mb-3"> @neuefaelle </span>
                                                     <h6 class="card-title"> Todesfälle </h6>
                                                     <span class="h5 d-inline-block mt-1 mb-3"> 0 </span>
                                                     <h6 class="card-title"> Genesen </h6>
-                                                    <span class="h5 d-inline-block mt-1 mb-3"> 15 </span>
+                                                    <span class="h5 d-inline-block mt-1 mb-3"> @genesen </span>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-md-4 col-xxl-3 d-flex">
                                             <div class="card flex-fill">
                                                 <div class="card-body" id="body-info">
                                                     <h6 class="card-title"> Aktive Fälle </h6>
-                                                    <span class="h5 d-inline-block mt-1 mb-3"> 42 </span>
-                                                    @*<p class="mb-2"> Intensivstation 2 | Normalstation 40 </p>*@
+                                                    <span class="h5 d-inline-block mt-1 mb-3"> @aktivefaelle </span>
                                                     <Chart Config="_pieConfig1"></Chart>
                                                 </div>
                                             </div>
@@ -77,24 +76,12 @@
                                             <div class="card flex-fill">
                                                 <div class="card-body" id="body-info">
                                                     <h6 class="card-title"> Durchgeführte Tests </h6>
-                                                    <span class="h5 d-inline-block mt-1 mb-3"> 500 </span>
-                                                    @*<p class="mb-2"> Positiv 10 </p>
-                                                    <p class="mb-2"> Negativ 490 </p>*@
+                                                    <span class="h5 d-inline-block mt-1 mb-3"> @gesamteTest </span>
                                                     <Chart Config="_pieConfig2"></Chart>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    @*<div class="row">
-                                        <div class="col-md-4 col-xxl-3 d-flex">
-                                            <div class="card flex-fill">
-                                                <div class="card-body" id="body-info">
-                                                    <Chart Config="_pieConfig"></Chart>
-                                                </div>
-                                            </div>
-                                        </div>  
-                                    </div>*@
-
                                 </div>
                             </div>
                         </div>
@@ -235,7 +222,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Anzahl negativer Tests</th>
-                                                    <td>@allNegativPat.Count()</td>
+                                                    <td>@allNegativTest.Count()</td>
                                                 </tr>
 
                                             </tbody>
@@ -305,6 +292,7 @@
 
 @code {
     private List<CountDataModel> allPositivTest;
+    private List<CountDataModel> allNegativTest;
     private List<CountDataModel> allNegativPat;
     private List<CountDataModel> allPositivPat;
     private List<Patient> allNoskumalPat;
@@ -328,6 +316,17 @@
     private PieConfig _pieConfig1;
     private PieConfig _pieConfig2;
 
+    private List<CountDataModel> posHeute;
+    private List<CountDataModel> posGestern;
+    private List<CountDataModel> negHeute;
+    private List<CountDataModel> genesenHeute;
+    private int neuefaelle;
+    private int genesen;
+    private int aktivefaelle;
+    private int gesamteTest;
+    List<StationaryDataModel> patStationary;
+    List<StationaryDataModel> aktivHeute= new();
+
     protected override async Task OnInitializedAsync()
     {
         date = DateTime.Now.ToString("dddd, dd MMMM yyyy");
@@ -342,55 +341,21 @@
         try
         {
             allPositivTest = dataService.GetAllPositivTest();
-            allPositivPat = dataService.GetPositivPat(allPositivTest);
-            allNegativPat = dataService.GetNegativPat();
+            allPositivPat =  dataService.GetAllPatByTest(allPositivTest);
+            allNegativTest = dataService.GetAllNegativTest();
+            allNegativPat =  dataService.GetAllPatByTest(allNegativTest);
+
             allNoskumalPat = dataService.GetAllNoskumalPat(allPositivTest);
             noskumalPatByContact = dataService.GetNoskumalByContact(allNoskumalPat, allPositivPat);
             anzahlFaelle = allPositivPat.Count() - allNoskumalPat.Count();
             anzahlPatTage = dataService.PatStay(allPositivPat);
 
-            Dictionary<string, int> sortDictPositiv = GetDataForChart(allPositivTest);
+            Dictionary<string, int> sortDictPositiv = GetDataForChart(allPositivPat);
             Dictionary<string, int> sortDictNegativ = GetDataForChart(allNegativPat);
             LineChart(sortDictPositiv, sortDictNegativ);
 
-            pieDaten = new();
-            pieDaten.Add("Intensiv", 10);
-            pieDaten.Add("Normal", 40);
 
-            _pieConfig1 = new PieConfig
-            {
-                Options = new PieOptions
-                {
-                    Responsive = true,
-                    Title = new OptionsTitle
-                    {
-                        Display = false,
-                        Text = "ChartJs.Blazor Pie Chart"
-                    }
-                }
-            };
-
-            PieChart(_pieConfig1, pieDaten);
-
-            pieDaten2 = new();
-            pieDaten2.Add("Positiv", 10);
-            pieDaten2.Add("Negativ", 10);
-
-            _pieConfig2 = new PieConfig
-            {
-                Options = new PieOptions
-                {
-                    Responsive = true,
-                    Title = new OptionsTitle
-                    {
-                        Display = false,
-                        //Text = "ChartJs.Blazor Pie Chart"
-                    }
-                }
-            };
-
-            PieChart(_pieConfig2, pieDaten2);
-            //GetPieChart(_pieConfig2, "Positiv", "Negativ", 25, 25);
+            Daily();
 
             status = true;
         }
@@ -474,11 +439,12 @@
             if (ehrDaten.ContainsKey(test.PatientID))
             {
                 ehrDaten.Remove(test.PatientID);
-                ehrDaten.Add(test.PatientID, test.Zeitpunkt_des_Probeneingangs.ToString("dd MMMM yyyy"));
+                //ehrDaten.Add(test.PatientID, test.Zeitpunkt_des_Probeneingangs.ToString("dd MMMM yyyy"));
+                ehrDaten.Add(test.PatientID, test.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"));
             }
             else
             {
-                ehrDaten.Add(test.PatientID, test.Zeitpunkt_des_Probeneingangs.ToString("dd MMMM yyyy"));
+                ehrDaten.Add(test.PatientID, test.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"));
             }
         }
 
@@ -502,7 +468,6 @@
         return sortedDict;
     }
 
-
     private void LineChart(Dictionary<string, int> sortDictPositiv, Dictionary<string, int> sortDictNegativ)
     {
         _config = new LineConfig
@@ -512,7 +477,7 @@
                 Title = new OptionsTitle
                 {
                     Display = true,
-                    Text = "Anzahl der Durchgeführte Tests"
+                    Text = "Entwicklung der Durchgeführte Tests"
                 },
                 Tooltips = new Tooltips
                 {
@@ -527,7 +492,7 @@
                 Scales = new Scales
                 {
                     XAxes = new List<CartesianAxis>
-        {
+    {
                             new CategoryAxis
                             {
                                  ScaleLabel = new ScaleLabel
@@ -537,7 +502,7 @@
                             }
                         },
                     YAxes = new List<CartesianAxis>
-         {
+     {
                             new LinearCartesianAxis
                             {
                                 Ticks = new LinearCartesianTicks
@@ -555,12 +520,6 @@
             _config.Data.Labels.Add(datum);
         }
 
-        //foreach (string datum in sortDictPositiv.Keys)
-        //{
-        //    _config.Data.Labels.Add(datum);
-        //}
-
-
         IDataset<int> posivtivDataset = new LineDataset<int>(sortDictPositiv.Values)
         {
             Label = "Positive Tests",
@@ -572,52 +531,137 @@
         IDataset<int> negativDataset = new LineDataset<int>(sortDictNegativ.Values)
         {
             Label = "Negative Tests",
-            BackgroundColor = "",
+            BackgroundColor = "#14477b",
             BorderColor = "#14477b",
             Fill = FillingMode.Disabled
         };
 
-        //_config.Data.Datasets.Add(negativDataset);
-
         _config.Data.Datasets.Add(posivtivDataset);
-
+        _config.Data.Datasets.Add(negativDataset);
     }
 
 
     private void PieChart(PieConfig _pieConfig, Dictionary<string, int> pieDaten)
     {
-        //_pieConfig = new PieConfig
-        //{
-        //    Options = new PieOptions
-        //    {
-        //        Responsive = true,
-        //        Title = new OptionsTitle
-        //        {
-        //            Display = false,
-        //            Text = "ChartJs.Blazor Pie Chart"
-        //        }
-        //    }
-        //};
-
-        foreach (string color in pieDaten.Keys)
+        foreach (string data in pieDaten.Keys)
         {
-            _pieConfig.Data.Labels.Add(color);
+            _pieConfig.Data.Labels.Add(data);
         }
 
         PieDataset<int> dataset = new PieDataset<int>(pieDaten.Values)
         {
             BackgroundColor = new[]
             {
-                ColorUtil.ColorHexString(180, 31, 42), // Slice 1 aka "Red"
-                //ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
-                ColorUtil.ColorHexString(20, 54, 123), // Slice 3 aka "Green"
-                //ColorUtil.ColorHexString(54, 162, 235), // Slice 4 aka "Blue"
+                ColorUtil.ColorHexString(180, 31, 42), //"Red" 
+                ColorUtil.ColorHexString(20, 54, 123), //"Blue"   
             }
         };
-
 
         _pieConfig.Data.Datasets.Add(dataset);
     }
 
 
+    private List<CountDataModel> DailyData(List<CountDataModel> patListe, DateTime datum)
+    {
+
+        List<CountDataModel> patHeute = new();
+        if (patListe != null)
+        {
+            foreach (var pat in patListe)
+            {
+                if (pat.Zeitpunkt_des_Probeneingangs.Date == datum)
+                {
+                    patHeute.Add(pat);
+                }
+            }
+            return patHeute;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private void Daily()
+    {
+        posHeute = DailyData(allPositivPat, DateTime.Now.Date);
+        neuefaelle = posHeute.Count();
+
+        negHeute = DailyData(allNegativPat, DateTime.Now.Date);
+        posGestern = DailyData(allPositivPat, DateTime.Now.AddDays(-1).Date);
+
+        if (negHeute.Count() != 0)
+        {
+            foreach (var item in negHeute)
+            {
+                if (posGestern.Contains(item))
+                {
+                    genesenHeute.Add(item);
+                }
+            }
+
+            genesen = genesenHeute.Count();
+        }
+        else
+        {
+            genesen = 0;
+        }
+
+
+        foreach (var item in allPositivPat)
+        {
+            patStationary = dataService.StayFromCase(item.PatientID, item.Fallkennung);
+            if (patStationary != null)
+            {
+                foreach (var pat in patStationary)
+                {
+                    //TODOS Bedinugung anpassen 
+                    if (pat.Datum_Uhrzeit_der_Entlassung.GetHashCode() != 0)
+                    {
+                        aktivHeute.Add(pat);
+                    }
+                }
+            }
+        }
+        var SortedList = aktivHeute.GroupBy(o => o.Station).ToList();
+
+        //TODO: SortedList Elemente anpassen
+        pieDaten = new();
+        pieDaten.Add(SortedList.ElementAt(1).Key, SortedList.ElementAt(0).Count());
+        pieDaten.Add(SortedList.ElementAt(0).Key, SortedList.ElementAt(1).Count());
+        _pieConfig1 = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = false,
+                    Text = "ChartJs.Blazor Pie Chart"
+                }
+            }
+        };
+        PieChart(_pieConfig1, pieDaten);
+
+
+        pieDaten2 = new();
+        pieDaten2.Add("Positiv", allPositivTest.Count());
+        pieDaten2.Add("Negativ", allNegativTest.Count());
+        _pieConfig2 = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = false
+                }
+            }
+        };
+        PieChart(_pieConfig2, pieDaten2);
+
+        gesamteTest = allPositivTest.Count() + allNegativTest.Count();
+
+        aktivefaelle = aktivHeute.Count();
+    }
 }
