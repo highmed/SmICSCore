@@ -22,28 +22,42 @@ namespace SmICSCoreLib.AQL.PatientInformation.Symptome
         {
             List<SymptomModel> symptomList = new List<SymptomModel>();
 
-            List<SymptomModel> symptomList_VS = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_VS(parameter));
-
-            if (symptomList_VS != null)
+            try
             {
-                symptomList = symptomList_VS;
-            }
+                List<SymptomModel> symptomList_VS = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_VS(parameter));
 
-            List<SymptomModel> symptomList_AS = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_AS(parameter));
+                if (symptomList_VS != null)
+                {
+                    symptomList = symptomList_VS;
+                }
 
-            if (symptomList_AS != null)
+                List<SymptomModel> symptomList_AS = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_AS(parameter));
+
+                if (symptomList_AS != null)
+                {
+                    symptomList = symptomList.Concat(symptomList_AS).ToList();
+                }
+
+                List<SymptomModel> symptomList_US = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_US(parameter));
+
+                if (symptomList_US != null)
+                {
+                    symptomList = symptomList.Concat(symptomList_US).ToList();
+                }
+
+                _logger.LogDebug("Information found.");
+            } 
+            catch (Exception e)
             {
-                symptomList = symptomList.Concat(symptomList_AS).ToList();
-            }
-
-            List<SymptomModel> symptomList_US = _restData.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_US(parameter));
-
-            if (symptomList_US != null)
+                _logger.LogError(e, "This Information could not be found.");
+            } 
+            finally
             {
-                symptomList = symptomList.Concat(symptomList_US).ToList();
+                _logger.LogDebug("AQL query worked.");
             }
 
             return symptomList;
+
         }
 
         public List<SymptomModel> ProcessNoParam()
