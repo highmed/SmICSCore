@@ -39,10 +39,7 @@ namespace SmICSWebApp
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseSerilog((hostingContext, loggerConfig) =>
-                    loggerConfig.ReadFrom
-                    .Configuration(hostingContext.Configuration)
-                )
+                .UseSerilog()
                 //.UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

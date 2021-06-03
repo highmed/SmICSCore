@@ -45,16 +45,12 @@ namespace SmICSCoreLib.AQL.PatientInformation.Symptome
                     symptomList = symptomList.Concat(symptomList_US).ToList();
                 }
 
-                _logger.LogDebug("Information found.");
+                _logger.LogInformation("Information found.");
             } 
             catch (Exception e)
             {
                 _logger.LogError(e, "This Information could not be found.");
             } 
-            finally
-            {
-                _logger.LogDebug("AQL query worked.");
-            }
 
             return symptomList;
 
