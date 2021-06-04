@@ -257,10 +257,10 @@ namespace SmICSCoreLib.AQL
             return new AQLQuery("PatientSymptom_VS", $@"SELECT e/ehr_id/value as PatientenID,
                                 c/context/start_time/value as BefundDatum,
                                 a/data[at0190]/events[at0191]/data[at0192]/items[at0001]/value/value as NameDesSymptoms, 
-                                a/data[at0190]/events[at0191]/data[at0192/items[at0151]/value/value as Lokalisation, 
-                                a/ data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value as Beginn, 
-                                a/ data[at0190]/events[at0191]/data[at0192]/items[at0021]/value/value as Schweregrad, 
-                                a/ data[at0190]/events[at0191]/data[at0192]/items[at0161] as Rueckgang 
+                                a/data[at0190]/events[at0191]/data[at0192]/items[at0151]/value/value as Lokalisation, 
+                                a/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value as Beginn, 
+                                a/data[at0190]/events[at0191]/data[at0192]/items[at0021]/value/value as Schweregrad, 
+                                a/data[at0190]/events[at0191]/data[at0192]/items[at0161]/value/value as Rueckgang 
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c 
                                 CONTAINS OBSERVATION a[openEHR-EHR-OBSERVATION.symptom_sign.v0] 
@@ -271,7 +271,7 @@ namespace SmICSCoreLib.AQL
             return new AQLQuery("PatientSymptom_AS", $@"SELECT e/ehr_id/value as PatientenID,
                                 c/context/start_time/value as BefundDatum,
                                 a/data[at0001]/items[at0002]/value/value as AusschlussAussage, 
-                                a/ data[at0001]/items[at0003]/value/value as Diagnose 
+                                a/data[at0001]/items[at0003]/value/value as Diagnose 
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c 
                                 CONTAINS EVALUATION a[openEHR-EHR-EVALUATION.exclusion_specific.v1] 
@@ -283,7 +283,7 @@ namespace SmICSCoreLib.AQL
             return new AQLQuery("PatientSymptom_US", $@"SELECT e/ehr_id/value as PatientenID,
                                 c/context/start_time/value as BefundDatum,
                                 a/data[at0001]/items[at0002]/value/value as UnbekanntesSymptom, 
-                                a/ data[at0001]/items[at0005]/value/value as AussageFehlendeInfo 
+                                a/data[at0001]/items[at0005]/value/value as AussageFehlendeInfo 
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c 
                                 CONTAINS EVALUATION a[openEHR-EHR-EVALUATION.absence.v2] 
@@ -415,13 +415,12 @@ namespace SmICSCoreLib.AQL
         {
             return new AQLQuery("PatientVaccination", $@"SELECT e/ehr_id/value as PatientID,
                                 c/context/start_time/value as DokumentationsID,
-                                a/description[at0017]/items[at0020]/value as Impfstoff, 
-                                x/items[at0164]/value as Dosierungsreihenfolge, 
-                                x/items[at0144]/value as Dosiermenge, 
-                                a/description[at0017]/items[at0021]/value as Impfung_gegen 
+                                a/description[at0017]/items[at0020]/value/value as Impfstoff, 
+                                x/items[at0164]/value/magnitude as Dosierungsreihenfolge, 
+                                x/items[at0144]/value/magnitude as Dosiermenge, 
+                                a/description[at0017]/items[at0021]/value/value as Impfung_gegen 
                                 FROM EHR e 
-                                CONTAINS COMPOSITION c 
-                                CONTAINS COMPOSITION s[openEHR-EHR-COMPOSITION.registereintrag.v1] 
+                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.registereintrag.v1] 
                                 CONTAINS ACTION a[openEHR-EHR-ACTION.medication.v1] 
                                 CONTAINS (CLUSTER x[openEHR-EHR-CLUSTER.dosage.v1]) 
                                 WHERE c/archetype_details/template_id='Impfstatus' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
