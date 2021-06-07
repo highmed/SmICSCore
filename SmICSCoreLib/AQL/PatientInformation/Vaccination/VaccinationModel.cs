@@ -18,7 +18,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Vaccination
         [JsonProperty(PropertyName = "Dosiermenge")]
         public string Dosiermenge { get; set; }
         [JsonProperty(PropertyName = "Impfung gegen")]
-        public string Impfung_gegen { get; set; }
+        public string ImpfungGegen { get; set; }
         [JsonProperty(PropertyName = "Aussage wegen Abwesenheit")]
         public string Abwesendheit { get; set; }
 

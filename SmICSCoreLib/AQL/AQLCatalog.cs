@@ -16,7 +16,7 @@ namespace SmICSCoreLib.AQL
         private AQLCatalog() { }        
         public static AQLQuery GetEHRID(string subjectID)
         {
-            return new AQLQuery("GetEHRID",$"SELECT DISTINCT e/ehr_id/value as PatientID FROM EHR e CONTAINS COMPOSITION c WHERE e/ehr_status/subject/external_ref/id/value='{subjectID}' and e/ehr_status/subject/external_ref/namespace='SmICSTests'");
+            return new AQLQuery("GetEHRID",$"SELECT DISTINCT e/ehr_id/value as ID FROM EHR e CONTAINS COMPOSITION c WHERE e/ehr_status/subject/external_ref/id/value='{subjectID}'");
         }
         public static AQLQuery ContactPatientWards(ContactParameter parameter)
         {
@@ -413,12 +413,12 @@ namespace SmICSCoreLib.AQL
 
         public static AQLQuery PatientVaccination(PatientListParameter patientList)
         {
-            return new AQLQuery("PatientVaccination", $@"SELECT e/ehr_id/value as PatientID,
+            return new AQLQuery("PatientVaccination", $@"SELECT e/ehr_id/value as PatientenID,
                                 c/context/start_time/value as DokumentationsID,
                                 a/description[at0017]/items[at0020]/value/value as Impfstoff, 
                                 x/items[at0164]/value/magnitude as Dosierungsreihenfolge, 
                                 x/items[at0144]/value/magnitude as Dosiermenge, 
-                                a/description[at0017]/items[at0021]/value/value as Impfung_gegen 
+                                a/description[at0017]/items[at0021]/value/value as ImpfungGegen 
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.registereintrag.v1] 
                                 CONTAINS ACTION a[openEHR-EHR-ACTION.medication.v1] 

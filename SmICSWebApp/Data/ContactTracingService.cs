@@ -92,21 +92,14 @@ namespace SmICSWebApp.Data
 
             if (ehr_id == null)
             {
-                string ehr_status = GetLastPatientStatus(_restData);
-                System.Diagnostics.Debug.WriteLine(ehr_status);
-                if (ehr_status != null)
-                {
-                    string ehr_statusNr = ehr_status.Remove(0, 6);
-                    System.Diagnostics.Debug.WriteLine(ehr_statusNr);
-                    HttpResponseMessage result = _restData.CreateEhrIDWithStatus("SmICSTest", "Patient" + ehr_statusNr + 1).Result;
+                    HttpResponseMessage result = _restData.CreateEhrIDWithStatus("SmICSTest", subjectID).Result;
                     ehr_id = result.Headers.ETag.ToString();
                     System.Diagnostics.Debug.WriteLine(ehr_id);
-                }
-                else
-                {
-                    throw new Exception($"Failed to POST data");
-                }
-                
+                  
+            }
+            else
+            {
+                throw new Exception($"Failed to POST data");
             }
 
             HttpResponseMessage responseMessage = _restData.CreateComposition(ehr_id, writeResult).Result;
@@ -123,19 +116,13 @@ namespace SmICSWebApp.Data
         private string ExistsSubject(IRestDataAccess _data, string subjectID)
         {
             List<Employee> subject = _data.AQLQuery<Employee>(AQLCatalog.GetEHRID(subjectID));
-            return subject != null ? subject[0].EmployeeID : null;
-        }
-
-        private string GetLastPatientStatus(IRestDataAccess _data)
-        {
-            List<Employee> patient = _data.AQLQuery<Employee>(AQLCatalog.GetLastEHRStatus());
-            return patient != null ? patient[0].EmployeeStatus : null;
+            return subject != null ? subject[0].ID : null;
         }
 
         private class Employee
         {
-            public string EmployeeID { get; set; }
-            public string EmployeeStatus { get; set; }
+            public string ID { get; set; }
+            public string Status { get; set; }
         }
     }
     
