@@ -14,9 +14,11 @@ namespace SmICSWebApp.Data
     public class ContactTracingService
     {
         private IRestDataAccess _restData;
-        public ContactTracingService(IRestDataAccess restData)
+        private ILogger<ContactTracingFactory> _logger;
+        public ContactTracingService(IRestDataAccess restData, ILogger<ContactTracingFactory> logger)
         {
             _restData = restData;
+            _logger = logger;
         }
         public void ContactTracingDataStorage(JObject createEntry, string ehr_id)
         {
@@ -68,10 +70,9 @@ namespace SmICSWebApp.Data
                         jobj["content"][0]["description"]["items"][7]["value"]["value"] = JObject.Parse(createEntry.ToString())["kommentar"];
 
                         writeResult = jobj.ToString();
-                        //Console.WriteLine(writeResult);
 
                     }
-                    //System.Diagnostics.Debug.WriteLine(readResult);
+
                     File.WriteAllText(filepath, writeResult);
 
                     SaveComposition(ehr_id, writeResult);
@@ -88,13 +89,11 @@ namespace SmICSWebApp.Data
         public void SaveComposition(string subjectID, string writeResult)
         {
             string ehr_id = ExistsSubject(_restData, subjectID);
-            System.Diagnostics.Debug.WriteLine(ehr_id);
 
             if (ehr_id == null)
             {
                     HttpResponseMessage result = _restData.CreateEhrIDWithStatus("SmICSTest", subjectID).Result;
                     ehr_id = result.Headers.ETag.ToString();
-                    System.Diagnostics.Debug.WriteLine(ehr_id);
                   
             }
             else
@@ -104,13 +103,18 @@ namespace SmICSWebApp.Data
 
             HttpResponseMessage responseMessage = _restData.CreateComposition(ehr_id, writeResult).Result;
             System.Diagnostics.Debug.WriteLine(responseMessage);
+
             if (responseMessage.StatusCode != System.Net.HttpStatusCode.Created)
             {
                 string returnValue = responseMessage.Content.ReadAsStringAsync().Result;
                 throw new Exception($"Failed to POST data: ({responseMessage.StatusCode}): {returnValue}");
             }
             else
-                throw new Exception($"Failed to POST data");
+            {
+                string returnValue = responseMessage.Content.ReadAsStringAsync().Result;
+                _logger.LogInformation($"Succeded to POST data: ({responseMessage.StatusCode}): {returnValue}");
+            }
+                
         }
 
         private string ExistsSubject(IRestDataAccess _data, string subjectID)
