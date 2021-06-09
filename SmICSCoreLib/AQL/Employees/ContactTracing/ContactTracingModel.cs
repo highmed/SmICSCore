@@ -12,8 +12,7 @@ namespace SmICSCoreLib.AQL.Employees.ContactTracing
         [Required]
         public string bericht_id { get; set; }
         [JsonProperty(PropertyName = "dokumentations_id")]
-        [Required]
-        public DateTime dokumentations_id { get; set; }
+        public string dokumentations_id { get; set; }
         [JsonProperty(PropertyName = "event_kennung")]
         [Required]
         public string event_kennung { get; set; }

@@ -15,6 +15,7 @@ namespace SmICSWebApp.Data
     {
         private IRestDataAccess _restData;
         private ILogger<ContactTracingFactory> _logger;
+
         public ContactTracingService(IRestDataAccess restData, ILogger<ContactTracingFactory> logger)
         {
             _restData = restData;
@@ -22,60 +23,136 @@ namespace SmICSWebApp.Data
         }
         public void ContactTracingDataStorage(JObject createEntry, string ehr_id)
         {
+            string composer = "SmICS";
             try
             {
                 if (createEntry != null)
                 {
-
-                    string filepath = @"../SmICSWebApp/Data/FormTemplates/Bericht_zur_Kontaktverfolgung.json";
-                    string readResult = string.Empty;
-                    string writeResult = string.Empty;
-                    using (StreamReader r = new StreamReader(filepath))
+                    string base_compsition = "{\"_type\":\"COMPOSITION\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Bericht zur Kontaktverfolgung\"}";
+                    string base_uid = ",\"uid\":{\"_type\":\"OBJECT_VERSION_ID\",\"value\":\"fe129559-0aa8-4c7c-b348-a037dc0f88ef::Infektionskontrolle::1\"}";
+                    string base_archetype_details = ",\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-COMPOSITION.report.v1\"},\"template_id\":{\"value\":\"Bericht zur Kontaktverfolgung\"},\"rm_version\":\"1.0.4\"}";
+                    string base_archetype_node_id = ",\"archetype_node_id\":\"openEHR-EHR-COMPOSITION.report.v1\"";
+                    string base_language = ",\"language\":{\"terminology_id\":{\"value\":\"ISO_639-1\"},\"code_string\":\"de\"}";
+                    string base_territory = ",\"territory\":{\"terminology_id\":{\"value\":\"ISO_3166-1\"},\"code_string\":\"DE\"}";
+                    string base_category = ",\"category\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"event\",\"defining_code\":{\"terminology_id\":{\"value\":\"openehr\"},\"code_string\":\"433\"}}";
+                    string base_composer = ",\"composer\":{\"_type\":\"PARTY_IDENTIFIED\",\"name\":\"" + composer + "\"}";
+                    string base_context = ",\"context\":{\"_type\":\"EVENT_CONTEXT\",\"start_time\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["dokumentations_id"] + "\"}";
+                    string base_setting = ",\"setting\":{\"_type\":\"DV_CODED_TEXT\",\"vaue\":\"other care\",\"definig_code\":{\"terminology_id\":{\"value\":\"openehr\"},\"code_string\":\"238\"}}";
+                    string base_other_context = ",\"other_context\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0001\",\"items\":[";
+                    string base_bericht_id = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Bericht ID\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["bericht_id"] + "\"}}";
+                    string base_event_cluster = ",{\"_type\":\"CLUSTER\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Eventsummary\"},\"archetype_details\":{\"archetype_id\":\"value\":\"openEHR-EHR-CLUSTER.eventsummary.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-CLUSTER.eventsummary.v0\",\"items\":[";
+                    string base_event_kennung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Event-Kennung\"},\"archetype_node_id\":\"at0001\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["event_kennung"] + "\"}}";
+                    string base_event_art = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Event-Art\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["event_art"] + "\"}}";
+                    string base_bet_person_cluster = ",{\"_type\":\"CLUSTER\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Beteiligte Personen\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"at0007\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"at0007\",\"items\":[";
+                    string base_art_d_person_1 = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Art der Person\"},\"archetype_node_id\":\"at0011\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["art_der_person_1"] + "\"}}";
+                    string base_art_d_person_1_ID = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"ID der Person\"},\"archetype_node_id\":\"at0010\",\"value\":{\"_type\":\"DV_IDENTIFIER\",\"id\":\"" + JObject.Parse(createEntry.ToString())["art_der_person_1_ID"] + "\"}}]}";
+                    string base_art_d_person_2 = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Art der Person\"},\"archetype_node_id\":\"at0011\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["art_der_person_2"] + "\"}}";
+                    string base_art_d_person_2_ID = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"ID der Person\"},\"archetype_node_id\":\"at0010\",\"value\":{\"_type\":\"DV_IDENTIFIER\",\"id\":\"" + JObject.Parse(createEntry.ToString())["art_der_person_2_ID"] + "\"}}]}";
+                    string base_event_kategorie = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Event-Kategorie\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["event_kategorie"] + "\"}}";
+                    string base_event_kommentar = (string)JObject.Parse(createEntry.ToString())["kontakt_kommentar"];
+                    if (base_event_kommentar != null) 
                     {
-                        var json = r.ReadToEnd();
-                        var jobj = JObject.Parse(json);
-                        readResult = jobj.ToString();
-
-                        jobj["context"]["start_time"]["value"] = JObject.Parse(createEntry.ToString())["dokumentations_id"];
-                        jobj["context"]["other_context"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["bericht_id"];
-                        jobj["context"]["other_context"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["bericht_id"];
-                        jobj["context"]["other_context"]["items"][1]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["event_kennung"];
-                        jobj["context"]["other_context"]["items"][1]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["event_art"];
-                        jobj["context"]["other_context"]["items"][1]["items"][2]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["art_der_person_1"];
-                        jobj["context"]["other_context"]["items"][1]["items"][2]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["art_der_person_1_ID"];
-                        jobj["context"]["other_context"]["items"][1]["items"][3]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["art_der_person_2"];
-                        jobj["context"]["other_context"]["items"][1]["items"][3]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["art_der_person_2_ID"];
-                        jobj["context"]["other_context"]["items"][1]["items"][4]["value"]["value"] = JObject.Parse(createEntry.ToString())["event_kategorie"];
-                        jobj["context"]["other_context"]["items"][1]["items"][5]["value"]["value"] = JObject.Parse(createEntry.ToString())["kontakt_kommentar"];
-                        jobj["content"][0]["description"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["beschreibung"];
-                        jobj["content"][0]["description"]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["beginn"];
-                        jobj["content"][0]["description"]["items"][2]["value"]["value"] = JObject.Parse(createEntry.ToString())["ende"];
-                        jobj["content"][0]["description"]["items"][3]["value"]["value"] = JObject.Parse(createEntry.ToString())["ort"];
-                        jobj["content"][0]["description"]["items"][4]["value"]["value"] = JObject.Parse(createEntry.ToString())["gesamtdauer"];
-                        jobj["content"][0]["description"]["items"][5]["value"]["value"] = JObject.Parse(createEntry.ToString())["abstand"];
-                        jobj["content"][0]["description"]["items"][6]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["schutzkleidung"];
-                        jobj["content"][0]["description"]["items"][6]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["person"];
-
-                        string person = (string)JObject.Parse(createEntry.ToString())["person"];
-
-                        if (person != "Indexperson")
-                        {
-                            jobj["content"][0]["description"]["items"][6]["items"][1]["value"]["defining_code"]["code_string"] = "at0004";
-                        }
-                        else
-                        {
-                            jobj["content"][0]["description"]["items"][6]["items"][1]["value"]["defining_code"]["code_string"] = "at0003";
-                        }
-
-                        jobj["content"][0]["description"]["items"][7]["value"]["value"] = JObject.Parse(createEntry.ToString())["kommentar"];
-
-                        writeResult = jobj.ToString();
-
+                        base_event_kommentar = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kommentar\"},\"archetype_node_id\":\"at0006\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["kontakt_kommentar"] + "\"}}";
                     }
+                    string base_close_other_context = "]}]}}";
+                    string base_content = ",\"content\":[{\"_type\":\"ACTION\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kontakt\"},\"archetype_node_id\":{\"archetype_id\":{\"value\":\"openEHR-EHR-ACTION.contact.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-ACTION.contact.v0\",\"language\":{\"terminology_id\":{\"value\":\"ISO_639-1\"},\"code_string\":\"de\"},\"encoding\":{\"terminology_id\":{\"value\":\"IANA_character-sets\"},\"code_string\":\"UTF-8\"},\"subject\":{\"_type\":\"PARTY_SELF\"},\"time\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["dokumentations_id"] + "\"},\"ism_transition\":{\"current_state\":{\"value\":\"planned\",\"defining_code\":{\"terminilogy_id\":{\"value\":\"openehr\"},\"code_string\":\"526\"}}},\"description\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0001\",\"items\":[";
+                    string base_beschreibung = (string)JObject.Parse(createEntry.ToString())["beschreibung"];
+                    if (base_beschreibung != null)
+                    {
+                        base_beschreibung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Beschreibung\"},\"archetype_node_id\":\"at0009\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["beschreibung"] + "\"}},";
+                    }
+                    string base_beginn = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Beginn\"},\"archetype_node_id\":\"at0006\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["beginn"] + "\"}}";
+                    string base_ende = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Ende\"},\"archetype_node_id\":\"at0016\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["ende"] + "\"}}";
+                    string base_ort = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Ort\"},\"archetype_node_id\":\"at0017\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["ort"] + "\"}}";
+                    string base_gesamtdauer = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Gesamtdauer\"},\"archetype_node_id\":\"at0003\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["gesamtdauer"] + "\"}}";
+                    string base_abstand = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Abstand\"},\"archetype_node_id\":\"at0008\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["abstand"] + "\"}}";
+                    string base_kleidung_cluster = ",{\"_type\":\"CLUSTER\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Schutzkleidung\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-CLUSTER.protective_clothing_.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-CLUSTER.protective_clothing_.v0\",\"items\":[";
+                    string base_schutzkleidung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Schutzkleidung\"},\"archetype_node_id\":\"at0001\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["schutzkleidung"] + "\"}}";
+                    string base_person = (string)JObject.Parse(createEntry.ToString())["person"];
+                    if (base_person != "Indexperson")
+                    {
+                        base_person = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["person"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0004\"}}}]}";
+                    }else
+                    {
+                        base_person = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["person"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0003\"}}}]}";
+                    }
+                    string base_kommentar = (string)JObject.Parse(createEntry.ToString())["kommentar"];
+                    if (base_kommentar != null)
+                    {
+                        base_kommentar = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kommentar\"},\"archetype_node_id\":\"at0007\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["kommentar"] + "\"}}";
+                    }
+                    string base_composition_ende = "]}}]}";
 
-                    File.WriteAllText(filepath, writeResult);
+                    string json_all = base_compsition + base_uid + base_archetype_details + base_archetype_node_id + base_language + base_territory + 
+                        base_category + base_composer + base_setting + base_other_context + base_bericht_id + base_event_cluster + base_event_kennung + 
+                        base_event_art + base_bet_person_cluster + base_art_d_person_1 + base_art_d_person_1_ID + base_bet_person_cluster + base_art_d_person_2 +
+                        base_art_d_person_2_ID + base_event_kategorie + base_event_kommentar + base_close_other_context + base_content + base_beschreibung +
+                        base_beginn + base_ende + base_ort + base_gesamtdauer + base_abstand + base_kleidung_cluster + base_schutzkleidung + base_person + 
+                        base_kommentar + base_composition_ende;
 
-                    SaveComposition(ehr_id, writeResult);
+                    SaveComposition(ehr_id, json_all);
+
+                    //string filepath = @"../SmICSWebApp/Data/FormTemplates/Bericht_zur_Kontaktverfolgung.json";
+                    //string readResult = string.Empty;
+                    //string writeResult = string.Empty;
+                    //using (StreamReader r = new StreamReader(filepath))
+                    //{
+                    //    var json = r.ReadToEnd();
+                    //    var jobj = JObject.Parse(json);
+                    //    readResult = jobj.ToString();
+                    //    //var composer = "SmICS";
+
+                    //    jobj["composer"]["name"] = composer;
+
+                    //    jobj["context"]["start_time"]["value"] = JObject.Parse(createEntry.ToString())["dokumentations_id"];
+                    //    jobj["context"]["other_context"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["bericht_id"];
+                    //    jobj["context"]["other_context"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["bericht_id"];
+                    //    jobj["context"]["other_context"]["items"][1]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["event_kennung"];
+                    //    jobj["context"]["other_context"]["items"][1]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["event_art"];
+                    //    jobj["context"]["other_context"]["items"][1]["items"][2]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["art_der_person_1"];
+                    //    jobj["context"]["other_context"]["items"][1]["items"][2]["items"][1]["value"]["id"] = JObject.Parse(createEntry.ToString())["art_der_person_1_ID"];
+                    //    jobj["context"]["other_context"]["items"][1]["items"][3]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["art_der_person_2"];
+                    //    jobj["context"]["other_context"]["items"][1]["items"][3]["items"][1]["value"]["id"] = JObject.Parse(createEntry.ToString())["art_der_person_2_ID"];
+                    //    jobj["context"]["other_context"]["items"][1]["items"][4]["value"]["value"] = JObject.Parse(createEntry.ToString())["event_kategorie"];
+                    //    jobj["context"]["other_context"]["items"][1]["items"][5]["value"]["value"] = JObject.Parse(createEntry.ToString())["kontakt_kommentar"];
+                    //    jobj["content"][0]["description"]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["beschreibung"];
+                    //    jobj["content"][0]["description"]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["beginn"];
+                    //    jobj["content"][0]["description"]["items"][2]["value"]["value"] = JObject.Parse(createEntry.ToString())["ende"];
+                    //    jobj["content"][0]["description"]["items"][3]["value"]["value"] = JObject.Parse(createEntry.ToString())["ort"];
+                    //    jobj["content"][0]["description"]["items"][4]["value"]["value"] = JObject.Parse(createEntry.ToString())["gesamtdauer"];
+                    //    jobj["content"][0]["description"]["items"][5]["value"]["value"] = JObject.Parse(createEntry.ToString())["abstand"];
+                    //    jobj["content"][0]["description"]["items"][6]["items"][0]["value"]["value"] = JObject.Parse(createEntry.ToString())["schutzkleidung"];
+                    //    jobj["content"][0]["description"]["items"][6]["items"][1]["value"]["value"] = JObject.Parse(createEntry.ToString())["person"];
+
+                    //    string person = (string)JObject.Parse(createEntry.ToString())["person"];
+
+                    //    if (person != "Indexperson")
+                    //    {
+                    //        jobj["content"][0]["description"]["items"][6]["items"][1]["value"]["defining_code"]["code_string"] = "at0004";
+                    //    }
+                    //    else
+                    //    {
+                    //        jobj["content"][0]["description"]["items"][6]["items"][1]["value"]["defining_code"]["code_string"] = "at0003";
+                    //    }
+
+                    //    jobj["content"][0]["description"]["items"][7]["value"]["value"] = JObject.Parse(createEntry.ToString())["kommentar"];
+
+                    //    writeResult = jobj.ToString();
+
+                    //    if (JObject.Parse(createEntry.ToString())["kontakt_kommentar"] == null)
+                    //    {
+                    //        writeResult.Remove(jobj["context"]["other_context"]["items"][1]["items"][5]);
+                    //    }
+                    //    else
+                    //    {
+
+                    //    }
+
+                    //}
+
+                    //File.WriteAllText(filepath, writeResult);
+
+                    //SaveComposition(ehr_id, writeResult);
                 }
 
             }

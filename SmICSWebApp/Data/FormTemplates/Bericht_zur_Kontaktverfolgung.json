@@ -42,13 +42,13 @@
   },
   "composer": {
     "_type": "PARTY_IDENTIFIED",
-    "name": "Alina"
+    "name": "SmICS"
   },
   "context": {
     "_type": "EVENT_CONTEXT",
     "start_time": {
       "_type": "DV_DATE_TIME",
-      "value": "2021-01-02T09:30:00Z"
+      "value": "2021-06-09T13:47:55"
     },
     "setting": {
       "_type": "DV_CODED_TEXT",
@@ -77,7 +77,7 @@
           "archetype_node_id": "at0002",
           "value": {
             "_type": "DV_TEXT",
-            "value": "1252536616"
+            "value": "346346664"
           }
         },
         {
@@ -103,7 +103,7 @@
               "archetype_node_id": "at0001",
               "value": {
                 "_type": "DV_TEXT",
-                "value": "2515163161616"
+                "value": "363463"
               }
             },
             {
@@ -141,7 +141,7 @@
                   "archetype_node_id": "at0011",
                   "value": {
                     "_type": "DV_TEXT",
-                    "value": "Indexperson"
+                    "value": "Kontaktperson"
                   }
                 },
                 {
@@ -181,7 +181,7 @@
                   "archetype_node_id": "at0011",
                   "value": {
                     "_type": "DV_TEXT",
-                    "value": "Kontaktperson"
+                    "value": "Indexperson"
                   }
                 },
                 {
@@ -288,7 +288,7 @@
             "archetype_node_id": "at0009",
             "value": {
               "_type": "DV_TEXT",
-              "value": null
+              "value": "da"
             }
           },
           {
@@ -300,7 +300,7 @@
             "archetype_node_id": "at0006",
             "value": {
               "_type": "DV_DATE_TIME",
-              "value": "2021-03-20T00:00:00"
+              "value": "2021-06-04T13:47"
             }
           },
           {
@@ -312,7 +312,7 @@
             "archetype_node_id": "at0016",
             "value": {
               "_type": "DV_DATE_TIME",
-              "value": "2021-04-03T00:00:00"
+              "value": "2021-06-05T13:47"
             }
           },
           {
@@ -324,7 +324,7 @@
             "archetype_node_id": "at0017",
             "value": {
               "_type": "DV_TEXT",
-              "value": "Außenbereich"
+              "value": "Innenraum"
             }
           },
           {
@@ -374,7 +374,7 @@
                 "archetype_node_id": "at0001",
                 "value": {
                   "_type": "DV_TEXT",
-                  "value": "Community- Maske"
+                  "value": "Keine Schutzkleidung"
                 }
               },
               {
