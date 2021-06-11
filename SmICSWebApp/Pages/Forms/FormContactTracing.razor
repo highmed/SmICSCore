@@ -245,7 +245,7 @@
 
         try
         {
-            contact_tracing.dokumentations_id = DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss");
+            //contact_tracing.dokumentations_id = DateTime.Now.ToString();
             JObject o = (JObject)JToken.FromObject(contact_tracing);
             disabled = true;
             messageStyles = "color:green";
