@@ -38,8 +38,8 @@ namespace SmICSWebApp.Data
                     var base_territory = ",\"territory\":{\"terminology_id\":{\"value\":\"ISO_3166-1\"},\"code_string\":\"DE\"}";
                     var base_category = ",\"category\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"event\",\"defining_code\":{\"terminology_id\":{\"value\":\"openehr\"},\"code_string\":\"433\"}}";
                     var base_composer = ",\"composer\":{\"_type\":\"PARTY_IDENTIFIED\",\"name\":\"" + composer + "\"}";
-                    var base_context = ",\"context\":{\"_type\":\"EVENT_CONTEXT\",\"start_time\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss") + "\"}}";
-                    var base_setting = ",\"setting\":{\"_type\":\"DV_CODED_TEXT\",\"vaue\":\"other care\",\"definig_code\":{\"terminology_id\":{\"value\":\"openehr\"},\"code_string\":\"238\"}}";
+                    var base_context = ",\"context\":{\"_type\":\"EVENT_CONTEXT\",\"start_time\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss") + "\"}";
+                    var base_setting = ",\"setting\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"other care\",\"defining_code\":{\"terminology_id\":{\"value\":\"openehr\"},\"code_string\":\"238\"}}";
                     var base_other_context = ",\"other_context\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0001\",\"items\":[";
                     var base_bericht_id = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Bericht ID\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["bericht_id"] + "\"}}";
                     var base_event_cluster = ",{\"_type\":\"CLUSTER\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Eventsummary\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-CLUSTER.eventsummary.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-CLUSTER.eventsummary.v0\",\"items\":[";
@@ -56,8 +56,8 @@ namespace SmICSWebApp.Data
                     {
                         base_event_kommentar = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kommentar\"},\"archetype_node_id\":\"at0006\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["kontakt_kommentar"] + "\"}}";
                     }
-                    var base_close_other_context = "]}]}";
-                    var base_content = ",\"content\":[{\"_type\":\"ACTION\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kontakt\"},\"archetype_node_id\":{\"archetype_id\":{\"value\":\"openEHR-EHR-ACTION.contact.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-ACTION.contact.v0\",\"language\":{\"terminology_id\":{\"value\":\"ISO_639-1\"},\"code_string\":\"de\"},\"encoding\":{\"terminology_id\":{\"value\":\"IANA_character-sets\"},\"code_string\":\"UTF-8\"},\"subject\":{\"_type\":\"PARTY_SELF\"},\"time\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss") + "\"},\"ism_transition\":{\"current_state\":{\"value\":\"planned\",\"defining_code\":{\"terminilogy_id\":{\"value\":\"openehr\"},\"code_string\":\"526\"}}},\"description\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0001\",\"items\":[";
+                    var base_close_other_context = "]}]}}";
+                    var base_content = ",\"content\":[{\"_type\":\"ACTION\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kontakt\"},\"archetype_node_id\":{\"archetype_id\":{\"value\":\"openEHR-EHR-ACTION.contact.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-ACTION.contact.v0\",\"language\":{\"terminology_id\":{\"value\":\"ISO_639-1\"},\"code_string\":\"de\"},\"encoding\":{\"terminology_id\":{\"value\":\"IANA_character-sets\"},\"code_string\":\"UTF-8\"},\"subject\":{\"_type\":\"PARTY_SELF\"},\"time\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss") + "\"},\"ism_transition\":{\"current_state\":{\"value\":\"planned\",\"defining_code\":{\"terminology_id\":{\"value\":\"openehr\"},\"code_string\":\"526\"}}},\"description\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0001\",\"items\":[";
                     var base_beschreibung = (string)JObject.Parse(createEntry.ToString())["beschreibung"];
                     if (base_beschreibung != null)
                     {
@@ -174,9 +174,9 @@ namespace SmICSWebApp.Data
 
             if (ehr_id == null)
             {
-                    HttpResponseMessage result = _restData.CreateEhrIDWithStatus("SmICSTest", subjectID).Result;
-                    ehr_id = result.Headers.ETag.ToString();
-                  
+                HttpResponseMessage result = _restData.CreateEhrIDWithStatus("SmICSTest", subjectID).Result;
+                ehr_id = (string)JsonConvert.DeserializeObject(result.Headers.ETag.Tag);
+
             }
             else
             {
