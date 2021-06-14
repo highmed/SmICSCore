@@ -15,6 +15,7 @@ using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.Patient_Stay.Count;
 using SmICSCoreLib.AQL.Patient_Stay.Cases;
 using SmICSCoreLib.AQL.Patient_Stay.WeekCase;
+using SmICSCoreLib.AQL.MiBi.WardOverview;
 
 namespace SmICS
 {
@@ -48,6 +49,8 @@ namespace SmICS
             services.AddTransient<ICountFactory, CountFactory>();
             services.AddTransient<ICaseFactory, CaseFactory>();
             services.AddTransient<IWeekCaseFactory, WeekCaseFactory>();
+
+            services.AddTransient<IWardOverviewFactory, WardOverviewFactory>();
 
             return services;
         }

@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using SmICSWebApp.Data;
 using Serilog;
+using MudBlazor.Services; 
 
 namespace SmICSWebApp
 {
@@ -31,7 +32,9 @@ namespace SmICSWebApp
             services.AddControllers().AddNewtonsoftJson();
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddMudServices();
             services.AddSmICSLibrary();
+            services.AddSingleton<MibiViewService>();
             services.AddSingleton<DataService>();
             services.AddSingleton<Symptom>();
 

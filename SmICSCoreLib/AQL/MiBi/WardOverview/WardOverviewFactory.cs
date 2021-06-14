@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace SmICSCoreLib.AQL.MiBi.WardOverview
 {
-    public class WardOverviewFactory
+    public class WardOverviewFactory : IWardOverviewFactory
     {
         private IRestDataAccess _rest;
         private IMibiPatientLaborDataFactory _mibiLab;
@@ -20,55 +20,78 @@ namespace SmICSCoreLib.AQL.MiBi.WardOverview
             _logger = logger;
             _rest = rest;
             _mibiLab = mibiLab;
-    }
+        }
 
-        public void Process(WardOverviewParameters parameters)
+        public List<WardOverviewModel> Process(WardOverviewParameters parameters)
         {
             List<Patient> patients = GetAllPatientsOnWardInTimeSpan(parameters);
             Dictionary<Patient, List<MibiLabDataModel>> labDataForPatients = GetAllLabResults(patients);
-            IsMibiLabDataNosokomial(labDataForPatients);
+            List<WardOverviewModel> wardOverview = GetWardOverwievInformation(parameters, labDataForPatients);
+            return wardOverview;
         }
 
-        private void IsMibiLabDataNosokomial(WardOverviewParameters parameters, Dictionary<Patient, List<MibiLabDataModel>> labDataForPatients)
+        private List<WardOverviewModel> GetWardOverwievInformation(WardOverviewParameters parameters, Dictionary<Patient, List<MibiLabDataModel>> labDataForPatients)
         {
-            WardOverviewModel wardOverview = new WardOverviewModel();
-            if(labDataForPatients == null)
+            List<WardOverviewModel> wardOverviews = new List<WardOverviewModel>();
+            if (labDataForPatients == null)
             {
-                return;
+                return null;
             }
-            foreach(Patient patient in labDataForPatients.Keys)
+            foreach (Patient patient in labDataForPatients.Keys)
             {
-                //labDataForPatients[patient].OrderBy(x => x.ZeitpunktProbenentnahme).Reverse();
-                MibiLabDataModel labDataWithinTime = labDataForPatients[patient].Where(x => x.ZeitpunktProbenentnahme >= parameters.Start && x.ZeitpunktProbenentnahme <= parameters.End && x.Befund).OrderBy(x => x.ZeitpunktProbenentnahme).FirstOrDefault() ?? null;
-                if(labDataWithinTime == null)
+                WardOverviewModel wardOverview = new WardOverviewModel();
+                MibiLabDataModel labDataWithinTime = labDataForPatients[patient].Where(x => x.Befund).OrderBy(x => x.ZeitpunktProbenentnahme).FirstOrDefault() ?? null;
+                EpisodeOfCareModel admission = getCurrentAdmission(labDataWithinTime, patient);
+                if (labDataWithinTime == null)
                 {
-                    //Schaue im er eventuell vorher und/oder woanders einen psoitiven Befund hat
+                    continue;
                 }
-                wardOverview.Nosokomial = IsNosokomial(labDataForPatients[patient], labDataWithinTime, patient);
+                Dictionary<string, bool> isNosokomailOrNewCase = IsNosokomialOrNewCase(labDataForPatients[patient], labDataWithinTime, patient, admission);
+                wardOverview.Nosokomial = isNosokomailOrNewCase["IsNosokomial"];
+                wardOverview.NewCase = isNosokomailOrNewCase["IsNewCase"];
                 wardOverview.PositivFinding = true;
-                
+                wardOverview.OnWard = IsResultFromParameterWard(labDataWithinTime, parameters, patient);
+                wardOverview.TestDate = labDataWithinTime.ZeitpunktProbenentnahme;
+                wardOverview.PatientID = patient.PatientID;
+                wardOverviews.Add(wardOverview);
+
             }
+            return wardOverviews;
         }
 
-        private bool IsNosokomial(List<MibiLabDataModel> mibiLabDataModels, MibiLabDataModel labDataWithinTime, Patient patient)
+        private bool IsResultFromParameterWard(MibiLabDataModel labDataWithinTime, WardOverviewParameters parameters, Patient patient)
         {
-            List<MibiLabDataModel> positivFindings = mibiLabDataModels.Where(x => x.Befund).ToList();
-            if(positivFindings == null)
+            PatientLocation location = _rest.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(labDataWithinTime.ZeitpunktProbenentnahme, patient.EHRID)).FirstOrDefault() ?? null;
+            if (location != null && parameters.Ward == location.Ward)
             {
-                return false;
-            }
-            MibiLabDataModel firstPositiv = positivFindings.OrderBy(x => x.ZeitpunktProbenentnahme).First();
-            if(firstPositiv == labDataWithinTime)
-            {
-                EpsiodeOfCareParameter episodeOfCare = new EpsiodeOfCareParameter() { PatientID = patient.EHRID, CaseID = labDataWithinTime.FallID };
-                EpisodeOfCareModel admission = _rest.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCare))[0];
-                TimeSpan diff = labDataWithinTime.ZeitpunktProbenentnahme.Subtract(admission.Beginn);
-                if(diff.TotalDays >= 3)
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
+        }
+
+        private EpisodeOfCareModel getCurrentAdmission(MibiLabDataModel labDataWithinTime, Patient patient)
+        {
+            EpsiodeOfCareParameter episodeOfCare = new EpsiodeOfCareParameter() { PatientID = patient.EHRID, CaseID = labDataWithinTime.FallID };
+            EpisodeOfCareModel admission = _rest.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCare))[0];
+            return admission;
+        }
+
+        private Dictionary<string, bool> IsNosokomialOrNewCase(List<MibiLabDataModel> mibiLabDataModels, MibiLabDataModel labDataWithinTime, Patient patient, EpisodeOfCareModel admission)
+        {
+            Dictionary<string, bool> dict = new Dictionary<string, bool> { { "IsNosokomial", false }, { "IsNewCase", false } };
+            List<MibiLabDataModel> positivFindings = mibiLabDataModels.Where(x => x.Befund).ToList();
+            MibiLabDataModel firstEverPositiv = positivFindings.OrderBy(x => x.ZeitpunktProbenentnahme).First();
+            MibiLabDataModel firstPositivThisStay = positivFindings.OrderBy(x => x.ZeitpunktProbenentnahme).Where(x => x.ZeitpunktProbenentnahme.Date >= admission.Beginn.Date).First();
+            if (firstEverPositiv == firstPositivThisStay)
+            {
+                dict["IsNewCase"] = true;
+                TimeSpan diff = labDataWithinTime.ZeitpunktProbenentnahme.Subtract(admission.Beginn);
+                if (diff.TotalDays >= 3)
+                {
+                    dict["IsNosokomial"] = true;
+                }
+            }
+            return dict;
         }
 
         private Dictionary<Patient, List<MibiLabDataModel>> GetAllLabResults(List<Patient> patients)
@@ -82,6 +105,7 @@ namespace SmICSCoreLib.AQL.MiBi.WardOverview
                     List<MibiLabDataModel> labData = _mibiLab.Process(patList);
                     labDataForPatients.Add(patient, labData);
                 }
+                return labDataForPatients;
             }
             return null;
         }
