@@ -127,6 +127,8 @@
 }
 
 #daily-row .card-body {
-    padding-left: 0.50rem;
-    padding-right: 0.50rem;
+ /*   padding-left: 0.50rem;
+    padding-right: 0.50rem;*/
+    padding-top: 10px;
+    padding-bottom: 10px;
 }

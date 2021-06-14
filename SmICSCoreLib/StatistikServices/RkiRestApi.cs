@@ -178,7 +178,6 @@ namespace SmICSCoreLib.StatistikServices
                                 attr.Todesfaelle = state.Features[0].Attributes.Todesfaelle.ToString("#,##");
                                 attr.Todesfaelle7BL = state.Features[0].Attributes.Death7_bl.ToString("0.##");
                                 attr.Inzidenz7Tage = (state.Features[0].Attributes.Faelle7BlPro100K).ToString("0.##").Replace(",", ".");
-                                bericht.BlStandAktuell = true;
                                 attr.Farbe = SeMapColor(attr.Inzidenz7Tage);
                                 District district = GetDistrictsByStateName(attr.Bundesland);
                                 if (district.Features != null && district.Features.Length != 0)
@@ -199,6 +198,7 @@ namespace SmICSCoreLib.StatistikServices
                                         landkreise.Add(landkreisObj);
                                     }
                                 }
+                                bericht.BlStandAktuell = true;
                             }
                         }
                         catch (Exception)
@@ -216,14 +216,22 @@ namespace SmICSCoreLib.StatistikServices
                     StateData stateData = GetStateData(0);
                     if (stateData != null)
                     {
-                        bericht.Fallzahl = stateData.DataFeature[0].DataAttributes.AnzFall.ToString("#,##");
-                        bericht.FallzahlVortag = stateData.DataFeature[0].DataAttributes.AnzFallNeu.ToString("#,##");
-                        bericht.Todesfaelle = stateData.DataFeature[0].DataAttributes.AnzTodesfall.ToString("#,##");
-                        bericht.TodesfaelleVortag = stateData.DataFeature[0].DataAttributes.AnzTodesfallNeu.ToString("#,##");
-                        bericht.Inzidenz7Tage = stateData.DataFeature[0].DataAttributes.Inz7T.ToString();
-                        bericht.Stand = DateTime.Now.Date.ToString("dd.MM.yyyy");
-                        bericht.RWert7Tage = GetRValue(2).Replace(",", ".");
-                        bericht.RWert7TageVortag = GetRValue(3).Replace(",", ".");
+                        try
+                        {
+                            bericht.Fallzahl = stateData.DataFeature[0].DataAttributes.AnzFall.ToString("#,##");
+                            bericht.FallzahlVortag = stateData.DataFeature[0].DataAttributes.AnzFallNeu.ToString("#,##");
+                            bericht.Todesfaelle = stateData.DataFeature[0].DataAttributes.AnzTodesfall.ToString("#,##");
+                            bericht.TodesfaelleVortag = stateData.DataFeature[0].DataAttributes.AnzTodesfallNeu.ToString("#,##");
+                            bericht.Inzidenz7Tage = stateData.DataFeature[0].DataAttributes.Inz7T.ToString();
+                            bericht.Stand = DateTime.Now.Date.ToString("dd.MM.yyyy");
+                            bericht.RWert7Tage = GetRValue(2).Replace(",", ".");
+                            bericht.RWert7TageVortag = GetRValue(3).Replace(",", ".");
+                        }
+                        catch (Exception)
+                        {
+                            bericht.StandAktuell = true;
+                            return bericht;
+                        }
                     }
 
                     String urlImpfung = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Impfquotenmonitoring.xlsx?__blob=publicationFile";
@@ -232,9 +240,9 @@ namespace SmICSCoreLib.StatistikServices
                     {
                         try
                         {
-                            bericht.GesamtImpfung = Convert.ToDouble(resultImpfung.Tables[1].Rows[21][2]).ToString("#,##");
-                            bericht.ErstImpfung = resultImpfung.Tables[1].Rows[21][5].ToString().Substring(0, 4).Replace(",", ".");
-                            bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[21][8].ToString().Substring(0, 4).Replace(",", ".");
+                            bericht.GesamtImpfung = Convert.ToDouble(resultImpfung.Tables[1].Rows[20][2]).ToString("#,##");
+                            bericht.ErstImpfung = resultImpfung.Tables[1].Rows[20][5].ToString().Substring(0, 4).Replace(",", ".");
+                            bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[20][9].ToString().Substring(0, 4).Replace(",", ".");
                             bericht.ImpfStatus = true;
                         }
                         catch (Exception)
@@ -248,6 +256,7 @@ namespace SmICSCoreLib.StatistikServices
                 }
                 catch (Exception)
                 {
+                    bericht.StandAktuell = false;
                     return null;
                 }
             }
@@ -268,7 +277,7 @@ namespace SmICSCoreLib.StatistikServices
 
             string filename = DateTime.Now.ToString("yyyy-MM-dd");
             string filePath = path + "/" + filename + ".json";
-            bool status = false; 
+            bool status = false;
             string url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile";
             if (!File.Exists(filePath))
             {

@@ -265,8 +265,8 @@
     private void GetDataForChart()
     {
 
-        rkiDatenBl = rkiRestApi.GetDatas("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 1, 366, 3, 2, 11);
-        rkiDatenLk = rkiRestApi.GetDatas("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 5, 172, 5, 4, 150);
+        rkiDatenBl = rkiRestApi.GetDatas("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 1, 366, 2, 2, 11);
+        rkiDatenLk = rkiRestApi.GetDatas("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 5, 172, 4, 4, 150);
 
         foreach (var itemBl in rkiDatenBl)
         {

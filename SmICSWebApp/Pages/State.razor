@@ -25,6 +25,11 @@
                     {
                         <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
                         <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+                        <div class="row" style=" display: inline-block;">
+                            <div class="row">
+                                <button class="btn btn-primary" @onclick="GetLastReport"> Daten von Vortag laden </button>
+                            </div>
+                        </div>
                     }
                 }
                 else
@@ -456,7 +461,12 @@
 
     private void SetRKIData()
     {
-        rkiRestApi.SerializeRkiData();
+
+        bool check = rkiRestApi.SerializeRkiData();
+        if (check == false)
+        {
+            status = false;
+        }
     }
 
     private void GetRKIData()
@@ -520,9 +530,23 @@
 
     private void GetLastReport()
     {
+        lastReport = rkiRestApi.DeserializeRkiData(datum.AddDays(-1));
         bundeslaender = lastReport.Bericht.Bundesland;
         blStandAktuell = lastReport.Bericht.BlStandAktuell;
         stand = lastReport.Bericht.Stand;
+
+        rWert7Tage = lastReport.Bericht.RWert7Tage;
+        inzidenz7Tage = lastReport.Bericht.Inzidenz7Tage;
+        fallzahl = lastReport.Bericht.Fallzahl;
+        fallzahlVortag = lastReport.Bericht.FallzahlVortag;
+        todesfaelle = lastReport.Bericht.Todesfaelle;
+        todesfaelleVortag = lastReport.Bericht.TodesfaelleVortag;
+        standAktuell = lastReport.Bericht.StandAktuell;
+        blStandAktuell = lastReport.Bericht.BlStandAktuell;
+        gesamtImpfung = lastReport.Bericht.GesamtImpfung;
+        erstImpfung = lastReport.Bericht.ErstImpfung;
+        zweittImpfung = lastReport.Bericht.ZweitImpfung;
+
         foreach (var bundesland in bundeslaender)
         {
             farbe.Add(bundesland.BlAttribute.Farbe);

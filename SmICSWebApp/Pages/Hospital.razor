@@ -36,12 +36,12 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="card flex-fill">
-                                <div class="card-header" style="background-color: #14477b; color: white;">
+                                <div class="card-header" style="background-color: #7FBDD2; color: black;">
                                     <div class="row">
                                         <div class="col-7">
                                             <h5 class="card-title">Tägliche Lage</h5>
                                         </div>
-                                        <div class="col-4" style="justify-content: flex-end;">
+                                        <div class="col-5" style="justify-content: flex-end;">
                                             <h5 class="card-title">@date</h5>
                                         </div>
                                     </div>
@@ -49,35 +49,25 @@
 
                                 <div class="card-body">
                                     <div class="row" id="daily-row">
-                                        <div class="col-md-3 col-xxl-3 d-flex">
-                                            <div class="card flex-fill">
-                                                <div class="card-body" id="body-info">
-                                                    <h6 class="card-title"> Neue Fälle </h6>
-                                                    <span class="h5 d-inline-block mt-1 mb-3"> @neuefaelle </span>
-                                                    <h6 class="card-title"> Todesfälle </h6>
-                                                    <span class="h5 d-inline-block mt-1 mb-3"> 0 </span>
-                                                    <h6 class="card-title"> Genesen </h6>
-                                                    <span class="h5 d-inline-block mt-1 mb-3"> @genesen </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 col-xxl-3 d-flex">
+                                        <div class="col-md-5 col-xxl-3 d-flex">
                                             <div class="card flex-fill">
                                                 <div class="card-body" id="body-info">
                                                     <h6 class="card-title"> Aktive Fälle </h6>
                                                     <span class="h5 d-inline-block mt-1 mb-3"> @aktivefaelle </span>
-                                                    <Chart Config="_pieConfig1"></Chart>
+                                                    <h6 class="card-title"> Neue Fälle </h6>
+                                                    <span class="h5 d-inline-block mt-1 mb-3"> @neuefaelle </span>
+                                                    <h6 class="card-title"> Fälle letze 7 Tage </h6>
+                                                    <span class="h5 d-inline-block mt-1 mb-3"> @neuefaelleWoche </span>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="col-md-4 col-xxl-3 d-flex">
+                                        <div class="col-md-7 col-xxl-3 d-flex">
                                             <div class="card flex-fill">
                                                 <div class="card-body" id="body-info">
                                                     <h6 class="card-title"> Durchgeführte Tests </h6>
                                                     <span class="h5 d-inline-block mt-1 mb-3"> @gesamteTest </span>
-                                                    <Chart Config="_pieConfig2"></Chart>
+                                                    <Chart Config="_pieConfig"></Chart>
                                                 </div>
                                             </div>
                                         </div>
@@ -283,7 +273,6 @@
                             </div>
                         </div>
                     </div>
-
                 }
             </div>
         </div>
@@ -307,25 +296,21 @@
     private string date;
 
     private LineConfig _config;
-    private Chart _chart;
-    private Dictionary<string, string> ehrDaten;
+    private PieConfig _pieConfig;
     private Dictionary<string, int> sortEhrDaten;
     private Dictionary<string, int> pieDaten;
-    private Dictionary<string, int> pieDaten2;
-
-    private PieConfig _pieConfig1;
-    private PieConfig _pieConfig2;
-
-    private List<CountDataModel> posHeute;
-    private List<CountDataModel> posGestern;
-    private List<CountDataModel> negHeute;
-    private List<CountDataModel> genesenHeute;
+    private List<CountDataModel> posPatHeute;
+    private List<CountDataModel> posTestHeute;
+    private List<CountDataModel> negTestHeute;
+    private List<CountDataModel> faelleWoche;
+    private List<StationaryDataModel> patStationary;
+    private List<StationaryDataModel> aktivHeute = new();
     private int neuefaelle;
-    private int genesen;
+    private int neuefaelleWoche;
     private int aktivefaelle;
     private int gesamteTest;
-    List<StationaryDataModel> patStationary;
-    List<StationaryDataModel> aktivHeute= new();
+    private int positivefaelle;
+    private int negativefaelle;
 
     protected override async Task OnInitializedAsync()
     {
@@ -341,21 +326,20 @@
         try
         {
             allPositivTest = dataService.GetAllPositivTest();
-            allPositivPat =  dataService.GetAllPatByTest(allPositivTest);
+            allPositivPat = dataService.GetAllPatByTest(allPositivTest);
             allNegativTest = dataService.GetAllNegativTest();
-            allNegativPat =  dataService.GetAllPatByTest(allNegativTest);
+            allNegativPat = dataService.GetAllPatByTest(allNegativTest);
 
             allNoskumalPat = dataService.GetAllNoskumalPat(allPositivTest);
             noskumalPatByContact = dataService.GetNoskumalByContact(allNoskumalPat, allPositivPat);
             anzahlFaelle = allPositivPat.Count() - allNoskumalPat.Count();
             anzahlPatTage = dataService.PatStay(allPositivPat);
 
-            Dictionary<string, int> sortDictPositiv = GetDataForChart(allPositivPat);
-            Dictionary<string, int> sortDictNegativ = GetDataForChart(allNegativPat);
+            Dictionary<string, int> sortDictPositiv = GetDataLineChart(allPositivPat);
+            Dictionary<string, int> sortDictNegativ = GetDataLineChart(allNegativPat);
             LineChart(sortDictPositiv, sortDictNegativ);
 
-
-            Daily();
+            DailyCases();
 
             status = true;
         }
@@ -363,7 +347,6 @@
         {
             status = false;
         }
-
     }
 
     private void ShowNoskIDs()
@@ -430,42 +413,24 @@
         }
     }
 
-
-    private Dictionary<string, int> GetDataForChart(List<CountDataModel> patientenTest)
+    private Dictionary<string, int> GetDataLineChart(List<CountDataModel> patientenTest)
     {
-        ehrDaten = new();
-        foreach (var test in patientenTest)
-        {
-            if (ehrDaten.ContainsKey(test.PatientID))
-            {
-                ehrDaten.Remove(test.PatientID);
-                //ehrDaten.Add(test.PatientID, test.Zeitpunkt_des_Probeneingangs.ToString("dd MMMM yyyy"));
-                ehrDaten.Add(test.PatientID, test.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"));
-            }
-            else
-            {
-                ehrDaten.Add(test.PatientID, test.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"));
-            }
-        }
-
         sortEhrDaten = new();
         int i;
-        foreach (var data in ehrDaten)
+        foreach (var pat in patientenTest)
         {
-            if (sortEhrDaten.ContainsKey(data.Value))
+            if (sortEhrDaten.ContainsKey(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM")))
             {
-                sortEhrDaten.TryGetValue(data.Value, out i);
-                sortEhrDaten.Remove(data.Value);
-                sortEhrDaten.Add(data.Value, i + 1);
+                sortEhrDaten.TryGetValue(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), out i);
+                sortEhrDaten.Remove(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"));
+                sortEhrDaten.Add(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), i + 1);
             }
             else
             {
-                sortEhrDaten.Add(data.Value, 1);
+                sortEhrDaten.Add(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), 1);
             }
         }
-
-        var sortedDict = sortEhrDaten.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
-        return sortedDict;
+        return sortEhrDaten;
     }
 
     private void LineChart(Dictionary<string, int> sortDictPositiv, Dictionary<string, int> sortDictNegativ)
@@ -492,7 +457,7 @@
                 Scales = new Scales
                 {
                     XAxes = new List<CartesianAxis>
-    {
+{
                             new CategoryAxis
                             {
                                  ScaleLabel = new ScaleLabel
@@ -502,7 +467,7 @@
                             }
                         },
                     YAxes = new List<CartesianAxis>
-     {
+{
                             new LinearCartesianAxis
                             {
                                 Ticks = new LinearCartesianTicks
@@ -540,7 +505,6 @@
         _config.Data.Datasets.Add(negativDataset);
     }
 
-
     private void PieChart(PieConfig _pieConfig, Dictionary<string, int> pieDaten)
     {
         foreach (string data in pieDaten.Keys)
@@ -552,18 +516,16 @@
         {
             BackgroundColor = new[]
             {
-                ColorUtil.ColorHexString(180, 31, 42), //"Red" 
-                ColorUtil.ColorHexString(20, 54, 123), //"Blue"   
+                ColorUtil.ColorHexString(180, 31, 42), //"Red"
+                ColorUtil.ColorHexString(20, 54, 123), //"Blue"
             }
         };
 
         _pieConfig.Data.Datasets.Add(dataset);
     }
 
-
-    private List<CountDataModel> DailyData(List<CountDataModel> patListe, DateTime datum)
+    private List<CountDataModel> GetPosPatByDate(List<CountDataModel> patListe, DateTime datum)
     {
-
         List<CountDataModel> patHeute = new();
         if (patListe != null)
         {
@@ -582,32 +544,13 @@
         }
     }
 
-    private void Daily()
+    private void DailyCases()
     {
-        posHeute = DailyData(allPositivPat, DateTime.Now.Date);
-        neuefaelle = posHeute.Count();
+        //Neuefaelle
+        posPatHeute = GetPosPatByDate(allPositivPat, DateTime.Now.Date);
+        neuefaelle = posPatHeute.Count();
 
-        negHeute = DailyData(allNegativPat, DateTime.Now.Date);
-        posGestern = DailyData(allPositivPat, DateTime.Now.AddDays(-1).Date);
-
-        if (negHeute.Count() != 0)
-        {
-            foreach (var item in negHeute)
-            {
-                if (posGestern.Contains(item))
-                {
-                    genesenHeute.Add(item);
-                }
-            }
-
-            genesen = genesenHeute.Count();
-        }
-        else
-        {
-            genesen = 0;
-        }
-
-
+        //Aktive Faelle
         foreach (var item in allPositivPat)
         {
             patStationary = dataService.StayFromCase(item.PatientID, item.Fallkennung);
@@ -615,39 +558,37 @@
             {
                 foreach (var pat in patStationary)
                 {
-                    //TODOS Bedinugung anpassen 
-                    if (pat.Datum_Uhrzeit_der_Entlassung.GetHashCode() != 0)
+                    //TODOS Bedinugung anpassen
+                    if (pat.Datum_Uhrzeit_der_Entlassung.GetHashCode() == 0)
                     {
                         aktivHeute.Add(pat);
                     }
                 }
             }
         }
-        var SortedList = aktivHeute.GroupBy(o => o.Station).ToList();
+        aktivefaelle = aktivHeute.Count();
 
-        //TODO: SortedList Elemente anpassen
-        pieDaten = new();
-        pieDaten.Add(SortedList.ElementAt(1).Key, SortedList.ElementAt(0).Count());
-        pieDaten.Add(SortedList.ElementAt(0).Key, SortedList.ElementAt(1).Count());
-        _pieConfig1 = new PieConfig
+        //Faelle letzte 7 Tage
+        for (int i = 0; i < 6; i++)
         {
-            Options = new PieOptions
-            {
-                Responsive = true,
-                Title = new OptionsTitle
-                {
-                    Display = false,
-                    Text = "ChartJs.Blazor Pie Chart"
-                }
-            }
-        };
-        PieChart(_pieConfig1, pieDaten);
+            int faelle = 0;
+            faelleWoche = GetPosPatByDate(allPositivPat, DateTime.Now.Date.AddDays(i));
+            faelle = faelleWoche.Count();
 
+            neuefaelleWoche += faelle;
+        }
 
-        pieDaten2 = new();
-        pieDaten2.Add("Positiv", allPositivTest.Count());
-        pieDaten2.Add("Negativ", allNegativTest.Count());
-        _pieConfig2 = new PieConfig
+        //Durchgefuehrte Tests
+        posTestHeute = GetPosPatByDate(allPositivTest, DateTime.Now.Date);
+        positivefaelle = posTestHeute.Count();
+        negTestHeute = GetPosPatByDate(allNegativTest, DateTime.Now.Date);
+        negativefaelle = negTestHeute.Count();
+        gesamteTest = positivefaelle + negativefaelle;
+
+        pieDaten = new();
+        pieDaten.Add("Positiv", positivefaelle);
+        pieDaten.Add("Negativ", negativefaelle);
+        _pieConfig = new PieConfig
         {
             Options = new PieOptions
             {
@@ -658,10 +599,8 @@
                 }
             }
         };
-        PieChart(_pieConfig2, pieDaten2);
-
-        gesamteTest = allPositivTest.Count() + allNegativTest.Count();
-
-        aktivefaelle = aktivHeute.Count();
+        negativefaelle = negTestHeute.Count();
+        PieChart(_pieConfig, pieDaten);
     }
+
 }
