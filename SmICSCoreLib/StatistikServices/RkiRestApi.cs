@@ -216,21 +216,22 @@ namespace SmICSCoreLib.StatistikServices
                     StateData stateData = GetStateData(0);
                     if (stateData != null)
                     {
-                        try
+                        bericht.Fallzahl = stateData.DataFeature[0].DataAttributes.AnzFall.ToString("#,##");
+                        bericht.FallzahlVortag = stateData.DataFeature[0].DataAttributes.AnzFallNeu.ToString("#,##");
+                        bericht.Todesfaelle = stateData.DataFeature[0].DataAttributes.AnzTodesfall.ToString("#,##");
+                        bericht.TodesfaelleVortag = stateData.DataFeature[0].DataAttributes.AnzTodesfallNeu.ToString("#,##");
+                        bericht.Inzidenz7Tage = stateData.DataFeature[0].DataAttributes.Inz7T.ToString();
+                        bericht.Stand = DateTime.Now.Date.ToString("dd.MM.yyyy");
+                        string wert = GetRValue(2);
+                        if (wert == null )
                         {
-                            bericht.Fallzahl = stateData.DataFeature[0].DataAttributes.AnzFall.ToString("#,##");
-                            bericht.FallzahlVortag = stateData.DataFeature[0].DataAttributes.AnzFallNeu.ToString("#,##");
-                            bericht.Todesfaelle = stateData.DataFeature[0].DataAttributes.AnzTodesfall.ToString("#,##");
-                            bericht.TodesfaelleVortag = stateData.DataFeature[0].DataAttributes.AnzTodesfallNeu.ToString("#,##");
-                            bericht.Inzidenz7Tage = stateData.DataFeature[0].DataAttributes.Inz7T.ToString();
-                            bericht.Stand = DateTime.Now.Date.ToString("dd.MM.yyyy");
+                            bericht.RWert7Tage = ("k.A.");
+                            bericht.RWert7TageVortag = ("k.A.");
+                        }
+                        else
+                        {
                             bericht.RWert7Tage = GetRValue(2).Replace(",", ".");
                             bericht.RWert7TageVortag = GetRValue(3).Replace(",", ".");
-                        }
-                        catch (Exception)
-                        {
-                            bericht.StandAktuell = true;
-                            return bericht;
                         }
                     }
 
@@ -399,6 +400,11 @@ namespace SmICSCoreLib.StatistikServices
                     farbe = "#FFF380";
                     return farbe;
                 }
+                if (zahl < 5 && zahl > 0)
+                {
+                    farbe = "#FFFCCD";
+                    return farbe;
+                }
                 else
                 {
                     farbe = "#FFFFFF";
@@ -439,7 +445,7 @@ namespace SmICSCoreLib.StatistikServices
                 }
                 else
                 {
-                    color = "#5591BB";
+                    color = "#8CA2AE";
                     return color;
                 }
             }

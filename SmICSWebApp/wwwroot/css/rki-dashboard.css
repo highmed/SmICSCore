@@ -9,11 +9,10 @@
 }
 
 .mapdiv {
-    width: 70%;
+    width: 100%;
 }
 
 .mapdiv path {
-    /*fill: #e2e8ee;*/
     fill: #084594;
     fill-opacity: 1;
     fill-rule: evenodd;
@@ -29,6 +28,11 @@
     fill: #e0eafc;
 }
 
+#map-element a {
+    stroke-opacity: 5; 
+    stroke: #8c8989; 
+    stroke-width: 4;
+}
 
 #head-info {
     background-color: #8CA2AE;
@@ -62,12 +66,6 @@
     top: 0;
     background: #EAEAEA
 }
-
-
-/*#blog-list .nav-link {
-    background-color: #4AA0CA;
-    margin: 0px 5px 0px 5px;
-}*/
 
 #nav-head {
     border-top: none;
@@ -127,8 +125,16 @@
 }
 
 #daily-row .card-body {
- /*   padding-left: 0.50rem;
-    padding-right: 0.50rem;*/
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+#col-table {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#body-table {
+    padding-left: 7px;
+    padding-right: 7px;
 }
