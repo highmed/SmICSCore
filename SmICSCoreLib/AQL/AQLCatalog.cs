@@ -368,7 +368,7 @@ namespace SmICSCoreLib.AQL
                                     CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
                                     CONTAINS (ADMIN_ENTRY j[openEHR-EHR-ADMIN_ENTRY.admission.v0] and 
                                     ADMIN_ENTRY w[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
-                                    WHERE Datum_Uhrzeit_der_Aufnahme like '{datum.Date.ToString("yyyy-MM-dd").Insert(10, "*")}'");
+                                    WHERE Datum_Uhrzeit_der_Aufnahme >= '{datum.Date.ToString("yyyy-MM-dd").Insert(10, "*")}'");
         }
 
         public static AQLQuery CovidPat(string nachweis)

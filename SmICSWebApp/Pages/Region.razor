@@ -129,7 +129,7 @@
 
                         <div class="col-7">
                             <div class="card flex-fill">
-                                <Chart Config="_config"></Chart>
+                           @*     <Chart Config="_config"></Chart>*@
                             </div>
                         </div>
                     </div>
@@ -165,8 +165,8 @@
         await Task.Run(LoadRValue);
         await Task.Run(LoadRkiData);
 
-        GetDataForChart();
-        GetChart();
+        //GetDataForChart();
+        //GetChart();
     }
 
     private void LoadRkiData()
@@ -262,95 +262,95 @@
 
 
 
-    private void GetDataForChart()
-    {
+    //private void GetDataForChart()
+    //{
 
-        rkiDatenBl = rkiRestApi.GetDatas("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 1, 366, 2, 2, 11);
-        rkiDatenLk = rkiRestApi.GetDatas("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 5, 172, 4, 4, 150);
+    //    rkiDatenBl = rkiRestApi.GetDatas("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 1, 366, 2, 2, 11);
+    //    rkiDatenLk = rkiRestApi.GetDatas("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 5, 172, 4, 4, 150);
 
-        foreach (var itemBl in rkiDatenBl)
-        {
-            if (!rkiDatenLk.ContainsKey(itemBl.Key))
-            {
-                rkiDatenBl.Remove(itemBl.Key);
-            }
-        }
-
-
-    }
-
-    protected void GetChart()
-    {
-        _config = new LineConfig
-        {
-            Options = new LineOptions
-            {
-                Title = new OptionsTitle
-                {
-                    Display = true,
-                    Text = "Entwicklung der 7-Tage-Fallzahlen in Nidersachsen"
-                },
-                Tooltips = new Tooltips
-                {
-                    Mode = InteractionMode.Nearest,
-                    Intersect = true
-                },
-                Hover = new Hover
-                {
-                    Mode = InteractionMode.Nearest,
-                    Intersect = true
-                },
-                Scales = new Scales
-                {
-                    XAxes = new List<CartesianAxis>
-                {
-                            new CategoryAxis
-                            {
-                                 ScaleLabel = new ScaleLabel
-                                {
-                                    LabelString = "Datum"
-                                }
-                            }
-                        },
-                    YAxes = new List<CartesianAxis>
-                 {
-                            new LinearCartesianAxis
-                            {
-                                Ticks = new LinearCartesianTicks
-                                {
-                                    BeginAtZero = true
-                                }
-                            }
-                     }
-                }
-            }
-        };
-
-        foreach (string datum in rkiDatenBl.Keys)
-        {
-            _config.Data.Labels.Add(datum);
-        }
+    //    foreach (var itemBl in rkiDatenBl)
+    //    {
+    //        if (!rkiDatenLk.ContainsKey(itemBl.Key))
+    //        {
+    //            rkiDatenBl.Remove(itemBl.Key);
+    //        }
+    //    }
 
 
-        IDataset<int> ndrDataset = new LineDataset<int>(rkiDatenBl.Values)
-        {
-            Label = "Nidersachsen-Fallzahlen",
-            BackgroundColor = "#4AA0CA",
-            BorderColor = "#7FBDD2",
-            Fill = FillingMode.Disabled
-        };
+    //}
 
-        IDataset<int> hhDataset = new LineDataset<int>(rkiDatenLk.Values)
-        {
-            Label = "Region Hannover-Fallzahlen",
-            BackgroundColor = "#F35C58",
-            BorderColor = "#F35C58",
-            Fill = FillingMode.Disabled
-        };
+    //protected void GetChart()
+    //{
+    //    _config = new LineConfig
+    //    {
+    //        Options = new LineOptions
+    //        {
+    //            Title = new OptionsTitle
+    //            {
+    //                Display = true,
+    //                Text = "Entwicklung der 7-Tage-Fallzahlen in Nidersachsen"
+    //            },
+    //            Tooltips = new Tooltips
+    //            {
+    //                Mode = InteractionMode.Nearest,
+    //                Intersect = true
+    //            },
+    //            Hover = new Hover
+    //            {
+    //                Mode = InteractionMode.Nearest,
+    //                Intersect = true
+    //            },
+    //            Scales = new Scales
+    //            {
+    //                XAxes = new List<CartesianAxis>
+    //            {
+    //                        new CategoryAxis
+    //                        {
+    //                             ScaleLabel = new ScaleLabel
+    //                            {
+    //                                LabelString = "Datum"
+    //                            }
+    //                        }
+    //                    },
+    //                YAxes = new List<CartesianAxis>
+    //             {
+    //                        new LinearCartesianAxis
+    //                        {
+    //                            Ticks = new LinearCartesianTicks
+    //                            {
+    //                                BeginAtZero = true
+    //                            }
+    //                        }
+    //                 }
+    //            }
+    //        }
+    //    };
 
-        _config.Data.Datasets.Add(ndrDataset);
-        _config.Data.Datasets.Add(hhDataset);
+    //    foreach (string datum in rkiDatenBl.Keys)
+    //    {
+    //        _config.Data.Labels.Add(datum);
+    //    }
 
-    }
+
+    //    IDataset<int> ndrDataset = new LineDataset<int>(rkiDatenBl.Values)
+    //    {
+    //        Label = "Nidersachsen-Fallzahlen",
+    //        BackgroundColor = "#4AA0CA",
+    //        BorderColor = "#7FBDD2",
+    //        Fill = FillingMode.Disabled
+    //    };
+
+    //    IDataset<int> hhDataset = new LineDataset<int>(rkiDatenLk.Values)
+    //    {
+    //        Label = "Region Hannover-Fallzahlen",
+    //        BackgroundColor = "#F35C58",
+    //        BorderColor = "#F35C58",
+    //        Fill = FillingMode.Disabled
+    //    };
+
+    //    _config.Data.Datasets.Add(ndrDataset);
+    //    _config.Data.Datasets.Add(hhDataset);
+
+    //}
 
 }
