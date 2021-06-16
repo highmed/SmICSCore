@@ -221,8 +221,17 @@ namespace SmICSCoreLib.StatistikServices
                         bericht.TodesfaelleVortag = stateData.DataFeature[0].DataAttributes.AnzTodesfallNeu.ToString("#,##");
                         bericht.Inzidenz7Tage = stateData.DataFeature[0].DataAttributes.Inz7T.ToString();
                         bericht.Stand = DateTime.Now.Date.ToString("dd.MM.yyyy");
-                        bericht.RWert7Tage = GetRValue(2).Replace(",", ".");
-                        bericht.RWert7TageVortag = GetRValue(3).Replace(",", ".");
+                        string wert = GetRValue(2);
+                        if (wert == null )
+                        {
+                            bericht.RWert7Tage = ("k.A.");
+                            bericht.RWert7TageVortag = ("k.A.");
+                        }
+                        else
+                        {
+                            bericht.RWert7Tage = GetRValue(2).Replace(",", ".");
+                            bericht.RWert7TageVortag = GetRValue(3).Replace(",", ".");
+                        }
                     }
 
                     String urlImpfung = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Impfquotenmonitoring.xlsx?__blob=publicationFile";
@@ -389,6 +398,11 @@ namespace SmICSCoreLib.StatistikServices
                     farbe = "#FFF380";
                     return farbe;
                 }
+                if (zahl < 5 && zahl > 0)
+                {
+                    farbe = "#FFFCCD";
+                    return farbe;
+                }
                 else
                 {
                     farbe = "#FFFFFF";
@@ -429,7 +443,7 @@ namespace SmICSCoreLib.StatistikServices
                 }
                 else
                 {
-                    color = "#5591BB";
+                    color = "#8CA2AE";
                     return color;
                 }
             }
