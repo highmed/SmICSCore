@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SmICSCoreLib.AQL.MiBi;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten.ReceiveModel;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten.ReceiveModel;
 using System;
@@ -34,6 +35,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten
         [JsonProperty(PropertyName = "MREKlasse")]
         public string MREKlasse { get; set; }
         [JsonProperty(PropertyName = "Befunddatum")]
+        public List<Antibiogram> Antibiogram { get; set; }
         public DateTime? Befunddatum { get; set; }
 
         public MibiLabDataModel() { }

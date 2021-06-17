@@ -1,4 +1,5 @@
 ﻿using SmICSCoreLib.AQL.General;
+using SmICSCoreLib.AQL.MiBi;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten.ReceiveModel;
 using SmICSCoreLib.REST;
 using System;
@@ -10,10 +11,12 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten
     public class MibiPatientLaborDataFactory : IMibiPatientLaborDataFactory
     {
         private IRestDataAccess _restData;
+        private IAntibiogramFactory _antibiogram;
         List<MibiLabDataModel> mibiLabDatas;
-        public MibiPatientLaborDataFactory(IRestDataAccess restData)
+        public MibiPatientLaborDataFactory(IRestDataAccess restData, IAntibiogramFactory antibiogram)
         {
             _restData = restData;
+            _antibiogram = antibiogram;
         }
 
         public List<MibiLabDataModel> Process(PatientListParameter parameter)
@@ -89,6 +92,16 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten
             foreach (PathogenReceiveModel pathogenData in pathogenDatas)
             {
                 MibiLabDataModel mibiLabData = new MibiLabDataModel(metaData, sampleData, pathogenData);
+                AntibiogramParameter antibiogramParameter = new AntibiogramParameter()
+                {
+                    CaseID = metaData.FallID,
+                    Pathogen = pathogenData.KeimID,
+                    LabID = sampleData.LabordatenID,
+                    UID = metaData.UID,
+                    EhrID = metaData.PatientID,
+                    IsolatNo = pathogenData.IsolatNo
+                };
+                mibiLabData.Antibiogram = _antibiogram.Process(antibiogramParameter);
                 mibiLabDatas.Add(mibiLabData);
             }
         }

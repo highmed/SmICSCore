@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System;
 
 namespace SmICSCoreLib.AQL.PatientInformation.PatientData
 {
     public class PatientData
     {
-        public string MyProperty { get; set; }
+        public string PatientID { get; set; }
+        public string Name { get; set; }
+        public DateTime Birthdate { get; set; }
+        public string Sex { get; set; }
     }
 }

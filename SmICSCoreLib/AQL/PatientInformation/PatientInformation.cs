@@ -3,6 +3,7 @@ using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
+using SmICSCoreLib.AQL.PatientInformation.PatientData;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using SmICSCoreLib.Util;
@@ -19,14 +20,17 @@ namespace SmICSCoreLib.AQL.PatientInformation
         private IPatientLabordataFactory _patLabFac;
         private IMibiPatientLaborDataFactory _mibiLabFac;
         private ISymptomFactory _symptomFac;
+        private IPatientDataFactory _patDataFac;
 
         public PatientInformation(IPatientMovementFactory patMoveFac, IPatientLabordataFactory patLabFac, 
-                                    ISymptomFactory symptomFac, IMibiPatientLaborDataFactory mibiLabFac) 
+                                    ISymptomFactory symptomFac, IMibiPatientLaborDataFactory mibiLabFac,
+                                    IPatientDataFactory patDataFac)
         {
             _patMoveFac = patMoveFac;
             _patLabFac = patLabFac;
             _mibiLabFac = mibiLabFac;
             _symptomFac = symptomFac;
+            _patDataFac = patDataFac;
         }
        
         public List<PatientMovementModel> Patient_Bewegung_Ps(PatientListParameter parameter)

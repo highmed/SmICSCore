@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
 using SmICSCoreLib.AQL.Contact_Nth_Network;
+using SmICSCoreLib.AQL.MiBi;
 using SmICSCoreLib.AQL.PatientInformation;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
+using SmICSCoreLib.AQL.PatientInformation.PatientData;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using SmICSCoreLib.REST;
@@ -100,13 +102,14 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 		
 		private PatientInformation CreatePatientInformation(IRestDataAccess rest)
         {
-
+			IAntibiogramFactory antibiogramFactory = new AntibiogramFactory(rest);
 			IPatientMovementFactory patMoveFac = new PatientMovementFactory(rest, NullLogger<PatientMovementFactory>.Instance);
 			IPatientLabordataFactory patLabFac = new PatientLabordataFactory(rest, NullLogger<PatientLabordataFactory>.Instance);
 			ISymptomFactory symptomFac = new SymptomFactory(rest);
-			IMibiPatientLaborDataFactory mibiLabFac = new MibiPatientLaborDataFactory(rest);
+			IMibiPatientLaborDataFactory mibiLabFac = new MibiPatientLaborDataFactory(rest, antibiogramFactory);
+			IPatientDataFactory patDataFac = new PatientDataFactory();
 
-			return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac);
+			return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, patDataFac);
 
 		}
 

@@ -1,6 +1,7 @@
 ﻿using SmICSCoreLib.AQL.Contact_Nth_Network;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.Lab.EpiKurve;
+using SmICSCoreLib.AQL.MiBi;
 using SmICSCoreLib.AQL.MiBi.WardOverview;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten.ReceiveModel;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
@@ -240,9 +241,29 @@ namespace SmICSCoreLib.AQL
             return new AQLQuery("PatientSymptom_US",$"SELECT e/ehr_id/value as PatientenID, a/data[at0001]/items[at0002]/value/value as UnbekanntesSymptom, a/ data[at0001]/items[at0005]/value/value as AussageFehlendeInfo FROM EHR e CONTAINS COMPOSITION c CONTAINS EVALUATION a[openEHR-EHR-EVALUATION.absence.v2] WHERE c/archetype_details/template_id='Symptom' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
         }
         //untested
-        public static AQLQuery AntibiogramFromPathogen(MetaDataReceiveModel metaData, SampleReceiveModel sampleData, PathogenReceiveModel pathogenData)
+        public static AQLQuery AntibiogramFromPathogen(AntibiogramParameter parameter)
         {
-            return new AQLQuery("AntibiogramFromPathogen", $"SELECT w/feeder_audit/originating_system_audit/time/value as erregerZeit, b/items[at0024]/value/value as antibiotikum, b/items[at0004]/value/defining_code/code_string as resistenz, b/items[at0001]/value/magnitude as mhkMagnitude, b/items[at0001]/value/magnitude_status as mhkMagnitudeStatus, b/items[at0001]/value/units as mhkUnits, u/feeder_audit/originating_system_audit/time/value as antibiogrammZeit, b/feeder_audit/original_content/value as original FROM EHR e CONTAINS COMPOSITION c contains (CLUSTER m[openEHR-EHR-CLUSTER.case_identification.v0] and OBSERVATION j[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] CONTAINS CLUSTER w[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] CONTAINS CLUSTER z[openEHR-EHR-CLUSTER.erregerdetails.v1] CONTAINS CLUSTER u[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] CONTAINS CLUSTER b[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]) where e/ehr_id/value = '{ metaData.PatientID }' and c/uid/value = '{ metaData.UID }' and  w/items[at0001]/value/value = '{ metaData.FallID }' and erregerName = '{ pathogenData.KeimID }' and isolatNummer = '{ pathogenData.IsolatNo }' and w/items[at0001]/name='Erregername' and b/items[at0024]/name='Antibiotikum' order by b/items[at0024]/value/value asc");
+            return new AQLQuery("AntibiogramFromPathogen", @$"SELECT b/items[at0024]/value/value as Antibiotic,
+                                b/items[at0004]/value/defining_code/code_string as Resistance,
+                                b/items[at0001]/value/magnitude as MinInhibitorConcentration,
+                                b/items[at0001]/value/units as MICUnit
+                                FROM EHR e
+                                CONTAINS COMPOSITION c
+                                contains 
+                                    (CLUSTER m[openEHR-EHR-CLUSTER.case_identification.v0] 
+                                    and OBSERVATION j[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
+                                        CONTAINS CLUSTER w[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] 
+                                        CONTAINS CLUSTER z[openEHR-EHR-CLUSTER.erregerdetails.v1] 
+                                        CONTAINS CLUSTER u[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] 
+                                        CONTAINS CLUSTER b[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]) 
+                                where w/items[at0001]/name='Erregername' 
+                                and b/items[at0024]/name='Antibiotikum'   
+                                and e/ehr_id/value = '{ parameter.EhrID }' 
+                                and c/uid/value = '{ parameter.UID }' 
+                                and m/items[at0001]/value/value = '{ parameter.CaseID }' 
+                                and w/items[at0001]/value/value = '{ parameter.Pathogen }' 
+                                and w/items[at0027]/value/magnitude = '{ parameter.IsolatNo }'                                       
+                                order by b/items[at0024]/value/value asc");
         }
 
         public static AQLQuery Stationary(string patientId, string fallkennung, DateTime datum)
@@ -398,9 +419,10 @@ namespace SmICSCoreLib.AQL
                                 CONTAINS ADMIN_ENTRY u[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] 
                                 CONTAINS (CLUSTER a[openEHR-EHR-CLUSTER.location.v1]
                                 and CLUSTER o[openEHR-EHR-CLUSTER.organization.v0])
-                                WHERE c/name/value = 'Patientenaufenthalt' WHERE a/items[at0027]/value/value = '{parameter.Ward}' 
-                                and u/data[at0001]/items[at0004]/value/value >= '{ parameter.Start.ToString("O") }'
-                                and u/data[at0001]/items[at0005]/value/value >= '{ parameter.End.ToString("O") }'");
+                                WHERE c/name/value = 'Patientenaufenthalt' 
+                                and a/items[at0027]/value/value = '{parameter.Ward}' 
+                                and u/data[at0001]/items[at0004]/value/value >= '{ parameter.Start.ToString("yyyy-MM-dd") }'
+                                and u/data[at0001]/items[at0004]/value/value <= '{ parameter.End.ToString("yyyy-MM-dd") }'");
         }
         #endregion
     }

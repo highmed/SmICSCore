@@ -25,7 +25,7 @@ namespace SmICSCoreLib.AQL.MiBi.WardOverview
         public List<WardOverviewModel> Process(WardOverviewParameters parameters)
         {
             List<Patient> patients = GetAllPatientsOnWardInTimeSpan(parameters);
-            Dictionary<Patient, List<MibiLabDataModel>> labDataForPatients = GetAllLabResults(patients);
+            Dictionary<Patient, List<MibiLabDataModel>> labDataForPatients = GetAllLabResults(parameters, patients);
             List<WardOverviewModel> wardOverview = GetWardOverwievInformation(parameters, labDataForPatients);
             return wardOverview;
         }
@@ -40,7 +40,7 @@ namespace SmICSCoreLib.AQL.MiBi.WardOverview
             foreach (Patient patient in labDataForPatients.Keys)
             {
                 WardOverviewModel wardOverview = new WardOverviewModel();
-                MibiLabDataModel labDataWithinTime = labDataForPatients[patient].Where(x => x.Befund).OrderBy(x => x.ZeitpunktProbenentnahme).FirstOrDefault() ?? null;
+                MibiLabDataModel labDataWithinTime = labDataForPatients[patient].Where(x => x.Befund & x.ZeitpunktProbeneingang >= parameters.Start).OrderBy(x => x.ZeitpunktProbenentnahme).FirstOrDefault() ?? null;
                 EpisodeOfCareModel admission = getCurrentAdmission(labDataWithinTime, patient);
                 if (labDataWithinTime == null)
                 {
@@ -94,7 +94,7 @@ namespace SmICSCoreLib.AQL.MiBi.WardOverview
             return dict;
         }
 
-        private Dictionary<Patient, List<MibiLabDataModel>> GetAllLabResults(List<Patient> patients)
+        private Dictionary<Patient, List<MibiLabDataModel>> GetAllLabResults(WardOverviewParameters parameters, List<Patient> patients)
         {
             if (patients != null)
             {
@@ -103,7 +103,26 @@ namespace SmICSCoreLib.AQL.MiBi.WardOverview
                 {
                     PatientListParameter patList = new PatientListParameter() { patientList = new List<string> { patient.EHRID } };
                     List<MibiLabDataModel> labData = _mibiLab.Process(patList);
-                    labDataForPatients.Add(patient, labData);
+                    foreach(MibiLabDataModel data in labData)
+                    {
+                        if (parameters.MRE == "MRSA")
+                        {
+                            List<Antibiogram> mrsa = data.Antibiogram.Where(x => x.Antibiotic == "Oxacillin" && x.Resistance == "R").ToList();
+                            if (mrsa != null && mrsa.Count > 0)
+                            {
+                                if (labDataForPatients.ContainsKey(patient))
+                                {
+                                    labDataForPatients[patient].Concat(labData);
+                                }
+                                else
+                                {
+                                    labDataForPatients.Add(patient, labData);
+
+                                }
+
+                            }
+                        }
+                    }
                 }
                 return labDataForPatients;
             }

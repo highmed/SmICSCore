@@ -16,6 +16,8 @@ using SmICSCoreLib.AQL.Patient_Stay.Count;
 using SmICSCoreLib.AQL.Patient_Stay.Cases;
 using SmICSCoreLib.AQL.Patient_Stay.WeekCase;
 using SmICSCoreLib.AQL.MiBi.WardOverview;
+using SmICSCoreLib.AQL.PatientInformation.PatientData;
+using SmICSCoreLib.AQL.MiBi;
 
 namespace SmICS
 {
@@ -30,7 +32,8 @@ namespace SmICS
             services.AddTransient<IPatientLabordataFactory, PatientLabordataFactory>();
             services.AddTransient<IMibiPatientLaborDataFactory, MibiPatientLaborDataFactory>();
             services.AddTransient<ISymptomFactory, SymptomFactory>();
-
+            services.AddTransient<IPatientDataFactory, PatientDataFactory>();
+            services.AddTransient<IAntibiogramFactory, AntibiogramFactory>();
             services.AddTransient<IPatientInformation, PatientInformation>();
 
             services.AddTransient<IContactNetworkFactory, ContactNetworkFactory>();

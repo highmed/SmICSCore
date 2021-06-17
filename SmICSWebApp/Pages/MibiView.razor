@@ -8,71 +8,79 @@
 
 <h3>MibiView</h3>
 
-<div class="row">
-    <label for="stationDropdown">Station</label>
-    <select id="stationDropdow">
-        <option>Station 1</option>
-        <option>Station 2</option>
-        <option>Station 3</option>
-        <option>Station 4</option>
-    </select>
-    <label for="pathogenDropdown">Erreger</label>
-    <select id="pathogenDropdown">
-        <option>MRSA</option>
-        <option>3 MRGN</option>
-        <option>4 MRGN</option>
-        <option>VRE </option>
-    </select>
-    <label for="startdate">Start</label>
-    <InputDate id="startdate" Value="DateTime.Now" />
-    <label for="enddate">Ende</label>
-    <InputDate id="enddate" Value="DateTime.Now" />
-    <button type="button" @onclick="Click">Suche</button>
-</div>
+<EditForm Model="@parameter" OnValidSubmit="@Submit">
+    <div class="form-row">
+        <label for="stationDropdown">Station</label>
+        <select id="stationDropdow" class="col-2" @bind="@parameter.Ward">
+            <option>Station 1</option>
+            <option>Station 2</option>
+            <option>Station 3</option>
+            <option>47</option>
+        </select>
+        <label for="pathogenDropdown">Erreger</label>
+        <select id="pathogenDropdown" class="col-2" @bind="@parameter.MRE">
+            <option>MRSA</option>
+            <option>3 MRGN</option>
+            <option>4 MRGN</option>
+            <option>VRE </option>
+        </select>
+        <label for="startdate">Start</label>
+        <InputDate id="startdate" class="col-2" @bind-Value="parameter.Start"/>
+        <label for="enddate">Ende</label>
+        <InputDate id="enddate" class="col-2" @bind-Value="parameter.End"/>
+        <button type="submit" class="col-2">Suche</button>
+    </div>
+</EditForm>
 
 @if (data != null)
 {
-    <div>
-        <table>
+<div class="row">
+    <div class="w-50">
+        <table class="table table-striped table-hover">
             <thead>
-                <th>Patient</th>
-                @if (HasPatientData())
-                {
-                    <th>Name</th>
-                    <th>Geburtstag</th>
-                    <th>Sex</th>
-                }
-                <th>Stationstest</th>
-                <th>Nosokomial</th>
-                <th>TestDatum</th>
+                <tr>
+                    <th class="text-center">Patient</th>
+                    @if (HasPatientData())
+                    {
+                        <th>Name</th>
+                        <th>Geburtstag</th>
+                        <th>Sex</th>
+                    }
+                    <th class="text-center">Stationstest</th>
+                    <th class="text-center">Nosokomial</th>
+                    <th class="text-center">TestDatum</th>
+                </tr>
             </thead>
             <tbody>
-                @foreach(MibiViewModel item in data)
+                @foreach (MibiViewModel item in data)
                 {
-                    <td>@item.LabData.PatientID</td>
-                    @if (item.PatientData != null)
-                    {
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                     }
-                    <td>@item.LabData.OnWard</td>
-                    <td>@item.LabData.Nosokomial</td>
-                    <td>@item.LabData.TestDate</td>
+                    <tr>
+                        <td class="text-center">@item.LabData.PatientID</td>
+                        @if (item.PatientData != null)
+                        {
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                        <td class="text-center">@item.LabData.OnWard</td>
+                        <td class="text-center">@item.LabData.Nosokomial</td>
+                        <td class="text-center">@item.LabData.TestDate</td>
+                    </tr>
                 }
             </tbody>
         </table>
     </div>
-    <div>
-        EpiKurve
+    <div class="w-50">
         <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
     </div>
+</div>
 }
 
 @code {
 
     private List<MibiViewModel> data { get; set; } = null;
+    private WardOverviewParameters parameter = new WardOverviewParameters();
 
     private string PathogenParam { get; set; }
     private string WardParam { get; set; }
@@ -81,14 +89,9 @@
 
     private List<ChartSeries> Series { get; set; }
     private string[] XAxisLabels { get; set; }
-    private void Click()
-    {
-        WardOverviewParameters parameter = new WardOverviewParameters();
-        parameter.MRE = PathogenParam;
-        parameter.Ward = WardParam;
-        parameter.Start = StartDateParam;
-        parameter.End = EndDateParam;
 
+    private void Submit()
+    {
         data = _service.GetData(parameter);
 
         Series = GetEpicurveData();
@@ -107,6 +110,7 @@
         return false;
     }
 
+
     private List<ChartSeries> GetEpicurveData()
     {
         List<ChartSeries> charts = new List<ChartSeries>();
@@ -117,14 +121,14 @@
         chartEntries.Add("Known", new SortedDictionary<DateTime, double>());
 
 
-        for (DateTime date = StartDateParam.Date; date <= EndDateParam.Date; date.AddDays(1.0))
+        for (DateTime date = parameter.Start.Date; date <= parameter.End.Date; date = date.AddDays(1.0))
         {
             chartEntries["NosokomialOnWard"].Add(date, 0);
             chartEntries["NosokomialOtherWard"].Add(date, 0);
             chartEntries["Known"].Add(date, 0);
         }
-
-        foreach (MibiViewModel mv in data.OrderBy(x => x.LabData.TestDate))
+        IEnumerable<MibiViewModel> orderedData = data.OrderBy(x => x.LabData.TestDate);
+        foreach (MibiViewModel mv in orderedData)
         {
             if(mv.LabData.Nosokomial && mv.LabData.OnWard)
             {
@@ -147,12 +151,13 @@
         return charts;
     }
 
+
     private string[] GetXAxisLabels()
     {
         List<string> labels = new List<string>();
-        for (DateTime date = StartDateParam.Date; date <= EndDateParam.Date; date.AddDays(1.0))
+        for (DateTime date = parameter.Start.Date; date <= parameter.End.Date; date = date.AddDays(1.0))
         {
-            labels.Add(date.ToString("M"));
+            labels.Add(date.ToString("dd.MM"));
         }
         return labels.ToArray();
     }
