@@ -8,11 +8,11 @@ namespace SmICSCoreLib.AQL.MiBi.WardOverview
         {
         }
 
-        public bool PositivFinding { get; internal set; }
-        public bool Nosokomial { get; internal set; }
-        public bool OnWard { get; internal set; }
-        public DateTime TestDate { get; internal set; }
-        public bool NewCase { get; internal set; }
-        public string PatientID { get; internal set; }
+        public bool PositivFinding { get; set; }
+        public bool Nosokomial { get; set; }
+        public bool OnWard { get; set; }
+        public DateTime TestDate { get; set; }
+        public bool NewCase { get; set; }
+        public string PatientID { get; set; }
     }
 }

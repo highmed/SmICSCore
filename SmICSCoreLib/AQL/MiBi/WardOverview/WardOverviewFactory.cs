@@ -25,12 +25,12 @@ namespace SmICSCoreLib.AQL.MiBi.WardOverview
         public List<WardOverviewModel> Process(WardOverviewParameters parameters)
         {
             List<Patient> patients = GetAllPatientsOnWardInTimeSpan(parameters);
-            Dictionary<Patient, List<MibiLabDataModel>> labDataForPatients = GetAllLabResults(patients);
+            Dictionary<Patient, Dictionary<bool, List<MibiLabDataModel>>> labDataForPatients = GetAllLabResults(parameters, patients);
             List<WardOverviewModel> wardOverview = GetWardOverwievInformation(parameters, labDataForPatients);
             return wardOverview;
         }
 
-        private List<WardOverviewModel> GetWardOverwievInformation(WardOverviewParameters parameters, Dictionary<Patient, List<MibiLabDataModel>> labDataForPatients)
+        private List<WardOverviewModel> GetWardOverwievInformation(WardOverviewParameters parameters, Dictionary<Patient, Dictionary<bool, List<MibiLabDataModel>>> labDataForPatients)
         {
             List<WardOverviewModel> wardOverviews = new List<WardOverviewModel>();
             if (labDataForPatients == null)
@@ -39,21 +39,34 @@ namespace SmICSCoreLib.AQL.MiBi.WardOverview
             }
             foreach (Patient patient in labDataForPatients.Keys)
             {
+                MibiLabDataModel labDataWithinTime = null;
                 WardOverviewModel wardOverview = new WardOverviewModel();
-                MibiLabDataModel labDataWithinTime = labDataForPatients[patient].Where(x => x.Befund).OrderBy(x => x.ZeitpunktProbenentnahme).FirstOrDefault() ?? null;
-                EpisodeOfCareModel admission = getCurrentAdmission(labDataWithinTime, patient);
-                if (labDataWithinTime == null)
+                if (labDataForPatients[patient][true].Count > 0)
                 {
-                    continue;
+                    labDataWithinTime = labDataForPatients[patient][true].Where(x => x.Befund & x.ZeitpunktProbeneingang >= parameters.Start).OrderBy(x => x.ZeitpunktProbenentnahme).FirstOrDefault() ?? null;
+                    EpisodeOfCareModel admission = getCurrentAdmission(labDataWithinTime, patient);
+                    if (labDataWithinTime == null)
+                    {
+                        continue;
+                    }
+                    Dictionary<string, bool> isNosokomailOrNewCase = IsNosokomialOrNewCase(labDataForPatients[patient][true], labDataWithinTime, patient, admission);
+                    wardOverview.Nosokomial = isNosokomailOrNewCase["IsNosokomial"];
+                    wardOverview.NewCase = isNosokomailOrNewCase["IsNewCase"];
+                    wardOverview.PositivFinding = true;
+                    wardOverview.OnWard = IsResultFromParameterWard(labDataWithinTime, parameters, patient);
+
                 }
-                Dictionary<string, bool> isNosokomailOrNewCase = IsNosokomialOrNewCase(labDataForPatients[patient], labDataWithinTime, patient, admission);
-                wardOverview.Nosokomial = isNosokomailOrNewCase["IsNosokomial"];
-                wardOverview.NewCase = isNosokomailOrNewCase["IsNewCase"];
-                wardOverview.PositivFinding = true;
-                wardOverview.OnWard = IsResultFromParameterWard(labDataWithinTime, parameters, patient);
-                wardOverview.TestDate = labDataWithinTime.ZeitpunktProbenentnahme;
+                else
+                {
+                    labDataWithinTime = labDataForPatients[patient][false].Where(x => x.Befund & x.ZeitpunktProbeneingang >= parameters.Start).OrderBy(x => x.ZeitpunktProbenentnahme).LastOrDefault() ?? null;
+                    wardOverview.Nosokomial = false;
+                    wardOverview.NewCase = false;
+                    wardOverview.PositivFinding = false;
+                    wardOverview.OnWard = false;
+                }
                 wardOverview.PatientID = patient.PatientID;
                 wardOverviews.Add(wardOverview);
+                wardOverview.TestDate = labDataWithinTime.ZeitpunktProbenentnahme;
 
             }
             return wardOverviews;
@@ -94,16 +107,47 @@ namespace SmICSCoreLib.AQL.MiBi.WardOverview
             return dict;
         }
 
-        private Dictionary<Patient, List<MibiLabDataModel>> GetAllLabResults(List<Patient> patients)
+        private Dictionary<Patient, Dictionary<bool, List<MibiLabDataModel>>> GetAllLabResults(WardOverviewParameters parameters, List<Patient> patients)
         {
             if (patients != null)
             {
-                Dictionary<Patient, List<MibiLabDataModel>> labDataForPatients = new Dictionary<Patient, List<MibiLabDataModel>>();
+                Dictionary<Patient, Dictionary<bool, List<MibiLabDataModel>>> labDataForPatients = new Dictionary<Patient, Dictionary<bool, List<MibiLabDataModel>>>();
                 foreach (Patient patient in patients)
                 {
                     PatientListParameter patList = new PatientListParameter() { patientList = new List<string> { patient.EHRID } };
                     List<MibiLabDataModel> labData = _mibiLab.Process(patList);
-                    labDataForPatients.Add(patient, labData);
+                    foreach (MibiLabDataModel data in labData)
+                    {
+                        if (parameters.MRE == "MRSA")
+                        {
+                            List<Antibiogram> mrsa = data.Antibiogram.Where(x => x.Antibiotic == "Oxacillin" && x.Resistance == "R").ToList();
+                            if (mrsa != null && mrsa.Count > 0)
+                            {
+                                if (labDataForPatients.ContainsKey(patient))
+                                {
+                                    labDataForPatients[patient][true] = labDataForPatients[patient][true].Concat(labData).ToList();
+                                }
+                                else
+                                {
+                                    labDataForPatients.Add(patient, new Dictionary<bool, List<MibiLabDataModel>> { { true, new List<MibiLabDataModel>() }, { false, new List<MibiLabDataModel>() } });
+                                    labDataForPatients[patient][true] = labDataForPatients[patient][true].Concat(labData).ToList();
+                                }
+                            }
+                            else
+                            {
+                                if (labDataForPatients.ContainsKey(patient))
+                                {
+                                    labDataForPatients[patient][false] = labDataForPatients[patient][false].Concat(labData).ToList();
+                                }
+                                else
+                                {
+                                    labDataForPatients.Add(patient, new Dictionary<bool, List<MibiLabDataModel>> { { true, new List<MibiLabDataModel>() }, { false, new List<MibiLabDataModel>() } });
+                                    labDataForPatients[patient][false] = labDataForPatients[patient][false].Concat(labData).ToList();
+                                }
+                            }
+                        }
+
+                    }
                 }
                 return labDataForPatients;
             }

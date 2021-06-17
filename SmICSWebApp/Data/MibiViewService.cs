@@ -10,9 +10,9 @@ namespace SmICSWebApp.Data
     public class MibiViewService
     {
         private IWardOverviewFactory _mibi;
-        private PatientDataFactory _patient;
+        private IPatientDataFactory _patient;
 
-        public MibiViewService(PatientDataFactory patient, IWardOverviewFactory mibi)
+        public MibiViewService(IPatientDataFactory patient, IWardOverviewFactory mibi)
         {
             _patient = patient;
             _mibi = mibi;
@@ -30,5 +30,6 @@ namespace SmICSWebApp.Data
             }
             return mibiViews;
         }
+
     }
 }

@@ -1,0 +1,34 @@
+﻿@using SmICSCoreLib.AQL.Contact_Nth_Network
+@using SmICSCoreLib.AQL.General
+@using SmICSCoreLib.
+
+<table>
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ()
+        {
+            <tr>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+        
+</table>
+
+
+@code {
+    [Parameter]
+    public Case RootPatient { get; set; }
+
+    [Parameter]
+    public ContactModel ContactInformation { get; set; }
+
+    public void OnInitialized()
+    {
+
+    }
+}

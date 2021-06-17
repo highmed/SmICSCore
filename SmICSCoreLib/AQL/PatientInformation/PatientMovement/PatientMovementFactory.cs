@@ -58,7 +58,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung
                 {
 
                     List<EpisodeOfCareModel> episodeOfCareList = _restData.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParam));
-                    List<EpisodeOfCareModel> discharges = _restData.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParam));
+                    List<EpisodeOfCareModel> discharges = _restData.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParam)); 
                     if (!(episodeOfCareList is null))
                     {
                         //result.First because there can be just one admission/discharge timestamp for each case

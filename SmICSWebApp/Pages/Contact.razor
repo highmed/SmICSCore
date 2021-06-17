@@ -1,0 +1,53 @@
+﻿@using SmICSCoreLib.AQL.General
+@using SmICSCoreLib.AQL.Contact_Nth_Network
+
+<h3>Contact</h3>
+
+<div class="card">
+    <div class="card-body">
+        <EditForm Model="@Case" OnValidSubmit="@SubmitPatient">
+            <label for="patient" class="mr-1">PatientID</label>
+            <input type="text" id="patient" class="col-2 mr-2" @bind="@Case.PatientID"></input>
+            <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button>
+        </EditForm>
+    </div>
+</div>
+
+@if(patientCases != null)
+{
+<div class="card">
+    <div class="card-body">
+        <EditForm Model="@Case" OnValidSubmit="@SubmitCase">
+            <label for="case" class="mr-1">Fall</label>
+            <select id="case" class="col-2 mr-2" @bind="@Case.CaseID">
+                <option></option>
+            </select>
+        </EditForm>
+    </div>
+</div>
+}
+
+@if(_contactInfos != null)
+{
+    <ContactTable ContactInformation="_contactInfos" RootPatient="Case"></ContactTable>
+}
+@code {
+    [Parameter]
+    public Case Case { get; set; }
+
+    private List<Case> patientCases;
+
+    private ContactModel _contactInfos;
+
+    private void SubmitPatient()
+    {
+
+    }
+
+    private void SubmitCase()
+    {
+
+    }
+
+
+}

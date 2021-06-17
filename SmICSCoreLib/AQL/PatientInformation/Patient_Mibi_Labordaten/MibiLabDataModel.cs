@@ -1,40 +1,18 @@
 ﻿using Newtonsoft.Json;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten.ReceiveModel;
+using SmICSCoreLib.AQL.MiBi;
+using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten.ReceiveModel;
 using System;
 using System.Collections.Generic;
 
 namespace SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten
 {
-    public class MibiLabDataModel
+    public class MibiLabDataModel : LabData
     {
-        [JsonProperty(PropertyName = "LabordatenID")]
-        public string LabordatenID { get; set; }
-        [JsonProperty(PropertyName = "PatientID")]
-        public string PatientID { get; set; }
-        [JsonProperty(PropertyName = "FallID")]
-        public string FallID { get; set; }
-        [JsonProperty(PropertyName = "ProbeID")]
-        public string ProbeID { get; set; }
-        [JsonProperty(PropertyName = "ZeitpunktProbenentnahme")]
-        public DateTime ZeitpunktProbenentnahme { get; set; }
-        [JsonProperty(PropertyName = "ZeitpunktProbeneingang")]
-        public DateTime ZeitpunktProbeneingang { get; set; }
-        [JsonProperty(PropertyName = "MaterialID")]
-        public string MaterialID { get; set; }
-        [JsonProperty(PropertyName = "Material_l")]
-        [System.ComponentModel.DefaultValue(" ")]
-        public string Material_l { get; set; }
-        [JsonProperty(PropertyName = "Befund")]
-        public bool Befund { get; set; }
-        [JsonProperty(PropertyName = "Befundkommentar")]
-        public string Befundkommentar { get; set; }
-        [JsonProperty(PropertyName = "KeimID")]
-        public string KeimID { get; set; }
         [JsonProperty(PropertyName = "MREKlasse")]
         public string MREKlasse { get; set; }
-        [JsonProperty(PropertyName = "Befunddatum")]
-        public DateTime? Befunddatum { get; set; }
+        [JsonProperty(PropertyName = "Antibiogram")]
+        public List<Antibiogram> Antibiogram { get; set; }
 
         public MibiLabDataModel() { }
         public MibiLabDataModel(MetaDataReceiveModel metaData, SampleReceiveModel sampleData, PathogenReceiveModel pathogenData)
@@ -48,7 +26,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten
             KeimID = pathogenData.KeimID;
             LabordatenID = sampleData.LabordatenID + pathogenData.IsolatNo;
             PatientID = metaData.PatientID;
-            FallID = metaData.FallID;
+            CaseID = metaData.FallID;
             ProbeID = sampleData.LabordatenID;
             MREKlasse = pathogenData.MREKlasse;
         }
