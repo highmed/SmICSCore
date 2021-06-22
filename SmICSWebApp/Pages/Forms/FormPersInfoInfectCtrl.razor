@@ -11,6 +11,7 @@
 @using SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl
 
 @inject ILogger<FormPersInfoInfectCtrl> Logger
+@inject PersInfoInfectCtrlService PersInfoInfectCtrlService
 
 <div class="zurueck-bottom">
     <NavLink class="nav-link" href="contactIndex" Match="NavLinkMatch.All">
@@ -24,6 +25,17 @@
         <EditForm Model="@informationControl" OnValidSubmit="@HandleValidSubmit">
             <DataAnnotationsValidator />
             <ValidationSummary />
+            <div class="deph_2">
+                <span class="span">Mitarbeiterdaten</span>
+                <div class="table">
+                    <div class="tr">
+                        <div class="tb tb_bez"><label>Mitarbeiter ID:</label></div>
+                        <div class="tb">
+                            <InputText @bind-Value="ehr_id" disabled="@disabled" />
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="deph_2">
                 <span class="span">Context</span>
                 <div class="table">
@@ -45,9 +57,9 @@
                             <div class="tb">
                                 <InputSelect @bind-Value="informationControl.symp_vorhanden" disabled="@disabled">
                                     <option selected disabled>Bitte wählen Sie aus</option>
-                                    <option value="vorhanden">vorhanden</option>
-                                    <option value="nicht vorhanden">nicht vorhanden</option>
-                                    <option value="unbekannt">unbekannt</option>
+                                    <option value="Vorhanden">Vorhanden</option>
+                                    <option value="Nicht vorhanden">Nicht vorhanden</option>
+                                    <option value="Unbekannt">Unbekannt</option>
                                 </InputSelect>
                             </div>
                         </div>
@@ -152,13 +164,13 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Startdatum der Freistellung:</label></div>
                         <div class="tb">
-                            <InputDate @bind-Value="informationControl.start_freistellung" disabled="@disabled" />
+                            <InputText type="date" @bind-Value="informationControl.start_freistellung" disabled="@disabled" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Wiederaufnahme der Arbeit:</label></div>
                         <div class="tb">
-                            <InputDate @bind-Value="informationControl.wiederaufnahme" disabled="@disabled" />
+                            <InputText type="date" @bind-Value="informationControl.wiederaufnahme" disabled="@disabled" />
                         </div>
                     </div>
                     <div class="tr">
@@ -231,6 +243,7 @@
     private string message;
     private string messageStyles = "visibility:hidden";
     private PersInfoInfecCtrlModel informationControl = new PersInfoInfecCtrlModel();
+    private string ehr_id;
 
     private void HandleValidSubmit()
     {
@@ -238,7 +251,7 @@
         try
         {
             JObject o = (JObject)JToken.FromObject(informationControl);
-            PersInfoInfectCtrlService.PersInfoInfectCtrlServiceDataStorage(o);
+            PersInfoInfectCtrlService.PersInfoInfectCtrlServiceDataStorage(o, ehr_id);
             disabled = true;
             messageStyles = "color:green";
             message = "Das Formular wurde übermittelt.";

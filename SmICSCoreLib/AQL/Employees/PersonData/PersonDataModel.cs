@@ -12,29 +12,25 @@ namespace SmICSCoreLib.AQL.Employees.PersonData
         [Required]
         public string personID { get; set; }
         [JsonProperty(PropertyName = "dokumentations_id")]
-        [Required]
-        public DateTime dokumentations_id { get; set; }
+        public string dokumentations_id { get; set; }
         [JsonProperty(PropertyName = "art_der_person")]
         [Required]
         public string art_der_person { get; set; }
         [JsonProperty(PropertyName = "titel")]
-        [Required]
         public string titel { get; set; }
         [JsonProperty(PropertyName = "vorname")]
         [Required]
         public string vorname { get; set; }
         [JsonProperty(PropertyName = "weiterer_vorname")]
-        [Required]
         public string weiterer_vorname { get; set; }
         [JsonProperty(PropertyName = "nachname")]
         [Required]
         public string nachname { get; set; }
         [JsonProperty(PropertyName = "suffix")]
-        [Required]
         public string suffix { get; set; }
         [JsonProperty(PropertyName = "geburtsdatum")]
         [Required]
-        public Nullable<DateTime> geburtsdatum { get; set; } = null;
+        public string geburtsdatum { get; set; }
         [JsonProperty(PropertyName = "zeile")]
         [Required]
         public string zeile { get; set; }

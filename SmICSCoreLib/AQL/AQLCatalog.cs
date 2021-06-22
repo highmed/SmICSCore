@@ -519,10 +519,6 @@ namespace SmICSCoreLib.AQL
                                 WHERE c/archetype_details/template_id='Personendaten' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
         }
 
-        public static AQLQuery GetLastEHRStatus()
-        {
-            return new AQLQuery("GetLastEHRStatus", $@"");
-        }
     }
 }
  

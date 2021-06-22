@@ -12,6 +12,7 @@
 @using SmICSCoreLib.AQL.Employees.PersonData
 
 @inject ILogger<FormPersonInformation> Logger
+@inject PersonInformationService PersonInformationService
 
 <div class="zurueck-bottom">
     <NavLink class="nav-link" href="contactIndex" Match="NavLinkMatch.All">
@@ -95,7 +96,7 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Geburtsdatum:</label></div>
                             <div class="tb">
-                                <InputDate @bind-Value="information.geburtsdatum" disabled="@disabled" />
+                                <InputText type="date" @bind-Value="information.geburtsdatum" disabled="@disabled" />
                             </div>
                         </div>
                     </div>
@@ -133,7 +134,7 @@
                                 <div class="tb">
                                     <InputSelect @bind-Value="information.kontakttyp" disabled="@disabled">
                                         <option selected disabled>Bitte wählen Sie aus</option>
-                                        <option value="Telefonnummer">Telefonnummer</option>
+                                        <option value="Telefon">Telefon</option>
                                     </InputSelect>
                                 </div>
                             </div>

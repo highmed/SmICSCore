@@ -37,10 +37,6 @@
   <ItemGroup>
     <Folder Include="Resources\nec\json\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\FormTemplates\" />
-  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\SmICSCoreLib\SmICSCoreLib.csproj" />

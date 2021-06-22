@@ -36,6 +36,8 @@ namespace SmICSWebApp
             services.AddSingleton<Symptom>();
 
             services.AddSingleton<ContactTracingService>();
+            services.AddSingleton<PersonInformationService>();
+            services.AddSingleton<PersInfoInfectCtrlService>();
                      
             services.AddSwaggerGen(c =>
             {
