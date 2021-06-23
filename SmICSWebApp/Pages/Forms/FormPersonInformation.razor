@@ -7,9 +7,18 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Logging
 @using Newtonsoft.Json.Linq
+@using SmICSCoreLib.AQL
+@using SmICSCoreLib.AQL.Employees
+@using SmICSCoreLib.AQL.Employees.PersonData
 
 @inject ILogger<FormPersonInformation> Logger
+@inject PersonInformationService PersonInformationService
 
+<div class="zurueck-bottom">
+    <NavLink class="nav-link" href="contactIndex" Match="NavLinkMatch.All">
+        <span class="oi oi-chevron-left" aria-hidden="true">&nbsp;</span> zur&uuml;ck
+    </NavLink>
+</div>
 <div class="con">
     <div class="deph_1">
         <h3>Personendaten</h3>
@@ -87,7 +96,7 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Geburtsdatum:</label></div>
                             <div class="tb">
-                                <InputDate @bind-Value="information.geburtsdatum" disabled="@disabled" />
+                                <InputText type="date" @bind-Value="information.geburtsdatum" disabled="@disabled" />
                             </div>
                         </div>
                     </div>
@@ -125,7 +134,7 @@
                                 <div class="tb">
                                     <InputSelect @bind-Value="information.kontakttyp" disabled="@disabled">
                                         <option selected disabled>Bitte wählen Sie aus</option>
-                                        <option value="Telefonnummer">Telefonnummer</option>
+                                        <option value="Telefon">Telefon</option>
                                     </InputSelect>
                                 </div>
                             </div>
@@ -188,14 +197,14 @@
                 @message
             </p>
         </EditForm>
-</div>
+    </div>
 </div>
 
 @code{
     private bool disabled;
     private string message;
     private string messageStyles = "visibility:hidden";
-    private Person information = new Person();
+    private PersonDataModel information = new PersonDataModel();
 
     private void HandleValidSubmit()
     {
@@ -203,7 +212,7 @@
         try
         {
             JObject o = (JObject)JToken.FromObject(information);
-            ContactTracingService.ContactTracingDataStorage(o);
+            PersonInformationService.PersonInformationDataStorage(o);
             disabled = true;
             messageStyles = "color:green";
             //message = "Das Formular wurde übermittelt.";
@@ -217,42 +226,5 @@
             messageStyles = "color:red";
             message = "Es wurde ein fehler festgestellt beim Übermitteln des Formulars.";
         }
-    }
-    public class Person
-    {
-        [Required]
-        public string personID { get; set; }
-        [Required]
-        public string art_der_person { get; set; }
-        [Required]
-        public string titel { get; set; }
-        [Required]
-        public string vorname { get; set; }
-        [Required]
-        public string weiterer_vorname { get; set; }
-        [Required]
-        public string nachname { get; set; }
-        [Required]
-        public string suffix { get; set; }
-        [Required]
-        public Nullable<DateTime> geburtsdatum { get; set; } = null;
-        [Required]
-        public string zeile { get; set; }
-        [Required]
-        public string stadt { get; set; }
-        [Required]
-        public string plz { get; set; }
-        [Required]
-        public string kontakttyp { get; set; }
-        [Required]
-        public string nummer { get; set; }
-        [Required]
-        public string fach_bez { get; set; }
-        [Required]
-        public string zeile_heil { get; set; }
-        [Required]
-        public string stadt_heil { get; set; }
-        [Required]
-        public string plz_heil { get; set; }
     }
 }

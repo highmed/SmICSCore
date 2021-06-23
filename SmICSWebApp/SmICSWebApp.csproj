@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\FormTemplates\**" />
+    <Content Remove="Data\FormTemplates\**" />
+    <EmbeddedResource Remove="Data\FormTemplates\**" />
+    <None Remove="Data\FormTemplates\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.3" />
@@ -32,10 +39,6 @@
 
   <ItemGroup>
     <Folder Include="Resources\nec\json\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\FormTemplates\" />
   </ItemGroup>
   
   <ItemGroup>
