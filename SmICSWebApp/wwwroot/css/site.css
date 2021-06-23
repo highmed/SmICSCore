@@ -173,6 +173,14 @@ footer.page-footer a {
     top: 0.5rem;
 }
 
+.gef_von {
+    font-size: 9pt;
+    text-align: right end;
+    margin-top: 0.25%;
+    margin-right: 5%;
+    color: #637492;
+}
+
 @media (max-width: 899px) {
     .main .top-row:not(.auth) {
         display: none;
