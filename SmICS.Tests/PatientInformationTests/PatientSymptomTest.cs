@@ -52,7 +52,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
+                List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
                 for (int i = 0; i <= 16; i++)
                 {
                     yield return new object[] { patient[i].EHR_ID, i };
@@ -64,7 +64,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
 
         private List<SymptomModel> GetExpectedSymptomModels(int ResultSetID)
         {
-            string path = "../../../../TestData/PatientSymptomTestResults.json";
+            string path = ".. /../../../TestData/PatientSymptomTestResults.json";
             List<SymptomModel> result = ExpectedResultJsonReader.ReadResults<SymptomModel>(path, ResultSetID, ExpectedType.PATIENT_SYMPTOM);
             return result;
         }

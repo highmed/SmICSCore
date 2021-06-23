@@ -39,7 +39,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                 Assert.Equal(expected[i].Impfstoff, actual[i].Impfstoff);
                 Assert.Equal(expected[i].Dosierungsreihenfolge, actual[i].Dosierungsreihenfolge);
                 Assert.Equal(expected[i].Dosiermenge, actual[i].Dosiermenge);
-                Assert.Equal(expected[i].Impfung_gegen, actual[i].Impfung_gegen);
+                Assert.Equal(expected[i].ImpfungGegen, actual[i].ImpfungGegen);
                 Assert.Equal(expected[i].Abwesendheit, actual[i].Abwesendheit);
             }
         }
@@ -48,7 +48,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../SmICSDataGenerator.Test/Resources/GeneratedEHRIDs.json");
+                List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
                 
                 yield return new object[] { patient[3].EHR_ID, 3 };
                 yield return new object[] { patient[5].EHR_ID, 5 };
@@ -63,7 +63,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
 
         private List<VaccinationModel> GetExpectedVaccinationModels(int ResultSetID)
         {
-            string path = "../../../../TestData/PatientVaccinationTestResults.json";
+            string path = ".. /../../../TestData/PatientVaccinationTestResults.json";
             List<VaccinationModel> result = ExpectedResultJsonReader.ReadResults<VaccinationModel>(path, ResultSetID, ExpectedType.PATIENT_VACCINATION);
             return result;
         }

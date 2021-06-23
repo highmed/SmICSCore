@@ -6,6 +6,7 @@ using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 using SmICSCoreLib.REST;
 using SmICSFactory.Tests;
 using System;
@@ -103,10 +104,11 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 
 			IPatientMovementFactory patMoveFac = new PatientMovementFactory(rest, NullLogger<PatientMovementFactory>.Instance);
 			IPatientLabordataFactory patLabFac = new PatientLabordataFactory(rest, NullLogger<PatientLabordataFactory>.Instance);
-			ISymptomFactory symptomFac = new SymptomFactory(rest);
+			ISymptomFactory symptomFac = new SymptomFactory(rest, NullLogger<SymptomFactory>.Instance);
+			IVaccinationFactory vaccFac = new VaccinationFactory(rest, NullLogger<VaccinationFactory>.Instance);
 			IMibiPatientLaborDataFactory mibiLabFac = new MibiPatientLaborDataFactory(rest);
 
-			return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac);
+			return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac);
 
 		}
 
