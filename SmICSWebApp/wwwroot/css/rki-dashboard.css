@@ -9,26 +9,29 @@
 }
 
 .mapdiv {
-    width: 70%;
+    width: 100%;
 }
 
-    .mapdiv path {
-        /*fill: #e2e8ee;*/
-        fill: #084594;
-        fill-opacity: 1;
-        fill-rule: evenodd;
-        stroke: #FFFFFF;
-        stroke-opacity: 0.7;
-        stroke-width: 2px;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        transition: fill 0.3s;
-    }
+.mapdiv path {
+    /*fill: #e2e8ee;*/
+    fill: #084594;
+    fill-opacity: 1;
+    fill-rule: evenodd;
+    stroke: #FFFFFF;
+    stroke-opacity: 0.7;
+    stroke-width: 2px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: fill 0.3s;
+}
 
-    .mapdiv :hover {
-        fill: #e0eafc;
-    }
+.mapdiv :hover {
+    fill: #e0eafc;
+}
 
+#map-element a {
+    stroke-opacity: 5; stroke: #8c8989; stroke-width: 4;
+}
 
 #head-info {
     background-color: #8CA2AE;
@@ -52,23 +55,64 @@
     height: 400px;
 }
 
-    .tableFixHead table {
-        border-collapse: collapse;
-        width: 100%;
-    }
+.tableFixHead table {
+    border-collapse: collapse;
+    width: 100%;
+}
 
-    .tableFixHead th {
-        position: sticky;
-        top: 0;
-        background: #EAEAEA;
-    }
-
-#bologna-list .nav-link {
-    background-color: #4AA0CA;
-    margin: 0px 5px 0px 5px;
+.tableFixHead th {
+    position: sticky;
+    top: 0;
+    background: #EAEAEA
 }
 
 
-#bologna-list a {
-    color: white;
+/*#blog-list .nav-link {
+    background-color: #4AA0CA;
+    margin: 0px 5px 0px 5px;
+}*/
+
+#nav-head {
+    border-top: none;
+}
+
+#blog-list .nav-link:hover {
+    background-color: #35A8E0;
+}
+
+#blog-list .nav-link:active {
+    background-color: #35A8E0;
+}
+
+#blog-list .nav-link:focus {
+    background-color: #35A8E0;
+}
+
+#blog-list a {
+    color: black;
+}
+
+#head-info-nav {
+    padding: 5px 15px;
+}
+
+#body-info-nav {
+    padding: 5px 15px 10px 15px;
+}
+
+#body-info-nav .navbar{
+    border-top: none;
+}
+#body-info-nav row{
+    margin: 0px;
+}
+
+#col-table{
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#body-table {
+    padding-left: 7px;
+    padding-right: 7px;
 }

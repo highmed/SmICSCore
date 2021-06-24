@@ -1,17 +1,17 @@
 ﻿using Newtonsoft.Json;
 
-namespace SmICSWebApp.Data
+namespace SmICSCoreLib.StatistikDataModels
 {
     public class District
     {
         [JsonProperty(PropertyName = "features")]
-        public DistrictFeature[] features { get; set; }
+        public DistrictFeature[] Features { get; set; }
     }
 
     public class DistrictFeature
     {
         [JsonProperty(PropertyName = "attributes")]
-        public DistrictAttributes districtAttributes { get; set; }
+        public DistrictAttributes DistrictAttributes { get; set; }
     }
 
     public class DistrictAttributes
@@ -32,42 +32,42 @@ namespace SmICSWebApp.Data
         public string BL_ID { get; set; }
 
         [JsonProperty(PropertyName = "county")]
-        public string county { get; set; }
+        public string County { get; set; }
 
         [JsonProperty(PropertyName = "EWZ")]
         public int EWZ { get; set; }
 
         [JsonProperty(PropertyName = "cases")]
-        public int cases { get; set; }
+        public int Cases { get; set; }
 
         [JsonProperty(PropertyName = "recovered")]
-        public object recovered { get; set; }
+        public object Recovered { get; set; }
 
         [JsonProperty(PropertyName = "deaths")]
-        public int deaths { get; set; }
+        public int Deaths { get; set; }
 
         [JsonProperty(PropertyName = "death_rate")]
-        public float death_rate { get; set; }
-        
+        public float Death_rate { get; set; }
+
         [JsonProperty(PropertyName = "death7_lk")]
-        public int death7_lk { get; set; }
-        
+        public int Death7_lk { get; set; }
+
         [JsonProperty(PropertyName = "cases7_lk")]
-        public int cases7_lk { get; set; }
+        public int Cases7_lk { get; set; }
 
         [JsonProperty(PropertyName = "cases_per_100k")]
-        public float cases_per_100k { get; set; }
+        public float Cases_per_100k { get; set; }
 
         [JsonProperty(PropertyName = "cases_per_population")]
-        public float cases_per_population { get; set; }
+        public float Cases_per_population { get; set; }
 
         [JsonProperty(PropertyName = "cases7_per_100k")]
-        public float cases7_per_100k { get; set; }
-        
+        public float Cases7_per_100k { get; set; }
+
         [JsonProperty(PropertyName = "cases7_per_100k_txt")]
-        public float cases7_per_100k_txt { get; set; }
+        public float Cases7_per_100k_txt { get; set; }
 
         [JsonProperty(PropertyName = "last_update")]
-        public string last_update { get; set; }
+        public string Last_update { get; set; }
     }
 }

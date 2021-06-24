@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace SmICSWebApp.Data
+namespace SmICSCoreLib.StatistikDataModels
 {
     public class State
     {
@@ -32,14 +32,14 @@ namespace SmICSWebApp.Data
         public int Fallzahl { get; set; }
 
         [JsonProperty(PropertyName = "faelle_100000_EW")]
-        public float FaellePro100000Ew { get; set; } 
-        
+        public float FaellePro100000Ew { get; set; }
+
         [JsonProperty(PropertyName = "cases7_bl")]
         public float Cases7_bl { get; set; }
 
         [JsonProperty(PropertyName = "Death")]
         public int Todesfaelle { get; set; }
-        
+
         [JsonProperty(PropertyName = "death7_bl")]
         public int Death7_bl { get; set; }
 
@@ -48,5 +48,38 @@ namespace SmICSWebApp.Data
 
         [JsonProperty(PropertyName = "Aktualisierung")]
         public long Aktualisierung { get; set; }
+    }
+
+    public class StateData
+    {
+        [JsonProperty(PropertyName = "features")]
+        public StateDataFeature[] DataFeature { get; set; }
+    }
+
+    public class StateDataFeature
+    {
+        [JsonProperty(PropertyName = "attributes")]
+        public StateDataAttributes DataAttributes { get; set; }
+    }
+
+    public class StateDataAttributes
+    {
+        [JsonProperty(PropertyName = "BundeslandId")]
+        public int BundeslandId { get; set; }
+
+        [JsonProperty(PropertyName = "AnzFall")]
+        public int AnzFall { get; set; }
+
+        [JsonProperty(PropertyName = "AnzFallNeu")]
+        public int AnzFallNeu { get; set; }
+
+        [JsonProperty(PropertyName = "AnzTodesfall")]
+        public int AnzTodesfall { get; set; }
+
+        [JsonProperty(PropertyName = "AnzTodesfallNeu")]
+        public int AnzTodesfallNeu { get; set; }
+
+        [JsonProperty(PropertyName = "Inz7T")]
+        public float Inz7T { get; set; }
     }
 }
