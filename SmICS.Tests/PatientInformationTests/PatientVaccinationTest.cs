@@ -63,7 +63,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
 
         private List<VaccinationModel> GetExpectedVaccinationModels(int ResultSetID)
         {
-            string path = ".. /../../../TestData/PatientVaccinationTestResults.json";
+            string path = "../../../../TestData/PatientVaccinationTestResults.json";
             List<VaccinationModel> result = ExpectedResultJsonReader.ReadResults<VaccinationModel>(path, ResultSetID, ExpectedType.PATIENT_VACCINATION);
             return result;
         }

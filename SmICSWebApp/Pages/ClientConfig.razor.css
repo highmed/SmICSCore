@@ -1,0 +1,26 @@
+﻿.welcome_header_config {
+    margin-left: 2%;
+    color: #637492;
+    text-shadow: 1px 1px 5px lightgrey;
+}
+
+.welcome_text_config {
+    margin-left: 2%;
+    margin-right: 2%;
+    opacity: 1;
+}
+
+.index_config {
+    display: flex;
+    margin: 2%;
+    flex-direction: column;
+    margin: 2%;
+}
+
+.index-text_config {
+    background-color: #0086b3;
+    opacity: 1;
+    color: azure;
+    padding: 0.2%;
+    margin: 1%;
+}

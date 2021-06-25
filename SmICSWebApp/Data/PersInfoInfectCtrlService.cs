@@ -25,9 +25,9 @@ namespace SmICSWebApp.Data
         {
             string composer = "SmICS";
             try
-             {
-                 if(createEntry != null)
-                 {
+            {
+                if (createEntry != null)
+                {
                     var base_composition = "{\"_type\":\"COMPOSITION\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Personeninformation zur Infektionskontrolle\"}";
                     var base_uid = ",\"uid\":{\"_type\":\"OBJECT_VERSION_ID\",\"value\":\"c37d27fc-38c8-4ca3-9481-fba3f4050319::Infektionskontrolle::1\"}";
                     var base_archetype_details = ",\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-COMPOSITION.report.v1\"},\"template_id\":{\"value\":\"Personeninformation zur Infektionskontrolle\"},\"rm_version\":\"1.0.4\"}";
@@ -53,9 +53,9 @@ namespace SmICSWebApp.Data
                     var base_symp_auftreten = (string)JObject.Parse(createEntry.ToString())["symp_auftreten"];
                     var base_spez_symp = (string)JObject.Parse(createEntry.ToString())["bez_symp"];
                     var base_all_komm = (string)JObject.Parse(createEntry.ToString())["allg_kommentar"];
-                    
 
-                    if (base_anzeichen != null | base_symp_auftreten != null | base_spez_symp != null | base_all_komm != null )
+
+                    if (base_anzeichen != null | base_symp_auftreten != null | base_spez_symp != null | base_all_komm != null)
                     {
                         base_content = "{\"_type\":\"OBSERVATION\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Screening-Fragebogen zur Symptomen/Anzeichen\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-OBSERVATION.symptom_sign_screening.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-OBSERVATION.symptom_sign_screening.v0\",\"language\":{\"terminology_id\":{\"value\":\"ISO_639-1\"},\"code_string\":\"de\"},\"encoding\":{\"terminology_id\":{\"value\":\"IANA_character-sets\"},\"code_string\":\"UTF-8\"},\"subject\":{\"_type\":\"PARTY_SELF\"}";
                         base_data_1 = ",\"data\":{\"_type\":\"HISTORY\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Event Series\"},\"archetype_node_id\":\"at0001\",\"origin\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss") + "\"},\"events\":[{\"_type\":\"POINT_EVENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Beliebiges Ereignis\"},\"archetype_node_id\":\"at0002\",\"time\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss") + "\"}";
@@ -94,7 +94,7 @@ namespace SmICSWebApp.Data
                     var base_erregname = (string)JObject.Parse(createEntry.ToString())["erreg_name"];
                     var base_zeitpunkt_kenn = (string)JObject.Parse(createEntry.ToString())["zeitpunkt_kennzeichnung"];
                     var base_erreg_nachweis_klinik = (string)JObject.Parse(createEntry.ToString())["erreg_Nachweis_klinik"];
-                    var base_zuletzt_akt = (string)JObject.Parse(createEntry.ToString())["erreg_name"];
+                    var base_zuletzt_akt = (string)JObject.Parse(createEntry.ToString())["zuletzt_aktuell"];
                     var base_komma_1 = "";
                     var base_komma_2 = "";
                     var base_komma_3 = "";
@@ -109,20 +109,21 @@ namespace SmICSWebApp.Data
                         {
                             base_komma_1 = ",";
                         }
-                         base_evulation_1 = "{\"_type\":\"EVALUATION\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kennzeichnung Erregernachweis\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-EVALUATION.flag_pathogen.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-EVALUATION.flag_pathogen.v0\",\"language\":{\"terminology_id\":{\"value\":\"ISO_639-1\"},\"code_string\":\"de\"},\"encoding\":{\"terminology_id\":{\"value\":\"IANA_character-sets\"},\"code_string\":\"UTF-8\"},\"subject\":{\"_type\":\"PARTY_SELF\"},\"data\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0001\",\"items\":[";
-                        
+                        base_evulation_1 = "{\"_type\":\"EVALUATION\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kennzeichnung Erregernachweis\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-EVALUATION.flag_pathogen.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-EVALUATION.flag_pathogen.v0\",\"language\":{\"terminology_id\":{\"value\":\"ISO_639-1\"},\"code_string\":\"de\"},\"encoding\":{\"terminology_id\":{\"value\":\"IANA_character-sets\"},\"code_string\":\"UTF-8\"},\"subject\":{\"_type\":\"PARTY_SELF\"},\"data\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0001\",\"items\":[";
+
                         if (base_erreg_nachweis != null)
                         {
-                            if(base_erreg_nachweis == "True")
+                            if (base_erreg_nachweis == "True")
                             {
                                 base_erreg_nachweis = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Erregernachweis\"},\"archetype_node_id\":\"at0005\",\"value\":{\"_type\":\"DV_BOOLEAN\",\"value\":true}}";
-                            }else
+                            }
+                            else
                             {
                                 base_erreg_nachweis = null;
                             }
-                               
+
                         }
-                        
+
                         if (base_erregname != null)
                         {
                             if (base_erreg_nachweis != null)
@@ -134,20 +135,20 @@ namespace SmICSWebApp.Data
 
                         if (base_zeitpunkt_kenn != null)
                         {
-                            if(base_erreg_nachweis != null | base_erregname != null)
+                            if (base_erreg_nachweis != null | base_erregname != null)
                             {
                                 base_komma_3 = ",";
                             }
-                            base_zeitpunkt_kenn = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Zeitpunkt der Kennzeichnung\"},\"archetype_node_id\":\"at0015\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["zeitpunkt_kennzeichnung"] + "\"}}";
+                            base_zeitpunkt_kenn = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Zeitpunkt der Kennzeichnung\"},\"archetype_node_id\":\"at0015\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["zeitpunkt_kennzeichnung"] + "\"}}";
                         }
-                         
+
                         if (base_erreg_nachweis_klinik != "False")
                         {
-                            if(base_erreg_nachweis != null | base_erregname != null | base_zeitpunkt_kenn != null)
+                            if (base_erreg_nachweis != null | base_erregname != null | base_zeitpunkt_kenn != null)
                             {
                                 base_komma_4 = ",";
                             }
-                            base_erreg_nachweis_klinik = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Erregernachweis in der Klinik\"},\"archetype_node_id\":\"at0011\",\"value\":{\"_type\":\"DV_BOOLEAN\",\"value\":true}}]}";
+                            base_erreg_nachweis_klinik = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Erregernachweis in der Klinik\"},\"archetype_node_id\":\"at0011\",\"value\":{\"_type\":\"DV_BOOLEAN\",\"value\":true}}]}";
                         }
                         else
                         {
@@ -161,11 +162,12 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_5 = ",";
                             }
-                            base_zuletzt_akt = ",\"protocol\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0003\",\"items\":[{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Zuletzt aktualisiert\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["zuletzt_aktuell"] + "\"}}";
+                            base_zuletzt_akt = "\"protocol\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0003\",\"items\":[{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Zuletzt aktualisiert\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["zuletzt_aktuell"] + "\"}}";
                         }
 
                         base_evu_ende = "]}}";
-                    } else
+                    }
+                    else
                     {
                         base_erreg_nachweis = null;
                         base_erreg_nachweis_klinik = null;
@@ -193,31 +195,32 @@ namespace SmICSWebApp.Data
                             base_komma_6 = ",";
                         }
                         base_evulation_2 = "{\"_type\":\"EVALUATION\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Freistellung von der Arbeit\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-EVALUATION.exemption_from_work.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-EVALUATION.exemption_from_work.v0\",\"language\":{\"terminology_id\":{\"value\":\"ISO_639-1\"},\"code_string\":\"de\"},\"encoding\":{\"terminology_id\":{\"value\":\"IANA_character-sets\"},\"code_string\":\"UTF-8\"},\"subject\":{\"_type\":\"PARTY_SELF\"},\"data\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0001\",\"items\":[";
-                        
+
                         if (base_freigestellt != null)
                         {
                             if (base_freigestellt == "True")
                             {
                                 base_freigestellt = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Freigestellt von der Arbeit?\"},\"archetype_node_id\":\"at0008\",\"value\":{\"_type\":\"DV_BOOLEAN\",\"value\":true}}";
-                            }else
+                            }
+                            else
                             {
                                 base_freigestellt = null;
                             }
-                            
+
                         }
 
                         if (base_grund != null)
                         {
-                            if(base_freigestellt != null)
+                            if (base_freigestellt != null)
                             {
                                 base_komma_7 = ",";
                             }
                             base_grund = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Grund für die Freistellung\"},\"archetype_node_id\":\"at0005\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["grund"] + "\"}}";
                         }
 
-                        if(base_beschreibung != null)
+                        if (base_beschreibung != null)
                         {
-                            if(base_freigestellt != null | base_grund != null)
+                            if (base_freigestellt != null | base_grund != null)
                             {
                                 base_komma_8 = ",";
                             }
@@ -233,7 +236,7 @@ namespace SmICSWebApp.Data
                             base_start_frei = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Startdatum der Freistellung\"},\"archetype_node_id\":\"at0003\",\"value\":{\"_type\":\"DV_DATE\",\"value\":\"" + JObject.Parse(createEntry.ToString())["start_freistellung"] + "\"}}";
                         }
 
-                        if(base_wiederaufnahme != null)
+                        if (base_wiederaufnahme != null)
                         {
                             if (base_freigestellt != null | base_grund != null | base_beschreibung != null | base_start_frei != null)
                             {
@@ -242,7 +245,7 @@ namespace SmICSWebApp.Data
                             base_wiederaufnahme = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Wiederaufnahme der Arbeit\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_DATE\",\"value\":\"" + JObject.Parse(createEntry.ToString())["wiederaufnahme"] + "\"}}";
                         }
 
-                        if(base_komm_frei != null)
+                        if (base_komm_frei != null)
                         {
                             if (base_freigestellt != null | base_grund != null | base_beschreibung != null | base_start_frei != null | base_wiederaufnahme != null)
                             {
@@ -252,7 +255,8 @@ namespace SmICSWebApp.Data
                         }
 
                         base_ende_evu_2 = "]}}";
-                    } else
+                    }
+                    else
                     {
                         base_freigestellt = null;
                     }
@@ -279,22 +283,23 @@ namespace SmICSWebApp.Data
                             base_komma_12 = ",";
                         }
                         base_admin_entry = "{\"_type\":\"ADMIN_ENTRY\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Meldung an das Gesundheitsamt\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-ADMIN_ENTRY.report_to_health_department.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-ADMIN_ENTRY.report_to_health_department.v0\",\"language\":{\"terminology_id\":{\"value\":\"ISO_639-1\"},\"code_string\":\"de\"},\"encoding\":{\"terminology_id\":{\"value\":\"IANA_character-sets\"},\"code_string\":\"UTF-8\"},\"subject\":{\"_type\":\"PARTY_SELF\"},\"data\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0001\",\"items\":[";
-                        
+
                         if (base_meldung != null)
                         {
                             if (base_meldung == "True")
                             {
                                 base_meldung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Meldung an das Gesundheitsamt?\"},\"archetype_node_id\":\"at0009\",\"value\":{\"_type\":\"DV_BOOLEAN\",\"value\":true}}";
-                            }else
+                            }
+                            else
                             {
                                 base_meldung = null;
                             }
-                            
+
                         }
 
-                        if(base_ereignis != null)
+                        if (base_ereignis != null)
                         {
-                            if(base_meldung != null)
+                            if (base_meldung != null)
                             {
                                 base_komma_13 = ",";
                             }
@@ -337,13 +342,14 @@ namespace SmICSWebApp.Data
                             base_meldung_komm = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kommentar\"},\"archetype_node_id\":\"at0007\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["meldung_kommentar"] + "\"}}";
                         }
                         base_end_admin_entry = "]}}";
-                    } else
+                    }
+                    else
                     {
                         base_meldung = null;
                     }
 
                     var base_end_compositionn = "]}";
-                    
+
 
                     var json_all = base_composition + base_uid + base_archetype_details + base_archetype_node_id + base_language + base_territory + base_category + base_composer +
                         base_context + base_setting + base_other_context + base_bericht_id + base_content_beginn + base_content + base_data_1 + base_data_2 + base_anzeichen + base_symp_auftreten +
@@ -357,13 +363,13 @@ namespace SmICSWebApp.Data
 
                     SaveComposition(ehr_id, finishedJson);
                 }
-                
-             }
-             catch (Exception)
-             {
+
+            }
+            catch (Exception)
+            {
                 throw new Exception($"Failed to POST data");
             }
-           
+
         }
 
         private void SaveComposition(string subjectID, string writeResult)

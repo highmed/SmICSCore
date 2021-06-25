@@ -64,7 +64,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
 
         private List<SymptomModel> GetExpectedSymptomModels(int ResultSetID)
         {
-            string path = ".. /../../../TestData/PatientSymptomTestResults.json";
+            string path = "../../../../TestData/PatientSymptomTestResults.json";
             List<SymptomModel> result = ExpectedResultJsonReader.ReadResults<SymptomModel>(path, ResultSetID, ExpectedType.PATIENT_SYMPTOM);
             return result;
         }
