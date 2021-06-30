@@ -64,7 +64,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				Assert.Equal(expected.LaborData[i].MaterialID, actual.LaborData[i].MaterialID);
 				Assert.Equal(expected.LaborData[i].Material_l, actual.LaborData[i].Material_l);
 				Assert.Equal(expected.LaborData[i].ProbeID, actual.LaborData[i].ProbeID);
-				Assert.Equal(expected.LaborData[i].ZeitpunktProbeneingang.ToString("s"), actual.LaborData[i].ZeitpunktProbeneingang.ToUniversalTime().ToString("s"));
+				Assert.Equal(expected.LaborData[i].ZeitpunktProbeneingang.Value.ToString("s"), actual.LaborData[i].ZeitpunktProbeneingang.Value.ToUniversalTime().ToString("s"));
 				Assert.Equal(expected.LaborData[i].ZeitpunktProbenentnahme.ToString("s"), actual.LaborData[i].ZeitpunktProbenentnahme.ToUniversalTime().ToString("s"));
 			}
 		}

@@ -557,13 +557,11 @@
             if (patStationary != null)
             {
                 foreach (var pat in patStationary)
-                {
-                    //TODOS Bedinugung anpassen
+                   
                     if (pat.Datum_Uhrzeit_der_Entlassung.GetHashCode() == 0)
                     {
                         aktivHeute.Add(pat);
                     }
-                }
             }
         }
         aktivefaelle = aktivHeute.Count();

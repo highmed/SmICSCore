@@ -202,11 +202,15 @@
     {
         patMovtList = symptom.GetPatMovement(patientId);
         moveCount = patMovtList.Count();
-
         if (moveCount != 0)
         {
             patientMovement = patMovtList.First();
         }
+
+        first = 0;
+        second = 0;
+        indexFirst = 1;
+        indexSec = 1;
     }
 
     private void NextFirst()
@@ -233,7 +237,6 @@
     {
         [Required]
         public DateTime datum = DateTime.Now.Date;
-
     }
 
 }

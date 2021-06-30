@@ -41,7 +41,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                 Assert.Equal(expected[i].MaterialID, actual[i].MaterialID);
                 Assert.Equal(expected[i].Material_l, actual[i].Material_l);
                 Assert.Equal(expected[i].ProbeID, actual[i].ProbeID);
-                Assert.Equal(expected[i].ZeitpunktProbeneingang.ToString("s"), actual[i].ZeitpunktProbeneingang.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].ZeitpunktProbeneingang.Value.ToString("s"), actual[i].ZeitpunktProbeneingang.Value.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].ZeitpunktProbenentnahme.ToString("s"), actual[i].ZeitpunktProbenentnahme.ToUniversalTime().ToString("s"));
                 //Assert.Equal(expected[i].Fachabteilung, actual[i].Fachabteilung); --> Exisitiert noch nicht, muss aber eingebunden werden
             }

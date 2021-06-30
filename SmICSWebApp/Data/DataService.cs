@@ -208,6 +208,10 @@ namespace SmICSWebApp.Data
 
                 foreach (StationaryDataModel statData in statPatList)
                 {
+                    if (statData.Datum_Uhrzeit_der_Entlassung.GetHashCode() == 0)
+                    {
+                        statData.Datum_Uhrzeit_der_Entlassung = DateTime.Now;
+                    }
                     start = (statData.Datum_Uhrzeit_der_Entlassung - statData.Datum_Uhrzeit_der_Aufnahme).TotalDays;
                     gesamt += start;
                 }

@@ -10,7 +10,7 @@ namespace SmICSFactory.Tests.StatistikServicesTests
         [Fact]
         public void GetAllStatesTest() {
             RestClient client = new();
-            RkiRestApi rkiRestApi = new ();
+            RkiRestApi rkiRestApi = new();
 
             State state = rkiRestApi.GetAllStates();
 

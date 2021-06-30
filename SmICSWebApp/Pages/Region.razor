@@ -4,7 +4,10 @@
 @using SmICSCoreLib.StatistikServices
 @using System.ComponentModel.DataAnnotations
 @using System
+@using System.Collections;
+@using System.IO;
 @using ChartJs.Blazor.LineChart
+@using SmICSCoreLib.JSONFileStream;
 
 @inject RkiRestApi rkiRestApi
 
@@ -40,7 +43,7 @@
                                         <div style="display: inline-flex; ">
                                             <div>
                                                 <label>Bundesland: </label>
-                                                <InputSelect @bind-Value="data.bl" @onclick="@OnValueBl">
+                                                <InputSelect @bind-Value="data.bl" @onclick="@GetBl">
                                                     @foreach (var item in bundeslaender)
                                                         {
                                                         <option value="@item.BlAttribute.Bundesland"> @item.BlAttribute.Bundesland</option>}
@@ -50,7 +53,7 @@
 
                                             <div>
                                                 <label>Region: </label>
-                                                <InputSelect @bind-Value="data.gen" @onclick="@OnValueGen">
+                                                <InputSelect @bind-Value="data.gen" @onclick="@GetLk">
                                                     @foreach (var item in @lkArray)
                                                         {
                                                         <option value="@item.Stadt">
@@ -116,10 +119,10 @@
                                                     <td> k.A.</td>
                                                 </tr>
                                                 @*<tr>
-                                                <th scope="row">Nicht genesen</th>
-                                                <td> .k.A </td>
-                                                <td> .k.A</td>
-                                            </tr>*@
+                                                        <th scope="row">Nicht genesen</th>
+                                                        <td> .k.A </td>
+                                                        <td> .k.A</td>
+                                                    </tr>*@
                                             </tbody>
                                         </table>
                                     </div>
@@ -129,7 +132,10 @@
 
                         <div class="col-7">
                             <div class="card flex-fill">
-                           @*     <Chart Config="_config"></Chart>*@
+                                @if (@chartStatus == true)
+                                {
+                                    <Chart Config="config" @ref="_chart"></Chart>
+                                }
                             </div>
                         </div>
                     </div>
@@ -148,25 +154,27 @@
     private Landkreis landkreis = new();
     private string stand;
     private string rValue = "";
+    private string lkDefult;
     private bool status;
-    private Dictionary<string, int> rkiDatenBl;
-    private Dictionary<string, int> rkiDatenLk;
+    private bool chartStatus;
     private int anzahlFaelle;
     private int anzahlPatTage;
 
-    private LineConfig _config;
     private Chart _chart;
+    private LineConfig config;
 
     protected override async Task OnInitializedAsync()
     {
         status = true;
+        chartStatus = false;
         data.bl = "Baden-Württemberg";
         data.gen = "Stuttgart";
         await Task.Run(LoadRValue);
         await Task.Run(LoadRkiData);
 
-        //GetDataForChart();
-        //GetChart();
+
+        //BLToJson();
+        //LKToJson();
     }
 
     private void LoadRkiData()
@@ -227,7 +235,7 @@
         }
     }
 
-    private void OnValueBl()
+    private void GetBl()
     {
         foreach (var item in bundeslaender)
         {
@@ -240,7 +248,7 @@
         }
     }
 
-    private void OnValueGen()
+    private void GetLk()
     {
         foreach (var item in lkArray)
         {
@@ -249,6 +257,111 @@
                 landkreis = item;
             }
         }
+
+        if (chartStatus == false)
+        {
+            Dictionary<string, int> rkiDatenLk = GetLKDataForChart(landkreis.LandkreisName);
+            Dictionary<string, int> rkiDatenBl = GetBLDataForChart(bundesland.BlAttribute.Bundesland, rkiDatenLk);
+            if (rkiDatenLk != null)
+            {
+                config = new();
+                IDataset<int> lkDataset = new LineDataset<int>(rkiDatenLk.Values)
+                {
+                    Label = landkreis.LandkreisName,
+                    BackgroundColor = "#4AA0CA",
+                    BorderColor = "#7FBDD2",
+                    Fill = FillingMode.Disabled
+                };
+                IDataset<int> blDataset = new LineDataset<int>(rkiDatenBl.Values)
+                {
+                    Label = bundesland.BlAttribute.Bundesland,
+                    BackgroundColor = "#F35C58",
+                    BorderColor = "#F35C58",
+                    Fill = FillingMode.Disabled
+                };
+
+                config = new LineConfig
+                {
+                    Options = new LineOptions
+                    {
+                        Title = new OptionsTitle
+                        {
+                            Display = true,
+                            Text = "Entwicklung der 7-Tage-Fallzahlen"
+                        },
+                        Tooltips = new Tooltips
+                        {
+                            Mode = InteractionMode.Nearest,
+                            Intersect = true
+                        },
+                        Hover = new Hover
+                        {
+                            Mode = InteractionMode.Nearest,
+                            Intersect = true
+                        },
+                        Scales = new Scales
+                        {
+                            XAxes = new List<CartesianAxis>
+        {
+                            new CategoryAxis
+                            {
+                                 ScaleLabel = new ScaleLabel
+                                {
+                                    LabelString = "Datum"
+                                }
+                            }
+                        },
+                            YAxes = new List<CartesianAxis>
+         {
+                            new LinearCartesianAxis
+                            {
+                                Ticks = new LinearCartesianTicks
+                                {
+                                    BeginAtZero = true
+                                }
+                            }
+                     }
+                        }
+                    }
+                };
+
+                foreach (var datum in rkiDatenBl.Keys)
+                {
+                    config.Data.Labels.Add(datum);
+                }
+                config.Data.Datasets.Add(blDataset);
+                config.Data.Datasets.Add(lkDataset);
+            }
+            chartStatus = true;
+        }
+        else
+        {
+            IList<IDataset> datasets = config.Data.Datasets;
+            datasets.Clear();
+            Dictionary<string, int> rkiDatenLkDSort = GetLKDataForChart(landkreis.LandkreisName);
+            Dictionary<string, int> rkiDatenBlSort = GetBLDataForChart(bundesland.BlAttribute.Bundesland, rkiDatenLkDSort);
+
+            IDataset<int> blDataset = new LineDataset<int>(rkiDatenBlSort.Values)
+            {
+                Label = bundesland.BlAttribute.Bundesland,
+                BackgroundColor = "#F35C58",
+                BorderColor = "#F35C58",
+                Fill = FillingMode.Disabled
+            };
+            IDataset<int> lkDataset2 = new LineDataset<int>(rkiDatenLkDSort.Values)
+            {
+                Label = landkreis.LandkreisName,
+                BackgroundColor = "#4AA0CA",
+                BorderColor = "#7FBDD2",
+                Fill = FillingMode.Disabled
+            };
+
+            config.Data.Datasets.Add(blDataset);
+            config.Data.Datasets.Add(lkDataset2);
+            _chart.Update();
+
+        }
+
     }
 
     private class StatistikData
@@ -260,97 +373,67 @@
         public string gen { get; set; }
     }
 
+    private Dictionary<string, int> GetLKDataForChart(string landkreis)
+    {
+        Dictionary<string, int> rkiDatenLk = new();
+
+        //LKReportJson lKReportJson = rkiRestApi.LKReportDeserialize("LKReport - 2021");
+        LKReportJson lKReportJson = rkiRestApi.LKReportDeserialize("LKReport");
+
+        foreach (var item in lKReportJson.LKReport)
+        {
+            if (item.LKName == landkreis)
+            {
+                foreach (var reportAttribute in item.LKReportAttribute)
+                {
+                    //if (reportAttribute.Datum.StartsWith("01") || reportAttribute.Datum.StartsWith("15")
+                    //    || reportAttribute.Datum.StartsWith("28"))
+                    if (reportAttribute.Datum.StartsWith("01"))
+                    {
+                        rkiDatenLk.Add(reportAttribute.Datum, reportAttribute.Fahlzahl);
+                    }
+                }
+
+            }
+        }
+
+        return rkiDatenLk;
+    }
+
+    private Dictionary<string, int> GetBLDataForChart(string bundesland, Dictionary<string, int> rkiDatenLk)
+    {
+        Dictionary<string, int> rkiDatenBl = new();
+
+        //Report blReportJson = rkiRestApi.BLReportDeserialize("BLReport - 2021");
+        Report blReportJson = rkiRestApi.BLReportDeserialize("BLReport");
+
+        foreach (var item in blReportJson.BLReport)
+        {
+            if (item.BlName == bundesland)
+            {
+                foreach (var reportAttribute in item.BLReportAttribute)
+                {
+                    //if (reportAttribute.Datum.StartsWith("01") || reportAttribute.Datum.StartsWith("15")
+                    //    || reportAttribute.Datum.StartsWith("28"))
+                    if (reportAttribute.Datum.StartsWith("01"))
+                    {
+                        rkiDatenBl.Add(reportAttribute.Datum, reportAttribute.Fahlzahl);
+                    }
+                }
+
+            }
+        }
 
 
-    //private void GetDataForChart()
-    //{
+        foreach (var itemBl in rkiDatenBl)
+        {
+            if (!rkiDatenLk.ContainsKey(itemBl.Key))
+            {
+                rkiDatenBl.Remove(itemBl.Key);
+            }
+        }
 
-    //    rkiDatenBl = rkiRestApi.GetDatas("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 1, 366, 2, 2, 11);
-    //    rkiDatenLk = rkiRestApi.GetDatas("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 5, 172, 4, 4, 150);
-
-    //    foreach (var itemBl in rkiDatenBl)
-    //    {
-    //        if (!rkiDatenLk.ContainsKey(itemBl.Key))
-    //        {
-    //            rkiDatenBl.Remove(itemBl.Key);
-    //        }
-    //    }
-
-
-    //}
-
-    //protected void GetChart()
-    //{
-    //    _config = new LineConfig
-    //    {
-    //        Options = new LineOptions
-    //        {
-    //            Title = new OptionsTitle
-    //            {
-    //                Display = true,
-    //                Text = "Entwicklung der 7-Tage-Fallzahlen in Nidersachsen"
-    //            },
-    //            Tooltips = new Tooltips
-    //            {
-    //                Mode = InteractionMode.Nearest,
-    //                Intersect = true
-    //            },
-    //            Hover = new Hover
-    //            {
-    //                Mode = InteractionMode.Nearest,
-    //                Intersect = true
-    //            },
-    //            Scales = new Scales
-    //            {
-    //                XAxes = new List<CartesianAxis>
-    //            {
-    //                        new CategoryAxis
-    //                        {
-    //                             ScaleLabel = new ScaleLabel
-    //                            {
-    //                                LabelString = "Datum"
-    //                            }
-    //                        }
-    //                    },
-    //                YAxes = new List<CartesianAxis>
-    //             {
-    //                        new LinearCartesianAxis
-    //                        {
-    //                            Ticks = new LinearCartesianTicks
-    //                            {
-    //                                BeginAtZero = true
-    //                            }
-    //                        }
-    //                 }
-    //            }
-    //        }
-    //    };
-
-    //    foreach (string datum in rkiDatenBl.Keys)
-    //    {
-    //        _config.Data.Labels.Add(datum);
-    //    }
-
-
-    //    IDataset<int> ndrDataset = new LineDataset<int>(rkiDatenBl.Values)
-    //    {
-    //        Label = "Nidersachsen-Fallzahlen",
-    //        BackgroundColor = "#4AA0CA",
-    //        BorderColor = "#7FBDD2",
-    //        Fill = FillingMode.Disabled
-    //    };
-
-    //    IDataset<int> hhDataset = new LineDataset<int>(rkiDatenLk.Values)
-    //    {
-    //        Label = "Region Hannover-Fallzahlen",
-    //        BackgroundColor = "#F35C58",
-    //        BorderColor = "#F35C58",
-    //        Fill = FillingMode.Disabled
-    //    };
-
-    //    _config.Data.Datasets.Add(ndrDataset);
-    //    _config.Data.Datasets.Add(hhDataset);
-
-    //}
+        return rkiDatenBl;
+    }
 
 }

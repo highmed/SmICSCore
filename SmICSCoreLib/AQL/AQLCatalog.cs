@@ -331,7 +331,7 @@ namespace SmICSCoreLib.AQL
                                  d/items[at0027]/value/value as Station
                                  FROM EHR e
                                  CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1]
-                                 CONTAINS (ADMIN_ENTRY u[openEHR-EHR-ADMIN_ENTRY.admission.v0] and ADMIN_ENTRY f[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0] and CLUSTER d[openEHR-EHR-CLUSTER.location.v1])
+                                 CONTAINS (ADMIN_ENTRY u[openEHR-EHR-ADMIN_ENTRY.admission.v0] or ADMIN_ENTRY f[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0] and CLUSTER d[openEHR-EHR-CLUSTER.location.v1])
                                  WHERE PatientID='{patientId}' and FallID='{fallId}'"
                 
                 
@@ -346,7 +346,7 @@ namespace SmICSCoreLib.AQL
                 //                    i/items[at0027]/value/value as Station
                 //                    FROM EHR e 
                 //                    CONTAINS COMPOSITION c#Stationärer_Versorgungsfall 
-                //                    CONTAINS (ADMIN_ENTRY j#Aufnahmedaten CONTAINS (CLUSTER i#Vorheriger_Patientenstandort__vor_Aufnahme_) and 
+                //                    CONTAINS (ADMIN_ENTRY j#Aufnahmedaten CONTAINS (CLUSTER i#Vorheriger_Patientenstandort__vor_Aufnahme_) or 
                 //                    ADMIN_ENTRY w#Entlassungsdaten) 
                 //                    WHERE PatientID='{patientId}' and FallID='{fallId}'"
                                     

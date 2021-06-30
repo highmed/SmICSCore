@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <Folder Include="Resources\nec\json\" />
+    <Folder Include="Resources\Rkidata\" />
   </ItemGroup>
 
   <ItemGroup>

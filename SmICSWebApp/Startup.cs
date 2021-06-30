@@ -41,12 +41,22 @@ namespace SmICSWebApp
             services.AddSingleton<RkiRestApi>();
             services.AddSingleton<Symptom>();
 
-            //CronJob
+            //CronJob GetReport
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             services.AddSingleton<JobGetReport>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 00 10 ? * *"));
             services.AddHostedService<QuartzHostedService>();
+
+            //CronJob UpdateLkRkidata
+            services.AddSingleton<JobUpdateLkRkidata>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateLkRkidata), "JobUpdateLkRkidata", "0 17 11 ? * *"));
+
+            //CronJob UpdateBlRkidata
+            services.AddSingleton<JobUpdateBlRkidata>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateBlRkidata), "JobUpdateBlRkidata", "0 19 11 ? * *"));
+
+            
 
             services.AddSwaggerGen(c =>
             {
