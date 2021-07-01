@@ -112,7 +112,7 @@
 
                                                 <tr>
                                                     <th scope="row">
-                                                        Mögliche Nosokomiale Infektion
+                                                        Mögliche nosokomiale Infektion
                                                         <a href="" @onmouseover="() => ShowFirstText()" @onclick:preventDefault style="color:red">
                                                             *
                                                         </a>
@@ -159,7 +159,7 @@
 
                                                 <tr>
                                                     <th scope="row">
-                                                        Wahrscheinliche Nosokomiale Infektion
+                                                        Wahrscheinliche nosokomiale Infektion
                                                         <a href="" @onmouseover="() => ShowSecondText()" @onclick:preventDefault style="color:red">
                                                             *
                                                         </a>
@@ -222,20 +222,22 @@
                                         @if (firstText == true && secondText == false)
                                         {
                                             <p style="font-size:0.8em">
-                                                *eine Mögliche Nosokomiale Infektion ist, wenn der Patient war bei stationärer Aufnahme negativ auf SARS-CoV-2
-                                                getestet war und hat keine SARS-CoV-2 Symptome gezeigt. Und hat erstmal eine positive PCR von SARS-CoV-2
-                                                ab Tag 4 nach stationärer Aufnahme.
+                                                *Mögliche nosokomiale Infektion:
+                                                <br>
+                                                Patient war bei stationärer Aufnahme negativ auf SARS-CoV-2 getestet und hat keine Symptome aus der Symptomliste unten.
+                                                Er/sie weist erstmals einen positiven PCR-Test auf SARS-CoV-2 ab Tag 4 nach stationärer Aufnahme auf
                                             </p>
                                         }
 
                                         @if (firstText == false && secondText == true)
                                         {
                                             <p style="font-size:0.8em">
-                                                *eine Wahrscheinliche Nosokomiale Infektion ist, wenn der Patient bei stationärer Aufnahme negativ auf SARS-CoV-2
-                                                getestet war und hat keine SARS-CoV-2 Symptome gezeigt. Und hat erstmal eine positive PCR für oder den
-                                                kulturellen Nachweis von SARS-CoV-2 ab Tag 4 nach stationärer Aufnahme. Und es besteht ein klassisch
-                                                infektionsepidemiologischer Zusammenhang (Ort-Zeit-Kontext) zu einem nachgewiesen infizierten potentiellen im
-                                                Zeitraum der Inkubationszeit (2-14 Tage VOR Beginn der Symptome oder Probenahme) im Krankenhaus.
+                                                *Wahrscheinliche nosokomiale Infektion:
+                                                <br>
+                                                 Patient war bei stationärer Aufnahme negativ auf SARS-CoV-2 getestet und hat keine Symptome aus der Symptomliste unten. 
+                                                 Und hat erstmal eine positive PCR für oder den kulturellen Nachweis von SARS-CoV-2 ab Tag 4 nach stationärer Aufnahme. 
+                                                 Und es besteht ein klassisch infektionsepidemiologischer Zusammenhang (Ort-Zeit-Kontext) zu einem nachgewiesen infizierten 
+                                                 potentiellen im Zeitraum der Inkubationszeit (2-14 Tage VOR Beginn der Symptome oder Probenahme) im Krankenhaus.
                                             </p>
                                         }
                                     </div>
@@ -557,7 +559,7 @@
             if (patStationary != null)
             {
                 foreach (var pat in patStationary)
-                   
+
                     if (pat.Datum_Uhrzeit_der_Entlassung.GetHashCode() == 0)
                     {
                         aktivHeute.Add(pat);
