@@ -48,13 +48,9 @@ namespace SmICSWebApp
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 00 10 ? * *"));
             services.AddHostedService<QuartzHostedService>();
 
-            //CronJob UpdateLkRkidata
-            services.AddSingleton<JobUpdateLkRkidata>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateLkRkidata), "JobUpdateLkRkidata", "0 17 11 ? * *"));
-
-            //CronJob UpdateBlRkidata
-            services.AddSingleton<JobUpdateBlRkidata>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateBlRkidata), "JobUpdateBlRkidata", "0 19 11 ? * *"));
+            //CronJob UpdateRkidata
+            services.AddSingleton<JobUpdateRkidata>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
 
             
 

@@ -129,17 +129,44 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        
+        public static DataSet GetCsvDataSet(String url)
+        {
+            var client = new WebClient();
+            try
+            {
+                var fullPath = Path.GetTempFileName();
+                client.DownloadFile(url, fullPath);
+
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                using var stream = File.Open(fullPath, FileMode.Open, FileAccess.Read);
+                using var reader = ExcelReaderFactory.CreateCsvReader(stream);
+                var result = reader.AsDataSet();
+
+                return result;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+
         //Get Data From RKI Resources and write it as a DailyReport
         public string GetRValue(int vlaue)
         {
             string rValu;
             try
             {
-                String url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Projekte_RKI/Nowcasting_Zahlen.xlsx?__blob=publicationFile";
-                var result = GetDataSetFromLink(url);
-                var dataRows = result.Tables[1].Rows;
-                return rValu = result.Tables[1].Rows[dataRows.Count - vlaue][10].ToString();
+                //String url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Projekte_RKI/Nowcasting_Zahlen.xlsx?__blob=publicationFile";
+                String url = "https://raw.githubusercontent.com/robert-koch-institut/SARS-CoV-2-Nowcasting_und_-R-Schaetzung/main/Nowcast_R_aktuell.csv";
+                var result = GetCsvDataSet(url);
+                var dataRows = result.Tables[0].Rows;
+                rValu = result.Tables[0].Rows[dataRows.Count - vlaue][10].ToString();
+                if (rValu.ElementAt(0) == '.')
+                {
+                    rValu = rValu.Insert(0, "0");
+                }
+                return rValu;
             }
             catch (Exception)
             {
@@ -559,7 +586,6 @@ namespace SmICSCoreLib.StatistikServices
 
         public void BLReportSerialize()
         {
-            //Report report = GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 241, 413);
             Report report = GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 1, 422);
             string path = @"../SmICSWebApp/Resources/Rkidata";
 
@@ -567,14 +593,12 @@ namespace SmICSCoreLib.StatistikServices
             {
                 Directory.CreateDirectory(path);
             }
-            //string filename = ("BLReport - 2021");
             string filename = ("BLReport");
             JSONWriter.Write(report, path, filename);
         }
 
         public void LKReportSerialize()
         {
-            //LKReportJson lKReportJson = rkiRestApi.GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 47, 219);
             LKReportJson lKReportJson = GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 3, 228);
             string path = @"../SmICSWebApp/Resources/Rkidata";
 
@@ -582,7 +606,6 @@ namespace SmICSCoreLib.StatistikServices
             {
                 Directory.CreateDirectory(path);
             }
-            //string filename = ("LKReport - 2021");
             string filename = ("LKReport");
             JSONWriter.Write(lKReportJson, path, filename);
         }

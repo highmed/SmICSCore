@@ -171,10 +171,7 @@
         data.gen = "Stuttgart";
         await Task.Run(LoadRValue);
         await Task.Run(LoadRkiData);
-
-
-        //BLToJson();
-        //LKToJson();
+        GetChart();
     }
 
     private void LoadRkiData()
@@ -244,8 +241,11 @@
                 bundesland = item;
                 lkArray = item.Landkreise;
                 landkreis = lkArray.First();
+                data.gen = landkreis.ToString();
             }
         }
+
+        GetChart();
     }
 
     private void GetLk()
@@ -257,6 +257,83 @@
                 landkreis = item;
             }
         }
+
+        GetChart();
+    }
+
+    private class StatistikData
+    {
+        [Required]
+        public string bl { get; set; }
+
+        [Required]
+        public string gen { get; set; }
+    }
+
+    private Dictionary<string, int> GetLKDataForChart(string landkreis)
+    {
+        Dictionary<string, int> rkiDatenLk = new();
+
+        //LKReportJson lKReportJson = rkiRestApi.LKReportDeserialize("LKReport - 2021");
+        LKReportJson lKReportJson = rkiRestApi.LKReportDeserialize("LKReport");
+
+        foreach (var item in lKReportJson.LKReport)
+        {
+            if (item.LKName == landkreis)
+            {
+                foreach (var reportAttribute in item.LKReportAttribute)
+                {
+                    //if (reportAttribute.Datum.StartsWith("01") || reportAttribute.Datum.StartsWith("15")
+                    //    || reportAttribute.Datum.StartsWith("28"))
+                    if (reportAttribute.Datum.StartsWith("01"))
+                    {
+                        rkiDatenLk.Add(reportAttribute.Datum, reportAttribute.Fahlzahl);
+                    }
+                }
+
+            }
+        }
+
+        return rkiDatenLk;
+    }
+
+    private Dictionary<string, int> GetBLDataForChart(string bundesland, Dictionary<string, int> rkiDatenLk)
+    {
+        Dictionary<string, int> rkiDatenBl = new();
+
+        //Report blReportJson = rkiRestApi.BLReportDeserialize("BLReport - 2021");
+        Report blReportJson = rkiRestApi.BLReportDeserialize("BLReport");
+
+        foreach (var item in blReportJson.BLReport)
+        {
+            if (item.BlName == bundesland)
+            {
+                foreach (var reportAttribute in item.BLReportAttribute)
+                {
+                    //if (reportAttribute.Datum.StartsWith("01") || reportAttribute.Datum.StartsWith("15")
+                    //    || reportAttribute.Datum.StartsWith("28"))
+                    if (reportAttribute.Datum.StartsWith("01"))
+                    {
+                        rkiDatenBl.Add(reportAttribute.Datum, reportAttribute.Fahlzahl);
+                    }
+                }
+
+            }
+        }
+
+
+        foreach (var itemBl in rkiDatenBl)
+        {
+            if (!rkiDatenLk.ContainsKey(itemBl.Key))
+            {
+                rkiDatenBl.Remove(itemBl.Key);
+            }
+        }
+
+        return rkiDatenBl;
+    }
+
+    private void GetChart(){
 
         if (chartStatus == false)
         {
@@ -361,79 +438,5 @@
             _chart.Update();
 
         }
-
     }
-
-    private class StatistikData
-    {
-        [Required]
-        public string bl { get; set; }
-
-        [Required]
-        public string gen { get; set; }
-    }
-
-    private Dictionary<string, int> GetLKDataForChart(string landkreis)
-    {
-        Dictionary<string, int> rkiDatenLk = new();
-
-        //LKReportJson lKReportJson = rkiRestApi.LKReportDeserialize("LKReport - 2021");
-        LKReportJson lKReportJson = rkiRestApi.LKReportDeserialize("LKReport");
-
-        foreach (var item in lKReportJson.LKReport)
-        {
-            if (item.LKName == landkreis)
-            {
-                foreach (var reportAttribute in item.LKReportAttribute)
-                {
-                    //if (reportAttribute.Datum.StartsWith("01") || reportAttribute.Datum.StartsWith("15")
-                    //    || reportAttribute.Datum.StartsWith("28"))
-                    if (reportAttribute.Datum.StartsWith("01"))
-                    {
-                        rkiDatenLk.Add(reportAttribute.Datum, reportAttribute.Fahlzahl);
-                    }
-                }
-
-            }
-        }
-
-        return rkiDatenLk;
-    }
-
-    private Dictionary<string, int> GetBLDataForChart(string bundesland, Dictionary<string, int> rkiDatenLk)
-    {
-        Dictionary<string, int> rkiDatenBl = new();
-
-        //Report blReportJson = rkiRestApi.BLReportDeserialize("BLReport - 2021");
-        Report blReportJson = rkiRestApi.BLReportDeserialize("BLReport");
-
-        foreach (var item in blReportJson.BLReport)
-        {
-            if (item.BlName == bundesland)
-            {
-                foreach (var reportAttribute in item.BLReportAttribute)
-                {
-                    //if (reportAttribute.Datum.StartsWith("01") || reportAttribute.Datum.StartsWith("15")
-                    //    || reportAttribute.Datum.StartsWith("28"))
-                    if (reportAttribute.Datum.StartsWith("01"))
-                    {
-                        rkiDatenBl.Add(reportAttribute.Datum, reportAttribute.Fahlzahl);
-                    }
-                }
-
-            }
-        }
-
-
-        foreach (var itemBl in rkiDatenBl)
-        {
-            if (!rkiDatenLk.ContainsKey(itemBl.Key))
-            {
-                rkiDatenBl.Remove(itemBl.Key);
-            }
-        }
-
-        return rkiDatenBl;
-    }
-
 }
