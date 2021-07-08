@@ -155,6 +155,7 @@
     private string stand;
     private string rValue = "";
     private string lkDefult;
+    private string path;
     private bool status;
     private bool chartStatus;
     private int anzahlFaelle;
@@ -178,7 +179,8 @@
     {
         try
         {
-            dailyReport = rkiRestApi.DeserializeRkiData(DateTime.Now);
+            path = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            dailyReport = rkiRestApi.DeserializeRkiData(path);
             if (dailyReport != null)
             {
                 stand = dailyReport.Bericht.Stand;
@@ -196,7 +198,7 @@
             else
             {
                 rkiRestApi.SerializeRkiData();
-                dailyReport = rkiRestApi.DeserializeRkiData(DateTime.Now);
+                dailyReport = rkiRestApi.DeserializeRkiData(path);
                 if (dailyReport != null)
                 {
                     stand = dailyReport.Bericht.Stand;
@@ -274,8 +276,8 @@
     {
         Dictionary<string, int> rkiDatenLk = new();
 
-        //LKReportJson lKReportJson = rkiRestApi.LKReportDeserialize("LKReport - 2021");
-        LKReportJson lKReportJson = rkiRestApi.LKReportDeserialize("LKReport");
+        string filePath = @"../SmICSWebApp/Resources/Rkidata/LKReport.json";
+        LKReportJson lKReportJson = rkiRestApi.LKReportDeserialize(filePath);
 
         foreach (var item in lKReportJson.LKReport)
         {
@@ -302,7 +304,8 @@
         Dictionary<string, int> rkiDatenBl = new();
 
         //Report blReportJson = rkiRestApi.BLReportDeserialize("BLReport - 2021");
-        Report blReportJson = rkiRestApi.BLReportDeserialize("BLReport");
+        string filePath = @"../SmICSWebApp/Resources/Rkidata/BLReport.json";
+        Report blReportJson = rkiRestApi.BLReportDeserialize(filePath);
 
         foreach (var item in blReportJson.BLReport)
         {

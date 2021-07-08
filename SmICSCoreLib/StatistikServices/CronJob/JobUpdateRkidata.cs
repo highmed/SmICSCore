@@ -23,7 +23,14 @@ namespace SmICSCoreLib.StatistikServices.CronJob
         public Task Execute(IJobExecutionContext context)
         {
             RkiRestApi rkiRestApi = new();
-            bool blStatus = rkiRestApi.UpdateBlRkidata();
+            string dailyReportPath = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            string blReportPath = @"../WebApp.Test/Resources/BLReport.json";
+            string lkReportPath = @"../SmICSWebApp/Resources/Rkidata/BLReport.json";
+            string targetPath = @"../SmICSWebApp/Resources/Rkidata";
+            string blFilename = ("BLReport");
+            string lkFilename = ("LKReport");
+
+            bool blStatus = rkiRestApi.UpdateBlRkidata(dailyReportPath, blReportPath, targetPath, blFilename);
             if (blStatus == true)
             {
                 _logger.LogInformation($"**BL RKI-Daten wurden am " + DateTime.Now.ToString("dd-MMM-yyyy hh:mm:ss") + " erfolgreich aktualisiert!");
@@ -31,9 +38,9 @@ namespace SmICSCoreLib.StatistikServices.CronJob
             else
             {
                 _logger.LogWarning($"**BL RKI-Daten könnten am " + DateTime.Now.ToString("dd-MMM-yyyy hh:mm:ss") + " leider nicht aktualisiert werden!");
-            }
-
-            bool lkStatus = rkiRestApi.UpdateLklRkidata();
+            } 
+         
+            bool lkStatus = rkiRestApi.UpdateLklRkidata(dailyReportPath, lkReportPath, targetPath, lkFilename);
             if (lkStatus == true)
             {
                 _logger.LogInformation($"**LK RKI-Daten wurden am " + DateTime.Now.ToString("dd-MMM-yyyy hh:mm:ss") + " erfolgreich aktualisiert!");

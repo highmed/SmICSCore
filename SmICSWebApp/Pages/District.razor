@@ -189,6 +189,8 @@
     private ArrayList landkreise = new ArrayList();
     private Landkreis[] lkArray;
     private Landkreis[] lkArrayLast;
+    private string path;
+    private string pathLastDay;
 
     [Parameter]
     public string lb { get; set; }
@@ -202,7 +204,8 @@
     {
         try
         {
-            dailyReport = rkiRestApi.DeserializeRkiData(datum);
+            path = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            dailyReport = rkiRestApi.DeserializeRkiData(path);
             stand = dailyReport.Bericht.Stand;
             rWert7Tage = dailyReport.Bericht.RWert7Tage;
             rWert7TageVortag = dailyReport.Bericht.RWert7TageVortag;
@@ -226,7 +229,8 @@
                 farbe.Add(bundesland.BlAttribute.Farbe);
             }
 
-            lastReport = rkiRestApi.DeserializeRkiData(datum.AddDays(-1));
+            pathLastDay = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
+            lastReport = rkiRestApi.DeserializeRkiData(pathLastDay);
             if (lastReport != null)
             {
                 lastBundeslaender = lastReport.Bericht.Bundesland;

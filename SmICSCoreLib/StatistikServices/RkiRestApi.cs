@@ -89,7 +89,7 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        public District GetDistrictByName(string gen)
+        public District GetDcistrictByName(string gen)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        public static DataSet GetDataSetFromLink(String url)
+        public DataSet GetDataSetFromLink(String url)
         {
             var client = new WebClient();
             try
@@ -129,7 +129,7 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        public static DataSet GetCsvDataSet(String url)
+        public DataSet GetCsvDataSet(String url)
         {
             var client = new WebClient();
             try
@@ -158,7 +158,7 @@ namespace SmICSCoreLib.StatistikServices
             try
             {
                 //String url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Projekte_RKI/Nowcasting_Zahlen.xlsx?__blob=publicationFile";
-                String url = "https://raw.githubusercontent.com/robert-koch-institut/SARS-CoV-2-Nowcasting_und_-R-Schaetzung/main/Nowcast_R_aktuell.csv";
+                string url = "https://raw.githubusercontent.com/robert-koch-institut/SARS-CoV-2-Nowcasting_und_-R-Schaetzung/main/Nowcast_R_aktuell.csv";
                 var result = GetCsvDataSet(url);
                 var dataRows = result.Tables[0].Rows;
                 rValu = result.Tables[0].Rows[dataRows.Count - vlaue][10].ToString();
@@ -168,9 +168,13 @@ namespace SmICSCoreLib.StatistikServices
                 }
                 return rValu;
             }
-            catch (Exception)
+            catch (InvalidOperationException ex )
             {
-                return null;
+                return ex.Message;
+                //LogError(e);
+                //throw new InvalidOperationException(
+                // "Parameter index is out of range.", ex);
+                //return null;
             }
 
         }
@@ -206,7 +210,7 @@ namespace SmICSCoreLib.StatistikServices
                                 attr.Todesfaelle = state.Features[0].Attributes.Todesfaelle.ToString("#,##");
                                 attr.Todesfaelle7BL = state.Features[0].Attributes.Death7_bl.ToString("0.##");
                                 attr.Inzidenz7Tage = (state.Features[0].Attributes.Faelle7BlPro100K).ToString("0.##").Replace(",", ".");
-                                attr.Farbe = SeMapColor(attr.Inzidenz7Tage);
+                                attr.Farbe = SetMapColor(attr.Inzidenz7Tage);
                                 District district = GetDistrictsByStateName(attr.Bundesland);
                                 if (district.Features != null && district.Features.Length != 0)
                                 {
@@ -299,7 +303,7 @@ namespace SmICSCoreLib.StatistikServices
             }
             else
             {
-                bericht.StandAktuell = false;
+                //bericht.StandAktuell = false;
                 return null;
             }
         }
@@ -335,8 +339,8 @@ namespace SmICSCoreLib.StatistikServices
             else
             {
                 try
-                {
-                    DailyReport lastReport = DeserializeRkiData(DateTime.Now);
+                { 
+                    DailyReport lastReport = DeserializeRkiData(filePath);
                     bool standAktuell = lastReport.Bericht.StandAktuell;
                     string stand = lastReport.Bericht.Stand.Substring(0, 10);
                     string date = DateTime.Now.ToString("dd.MM.yyyy");
@@ -378,9 +382,8 @@ namespace SmICSCoreLib.StatistikServices
             return status;
         }
 
-        public DailyReport DeserializeRkiData(DateTime datum)
+        public DailyReport DeserializeRkiData(string path)
         {
-            string path = @"../SmICSWebApp/Resources/statistik/json/" + datum.ToString("yyyy-MM-dd") + ".json";
             try
             {
                 DailyReport dailyReport = JSONReader<DailyReport>.ReadObject(path);
@@ -392,7 +395,7 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        public static string SeMapColor(string inzidenz)
+        public string SetMapColor(string inzidenz)
         {
             string farbe;
             try
@@ -457,7 +460,7 @@ namespace SmICSCoreLib.StatistikServices
         public string SetCaseColor(string tag, string vortag)
         {
             string color;
-            if (tag != null && vortag != null)
+            try
             {
                 tag = tag.Replace(".", "").Trim();
                 vortag = vortag.Replace(".", "").Trim();
@@ -485,12 +488,11 @@ namespace SmICSCoreLib.StatistikServices
                     return color;
                 }
             }
-            else
+            catch (Exception)
             {
-                color = "#5591BB";
+                color = "#8CA2AE";
                 return color;
             }
-
         }
 
 
@@ -584,37 +586,50 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        public void BLReportSerialize()
+        public bool BLReportSerialize(string path)
         {
             Report report = GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 1, 422);
-            string path = @"../SmICSWebApp/Resources/Rkidata";
-
-            if (!Directory.Exists(path))
+            try
             {
-                Directory.CreateDirectory(path);
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                string filename = ("BLReport");
+                JSONWriter.Write(report, path, filename);
+                return true;
             }
-            string filename = ("BLReport");
-            JSONWriter.Write(report, path, filename);
+            catch (Exception)
+            {
+                return false;
+            }  
         }
 
-        public void LKReportSerialize()
+        public bool LKReportSerialize(string path)
         {
             LKReportJson lKReportJson = GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 3, 228);
-            string path = @"../SmICSWebApp/Resources/Rkidata";
-
-            if (!Directory.Exists(path))
+            try
             {
-                Directory.CreateDirectory(path);
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                string filename = ("LKReport");
+                JSONWriter.Write(lKReportJson, path, filename);
+                return true;
             }
-            string filename = ("LKReport");
-            JSONWriter.Write(lKReportJson, path, filename);
+            catch (Exception)
+            {
+                return false;
+            }
+
+            
         }
 
         //Update RKI Data with a CronJob
-        public Report BLReportDeserialize(string filename)
+        public Report BLReportDeserialize(string filePath)
         {
-            string filePath = @"../SmICSWebApp/Resources/Rkidata/" + filename + ".json";
-            try
+           try
             {
                 Report blReportJson = JSONReader<Report>.ReadObject(filePath);
                 return blReportJson;
@@ -625,9 +640,8 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        public LKReportJson LKReportDeserialize(string filename)
+        public LKReportJson LKReportDeserialize(string filePath)
         {
-            string filePath = @"../SmICSWebApp/Resources/Rkidata/" + filename + ".json";
             try
             {
                 LKReportJson lKReportJson = JSONReader<LKReportJson>.ReadObject(filePath);
@@ -639,19 +653,19 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        public bool UpdateBlRkidata()
-        {
+        public bool UpdateBlRkidata(string dailyReportPath, string blReportPath, string targetPath, string filename)
+        {     
             try
             {
-                DailyReport dailyReport = DeserializeRkiData(DateTime.Now);
+                DailyReport dailyReport = DeserializeRkiData(dailyReportPath);
                 Bundesland[] bundeslaender = dailyReport.Bericht.Bundesland;
                 Report report = new();
                 BLReportAttribute[] bLAttributeObj;
                 ArrayList reportArrayList = new();
                 ArrayList blAttributeArrayList = new();
-
                 BLReportAttribute[] blReportAttributeArray;
-                Report blReportJson = BLReportDeserialize("BLReport");
+
+                Report blReportJson = BLReportDeserialize(blReportPath);
                 int count = 0;
                 foreach (var bl in blReportJson.BLReport)
                 {
@@ -674,9 +688,8 @@ namespace SmICSCoreLib.StatistikServices
                 BLReport[] blReportArray = (BLReport[])reportArrayList.ToArray(typeof(BLReport));
                 report.BLReport = blReportArray;
                 report.Datum = DateTime.Now.ToString("dd.MM.yyyy");
-                string path = @"../SmICSWebApp/Resources/Rkidata";
-                string filename = ("BLReport");
-                JSONWriter.Write(report, path, filename);
+               
+                JSONWriter.Write(report, targetPath, filename);
                 return true;
             }
             catch (Exception)
@@ -685,15 +698,14 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        public bool UpdateLklRkidata()
+        public bool UpdateLklRkidata(string dailyReportPath, string lkReportPath, string targetPath, string filename)
         {
             try
             {
-                DailyReport dailyReport = DeserializeRkiData(DateTime.Now);
+                DailyReport dailyReport = DeserializeRkiData(dailyReportPath);
                 Bundesland[] bundeslaender = dailyReport.Bericht.Bundesland;
                 ArrayList allLkArrayList = new();
 
-                //List<Landkreis> landkreiseListeee = new();
                 foreach (var blItem in bundeslaender)
                 {
                     Landkreis[] lk = blItem.Landkreise;
@@ -711,7 +723,7 @@ namespace SmICSCoreLib.StatistikServices
                 ArrayList reportArrayList = new();
                 ArrayList lkAttributeArrayList = new();
                 LKReportAttribute[] lkReportAttributeArray;
-                LKReportJson lklReportJson = LKReportDeserialize("LKReport");
+                LKReportJson lklReportJson = LKReportDeserialize(lkReportPath);
 
                 foreach (var lk in lklReportJson.LKReport)
                 {
@@ -753,9 +765,8 @@ namespace SmICSCoreLib.StatistikServices
                 LKReport[] lkReportArray = (LKReport[])reportArrayList.ToArray(typeof(LKReport));
                 report.LKReport = lkReportArray;
                 report.Datum = DateTime.Now.ToString("dd.MM.yyyy");
-                string path = @"../SmICSWebApp/Resources/Rkidata";
-                string filename = ("LKReport");
-                JSONWriter.Write(report, path, filename);
+               
+                JSONWriter.Write(report, targetPath, filename);
                 return true;
             }
             catch (Exception e)
