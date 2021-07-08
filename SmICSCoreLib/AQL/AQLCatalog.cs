@@ -410,6 +410,21 @@ namespace SmICSCoreLib.AQL
                                 WHERE c/archetype_details/template_id='Symptom' GROUP BY NameDesSymptoms");
         }
 
+        public static AQLQuery PatientVaccination(PatientListParameter patientList)
+        {
+            return new AQLQuery("PatientVaccination", $@"SELECT e/ehr_id/value as PatientenID,
+                                c/context/start_time/value as DokumentationsID,
+                                a/description[at0017]/items[at0020]/value/value as Impfstoff, 
+                                x/items[at0164]/value/magnitude as Dosierungsreihenfolge, 
+                                x/items[at0144]/value/magnitude as Dosiermenge, 
+                                a/description[at0017]/items[at0021]/value/value as ImpfungGegen 
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.registereintrag.v1] 
+                                CONTAINS ACTION a[openEHR-EHR-ACTION.medication.v1] 
+                                CONTAINS (CLUSTER x[openEHR-EHR-CLUSTER.dosage.v1]) 
+                                WHERE c/archetype_details/template_id='Impfstatus' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
+        }
+
     }
 }
  

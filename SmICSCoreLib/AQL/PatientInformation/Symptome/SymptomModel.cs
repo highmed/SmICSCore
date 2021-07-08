@@ -12,6 +12,8 @@ namespace SmICSCoreLib.AQL.PatientInformation.Symptome
 
         [JsonProperty(PropertyName = "BefundID")]
         public string BefundID { get; set; }
+        [JsonProperty(PropertyName = "BefundDatum")]
+        public DateTime BefundDatum { get; set; }
         [JsonProperty(PropertyName = "NameDesSymptoms")]
         public string NameDesSymptoms { get; set; }
 

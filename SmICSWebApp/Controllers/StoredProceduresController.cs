@@ -8,6 +8,7 @@ using SmICSCoreLib.AQL.Algorithm;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.Lab.EpiKurve;
 using SmICSCoreLib.AQL.Algorithm.NEC;
@@ -263,22 +264,33 @@ namespace SmICSWebApp.Controllers
             else { return new StatusCodeResult(500); }
         }
 
-        /*
-        [Route("Patient_Symptom_TTPs")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
+
+        [Route("Patient_Symptom")]
         [HttpPost]
-        public ActionResult<List<SymptomModel>> Patient_Symptom_TTPs([FromBody] PatientListParameter parameter)
+        public ActionResult<List<SymptomModel>> Patient_Symptom([FromBody] PatientListParameter parameter)
         {
             try
             {
-                return _patientInformation.Patient_Symptom_TTPs(parameter);
+                return _patientInformation.Patient_Symptom(parameter);
             }
             catch (Exception e)
             {
                 return ErrorHandling(e);
             }
         }
-        */
+
+        [Route("Patient_Vaccination")]
+        [HttpPost]
+        public ActionResult<List<VaccinationModel>> Patient_Vaccination([FromBody] PatientListParameter parameter)
+        {
+            try
+            {
+                return _patientInformation.Patient_Vaccination(parameter);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
     }
 }
