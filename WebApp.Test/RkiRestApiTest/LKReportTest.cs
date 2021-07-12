@@ -12,7 +12,7 @@ namespace WebApp.Test
         [Fact]
         public void LKReportSerializeTest()
         {
-            string filePath = @"../WebApp.Test/Resources";
+            string filePath = @"../../../../WebApp.Test/Resources";
             bool status = rkiRestApi.LKReportSerialize(filePath);
 
             Assert.True(status);
@@ -21,7 +21,7 @@ namespace WebApp.Test
         [Fact]
         public void LKReportDeserializeTest()
         {
-            string filePath = @"../WebApp.Test/Resources/LKReport.json";
+            string filePath = @"../../../../WebApp.Test/Resources/LKReport.json";
             LKReportJson lKReportJson = rkiRestApi.LKReportDeserialize(filePath);
 
             Assert.Equal(DateTime.Now.ToString("dd.MM.yyyy"), lKReportJson.Datum);
@@ -38,9 +38,9 @@ namespace WebApp.Test
         [Fact]
         public void UpdateLklRkidataTest()
         {
-            string dailyReportPath = @"../WebApp.Test/Resources/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
-            string BLReportPath = @"../WebApp.Test/Resources/LKReport.json";
-            string targetPath = @"../WebApp.Test/Resources";
+            string dailyReportPath = @"../../../../WebApp.Test/Resources/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            string BLReportPath = @"../../../../WebApp.Test/Resources/LKReport.json";
+            string targetPath = @"../../../../WebApp.Test/Resources";
             string blFilename = ("LKReport");
             bool status = rkiRestApi.UpdateLklRkidata(dailyReportPath, BLReportPath, targetPath, blFilename);
 

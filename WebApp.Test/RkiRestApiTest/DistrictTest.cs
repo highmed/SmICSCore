@@ -36,13 +36,13 @@ namespace WebApp.Test
         [Fact]
         public void GetADistrict()
         {
-            string pathFile = @"../WebApp.Test/Resources";
+            string pathFile = @"../../../../WebApp.Test/Resources";
             District district = rkiRestApi.GetDistrictsByStateName("Hamburg");
             JSONWriter.Write(district, pathFile, "District");
 
             //expected
             District districtFromJson;
-            string path = @"../WebApp.Test/Resources/District.json";
+            string path = @"../../../../WebApp.Test/Resources/District.json";
             using (StreamReader reader = new StreamReader(path))
             {
                 string json = reader.ReadToEnd();

@@ -1,19 +1,17 @@
-{
-  "features": [
-    {
-      "attributes": {
-        "OBJECTID_1": 8,
-        "LAN_ew_GEN": "Baden-Württemberg",
-        "LAN_ew_BEZ": "Land",
-        "LAN_ew_EWZ": 11100394,
-        "Fallzahl": 501040,
-        "cases7_bl": 569,
-        "faelle_100000_EW": 4513.71365737108,
-        "Death": 10282,
-        "death7_bl": 0,
-        "cases7_bl_per_100k": 5.12594417819764,
-        "Aktualisierung": 1625522400000
-      }
+[
+  {
+    "attributes": {
+      "OBJECTID_1": 8,
+      "LAN_ew_GEN": "Baden-Württemberg",
+      "LAN_ew_BEZ": "Land",
+      "LAN_ew_EWZ": 11100394,
+      "Fallzahl": 501017,
+      "cases7_bl": 608,
+      "faelle_100000_EW": 4513.50645751854,
+      "Death": 10279,
+      "death7_bl": 0,
+      "cases7_bl_per_100k": 5.47728305860134,
+      "Aktualisierung": 1625436000000
     }
-  ]
-}
+  }
+]

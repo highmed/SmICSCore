@@ -34,7 +34,7 @@ namespace WebApp.Test
 
             //expected
             State stateFromJson;
-            string path = @"../WebApp.Test/Resources/State.json";
+            string path = @"../../../../WebApp.Test/Resources/State.json";
             using (StreamReader reader = new StreamReader(path))
             {
                 string json = reader.ReadToEnd();

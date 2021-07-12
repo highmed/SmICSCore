@@ -56,7 +56,7 @@ namespace WebApp.Test
         [Fact]
         public void CkeckDeserializtion()
         {
-            string dailyReportPath = @"../WebApp.Test/Resources/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            string dailyReportPath = @"../../../../WebApp.Test/Resources/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
             DailyReport dailyReport = rkiRestApi.DeserializeRkiData(dailyReportPath);
 
             Assert.True(dailyReport.Bericht.StandAktuell);
@@ -65,7 +65,7 @@ namespace WebApp.Test
         [Fact]
         public void CkeckIncorrectDate()
         {
-            string dailyReportPath = @"../WebApp.Test/Resources/" + DateTime.Now.AddDays(10).ToString("yyyy-MM-dd") + ".json";
+            string dailyReportPath = @"../../../../WebApp.Test/Resources/" + DateTime.Now.AddDays(10).ToString("yyyy-MM-dd") + ".json";
             DailyReport dailyReport = rkiRestApi.DeserializeRkiData(dailyReportPath);
 
             Assert.Null(dailyReport);
