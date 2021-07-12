@@ -17,6 +17,7 @@ using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.Patient_Stay.Count;
 using SmICSCoreLib.AQL.Patient_Stay.Cases;
 using SmICSCoreLib.AQL.Patient_Stay.WeekCase;
+using SmICSCoreLib.StatistikDataModels;
 using Microsoft.Extensions.Logging;
 
 namespace SmICSWebApp.Controllers
@@ -140,6 +141,33 @@ namespace SmICSWebApp.Controllers
                 return ErrorHandling(e);
             }
         }
+
+
+        /// <summary></summary>
+        /// <remarks>
+        /// Gibt alle mögliche Nosokomiale Infektion. 
+        /// Regeln für eine mögliche Nosokomiale Infektion sind: SARS-CoV-2 negative Test und keine SARS-CoV-2 Symptome bei Aufnahme. 
+        /// Positive PCR von SARS-CoV-2 ab Tag 4 nach stationärer Aufnahme.
+        /// </remarks>
+        /// <returns></returns>
+        [Route("Infection_Situation")]
+        [HttpPost]
+        public ActionResult<List<Patient>> Infection_Situation()
+        {
+            _logger.LogInformation("CALLED Infection_Situation without any parameters");
+
+            try
+            {
+                return _patientInformation.Infection_Situation();
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("CALLED Infection_Situation:" + e.Message);
+                return ErrorHandling(e);
+            }
+        }
+
+
 
         //[Route("Patient_Stay_Stationary")]
         //[HttpPost]
