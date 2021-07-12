@@ -460,39 +460,47 @@ namespace SmICSCoreLib.StatistikServices
         public string SetCaseColor(string tag, string vortag)
         {
             string color;
-            try
+            if (tag != null && vortag != null)
             {
-                tag = tag.Replace(".", "").Trim();
-                vortag = vortag.Replace(".", "").Trim();
-                double tagToDouble = double.Parse(tag);
-                double vortagToDouble = double.Parse(vortag);
+                try
+                {
+                    tag = tag.Replace(".", "").Trim();
+                    vortag = vortag.Replace(".", "").Trim();
+                    double tagToDouble = double.Parse(tag);
+                    double vortagToDouble = double.Parse(vortag);
 
-                if (tagToDouble < vortagToDouble)
-                {
-                    color = "#66C166";
-                    return color;
+                    if (tagToDouble < vortagToDouble)
+                    {
+                        color = "#66C166";
+                        return color;
+                    }
+                    if (tagToDouble == vortagToDouble)
+                    {
+                        color = "#FFC037";
+                        return color;
+                    }
+                    if (tagToDouble > vortagToDouble)
+                    {
+                        color = "#F35C58";
+                        return color;
+                    }
+                    else
+                    {
+                        color = "#8CA2AE";
+                        return color;
+                    }
                 }
-                if (tagToDouble == vortagToDouble)
-                {
-                    color = "#FFC037";
-                    return color;
-                }
-                if (tagToDouble > vortagToDouble)
-                {
-                    color = "#F35C58";
-                    return color;
-                }
-                else
+                catch (Exception)
                 {
                     color = "#8CA2AE";
                     return color;
                 }
             }
-            catch (Exception)
+            else
             {
                 color = "#8CA2AE";
                 return color;
-            }
+            }     
         }
 
 
