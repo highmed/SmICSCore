@@ -27,5 +27,8 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Stationary.ReceiveModel
 
         [JsonProperty(PropertyName = "Datum_Uhrzeit_der_Entlassung")]
         public DateTime Datum_Uhrzeit_der_Entlassung { get; set; }
+
+        [JsonProperty(PropertyName = "Station")]
+        public string Station { get; set; }
     }
 }

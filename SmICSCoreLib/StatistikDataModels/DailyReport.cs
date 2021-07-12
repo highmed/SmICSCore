@@ -93,6 +93,9 @@ namespace SmICSCoreLib.StatistikDataModels
 
         [JsonProperty(PropertyName = "Todesfaelle7Lk")]
         public string Todesfaelle7Lk { get; set; }
+
+        [JsonProperty(PropertyName = "AdmUnitId")]
+        public int AdmUnitId { get; set; }
     }
 
     public class BlAttribute

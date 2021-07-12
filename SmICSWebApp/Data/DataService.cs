@@ -29,14 +29,19 @@ namespace SmICSWebApp.Data
             _patientInformation = patientInformation;
         }
 
-
         //Load EhrData
         public List<StationaryDataModel> GetStationaryPat(string patientID, string fallkennung, DateTime datum)
         {
             List<StationaryDataModel> stationaryDatas = _patinet_Stay.Stationary_Stay(patientID, fallkennung, datum);
             return stationaryDatas;
         }
-        
+
+        public List<StationaryDataModel> StayFromCase(string patientId, string fallId)
+        {
+            List<StationaryDataModel> patStationary = _patinet_Stay.StayFromCase(patientId, fallId);
+            return patStationary;
+        }
+
         public List<PatientMovementModel> GetPatMovement(string patientId)
         {
             List<string> patientList = new();
@@ -69,30 +74,30 @@ namespace SmICSWebApp.Data
             return allPositivTest;
         }
        
-        public List<CountDataModel> GetPositivPat(List<CountDataModel> allPositivPat)
+        public List<CountDataModel> GetAllPatByTest(List<CountDataModel> allTest)
         {
-            List<CountDataModel> positivPat = new List<CountDataModel>();
-            foreach (CountDataModel countData in allPositivPat)
+            List<CountDataModel> testPat = new();
+            foreach (CountDataModel countData in allTest)
             {
-                if (!positivPat.Contains(countData))
+                if (!testPat.Contains(countData))
                 {
-                    positivPat.Add(countData);
+                    testPat.Add(countData);
                 }
                 else
                 {
-                    CountDataModel data = positivPat.Find(i => i.PatientID == countData.PatientID);
+                    CountDataModel data = testPat.Find(i => i.PatientID == countData.PatientID);
 
                     if (data.Zeitpunkt_des_Probeneingangs > countData.Zeitpunkt_des_Probeneingangs)
                     {
-                        positivPat.Remove(data);
-                        positivPat.Add(countData);
+                        testPat.Remove(data);
+                        testPat.Add(countData);
                     }
                 }
             }
-            return positivPat;
+            return testPat;
         }
       
-        public List<CountDataModel> GetNegativPat()
+        public List<CountDataModel> GetAllNegativTest()
         {
             List<CountDataModel> allNegativPat = GetCovidPat("260415000");
             return allNegativPat;
@@ -203,6 +208,10 @@ namespace SmICSWebApp.Data
 
                 foreach (StationaryDataModel statData in statPatList)
                 {
+                    if (statData.Datum_Uhrzeit_der_Entlassung.GetHashCode() == 0)
+                    {
+                        statData.Datum_Uhrzeit_der_Entlassung = DateTime.Now;
+                    }
                     start = (statData.Datum_Uhrzeit_der_Entlassung - statData.Datum_Uhrzeit_der_Aufnahme).TotalDays;
                     gesamt += start;
                 }

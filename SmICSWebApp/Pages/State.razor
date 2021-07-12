@@ -25,6 +25,11 @@
                     {
                         <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
                         <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+                        <div class="row" style=" display: inline-block;">
+                            <div class="row">
+                                <button class="btn btn-primary" @onclick="GetLastReport"> Daten von Vortag laden </button>
+                            </div>
+                        </div>
                     }
                 }
                 else
@@ -430,15 +435,18 @@
     private string fallzahlVortag;
     private string todesfaelle;
     private string todesfaelleVortag;
-    private bool standAktuell;
-    private bool blStandAktuell;
-    private bool status;
-    private bool impfStatus;
     private string inzidenzColor;
     private string rWertColor;
     private string gesamtImpfung;
     private string erstImpfung;
     private string zweittImpfung;
+    private bool standAktuell;
+    private bool blStandAktuell;
+    private bool status;
+    private bool impfStatus;
+    private string path;
+    private string pathLastDay;
+
 
     private Bundesland[] bundeslaender = new Bundesland[16];
     private List<string> farbe = new List<string>();
@@ -462,14 +470,20 @@
 
     private void SetRKIData()
     {
-        rkiRestApi.SerializeRkiData();
+
+        bool check = rkiRestApi.SerializeRkiData();
+        if (check == false)
+        {
+            status = false;
+        }
     }
 
     private void GetRKIData()
     {
         try
         {
-            dailyReport = rkiRestApi.DeserializeRkiData(datum);
+            path = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            dailyReport = rkiRestApi.DeserializeRkiData(path);
             stand = dailyReport.Bericht.Stand;
             standAktuell = dailyReport.Bericht.StandAktuell;
             blStandAktuell = dailyReport.Bericht.BlStandAktuell;
@@ -496,7 +510,8 @@
 
             try
             {
-                lastReport = rkiRestApi.DeserializeRkiData(datum.AddDays(-1));
+                pathLastDay = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
+                lastReport = rkiRestApi.DeserializeRkiData(pathLastDay);
                 if (lastReport != null)
                 {
                     inzidenz7TageVortag = lastReport.Bericht.Inzidenz7Tage;
@@ -522,9 +537,23 @@
 
     private void GetLastReport()
     {
+        lastReport = rkiRestApi.DeserializeRkiData(pathLastDay);
         bundeslaender = lastReport.Bericht.Bundesland;
         blStandAktuell = lastReport.Bericht.BlStandAktuell;
         stand = lastReport.Bericht.Stand;
+
+        rWert7Tage = lastReport.Bericht.RWert7Tage;
+        inzidenz7Tage = lastReport.Bericht.Inzidenz7Tage;
+        fallzahl = lastReport.Bericht.Fallzahl;
+        fallzahlVortag = lastReport.Bericht.FallzahlVortag;
+        todesfaelle = lastReport.Bericht.Todesfaelle;
+        todesfaelleVortag = lastReport.Bericht.TodesfaelleVortag;
+        standAktuell = lastReport.Bericht.StandAktuell;
+        blStandAktuell = lastReport.Bericht.BlStandAktuell;
+        gesamtImpfung = lastReport.Bericht.GesamtImpfung;
+        erstImpfung = lastReport.Bericht.ErstImpfung;
+        zweittImpfung = lastReport.Bericht.ZweitImpfung;
+
         foreach (var bundesland in bundeslaender)
         {
             farbe.Add(bundesland.BlAttribute.Farbe);

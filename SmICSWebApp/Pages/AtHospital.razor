@@ -15,7 +15,7 @@
 
         <div class="card-body col-10">
             <div style="padding: 30px 0px 100px 0px;">
-                @if (patStationary == null)
+                @if (sortedPatStationary == null)
                 {
                     @if (status == true)
                     {
@@ -42,7 +42,7 @@
                                             <tr>
                                                 <th scope="col">
                                                     <EditForm Model="@patData">
-                                                        <label>Aufgenommen am: </label>
+                                                        <label>Aufgenommen ab dem: </label>
                                                         <InputDate @bind-Value="@patData.datum"></InputDate>
                                                         <button @onclick="GetAllPat">Aktualisieren</button>
                                                     </EditForm>
@@ -54,10 +54,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var patient in patStationary)
+                                            @foreach (var patient in sortedPatStationary)
                                             {
                                                 <tr>
-                                                    <th scope="row">@patData.datum.Date.ToString("dd-MM-yyyy")</th>
+                                                    <th scope="row">@patient.Datum_Uhrzeit_der_Aufnahme</th>
                                                     <td>@patient.FallID</td>
                                                     <td>
                                                         <a href="" @onclick="() => GetPatMovement(patient.PatientID)" @onclick:preventDefault>
@@ -70,7 +70,7 @@
                                             }
                                         </tbody>
                                     </table>
-                                    @if (patStationary.Count == 0)
+                                    @if (sortedPatStationary.Count == 0)
                                     {
                                         <p>Am @patData.datum.ToString("dd.MM.yyyy") wurden keine neuen Patienten Aufgenommen</p>
                                     }
@@ -84,7 +84,7 @@
                         <div class="col-8 d-flex">
                             <div class="card flex-fill">
                                 <div class="card-header">
-                                    <h5 class="card-title">Patient Ansicht</h5>
+                                    <h5 class="card-title">Patientenansicht</h5>
                                 </div>
 
                                 <div class="card-body">
@@ -172,7 +172,7 @@
 
 @code {
     PatData patData = new PatData();
-    List<StationaryDataModel> patStationary = new();
+    List<StationaryDataModel> sortedPatStationary = new();
     List<PatientMovementModel> patMovtList;
     PatientMovementModel patientMovement;
     private int moveCount;
@@ -190,7 +190,8 @@
 
     private void GetAllPat()
     {
-        patStationary = symptom.GetAllPatByDate(patData.datum);
+        List<StationaryDataModel> patStationary = symptom.GetAllPatByDate(patData.datum);
+        sortedPatStationary = patStationary.OrderBy(x => x.Datum_Uhrzeit_der_Aufnahme).ToList();
         if (patStationary == null)
         {
             status = false;
@@ -201,11 +202,15 @@
     {
         patMovtList = symptom.GetPatMovement(patientId);
         moveCount = patMovtList.Count();
-
         if (moveCount != 0)
         {
             patientMovement = patMovtList.First();
         }
+
+        first = 0;
+        second = 0;
+        indexFirst = 1;
+        indexSec = 1;
     }
 
     private void NextFirst()
@@ -232,7 +237,6 @@
     {
         [Required]
         public DateTime datum = DateTime.Now.Date;
-
     }
 
 }
