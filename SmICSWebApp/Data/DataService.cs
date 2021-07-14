@@ -36,10 +36,25 @@ namespace SmICSWebApp.Data
             return stationaryDatas;
         }
 
-        public List<StationaryDataModel> StayFromCase(string patientId, string fallId)
+        public List<StationaryDataModel> GetPatStationary(string patientId, string fallId)
         {
             List<StationaryDataModel> patStationary = _patinet_Stay.StayFromCase(patientId, fallId);
             return patStationary;
+        }
+
+        public List<StationaryDataModel> GetAllPatByDate(DateTime datum)
+        {
+            List<StationaryDataModel> patStationary;
+            try
+            {
+                patStationary = _patinet_Stay.StayFromDate(datum);
+                return patStationary;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
         }
 
         public List<PatientMovementModel> GetPatMovement(string patientId)

@@ -555,7 +555,7 @@
         //Aktive Faelle
         foreach (var item in allPositivPat)
         {
-            patStationary = dataService.StayFromCase(item.PatientID, item.Fallkennung);
+            patStationary = dataService.GetPatStationary(item.PatientID, item.Fallkennung);
             if (patStationary != null)
             {
                 foreach (var pat in patStationary)

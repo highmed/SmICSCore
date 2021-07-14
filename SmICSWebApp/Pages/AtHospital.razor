@@ -5,6 +5,7 @@
 @using SmICSCoreLib.AQL.PatientInformation.PatientMovement
 @using System.ComponentModel.DataAnnotations
 @inject SmICSWebApp.Data.Symptom symptom
+@inject SmICSWebApp.Data.DataService dataService
 
 <h3>Statistik (Prototyp)</h3>
 
@@ -190,7 +191,7 @@
 
     private void GetAllPat()
     {
-        List<StationaryDataModel> patStationary = symptom.GetAllPatByDate(patData.datum);
+        List<StationaryDataModel> patStationary = dataService.GetAllPatByDate(patData.datum);
         sortedPatStationary = patStationary.OrderBy(x => x.Datum_Uhrzeit_der_Aufnahme).ToList();
         if (patStationary == null)
         {
@@ -200,7 +201,7 @@
 
     private void GetPatMovement(string patientId)
     {
-        patMovtList = symptom.GetPatMovement(patientId);
+        patMovtList = dataService.GetPatMovement(patientId);
         moveCount = patMovtList.Count();
         if (moveCount != 0)
         {

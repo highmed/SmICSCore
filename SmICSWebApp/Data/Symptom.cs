@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using SmICSCoreLib.AQL.PatientInformation;
-using SmICSCoreLib.AQL.Patient_Stay;
-using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
-using SmICSCoreLib.AQL.General;
 
 
 namespace SmICSWebApp.Data
@@ -14,27 +11,12 @@ namespace SmICSWebApp.Data
     public class Symptom
     {
         private readonly IPatientInformation _patientInformation;
-        private readonly IPatinet_Stay _paient_Stay;
+        private readonly DataService _dataService;     
 
-        public Symptom(IPatientInformation patientInformation, IPatinet_Stay paient_Stay)
+        public Symptom(IPatientInformation patientInformation, DataService dataService)
         {
             _patientInformation = patientInformation;
-            _paient_Stay = paient_Stay;
-        }
-
-        public List<StationaryDataModel> GetAllPatByDate(DateTime datum)
-        {
-            List<StationaryDataModel> patStationary ;
-            try
-            {
-                patStationary = _paient_Stay.StayFromDate(datum);
-                return patStationary;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        
+            _dataService = dataService;
         }
 
         public List<SymptomModel> GetAllSymptom()
@@ -72,7 +54,7 @@ namespace SmICSWebApp.Data
             List<SymptomModel> symListe = new();
             foreach (var item in patientListe)
             {
-                patientMovement = GetPatMovement(item.PatientenID);
+                patientMovement = _dataService.GetPatMovement(item.PatientenID);
                 foreach (var movment in patientMovement)
                 {
                     if (movment.Fachabteilung == station)
@@ -87,17 +69,6 @@ namespace SmICSWebApp.Data
             return symListe;
         }
 
-        public List<PatientMovementModel> GetPatMovement(string patientId)
-        {
-            List<string> patientList = new List<string>();
-            patientList.Add(patientId);
-            PatientListParameter patListParameter = new();
-            patListParameter.patientList = patientList;
-            List<PatientMovementModel> patientMovement = _patientInformation.Patient_Bewegung_Ps(patListParameter);
-            return patientMovement;
-        }
-
-
         public Dictionary<string, int> GetSymGroup(string symptom, DateTime datum)
         {
             List<PatientMovementModel> patBewegungen = new List<PatientMovementModel>();
@@ -105,7 +76,7 @@ namespace SmICSWebApp.Data
 
             foreach (var patient in patinetList)
             {
-                List<PatientMovementModel> patBewegung = GetPatMovement(patient.PatientenID);
+                List<PatientMovementModel> patBewegung = _dataService.GetPatMovement(patient.PatientenID);
                 if (patBewegung.Count != 0)
                 {
                     patBewegungen.Add(patBewegung.First());
@@ -147,10 +118,5 @@ namespace SmICSWebApp.Data
             }
         }
 
-        public List<StationaryDataModel> GetPatStationary(string patientId, string fallId)
-        {
-            List<StationaryDataModel> pathStationary = _paient_Stay.StayFromCase(patientId, fallId);
-            return pathStationary;
-        }
     }
 }
