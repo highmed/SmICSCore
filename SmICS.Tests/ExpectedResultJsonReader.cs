@@ -11,8 +11,6 @@ namespace SmICSFactory.Tests
     {
         public static List<T> ReadResults<T, U>(string testResultPath, string parameterPath, int resultNo, ExpectedType type) where U : new()
         {
-            //'patients' can be removed because they have been replaced by 'patientInfos' 
-            ///List<PatientIDs> patients = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../WebApp.Test/Resources/EHRID_StayFromCase.json");
             List<U> patients = SmICSCoreLib.JSONFileStream.JSONReader<U>.Read(parameterPath);
 
             using (StreamReader reader = new StreamReader(testResultPath, System.Text.Encoding.GetEncoding("ISO-8859-1")))

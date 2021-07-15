@@ -66,7 +66,9 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
         private List<PatientMovementModel> GetExpectedPatientMovementModels(int ResultSetID)
         {
             string path = "../../../../TestData/PatientMovementTestResults.json";
-            List<PatientMovementModel> result = ExpectedResultJsonReader.ReadResults<PatientMovementModel>(path, ResultSetID, ExpectedType.PATIENT_MOVEMENT);
+            string parameterPath = "../../../../TestData/GeneratedEHRIDs.json";
+
+            List<PatientMovementModel> result = ExpectedResultJsonReader.ReadResults<PatientMovementModel, PatientIDs>(path, parameterPath, ResultSetID, ExpectedType.PATIENT_MOVEMENT);
             return result;
         }
     }

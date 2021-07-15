@@ -55,10 +55,11 @@ namespace WebApp.Test.DataServiceTest
         //Get Expected Data
         private List<StationaryDataModel> GetExpectedStationaryDataModels(int ResultSetID)
         {
-            string path = "../../../../WebApp.Test/Resources/StationaryPatTestResults.json";
-            List<StationaryDataModel> result = ExpectedResultJsonReader.ReadResults<StationaryDataModel>(path, ResultSetID, ExpectedType.STATIONARY);
-            return result;
+            string testResultPath = "../../../../WebApp.Test/Resources/StationaryPatTestResults.json";
+            string parameterPath = "../../../../WebApp.Test/Resources/EHRID_StayFromCase.json";
 
+            List<StationaryDataModel> result = ExpectedResultJsonReader.ReadResults<StationaryDataModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ExpectedType.STATIONARY);
+            return result;
         }
     }
 }

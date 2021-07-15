@@ -115,12 +115,14 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 			string movementPath = "../../../../TestData/PatientMovementTestResults.json";
 			string labPath = "../../../../TestData/LabDataTestResults.json";
 
+			string parameterPath = "../../../../TestData/GeneratedEHRIDs.json";
+
 			List<PatientMovementModel> moveResults = new List<PatientMovementModel>();
 			List<LabDataModel> labDataResults = new List<LabDataModel>();
 			foreach (int i in contactOrder)
 			{
-				List<PatientMovementModel> movementResult = ExpectedResultJsonReader.ReadResults<PatientMovementModel>(movementPath, i, ExpectedType.PATIENT_MOVEMENT);
-				List<LabDataModel> labResult = ExpectedResultJsonReader.ReadResults<LabDataModel>(labPath, i, ExpectedType.LAB_DATA);
+				List<PatientMovementModel> movementResult = ExpectedResultJsonReader.ReadResults<PatientMovementModel, PatientIDs>(movementPath, parameterPath, i, ExpectedType.PATIENT_MOVEMENT);
+				List<LabDataModel> labResult = ExpectedResultJsonReader.ReadResults<LabDataModel, PatientIDs>(labPath, parameterPath, i, ExpectedType.LAB_DATA);
 
 				moveResults.AddRange(movementResult);
 				labDataResults.AddRange(labResult);
