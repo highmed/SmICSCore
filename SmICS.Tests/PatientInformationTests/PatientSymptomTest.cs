@@ -1,11 +1,8 @@
-﻿using Autofac.Extras.Moq;
-using Microsoft.Extensions.Logging.Abstractions;
-using SmICSCoreLib.AQL;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using SmICSCoreLib.REST;
 using SmICSFactory.Tests;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Xunit;
@@ -17,7 +14,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
     {
         [Theory]
         [ClassData(typeof(PatientSymptomTestData))]
-        public void ProcessorTest(string ehrID, int ResultSetID) 
+        public void ProcessorTest(string ehrID, int expectedResultSet) 
         {
             RestDataAccess _data = TestConnection.Initialize();
 
@@ -28,19 +25,19 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
 
             SymptomFactory factory = new SymptomFactory(_data, NullLogger<SymptomFactory>.Instance);
             List<SymptomModel> actual = factory.Process(patientParams);
-            List<SymptomModel> expected = GetExpectedSymptomModels(ResultSetID);
+            List<SymptomModel> expected = GetExpectedSymptomModels(expectedResultSet);
 
             Assert.Equal(expected.Count, actual.Count);
 
             for (int i = 0; i < actual.Count; i++)
             {
                 Assert.Equal(expected[i].PatientenID, actual[i].PatientenID);
-                Assert.Equal(expected[i].BefundDatum.ToUniversalTime(), actual[i].BefundDatum.ToUniversalTime());
+                Assert.Equal(expected[i].BefundDatum.ToString("s"), actual[i].BefundDatum.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].NameDesSymptoms, actual[i].NameDesSymptoms);
                 Assert.Equal(expected[i].Lokalisation, actual[i].Lokalisation);
-                Assert.Equal(expected[i].Beginn.ToUniversalTime(), actual[i].Beginn.ToUniversalTime());
+                Assert.Equal(expected[i].Beginn.ToString("s"), actual[i].Beginn.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].Schweregrad, actual[i].Schweregrad);
-                Assert.Equal(expected[i].Rueckgang.ToUniversalTime(), actual[i].Rueckgang.ToUniversalTime());
+                Assert.Equal(expected[i].Rueckgang.ToString("s"), actual[i].Rueckgang.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].AusschlussAussage, actual[i].AusschlussAussage);
                 Assert.Equal(expected[i].Diagnose, actual[i].Diagnose);
                 Assert.Equal(expected[i].UnbekanntesSymptom, actual[i].UnbekanntesSymptom);
@@ -65,7 +62,9 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
         private List<SymptomModel> GetExpectedSymptomModels(int ResultSetID)
         {
             string path = "../../../../TestData/PatientSymptomTestResults.json";
-            List<SymptomModel> result = ExpectedResultJsonReader.ReadResults<SymptomModel>(path, ResultSetID, ExpectedType.PATIENT_SYMPTOM);
+            string parameterPath = "../../../../TestData/GeneratedEHRIDs.json";
+
+            List<SymptomModel> result = ExpectedResultJsonReader.ReadResults<SymptomModel, PatientIDs>(path, parameterPath, ResultSetID, ExpectedType.PATIENT_SYMPTOM);
             return result;
         }
 

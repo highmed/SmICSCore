@@ -39,6 +39,18 @@ namespace SmICSFactory.Tests
                             ParseStationaryPatData(arr, patients[resultNo] as PatientInfos);
                         }
                         break;
+                    case ExpectedType.PATIENT_SYMPTOM:
+                        if (patients[resultNo].GetType() == typeof(PatientIDs))
+                        {
+                            ParsePatientSymptom(arr, patients[resultNo] as PatientIDs);
+                        }
+                        break;
+                    case ExpectedType.PATIENT_VACCINATION:
+                        if (patients[resultNo].GetType() == typeof(PatientIDs))
+                        {
+                            ParsePatientVaccination(arr, patients[resultNo] as PatientIDs);
+                        }
+                        break;
                 }
 
                 return arr.ToObject<List<T>>();
@@ -75,11 +87,11 @@ namespace SmICSFactory.Tests
             }
         }
 
-        private static void ParsePatientSymptom(JArray array, string ehr)
+        private static void ParsePatientSymptom(JArray array, PatientIDs id)
         {
             foreach (JObject obj in array)
             {
-                obj.Add(new JProperty("PatientID", ehr));
+                obj.Add(new JProperty("PatientID", id.EHR_ID));
                 obj.Property("BefundDatum").Value = DateTime.Parse(obj.Property("BefundDatum").Value.ToString());
                 obj.Property("Beginn").Value = DateTime.Parse(obj.Property("Beginn").Value.ToString());
 
@@ -94,11 +106,11 @@ namespace SmICSFactory.Tests
             }
         }
 
-        private static void ParsePatientVaccination(JArray array, string ehr)
+        private static void ParsePatientVaccination(JArray array, PatientIDs id)
         {
             foreach (JObject obj in array)
             {
-                obj.Add(new JProperty("PatientID", ehr));
+                obj.Add(new JProperty("PatientID", id.EHR_ID));
                 obj.Property("DokumentationsID").Value = DateTime.Parse(obj.Property("DokumentationsID").Value.ToString());
             }
         }

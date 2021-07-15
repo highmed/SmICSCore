@@ -1,11 +1,8 @@
-﻿using Autofac.Extras.Moq;
-using Microsoft.Extensions.Logging.Abstractions;
-using SmICSCoreLib.AQL;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 using SmICSCoreLib.REST;
 using SmICSFactory.Tests;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Xunit;
@@ -17,7 +14,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
     {
         [Theory]
         [ClassData(typeof(PatientVaccinationTestData))]
-        public void ProcessorTest(string ehrID, int ResultSetID) 
+        public void ProcessorTest(string ehrID, int expectedResultSet) 
         {
             RestDataAccess _data = TestConnection.Initialize();
 
@@ -28,14 +25,14 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
 
             VaccinationFactory factory = new VaccinationFactory(_data, NullLogger<VaccinationFactory>.Instance);
             List<VaccinationModel> actual = factory.Process(patientParams);
-            List<VaccinationModel> expected = GetExpectedVaccinationModels(ResultSetID);
+            List<VaccinationModel> expected = GetExpectedVaccinationModels(expectedResultSet);
 
             Assert.Equal(expected.Count, actual.Count);
 
             for (int i = 0; i < actual.Count; i++)
             {
                 Assert.Equal(expected[i].PatientenID, actual[i].PatientenID);
-                Assert.Equal(expected[i].DokumentationsID.ToUniversalTime(), actual[i].DokumentationsID.ToUniversalTime());
+                Assert.Equal(expected[i].DokumentationsID.ToString("s"), actual[i].DokumentationsID.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].Impfstoff, actual[i].Impfstoff);
                 Assert.Equal(expected[i].Dosierungsreihenfolge, actual[i].Dosierungsreihenfolge);
                 Assert.Equal(expected[i].Dosiermenge, actual[i].Dosiermenge);
@@ -64,7 +61,9 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
         private List<VaccinationModel> GetExpectedVaccinationModels(int ResultSetID)
         {
             string path = "../../../../TestData/PatientVaccinationTestResults.json";
-            List<VaccinationModel> result = ExpectedResultJsonReader.ReadResults<VaccinationModel>(path, ResultSetID, ExpectedType.PATIENT_VACCINATION);
+            string parameterPath = "../../../../TestData/GeneratedEHRIDs.json";
+
+            List<VaccinationModel> result = ExpectedResultJsonReader.ReadResults<VaccinationModel, PatientIDs>(path, parameterPath, ResultSetID, ExpectedType.PATIENT_VACCINATION);
             return result;
         }
 

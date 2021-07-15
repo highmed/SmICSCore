@@ -95,7 +95,7 @@ namespace SmICSWebApp.Data
                     var obj = JsonConvert.DeserializeObject(json_all);
                     var finishedJson = JsonConvert.SerializeObject(obj, Formatting.Indented);
 
-                    File.WriteAllText(@"D:\contacttracing.txt", finishedJson);
+                    File.WriteAllText(@".. / .. / .. / .. / TestData / contacttracing.txt", finishedJson);
 
                     //SaveComposition(ehr_id, finishedJson);
                 }
