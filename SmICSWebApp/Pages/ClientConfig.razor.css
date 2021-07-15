@@ -24,3 +24,58 @@
     padding: 0.2%;
     margin: 1%;
 }
+
+#div_card_1 {
+    display: flex;
+    flex-direction: column;
+    border : 1px solid black;
+    padding: 1%;
+    margin-bottom: 10%;
+}
+
+#div_card_2 {
+    border: 1px solid black;
+    margin: 1%;
+    padding: 1%;
+}
+
+#div_card_3 {
+    border: 1px solid black;
+    margin: 1%;
+    padding: 1%;
+}
+
+#div_card_4 {
+    border: 1px solid black;
+    margin: 1%;
+    padding: 1%;
+}
+
+#div_card_5 {
+    flex-direction: row;
+    border: 1px solid black;
+    margin: 1%;
+    padding: 1%;
+}
+
+.span_hr {
+    background-color: #56A5EC;
+    margin: 0%;
+    padding: 0%;
+    height: 3px;
+    box-shadow: 1px 1px 5px lightgrey;
+}
+
+#button {
+    width: 20%;
+    border-radius: 8px;
+    background: linear-gradient(to bottom, #33ccff 0%, #3399ff 100%);
+    padding: 0.5%;
+    color: white;
+    margin-right: 2%;
+    float: right;
+}
+
+    #button:hover {
+        opacity: 1
+    }

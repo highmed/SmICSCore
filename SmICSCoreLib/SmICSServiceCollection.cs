@@ -40,8 +40,6 @@ namespace SmICS
 
             services.AddTransient<IContactNetworkFactory, ContactNetworkFactory>();
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();
-            services.AddTransient<ISymptomFactory, SymptomFactory>();
-            services.AddTransient<IMibiPatientLaborDataFactory, MibiPatientLaborDataFactory>();
             
             services.AddTransient<INECCombinedFactory, NECCombinedFactory>();
 
