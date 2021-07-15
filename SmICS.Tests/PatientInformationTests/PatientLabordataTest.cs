@@ -64,7 +64,9 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
         private List<LabDataModel> GetExpectedLabDataModels(int ResultSetID)
         {
             string path = "../../../../TestData/LabDataTestResults.json";
-            List<LabDataModel> result = ExpectedResultJsonReader.ReadResults<LabDataModel>(path, ResultSetID, ExpectedType.LAB_DATA);
+            string parameterPath = "../../../../TestData/GeneratedEHRIDs.json";
+
+            List<LabDataModel> result = ExpectedResultJsonReader.ReadResults<LabDataModel, PatientIDs>(path, parameterPath, ResultSetID, ExpectedType.LAB_DATA);
             return result;
 
         }

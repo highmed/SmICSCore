@@ -1,0 +1,12 @@
+[
+  {
+    "EHR_ID": "eae9b822-6015-430c-a694-123249e977eb",
+    "Patient": "Patient35",
+    "FallID": "00000027"
+  },
+  {
+    "EHR_ID": "f7f106b1-3aef-481e-aa76-af9092dc63dc",
+    "Patient": "Patient36",
+    "FallID": "00000020"
+  }
+]

@@ -3,19 +3,22 @@
 @using SmICSWebApp.Data
 @using System.Collections.Generic;
 @using SmICSCoreLib.AQL.Patient_Stay.Count;
+@using SmICSCoreLib.AQL.Patient_Stay.Stationary
+@using ChartJs.Blazor.LineChart
+@using ChartJs.Blazor.PieChart
 
 @inject DataService dataService
+@inject IJSRuntime JSRuntime
 
 <h3>Statistik (Prototyp)</h3>
 
 <div class="card">
-    <StatistikNav>
-    </StatistikNav>
+    <div class="row">
+        <StatistikNav>
+        </StatistikNav>
 
-    <div class="card-body">
-        <div>
+        <div class="card-body col-10">
             <div style="padding: 0px 0px 100px 0px;">
-
                 @if (allPositivTest == null)
                 {
                     @if (status == true)
@@ -30,6 +33,57 @@
                 }
                 else
                 {
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="card flex-fill">
+                                <div class="card-header" style="background-color: #7FBDD2; color: black;">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <h5 class="card-title">Tägliche Lage</h5>
+                                        </div>
+                                        <div class="col-5" style="justify-content: flex-end;">
+                                            <h5 class="card-title">@date</h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="row" id="daily-row">
+                                        <div class="col-md-5 col-xxl-3 d-flex">
+                                            <div class="card flex-fill">
+                                                <div class="card-body" id="body-info">
+                                                    <h6 class="card-title"> Aktive Fälle </h6>
+                                                    <span class="h5 d-inline-block mt-1 mb-3"> @aktivefaelle </span>
+                                                    <h6 class="card-title"> Neue Fälle </h6>
+                                                    <span class="h5 d-inline-block mt-1 mb-3"> @neuefaelle </span>
+                                                    <h6 class="card-title"> Fälle letze 7 Tage </h6>
+                                                    <span class="h5 d-inline-block mt-1 mb-3"> @neuefaelleWoche </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-7 col-xxl-3 d-flex">
+                                            <div class="card flex-fill">
+                                                <div class="card-body" id="body-info">
+                                                    <h6 class="card-title"> Durchgeführte Tests </h6>
+                                                    <span class="h5 d-inline-block mt-1 mb-3"> @gesamteTest </span>
+                                                    <Chart Config="_pieConfig"></Chart>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="card flex-fill">
+                                <Chart Config="_config"></Chart>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
                     <div class="row">
                         <div class="col-6">
                             <div class="card flex-fill">
@@ -58,7 +112,7 @@
 
                                                 <tr>
                                                     <th scope="row">
-                                                        Mögliche Nosokomiale Infektion
+                                                        Mögliche nosokomiale Infektion
                                                         <a href="" @onmouseover="() => ShowFirstText()" @onclick:preventDefault style="color:red">
                                                             *
                                                         </a>
@@ -105,7 +159,7 @@
 
                                                 <tr>
                                                     <th scope="row">
-                                                        Wahrscheinliche Nosokomiale Infektion
+                                                        Wahrscheinliche nosokomiale Infektion
                                                         <a href="" @onmouseover="() => ShowSecondText()" @onclick:preventDefault style="color:red">
                                                             *
                                                         </a>
@@ -158,7 +212,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Anzahl negativer Tests</th>
-                                                    <td>@allNegativPat.Count()</td>
+                                                    <td>@allNegativTest.Count()</td>
                                                 </tr>
 
                                             </tbody>
@@ -168,20 +222,22 @@
                                         @if (firstText == true && secondText == false)
                                         {
                                             <p style="font-size:0.8em">
-                                                *eine Mögliche Nosokomiale Infektion ist, wenn der Patient war bei stationärer Aufnahme negativ auf SARS-CoV-2
-                                                getestet war und hat keine Symptome aus der Symptomliste unten. Und hat erstmal eine positive PCR von SARS-CoV-2
-                                                ab Tag 4 nach stationärer Aufnahme.
+                                                *Mögliche nosokomiale Infektion:
+                                                <br>
+                                                Patient war bei stationärer Aufnahme negativ auf SARS-CoV-2 getestet und hat keine Symptome aus der Symptomliste unten.
+                                                Er/sie weist erstmals einen positiven PCR-Test auf SARS-CoV-2 ab Tag 4 nach stationärer Aufnahme auf
                                             </p>
                                         }
 
-                                        @if (firstText == false && secondText == true )
+                                        @if (firstText == false && secondText == true)
                                         {
                                             <p style="font-size:0.8em">
-                                                *eine Wahrscheinliche Nosokomiale Infektion ist, wenn der Patient bei stationärer Aufnahme negativ auf SARS-CoV-2
-                                                getestet war und hat keine Symptome aus der Symptomliste unten. Und hat erstmal eine positive PCR für oder den
-                                                kulturellen Nachweis von SARS-CoV-2 ab Tag 4 nach stationärer Aufnahme. Und es besteht ein klassisch
-                                                infektionsepidemiologischer Zusammenhang (Ort-Zeit-Kontext) zu einem nachgewiesen infizierten potentiellen im
-                                                Zeitraum der Inkubationszeit (2-14 Tage VOR Beginn der Symptome oder Probenahme) im Krankenhaus.
+                                                *Wahrscheinliche nosokomiale Infektion:
+                                                <br>
+                                                 Patient war bei stationärer Aufnahme negativ auf SARS-CoV-2 getestet und hat keine Symptome aus der Symptomliste unten. 
+                                                 Und hat erstmal eine positive PCR für oder den kulturellen Nachweis von SARS-CoV-2 ab Tag 4 nach stationärer Aufnahme. 
+                                                 Und es besteht ein klassisch infektionsepidemiologischer Zusammenhang (Ort-Zeit-Kontext) zu einem nachgewiesen infizierten 
+                                                 potentiellen im Zeitraum der Inkubationszeit (2-14 Tage VOR Beginn der Symptome oder Probenahme) im Krankenhaus.
                                             </p>
                                         }
                                     </div>
@@ -219,9 +275,7 @@
                             </div>
                         </div>
                     </div>
-
                 }
-
             </div>
         </div>
     </div>
@@ -229,6 +283,7 @@
 
 @code {
     private List<CountDataModel> allPositivTest;
+    private List<CountDataModel> allNegativTest;
     private List<CountDataModel> allNegativPat;
     private List<CountDataModel> allPositivPat;
     private List<Patient> allNoskumalPat;
@@ -240,9 +295,28 @@
     private bool showNoskByCont;
     private bool firstText;
     private bool secondText;
+    private string date;
+
+    private LineConfig _config;
+    private PieConfig _pieConfig;
+    private Dictionary<string, int> sortEhrDaten;
+    private Dictionary<string, int> pieDaten;
+    private List<CountDataModel> posPatHeute;
+    private List<CountDataModel> posTestHeute;
+    private List<CountDataModel> negTestHeute;
+    private List<CountDataModel> faelleWoche;
+    private List<StationaryDataModel> patStationary;
+    private List<StationaryDataModel> aktivHeute = new();
+    private int neuefaelle;
+    private int neuefaelleWoche;
+    private int aktivefaelle;
+    private int gesamteTest;
+    private int positivefaelle;
+    private int negativefaelle;
 
     protected override async Task OnInitializedAsync()
     {
+        date = DateTime.Now.ToString("dddd, dd MMMM yyyy");
         status = true;
         showNosk = false;
         showNoskByCont = false;
@@ -254,19 +328,27 @@
         try
         {
             allPositivTest = dataService.GetAllPositivTest();
-            allPositivPat = dataService.GetPositivPat(allPositivTest);
-            allNegativPat = dataService.GetNegativPat();
+            allPositivPat = dataService.GetAllPatByTest(allPositivTest);
+            allNegativTest = dataService.GetAllNegativTest();
+            allNegativPat = dataService.GetAllPatByTest(allNegativTest);
+
             allNoskumalPat = dataService.GetAllNoskumalPat(allPositivTest);
             noskumalPatByContact = dataService.GetNoskumalByContact(allNoskumalPat, allPositivPat);
             anzahlFaelle = allPositivPat.Count() - allNoskumalPat.Count();
             anzahlPatTage = dataService.PatStay(allPositivPat);
+
+            Dictionary<string, int> sortDictPositiv = GetDataLineChart(allPositivPat);
+            Dictionary<string, int> sortDictNegativ = GetDataLineChart(allNegativPat);
+            LineChart(sortDictPositiv, sortDictNegativ);
+
+            DailyCases();
+
             status = true;
         }
         catch (Exception)
         {
             status = false;
         }
-
     }
 
     private void ShowNoskIDs()
@@ -332,4 +414,193 @@
             secondText = false;
         }
     }
+
+    private Dictionary<string, int> GetDataLineChart(List<CountDataModel> patientenTest)
+    {
+        sortEhrDaten = new();
+        int i;
+        foreach (var pat in patientenTest)
+        {
+            if (sortEhrDaten.ContainsKey(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM")))
+            {
+                sortEhrDaten.TryGetValue(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), out i);
+                sortEhrDaten.Remove(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"));
+                sortEhrDaten.Add(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), i + 1);
+            }
+            else
+            {
+                sortEhrDaten.Add(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), 1);
+            }
+        }
+        return sortEhrDaten;
+    }
+
+    private void LineChart(Dictionary<string, int> sortDictPositiv, Dictionary<string, int> sortDictNegativ)
+    {
+        _config = new LineConfig
+        {
+            Options = new LineOptions
+            {
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Entwicklung der Durchgeführte Tests"
+                },
+                Tooltips = new Tooltips
+                {
+                    Mode = InteractionMode.Nearest,
+                    Intersect = true
+                },
+                Hover = new Hover
+                {
+                    Mode = InteractionMode.Nearest,
+                    Intersect = true
+                },
+                Scales = new Scales
+                {
+                    XAxes = new List<CartesianAxis>
+{
+                            new CategoryAxis
+                            {
+                                 ScaleLabel = new ScaleLabel
+                                {
+                                    LabelString = "Datum"
+                                }
+                            }
+                        },
+                    YAxes = new List<CartesianAxis>
+{
+                            new LinearCartesianAxis
+                            {
+                                Ticks = new LinearCartesianTicks
+                                {
+                                    BeginAtZero = true
+                                }
+                            }
+                     }
+                }
+            }
+        };
+
+        foreach (string datum in sortDictPositiv.Keys)
+        {
+            _config.Data.Labels.Add(datum);
+        }
+
+        IDataset<int> posivtivDataset = new LineDataset<int>(sortDictPositiv.Values)
+        {
+            Label = "Positive Tests",
+            BackgroundColor = "#B41F2A",
+            BorderColor = "#B41F2A",
+            Fill = FillingMode.Disabled
+        };
+
+        IDataset<int> negativDataset = new LineDataset<int>(sortDictNegativ.Values)
+        {
+            Label = "Negative Tests",
+            BackgroundColor = "#14477b",
+            BorderColor = "#14477b",
+            Fill = FillingMode.Disabled
+        };
+
+        _config.Data.Datasets.Add(posivtivDataset);
+        _config.Data.Datasets.Add(negativDataset);
+    }
+
+    private void PieChart(PieConfig _pieConfig, Dictionary<string, int> pieDaten)
+    {
+        foreach (string data in pieDaten.Keys)
+        {
+            _pieConfig.Data.Labels.Add(data);
+        }
+
+        PieDataset<int> dataset = new PieDataset<int>(pieDaten.Values)
+        {
+            BackgroundColor = new[]
+            {
+                ColorUtil.ColorHexString(180, 31, 42), //"Red"
+                ColorUtil.ColorHexString(20, 54, 123), //"Blue"
+            }
+        };
+
+        _pieConfig.Data.Datasets.Add(dataset);
+    }
+
+    private List<CountDataModel> GetPosPatByDate(List<CountDataModel> patListe, DateTime datum)
+    {
+        List<CountDataModel> patHeute = new();
+        if (patListe != null)
+        {
+            foreach (var pat in patListe)
+            {
+                if (pat.Zeitpunkt_des_Probeneingangs.Date == datum)
+                {
+                    patHeute.Add(pat);
+                }
+            }
+            return patHeute;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private void DailyCases()
+    {
+        //Neuefaelle
+        posPatHeute = GetPosPatByDate(allPositivPat, DateTime.Now.Date);
+        neuefaelle = posPatHeute.Count();
+
+        //Aktive Faelle
+        foreach (var item in allPositivPat)
+        {
+            patStationary = dataService.StayFromCase(item.PatientID, item.Fallkennung);
+            if (patStationary != null)
+            {
+                foreach (var pat in patStationary)
+
+                    if (pat.Datum_Uhrzeit_der_Entlassung.GetHashCode() == 0)
+                    {
+                        aktivHeute.Add(pat);
+                    }
+            }
+        }
+        aktivefaelle = aktivHeute.Count();
+
+        //Faelle letzte 7 Tage
+        for (int i = 0; i < 6; i++)
+        {
+            int faelle = 0;
+            faelleWoche = GetPosPatByDate(allPositivPat, DateTime.Now.Date.AddDays(i));
+            faelle = faelleWoche.Count();
+
+            neuefaelleWoche += faelle;
+        }
+
+        //Durchgefuehrte Tests
+        posTestHeute = GetPosPatByDate(allPositivTest, DateTime.Now.Date);
+        positivefaelle = posTestHeute.Count();
+        negTestHeute = GetPosPatByDate(allNegativTest, DateTime.Now.Date);
+        negativefaelle = negTestHeute.Count();
+        gesamteTest = positivefaelle + negativefaelle;
+
+        pieDaten = new();
+        pieDaten.Add("Positiv", positivefaelle);
+        pieDaten.Add("Negativ", negativefaelle);
+        _pieConfig = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = false
+                }
+            }
+        };
+        negativefaelle = negTestHeute.Count();
+        PieChart(_pieConfig, pieDaten);
+    }
+
 }
