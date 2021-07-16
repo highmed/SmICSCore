@@ -47,7 +47,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
             {
                 List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
                 
-                yield return new object[] { patient[3].EHR_ID, 3 };
+                yield return new object[] { patient[11].EHR_ID, 11 };
                 yield return new object[] { patient[5].EHR_ID, 5 };
                 yield return new object[] { patient[7].EHR_ID, 7 };
                 yield return new object[] { patient[13].EHR_ID, 13 };
