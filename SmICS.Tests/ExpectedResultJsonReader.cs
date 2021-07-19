@@ -4,12 +4,13 @@ using SmICSDataGenerator.Tests;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace SmICSFactory.Tests
 {
     public class ExpectedResultJsonReader
     {
-        public static List<T> ReadResults<T, U>(string testResultPath, string parameterPath, int resultNo, ExpectedType type) where U : new()
+        public static List<T> ReadResults<T, U>(string testResultPath, string parameterPath, int resultNo, int ehrNo, ExpectedType type) where U : new()
         {
             List<U> patients = SmICSCoreLib.JSONFileStream.JSONReader<U>.Read(parameterPath);
 
@@ -22,33 +23,33 @@ namespace SmICSFactory.Tests
                 switch (type)
                 {
                     case ExpectedType.PATIENT_MOVEMENT:
-                        if (patients[resultNo].GetType() == typeof(PatientIDs))
+                        if (patients[ehrNo].GetType() == typeof(PatientIDs))
                         {
-                            ParsePatientMovement(arr, patients[resultNo] as PatientIDs);
+                            ParsePatientMovement(arr, patients[ehrNo] as PatientIDs);
                         }
                         break;
                     case ExpectedType.LAB_DATA:
-                        if (patients[resultNo].GetType() == typeof(PatientIDs))
+                        if (patients[ehrNo].GetType() == typeof(PatientIDs))
                         {
-                            ParseLabData(arr, patients[resultNo] as PatientIDs);
+                            ParseLabData(arr, patients[ehrNo] as PatientIDs);
                         }
                         break;
                     case ExpectedType.STATIONARY:
-                        if (patients[resultNo].GetType() == typeof(PatientInfos))
-                        { 
-                            ParseStationaryPatData(arr, patients[resultNo] as PatientInfos);
+                        if (patients[ehrNo].GetType() == typeof(PatientInfos))
+                        {
+                            ParseStationaryPatData(arr, patients[ehrNo] as PatientInfos);
                         }
                         break;
                     case ExpectedType.PATIENT_SYMPTOM:
-                        if (patients[resultNo].GetType() == typeof(PatientIDs))
+                        if (patients[ehrNo].GetType() == typeof(PatientIDs))
                         {
-                            ParsePatientSymptom(arr, patients[resultNo] as PatientIDs);
+                            ParsePatientSymptom(arr, patients[ehrNo] as PatientIDs);
                         }
                         break;
                     case ExpectedType.PATIENT_VACCINATION:
-                        if (patients[resultNo].GetType() == typeof(PatientIDs))
+                        if (patients[ehrNo].GetType() == typeof(PatientIDs))
                         {
-                            ParsePatientVaccination(arr, patients[resultNo] as PatientIDs);
+                            ParsePatientVaccination(arr, patients[ehrNo] as PatientIDs);
                         }
                         break;
                 }
@@ -91,7 +92,7 @@ namespace SmICSFactory.Tests
         {
             foreach (JObject obj in array)
             {
-                obj.Add(new JProperty("PatientID", id.EHR_ID));
+                obj.Add(new JProperty("PatientenID", id.EHR_ID));
                 obj.Property("BefundDatum").Value = DateTime.Parse(obj.Property("BefundDatum").Value.ToString());
                 obj.Property("Beginn").Value = DateTime.Parse(obj.Property("Beginn").Value.ToString());
 
@@ -110,7 +111,7 @@ namespace SmICSFactory.Tests
         {
             foreach (JObject obj in array)
             {
-                obj.Add(new JProperty("PatientID", id.EHR_ID));
+                obj.Add(new JProperty("PatientenID", id.EHR_ID));
                 obj.Property("DokumentationsID").Value = DateTime.Parse(obj.Property("DokumentationsID").Value.ToString());
             }
         }

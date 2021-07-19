@@ -20,14 +20,15 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 	{
 		[Theory]
 		[ClassData(typeof(ContactNetworkTestData))]
-		public void ProcessorTest(int degree, string ehr_id, int start_year, int start_month, int start_day, int end_year, int end_month, int end_day, int expectedResultSet)
+		public void ProcessorTest(int degree, int ehrNo, int start_year, int start_month, int start_day, int end_year, int end_month, int end_day, int expectedResultSet)
 		{
 			IRestDataAccess _data = TestConnection.Initialize();
+			List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
 
 			ContactParameter contactParams = new ContactParameter()
 			{
 				Degree = degree,
-				PatientID = ehr_id,
+				PatientID = patient[ehrNo].EHR_ID,
 				Starttime = new DateTime(start_year, start_month, start_day),
 				Endtime = new DateTime(end_year, end_month, end_day)
 			};
@@ -35,7 +36,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 			IPatientInformation patientInformation = CreatePatientInformation(_data);
 			ContactNetworkFactory factory = new ContactNetworkFactory(_data, NullLogger<ContactNetworkFactory>.Instance, patientInformation);
 			ContactModel actual = factory.Process(contactParams);
-			ContactModel expected = getExpectedContactModels(expectedResultSet);
+			ContactModel expected = getExpectedContactModels(expectedResultSet, ehrNo);
 
 			Assert.Equal(expected.PatientMovements.Count, actual.PatientMovements.Count);
 			Assert.Equal(expected.LaborData.Count, actual.LaborData.Count);
@@ -73,34 +74,33 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 		private class ContactNetworkTestData : IEnumerable<object[]>
 		{
 			public IEnumerator<object[]> GetEnumerator()
-            {
-				List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
-				yield return new object[] { 1, patient[0].EHR_ID, 2021, 1, 1, 2021, 1, 10, 0 };
-				yield return new object[] { 1, patient[1].EHR_ID, 2021, 1, 1, 2021, 1, 10, 1 };
-            }
+			{
+				yield return new object[] { 1, 0, 2021, 1, 1, 2021, 1, 10, 0 };
+				yield return new object[] { 1, 1, 2021, 1, 1, 2021, 1, 10, 1 };
+			}
 
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        }
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		}
 
-		private ContactModel getExpectedContactModels(int ResultSetID)
+		private ContactModel getExpectedContactModels(int ResultSetID, int ehrNo)
 		{
 			Dictionary<int, List<int>> ResultSet = new Dictionary<int, List<int>>
 			{
 				{
-                    0,
+					0,
 					new List<int> { 0, 1, 3, 2, 5, 4, 6 }
 				},
-                {
+				{
 					1,
 					new List<int> { 0, 1, 3, 2, 5, 4, 6, 8, 7, 9, 11, 12, 13 }
-                }
+				}
 			};
 
-			return CreateExpactedContactModel(ResultSet[ResultSetID]);
+			return CreateExpactedContactModel(ResultSet[ResultSetID], ehrNo);
 		}
-		
+
 		private PatientInformation CreatePatientInformation(IRestDataAccess rest)
-        {
+		{
 
 			IPatientMovementFactory patMoveFac = new PatientMovementFactory(rest, NullLogger<PatientMovementFactory>.Instance);
 			IPatientLabordataFactory patLabFac = new PatientLabordataFactory(rest, NullLogger<PatientLabordataFactory>.Instance);
@@ -112,8 +112,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 
 		}
 
-		private ContactModel CreateExpactedContactModel(List<int> contactOrder)
-        {
+		private ContactModel CreateExpactedContactModel(List<int> contactOrder, int ehrNo)
+		{
 			string movementPath = "../../../../TestData/PatientMovementTestResults.json";
 			string labPath = "../../../../TestData/LabDataTestResults.json";
 
@@ -123,8 +123,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 			List<LabDataModel> labDataResults = new List<LabDataModel>();
 			foreach (int i in contactOrder)
 			{
-				List<PatientMovementModel> movementResult = ExpectedResultJsonReader.ReadResults<PatientMovementModel, PatientIDs>(movementPath, parameterPath, i, ExpectedType.PATIENT_MOVEMENT);
-				List<LabDataModel> labResult = ExpectedResultJsonReader.ReadResults<LabDataModel, PatientIDs>(labPath, parameterPath, i, ExpectedType.LAB_DATA);
+				List<PatientMovementModel> movementResult = ExpectedResultJsonReader.ReadResults<PatientMovementModel, PatientIDs>(movementPath, parameterPath, i, ehrNo, ExpectedType.PATIENT_MOVEMENT);
+				List<LabDataModel> labResult = ExpectedResultJsonReader.ReadResults<LabDataModel, PatientIDs>(labPath, parameterPath, i, ehrNo, ExpectedType.LAB_DATA);
 
 				moveResults.AddRange(movementResult);
 				labDataResults.AddRange(labResult);
@@ -132,5 +132,5 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 			ContactModel contacts = new ContactModel { LaborData = labDataResults, PatientMovements = moveResults };
 			return contacts;
 		}
-    }
+	}
 }
