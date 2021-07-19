@@ -207,9 +207,9 @@ namespace SmICSWebApp
             OpenehrConfig.openehrPassword = "test";
             OpenehrConfig.openehrAdaptor = "STANDARD";*/
 
-            //OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
-            //OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
-            //OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
+            OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
+            OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
+            OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
 
             if (env.IsDevelopment())
             {
