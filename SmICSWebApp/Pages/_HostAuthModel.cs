@@ -5,6 +5,7 @@ using SmICSWebApp.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace SmICSWebApp.Pages
 {
@@ -26,7 +27,7 @@ namespace SmICSWebApp.Pages
                 RedirectUri = Url.Content("~/")
             };
 
-            return Challenge(authProps, "oidc");
+            return Challenge(authProps, OpenIdConnectDefaults.AuthenticationScheme);
         }
 
         public async Task OnGetLogout()
@@ -37,7 +38,7 @@ namespace SmICSWebApp.Pages
             };
 
             await HttpContext.SignOutAsync("Cookies");
-            await HttpContext.SignOutAsync("oidc", authProps);
+            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme, authProps);
         }
 
         public async Task<IActionResult> OnGet()
@@ -51,7 +52,7 @@ namespace SmICSWebApp.Pages
 
                 if (sid != null && !Cache.HasSubjectId(sid))
                 {
-                    var authResult = await HttpContext.AuthenticateAsync("oidc");
+                    var authResult = await HttpContext.AuthenticateAsync(OpenIdConnectDefaults.AuthenticationScheme);
                     DateTimeOffset expiration = authResult.Properties.ExpiresUtc.Value;
                     string accessToken = await HttpContext.GetTokenAsync("access_token");
                     string refreshToken = await HttpContext.GetTokenAsync("refresh_token");

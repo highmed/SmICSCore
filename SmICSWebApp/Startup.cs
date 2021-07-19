@@ -18,6 +18,11 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication;
+using System.Linq;
+using Microsoft.AspNetCore.Authentication.Certificate;
 
 namespace SmICSWebApp
 {
@@ -83,32 +88,79 @@ namespace SmICSWebApp
             });*/
 
 
+            services.AddAuthentication(
+                  CertificateAuthenticationDefaults.AuthenticationScheme)
+              .AddCertificate(options =>
+              {
+                  options.AllowedCertificateTypes = CertificateTypes.All;
+              });
+
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = "oidc";
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
-                    .AddCookie("Cookies")
-                    .AddOpenIdConnect("oidc", options =>
-                    {
-                        options.Authority = "https://demo.identityserver.io/";
-                        options.ClientId = "interactive.confidential.short"; // 75 seconds
-                        options.ClientSecret = "secret";
-                        options.ResponseType = "code";
-                        options.SaveTokens = true;
-                        options.GetClaimsFromUserInfoEndpoint = true;
-                        options.Scope.Add("offline_access");
+            .AddCookie("Cookies")
+            .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+            {
+                options.Authority = Configuration["oidc:Authority"];
+                options.ClientId = Configuration["oidc:ClientId"];
+                options.ClientSecret = Configuration["oidc:ClientSecret"];
 
-                        options.Events = new OpenIdConnectEvents
-                        {
-                            OnAccessDenied = context =>
-                            {
-                                context.HandleResponse();
-                                context.Response.Redirect("/");
-                                return Task.CompletedTask;
-                            }
-                        };
-                    });
+                options.ResponseType = "code";
+                options.Scope.Clear();
+                options.Scope.Add("openid");
+
+                options.ClaimsIssuer = "User";
+                options.RequireHttpsMetadata = false;
+
+                options.SaveTokens = true;
+                options.GetClaimsFromUserInfoEndpoint = true;
+
+                options.Events = new OpenIdConnectEvents
+                {
+
+                    /*OnRedirectToIdentityProviderForSignOut = (context) =>
+                    {
+
+                    };*/
+
+                    OnAccessDenied = context =>
+                    {
+                        context.HandleResponse();
+                        context.Response.Redirect("/");
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+
+            services.AddAuthentication()
+            .AddJwtBearer(options =>
+            {
+                options.Authority = Configuration["oidc:Authority"];
+                options.RequireHttpsMetadata = true;
+                // name of the API resource
+                options.Audience = "account";
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidIssuer = Configuration["oidc:Authority"],
+                    ValidAudience = "account"
+                    //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])) 
+                };
+            });
+
+
+            services.AddAuthorization(options =>
+            {
+                var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    JwtBearerDefaults.AuthenticationScheme);
+                defaultAuthorizationPolicyBuilder =
+                    defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+                options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            });
+
             services.AddControllers();
             services.AddControllers().AddNewtonsoftJson();
             services.AddRazorPages();
@@ -183,6 +235,18 @@ namespace SmICSWebApp
             app.UseSerilogRequestLogging();
 
             app.UseAuthentication();
+            app.Use(async (context, next) =>
+            {
+                await next();
+                var bearerAuth = context.Request.Headers["Authorization"]
+                    .FirstOrDefault()?.StartsWith("Bearer ") ?? false;
+                if (context.Response.StatusCode == 401
+                    && !context.User.Identity.IsAuthenticated
+                    && !bearerAuth)
+                {
+                    await context.ChallengeAsync("oidc");
+                }
+            });
             app.UseRouting();
 
             app.UseAuthorization();
