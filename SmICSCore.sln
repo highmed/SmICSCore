@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmICSFactory.Tests", "SmICS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmICSDataGenerator.Test", "SmICSDataGenerator.Test\SmICSDataGenerator.Test.csproj", "{B68CA049-DB0C-4D8C-9A7E-7389FF32D5FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.Test", "WebApp.Test\WebApp.Test.csproj", "{6B792E07-C098-42A1-BDBE-3DA67269709A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.Test", "WebApp.Test\WebApp.Test.csproj", "{6B792E07-C098-42A1-BDBE-3DA67269709A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,25 @@
+{
+  "0": [
+    {
+      "FallID": "00000001",
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Raum": "Zimmerkennung 101",
+      "Fachabteilung": "Sonstige Fachabteilung",
+      "FachabteilungsID": "3700"
+    },
+    {
+      "FallID": "00000001",
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Raum": "Zimmerkennung 101",
+      "Fachabteilung": "Sonstige Fachabteilung",
+      "FachabteilungsID": "3700"
+    },
+    {
+      "FallID": "00000001",
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Raum": "Zimmerkennung 101",
+      "Fachabteilung": "Sonstige Fachabteilung",
+      "FachabteilungsID": "3700"
+    }
+  ]
+}

@@ -191,10 +191,14 @@
 
     private void GetAllPat()
     {
-        List<StationaryDataModel> patStationary = dataService.GetAllPatByDate(patData.datum);
-        sortedPatStationary = patStationary.OrderBy(x => x.Datum_Uhrzeit_der_Aufnahme).ToList();
-        if (patStationary == null)
+        try
         {
+            List<StationaryDataModel> patStationary = dataService.GetAllPatByDate(patData.datum);
+            sortedPatStationary = patStationary.OrderBy(x => x.Datum_Uhrzeit_der_Aufnahme).ToList();
+        }
+        catch (Exception)
+        {
+
             status = false;
         }
     }

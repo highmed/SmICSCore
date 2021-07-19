@@ -57,7 +57,7 @@ namespace SmICSWebApp.Data
                 patientMovement = _dataService.GetPatMovement(item.PatientenID);
                 foreach (var movment in patientMovement)
                 {
-                    if (movment.Fachabteilung == station)
+                    if (movment.StationID == station)
                     {
                         if (!symListe.Contains(item))
                         {
@@ -83,14 +83,14 @@ namespace SmICSWebApp.Data
                 }
             }
 
-            var result = patBewegungen.GroupBy(x => x.Fachabteilung).Select(x => new { Fachabteilung = x.Key, Count = x.Count() }).ToList();
+            var result = patBewegungen.GroupBy(x => x.StationID).Select(x => new { StationID = x.Key, Count = x.Count() }).ToList();
 
             Dictionary<string, int> finalList = new Dictionary<string, int>();
             foreach (var item in result)
             {
                 if (item.Count >= 3)
                 {
-                    finalList.Add(item.Fachabteilung, item.Count);
+                    finalList.Add(item.StationID, item.Count);
                 }
             }
             return finalList;

@@ -10,6 +10,11 @@ namespace SmICSFactory.Tests
     public class PatientInfos : PatientIDs
     {
         public string FallID { get; set; }
+        public string StationID { get; set; }
+       
+        public DateTime Beginn { get; set; }
+        public DateTime Ende { get; set; }
+
         public DateTime Datum_Uhrzeit_der_Aufnahme { get; set; }
     }
 }

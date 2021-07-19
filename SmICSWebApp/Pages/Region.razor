@@ -173,6 +173,15 @@
         await Task.Run(LoadRValue);
         await Task.Run(LoadRkiData);
         GetChart();
+        GetStatus();
+    }
+
+    private void GetStatus()
+    {
+        if (lkArray == null)
+        {
+            status = false;
+        }
     }
 
     private void LoadRkiData()

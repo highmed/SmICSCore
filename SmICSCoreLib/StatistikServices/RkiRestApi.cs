@@ -161,20 +161,16 @@ namespace SmICSCoreLib.StatistikServices
                 string url = "https://raw.githubusercontent.com/robert-koch-institut/SARS-CoV-2-Nowcasting_und_-R-Schaetzung/main/Nowcast_R_aktuell.csv";
                 var result = GetCsvDataSet(url);
                 var dataRows = result.Tables[0].Rows;
-                rValu = result.Tables[0].Rows[dataRows.Count - vlaue][10].ToString();
+                rValu = result.Tables[0].Rows[dataRows.Count - vlaue][9].ToString();
                 if (rValu.ElementAt(0) == '.')
                 {
                     rValu = rValu.Insert(0, "0");
                 }
                 return rValu;
             }
-            catch (InvalidOperationException ex )
+            catch (Exception)
             {
-                return ex.Message;
-                //LogError(e);
-                //throw new InvalidOperationException(
-                // "Parameter index is out of range.", ex);
-                //return null;
+                return null;
             }
 
         }

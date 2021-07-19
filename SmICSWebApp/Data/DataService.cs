@@ -30,10 +30,79 @@ namespace SmICSWebApp.Data
         }
 
         //Load EhrData
+
+        //Get all hospitalized patients by ID, CaseID and Date.
         public List<StationaryDataModel> GetStationaryPat(string patientID, string fallkennung, DateTime datum)
         {
             List<StationaryDataModel> stationaryDatas = _patinet_Stay.Stationary_Stay(patientID, fallkennung, datum);
             return stationaryDatas;
+        }
+
+        //Get all hospitalized patients by ID and CaseID.
+        public List<StationaryDataModel> StayFromCase(string patientId, string fallkennung)
+        {
+            List<StationaryDataModel> patStationary = _patinet_Stay.StayFromCase(patientId, fallkennung);
+            return patStationary;
+        }
+
+        public List<PatientMovementModel> GetPatMovement(string patientId)
+        {
+            List<string> patientList = new();
+            patientList.Add(patientId);
+            PatientListParameter patListParameter = new();
+            patListParameter.patientList = patientList;
+            List<PatientMovementModel> patientMovement = _patientInformation.Patient_Bewegung_Ps(patListParameter);
+            return patientMovement;
+        }
+
+        // Get all patientmovements by patientID, Station, Starttime and Endtime
+        public List<PatientMovementModel> GetPatMovementFromStation(List<string> patientList, string station, DateTime starttime, DateTime endtime)
+        {
+            PatientListParameter patListParameter = new();
+            patListParameter.patientList = patientList;
+            List<PatientMovementModel> patientMovement = _patientInformation.Patient_Bewegung_Station(patListParameter, station, starttime, endtime);
+            return patientMovement;
+        }
+
+        public List<CountDataModel> GetCovidPat(string nachweis)
+        {
+            List<CountDataModel> covidPat = _patinet_Stay.CovidPat(nachweis);
+            return covidPat;
+        }
+
+        public List<CountDataModel> GetAllPositivTest()
+        {
+            List<CountDataModel> allPositivTest = GetCovidPat("260373001");
+            return allPositivTest;
+        }
+
+        public List<CountDataModel> GetAllPatByTest(List<CountDataModel> allTest)
+        {
+            List<CountDataModel> testPat = new();
+            foreach (CountDataModel countData in allTest)
+            {
+                if (!testPat.Contains(countData))
+                {
+                    testPat.Add(countData);
+                }
+                else
+                {
+                    CountDataModel data = testPat.Find(i => i.PatientID == countData.PatientID);
+
+                    if (data.Zeitpunkt_des_Probeneingangs > countData.Zeitpunkt_des_Probeneingangs)
+                    {
+                        testPat.Remove(data);
+                        testPat.Add(countData);
+                    }
+                }
+            }
+            return testPat;
+        }
+
+        public List<CountDataModel> GetAllNegativTest()
+        {
+            List<CountDataModel> allNegativPat = GetCovidPat("260415000");
+            return allNegativPat;
         }
 
         public List<StationaryDataModel> GetPatStationary(string patientId, string fallId)
@@ -57,73 +126,12 @@ namespace SmICSWebApp.Data
 
         }
 
-        public List<PatientMovementModel> GetPatMovement(string patientId)
-        {
-            List<string> patientList = new();
-            patientList.Add(patientId);
-            PatientListParameter patListParameter = new();
-            patListParameter.patientList = patientList;
-            List<PatientMovementModel> patientMovement = _patientInformation.Patient_Bewegung_Ps(patListParameter);
-            return patientMovement;
-        }
-
-        public List<PatientMovementModel> GetPatMovementFromStation(List<string> patientList, string station, DateTime starttime, DateTime endtime)
-        {
-            //List<string> patientList = new();
-            //patientList.Add(patientId);
-            PatientListParameter patListParameter = new();
-            patListParameter.patientList = patientList;
-            List<PatientMovementModel> patientMovement = _patientInformation.Patient_Bewegung_Station(patListParameter, station, starttime, endtime);
-            return patientMovement;
-        }
-
-        public List<CountDataModel> GetCovidPat(string nachweis)
-        {
-            List<CountDataModel> covidPat = _patinet_Stay.CovidPat(nachweis);
-            return covidPat;
-        }
-        
-        public List<CountDataModel> GetAllPositivTest()
-        {
-            List<CountDataModel> allPositivTest = GetCovidPat("260373001");
-            return allPositivTest;
-        }
-       
-        public List<CountDataModel> GetAllPatByTest(List<CountDataModel> allTest)
-        {
-            List<CountDataModel> testPat = new();
-            foreach (CountDataModel countData in allTest)
-            {
-                if (!testPat.Contains(countData))
-                {
-                    testPat.Add(countData);
-                }
-                else
-                {
-                    CountDataModel data = testPat.Find(i => i.PatientID == countData.PatientID);
-
-                    if (data.Zeitpunkt_des_Probeneingangs > countData.Zeitpunkt_des_Probeneingangs)
-                    {
-                        testPat.Remove(data);
-                        testPat.Add(countData);
-                    }
-                }
-            }
-            return testPat;
-        }
-      
-        public List<CountDataModel> GetAllNegativTest()
-        {
-            List<CountDataModel> allNegativPat = GetCovidPat("260415000");
-            return allNegativPat;
-        }
-       
         public List<SymptomModel> GetAllSymByPat(string patientId, DateTime datum)
         {
             List<SymptomModel> symptomListe = _patientInformation.Symptoms_By_PatientId(patientId, datum);
             return symptomListe;
         }
-       
+
         public List<Patient> GetAllNoskumalPat(List<CountDataModel> positivPatList)
         {
             List<Patient> patNoskumalList = new();
@@ -160,10 +168,10 @@ namespace SmICSWebApp.Data
             }
             return patNoskumalList;
         }
-        
+
         public List<Patient> GetNoskumalByContact(List<Patient> allNoskumalPat, List<CountDataModel> allPositivPat)
         {
-            List<Patient> patNoskumalList = new ();
+            List<Patient> patNoskumalList = new();
 
             foreach (var patient in allNoskumalPat)
             {
@@ -174,7 +182,7 @@ namespace SmICSWebApp.Data
                     {
                         if (bewegung.Beginn < bewegung.Ende.AddMinutes(-15))
                         {
-                            List <PatientMovementModel> patientMovement = FindContact(allPositivPat, bewegung.PatientID, 
+                            List<PatientMovementModel> patientMovement = FindContact(allPositivPat, bewegung.PatientID,
                                 bewegung.Fachabteilung, bewegung.Beginn, bewegung.Ende);
 
                             if (patientMovement.Count != 0)
@@ -187,10 +195,11 @@ namespace SmICSWebApp.Data
             }
             return patNoskumalList;
         }
-       
-        public List<PatientMovementModel> FindContact(List<CountDataModel> allPositivPat, string patientID, string station, DateTime beginn, DateTime ende  ) {
 
-            List <PatientMovementModel> patientMovement = new();
+        public List<PatientMovementModel> FindContact(List<CountDataModel> allPositivPat, string patientID, string station, DateTime beginn, DateTime ende)
+        {
+
+            List<PatientMovementModel> patientMovement = new();
             List<string> patientList = new();
 
             foreach (var positivPat in allPositivPat)
@@ -208,8 +217,8 @@ namespace SmICSWebApp.Data
                     {
                         patientMovement.Add(patBewegung);
                     }
-                }    
-            }            
+                }
+            }
             return patientMovement;
         }
 
@@ -233,6 +242,6 @@ namespace SmICSWebApp.Data
             }
             return Convert.ToInt32(gesamt);
         }
-  
+
     }
 }

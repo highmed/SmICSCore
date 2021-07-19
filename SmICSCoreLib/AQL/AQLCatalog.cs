@@ -111,33 +111,10 @@ namespace SmICSCoreLib.AQL
                                 and (h/data[at0001]/items[at0005]/value/value >= '{ starttime.ToString("o") }'
                                 or NOT EXISTS h/data[at0001]/items[at0005]/value/value)
                                 AND e/ehr_id/value MATCHES {patientList.ToAQLMatchString()}
-                                AND Fachabteilung =  '{ station }'
+                                AND StationID = '{ station }'
                                 ORDER BY e/ehr_id/value ASC, h/data[at0001]/items[at0004]/value/value ASC");
         }
-        //public static AQLQuery PatientStayFromStation(PatientListParameter patientList, string station)
-        //{
-        //    return new AQLQuery("PatientStay", $@"SELECT e/ehr_id/value as PatientID,
-        //                        i/items[at0001]/value/value as FallID,
-        //                        h/data[at0001]/items[at0004]/value/value as Beginn,
-        //                        h/data[at0001]/items[at0005]/value/value as Ende,
-        //                        h/data[at0001]/items[at0006]/value/value as Bewegungsart_l,
-        //                        s/items[at0027]/value/value as StationID,
-        //                        s/items[at0029]/value/value as Raum,
-        //                        f/items[at0024]/value/value as Fachabteilung,
-        //                        f/items[at0024]/value/defining_code/code_string as FachabteilungsID
-        //                        FROM EHR e 
-        //                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] 
-        //                            CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0]
-        //                            AND ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]
-        //                                CONTAINS (CLUSTER s[openEHR-EHR-CLUSTER.location.v1]
-        //                                AND CLUSTER f[openEHR-EHR-CLUSTER.organization.v0]))
-        //                        WHERE c/name/value = 'Patientenaufenthalt'
-        //                        AND i/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)'
-        //                        AND e/ehr_id/value MATCHES {patientList.ToAQLMatchString()}
-        //                        AND Fachabteilung =  '{ station }'
-        //                        ORDER BY e/ehr_id/value ASC, h/data[at0001]/items[at0004]/value/value ASC");
-        //}
-
+      
 
         public static AQLQuery PatientAdmission(EpsiodeOfCareParameter parameter)
         {
