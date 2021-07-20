@@ -1,0 +1,179 @@
+﻿@page "/rkiconfig"
+
+@using System.IO
+@using Microsoft.Extensions.Logging
+@using SmICSCoreLib.AQL.RKIConfig
+@using Newtonsoft.Json.Linq
+
+<div class="">
+    <div class="welcome_header_config">
+        <h1>RKI Konfigurationen</h1>
+    </div>
+    <div class="welcome_text_config">
+        <div class="index_config">
+            <div class="index-text_config">
+                <span class="oi oi-info" aria-hidden="true">&nbsp;&nbsp;</span> In diesem Bereich können Informationen hinterlegt werden, die die Handhabung dieser Funktion für den Nutzer erklärt.
+            </div>
+            <div id="div_card_1" class="">
+                <EditForm Model="@RKIConfigForm" OnValidSubmit="@HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div id="div_card_2">
+
+                        <div id="div_card_3_a">
+                            <div id="div_card_4">
+                                <div id="div_card_5">
+                                    <div>
+                                        <label for="Station" class="tb_bez">Station</label>
+                                    </div>
+                                    <div>
+                                        <InputText id="Station" @bind-Value="RKIConfigForm.Station" class="input-field" />
+                                    </div>
+                                </div>
+                                <div id="div_card_5">
+                                    <div>
+                                        <label for="Erreger" class="tb_bez">Erreger</label>
+                                    </div>
+                                    <div>
+                                        <InputText id="Erreger" @bind-Value="RKIConfigForm.Erreger" class="input-field" />
+                                    </div>
+                                </div>
+                                <div id="div_card_5">
+                                    <div>
+                                        <label for="Zeitraum" class="tb_bez">Zeitraum</label>
+                                    </div>
+                                    <div>
+                                        <InputText id="Zeitraum" @bind-Value="RKIConfigForm.Zeitraum" class="input-field"/>
+                                    </div>
+                                </div>
+                                <div id="div_card_5">
+                                    <div>
+                                        <label for="Retro" class="tb_bez">Retrospektiv</label>
+                                    </div>
+                                    <div class="check">
+                                        <InputCheckbox @bind-Value="RKIConfigForm.Retro" id="op1" class="css-checkbox"
+                                                       @onchange="eventArgs => { CheckboxClicked(eventArgs.Value); }" />
+                                        <label class="css-label" for="op1"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            @foreach (var frag in DynamicFragment)
+                            {
+                                <div id="div_card_4">
+                                    <div id="div_card_5">
+                                        <div>
+                                            <label for="@DynamicFragment.IndexOf(frag)" class="tb_bez"></label>
+                                        </div>
+                                        <div>
+                                            @frag
+                                        </div>
+                                    </div>
+                                    <div id="div_card_5">
+                                        <button id="btn" type="button" @onclick="()=>DeleteSubconsent(frag)"><i class="oi oi-minus"></i></button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div id="div_card_3_b">
+                            <div>
+                                <button id="btn" type="button" @onclick="@RenderComponent"><i class="oi oi-plus"></i></button>
+                            </div>
+                        </div>
+
+                        <div id="div_card_3_c">
+                            <div>
+                                <label for="Zeitpunkt" class="tb_bez">Tgl. Ausführuhrzeit d. Regeln</label>
+                            </div>
+                            <div>
+                                <InputText type="time" @bind-Value="@Zeitpunkt" class="input-field" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="div_card_2" style="display: flex; justify-content: flex-end; padding:0%;">
+                        <input id="button" type="submit" value="Ausführen" />
+                    </div>
+                </EditForm>
+                <div class="span_hr">
+                    <span>&nbsp;</span>
+                </div>
+                <div id="div_card_2">
+                    <div id="div_card_3">
+                        <div>
+                            
+                        </div>
+                    </div>
+                    <div id="div_card_3">
+                        <div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private List<RenderFragment> DynamicFragment = new List<RenderFragment>();
+
+    private RKIConfigTemplate RKIConfigForm = new RKIConfigTemplate();
+    private string Zeitpunkt;
+
+    private void HandleValidSubmit()
+    {
+        Zeitpunkt = DateTime.Now.ToString("h:mm:ss tt");
+    }
+
+    private void DeleteSubconsent(RenderFragment frag)
+    {
+        DynamicFragment.Remove(frag);
+    }
+
+    private void RenderComponent()
+    {
+        RKIConfigTemplate RKIConfigFormAdds = new RKIConfigTemplate();
+        RKIConfigForm.RKIConfigFormAdd.Add(RKIConfigFormAdds);
+
+        DynamicFragment.Add(CreateComponent(RKIConfigFormAdds));
+    }
+
+    private RenderFragment CreateComponent(RKIConfigTemplate RKIConfigFormAdds) => builder =>
+    {
+        var propGetExpr = System.Linq.Expressions.Expression.Property(System.Linq.Expressions.Expression.Constant(RKIConfigFormAdds), "Station");
+        var StationExpr = System.Linq.Expressions.Expression.Lambda<Func<System.String>>(propGetExpr);
+        propGetExpr = System.Linq.Expressions.Expression.Property(System.Linq.Expressions.Expression.Constant(RKIConfigFormAdds), "Erreger");
+        var ErregerExpr = System.Linq.Expressions.Expression.Lambda<Func<System.String>>(propGetExpr);
+        propGetExpr = System.Linq.Expressions.Expression.Property(System.Linq.Expressions.Expression.Constant(RKIConfigFormAdds), "Zeitraum");
+        var ZeitraumExpr = System.Linq.Expressions.Expression.Lambda<Func<System.String>>(propGetExpr);
+
+
+        //builder.OpenComponent<SubconsentBuilder>(0);
+        //builder.AddAttribute(0, "Station", RKIConfigFormAdds.Station);
+        //builder.AddAttribute(0, "StationChanged", EventCallback.Factory.Create<System.String>(this, str => RKIConfigFormAdds.Station = str));
+        //builder.AddAttribute(0, "StationExpression", StationExpr);
+        //builder.AddAttribute(0, "Erreger", RKIConfigFormAdds.Erreger);
+        //builder.AddAttribute(0, "ErregerChanged", EventCallback.Factory.Create<System.String>(this, str => RKIConfigFormAdds.Erreger = str));
+        //builder.AddAttribute(0, "ErregerExpression", ErregerExpr);
+        //builder.AddAttribute(0, "Zeitraum", RKIConfigFormAdds.Zeitraum);
+        //builder.AddAttribute(0, "ZeitraumChanged", EventCallback.Factory.Create<System.String>(this, str => RKIConfigFormAdds.Zeitraum = str));
+        //builder.AddAttribute(0, "ZeitraumExpression", ZeitraumExpr);
+        //builder.CloseComponent();
+    };
+
+    void CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue == true)
+        {
+            checkedValue = false;
+        }
+        else
+        {
+            checkedValue = true;
+        }
+    }
+}

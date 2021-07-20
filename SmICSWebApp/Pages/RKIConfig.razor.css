@@ -18,7 +18,7 @@
 }
 
 .index-text_config {
-    background-color: #0086b3;
+    background-color: #56A5EC;
     opacity: 1;
     color: azure;
     padding: 0.2%;
@@ -28,34 +28,49 @@
 #div_card_1 {
     display: flex;
     flex-direction: column;
-    border : 1px solid black;
     padding: 1%;
     margin-bottom: 10%;
 }
 
 #div_card_2 {
-    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
     margin: 1%;
-    padding: 1%;
 }
 
-#div_card_3 {
-    border: 1px solid black;
+#div_card_3_a {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    background-image: url("../resources/Form_BG.png");
+    background-repeat: no-repeat;
+    background-size: 95% 95%;
+    opacity: 0.7;
+}
+
+#div_card_3_b {
+    width: 5%;
+    display: flex;
+    align-items: flex-end;
+}
+
+#div_card_3_c {
+    width: 25%;
     margin: 1%;
-    padding: 1%;
 }
 
 #div_card_4 {
-    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
     margin: 1%;
-    padding: 1%;
 }
 
 #div_card_5 {
-    flex-direction: row;
-    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
     margin: 1%;
-    padding: 1%;
+    color: white;
+    flex-grow: 1;
 }
 
 .span_hr {
@@ -73,9 +88,30 @@
     padding: 0.5%;
     color: white;
     margin-right: 2%;
-    float: right;
+    border: none;
 }
 
-    #button:hover {
-        opacity: 1
-    }
+#button:hover {
+    opacity: 1
+}
+
+#btn {
+    width: 3em;
+    height: 3em;
+    background: linear-gradient(to bottom, #33ccff 0%, #3399ff 100%);
+    border-radius: 8px;
+    color: white;
+    border: none;
+}
+
+#btn:focus {
+    outline: none;
+}
+
+.check {
+    padding-left: 20%;
+}
+
+.input-field {
+    border: 2px lightgrey;
+}

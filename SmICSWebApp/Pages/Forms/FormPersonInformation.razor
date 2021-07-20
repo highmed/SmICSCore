@@ -32,7 +32,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Personen ID:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="information.personID" disabled="@disabled" />
+                            <InputText @bind-Value="information.personID" disabled="@disabled" class="input" />
                         </div>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Art der Person:</label></div>
                         <div class="tb">
-                            <InputSelect @bind-Value="information.art_der_person" disabled="@disabled">
+                            <InputSelect @bind-Value="information.art_der_person" disabled="@disabled" class="input">
                                 <option selected disabled>Bitte wählen Sie aus</option>
                                 <option value="Mitarbeiter">Mitarbeiter</option>
                                 <option value="Patient">Patient</option>
@@ -60,31 +60,31 @@
                             <div class="tr">
                                 <div class="tb tb_bez"><label>Titel:</label></div>
                                 <div class="tb">
-                                    <InputText @bind-Value="information.titel" disabled="@disabled" />
+                                    <InputText @bind-Value="information.titel" disabled="@disabled" class="input" />
                                 </div>
                             </div>
                             <div class="tr">
                                 <div class="tb tb_bez"><label>Vorname:</label></div>
                                 <div class="tb">
-                                    <InputText @bind-Value="information.vorname" disabled="@disabled" />
+                                    <InputText @bind-Value="information.vorname" disabled="@disabled" class="input" />
                                 </div>
                             </div>
                             <div class="tr">
                                 <div class="tb tb_bez"><label>Weiterer Vorname:</label></div>
                                 <div class="tb">
-                                    <InputText @bind-Value="information.weiterer_vorname" disabled="@disabled" />
+                                    <InputText @bind-Value="information.weiterer_vorname" disabled="@disabled" class="input" />
                                 </div>
                             </div>
                             <div class="tr">
                                 <div class="tb tb_bez"><label>Nachname:</label></div>
                                 <div class="tb">
-                                    <InputText @bind-Value="information.nachname" disabled="@disabled" />
+                                    <InputText @bind-Value="information.nachname" disabled="@disabled" class="input" />
                                 </div>
                             </div>
                             <div class="tr">
                                 <div class="tb tb_bez"><label>Suffix:</label></div>
                                 <div class="tb">
-                                    <InputText @bind-Value="information.suffix" disabled="@disabled" />
+                                    <InputText @bind-Value="information.suffix" disabled="@disabled" class="input" />
                                 </div>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Geburtsdatum:</label></div>
                             <div class="tb">
-                                <InputText type="date" @bind-Value="information.geburtsdatum" disabled="@disabled" />
+                                <InputText type="date" @bind-Value="information.geburtsdatum" disabled="@disabled" class="input" />
                             </div>
                         </div>
                     </div>
@@ -107,19 +107,19 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Zeile:</label></div>
                             <div class="tb">
-                                <InputText @bind-Value="information.zeile" disabled="@disabled" />
+                                <InputText @bind-Value="information.zeile" disabled="@disabled" class="input" />
                             </div>
                         </div>
                         <div class="tr">
                             <div class="tb tb_bez"><label>Stadt:</label></div>
                             <div class="tb">
-                                <InputText @bind-Value="information.stadt" disabled="@disabled" />
+                                <InputText @bind-Value="information.stadt" disabled="@disabled" class="input" />
                             </div>
                         </div>
                         <div class="tr">
                             <div class="tb tb_bez"><label>Postleitzahl:</label></div>
                             <div class="tb">
-                                <InputText @bind-Value="information.plz" disabled="@disabled" />
+                                <InputText @bind-Value="information.plz" disabled="@disabled" class="input" />
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                             <div class="tr">
                                 <div class="tb tb_bez"><label>Kontakttyp:</label></div>
                                 <div class="tb">
-                                    <InputSelect @bind-Value="information.kontakttyp" disabled="@disabled">
+                                    <InputSelect @bind-Value="information.kontakttyp" disabled="@disabled" class="input">
                                         <option selected disabled>Bitte wählen Sie aus</option>
                                         <option value="Telefon">Telefon</option>
                                     </InputSelect>
@@ -145,7 +145,7 @@
                                 <div class="tr">
                                     <div class="tb tb_bez"><label>Nummer:</label></div>
                                     <div class="tb">
-                                        <InputText @bind-Value="information.nummer" disabled="@disabled" />
+                                        <InputText @bind-Value="information.nummer" disabled="@disabled" class="input" />
                                     </div>
                                 </div>
                             </div>
@@ -160,7 +160,7 @@
                             <div class="tr">
                                 <div class="tb tb_bez"><label>Fachbezeichnung:</label></div>
                                 <div class="tb">
-                                    <InputText @bind-Value="information.fach_bez" disabled="@disabled" />
+                                    <InputText @bind-Value="information.fach_bez" disabled="@disabled" class="input" />
                                 </div>
                             </div>
                         </div>
@@ -170,19 +170,19 @@
                                 <div class="tr">
                                     <div class="tb tb_bez"><label>Zeile:</label></div>
                                     <div class="tb">
-                                        <InputText @bind-Value="information.zeile_heil" disabled="@disabled" />
+                                        <InputText @bind-Value="information.zeile_heil" disabled="@disabled" class="input" />
                                     </div>
                                 </div>
                                 <div class="tr">
                                     <div class="tb tb_bez"><label>Stadt:</label></div>
                                     <div class="tb">
-                                        <InputText @bind-Value="information.stadt_heil" disabled="@disabled" />
+                                        <InputText @bind-Value="information.stadt_heil" disabled="@disabled" class="input" />
                                     </div>
                                 </div>
                                 <div class="tr">
                                     <div class="tb tb_bez"><label>Postleitzahl:</label></div>
                                     <div class="tb">
-                                        <InputText @bind-Value="information.plz_heil" disabled="@disabled" />
+                                        <InputText @bind-Value="information.plz_heil" disabled="@disabled" class="input" />
                                     </div>
                                 </div>
                             </div>

@@ -46,14 +46,17 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-
-
                 yield return new object[] { 7, 0 };
                 yield return new object[] { 5, 1 };
                 yield return new object[] { 14, 2 };
                 yield return new object[] { 3, 3 };
                 yield return new object[] { 13, 4 };
                 yield return new object[] { 15, 5 };
+                //yield return new object[] { 17, 6 };
+                //yield return new object[] { 18, 7 };
+                //yield return new object[] { 19, 8 };
+                //yield return new object[] { 20, 9 };
+                //yield return new object[] { 21, 10 };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

@@ -31,7 +31,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Mitarbeiter ID:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="ehr_id" disabled="@disabled" />
+                            <InputText @bind-Value="ehr_id" disabled="@disabled" class="input" />
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Bericht ID:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="informationControl.berichtID" disabled="@disabled" />
+                            <InputText @bind-Value="informationControl.berichtID" disabled="@disabled" class="input" />
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Sind Symptome oder Anzeichen vorhanden?</label></div>
                             <div class="tb">
-                                <InputSelect @bind-Value="informationControl.symp_vorhanden" disabled="@disabled">
+                                <InputSelect @bind-Value="informationControl.symp_vorhanden" disabled="@disabled" class="input">
                                     <option selected disabled>Bitte wählen Sie aus</option>
                                     <option value="Vorhanden">Vorhanden</option>
                                     <option value="Nicht vorhanden">Nicht vorhanden</option>
@@ -66,7 +66,7 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Auftreten von Symptomen oder Anzeichen:</label></div>
                             <div class="tb">
-                                <InputText type="datetime-local" @bind-Value="informationControl.symp_auftreten" @bind-Value:format="dd/MM/yyyy HH:ii:ss" disabled="@disabled" />
+                                <InputText type="datetime-local" @bind-Value="informationControl.symp_auftreten" @bind-Value:format="dd/MM/yyyy HH:ii:ss" disabled="@disabled" class="input"/>
                             </div>
                         </div>
                     </div>
@@ -76,7 +76,7 @@
                             <div class="tr">
                                 <div class="tb tb_bez"><label>Bezeichnung des Symptoms oder Anzeichens:</label></div>
                                 <div class="tb">
-                                    <InputText @bind-Value="informationControl.bez_symp" disabled="@disabled" />
+                                    <InputText @bind-Value="informationControl.bez_symp" disabled="@disabled" class="input" />
                                 </div>
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Allgemeiner Kommentar:</label></div>
                             <div class="tb">
-                                <InputText @bind-Value="informationControl.allg_kommentar" disabled="@disabled" />
+                                <InputText @bind-Value="informationControl.allg_kommentar" disabled="@disabled" class="input" />
                             </div>
                         </div>
                     </div>
@@ -105,7 +105,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Erregername:</label></div>
                         <div class="tb">
-                            <InputSelect @bind-Value="informationControl.erreg_name" disabled="@disabled">
+                            <InputSelect @bind-Value="informationControl.erreg_name" disabled="@disabled" class="input">
                                 <option selected disabled>Bitte wählen Sie aus</option>
                                 <option value="SARS-COV-2">SARS-COV-2</option>
                             </InputSelect>
@@ -114,7 +114,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Zeitpunkt der Kennzeichnung:</label></div>
                         <div class="tb">
-                            <InputText type="datetime-local" @bind-Value="informationControl.zeitpunkt_kennzeichnung" disabled="@disabled" />
+                            <InputText type="datetime-local" @bind-Value="informationControl.zeitpunkt_kennzeichnung" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
@@ -128,7 +128,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Zuletzt aktualisiert:</label></div>
                         <div class="tb">
-                            <InputText type="datetime-local" @bind-Value="informationControl.zuletzt_aktuell" disabled="@disabled" />
+                            <InputText type="datetime-local" @bind-Value="informationControl.zuletzt_aktuell" disabled="@disabled" class="input" />
                         </div>
                     </div>
                 </div>
@@ -147,7 +147,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Grund für die Freistellung:</label></div>
                         <div class="tb">
-                            <InputSelect @bind-Value="informationControl.grund" disabled="@disabled">
+                            <InputSelect @bind-Value="informationControl.grund" disabled="@disabled" class="input">
                                 <option selected disabled>Bitte wählen Sie aus</option>
                                 <option value="Nachweis einer SARS-CoV-2 Infektion">Nachweis einer SARS-CoV-2 Infektion</option>
                                 <option value="Ungeschützer Kontakt zu einer SARS-CoV-2 infizierten Person">Ungeschützer Kontakt zu einer SARS-CoV-2 infizierten Person</option>
@@ -158,25 +158,25 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Beschreibung:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="informationControl.beschreibung" disabled="@disabled" />
+                            <InputText @bind-Value="informationControl.beschreibung" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Startdatum der Freistellung:</label></div>
                         <div class="tb">
-                            <InputText type="date" @bind-Value="informationControl.start_freistellung" disabled="@disabled" />
+                            <InputText type="date" @bind-Value="informationControl.start_freistellung" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Wiederaufnahme der Arbeit:</label></div>
                         <div class="tb">
-                            <InputText type="date" @bind-Value="informationControl.wiederaufnahme" disabled="@disabled" />
+                            <InputText type="date" @bind-Value="informationControl.wiederaufnahme" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Kommentar:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="informationControl.kommentar_freistellung" disabled="@disabled" />
+                            <InputText @bind-Value="informationControl.kommentar_freistellung" disabled="@disabled" class="input" />
                         </div>
                     </div>
                 </div>
@@ -195,7 +195,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Zu meldendes Ereignis:</label></div>
                         <div class="tb">
-                            <InputSelect @bind-Value="informationControl.ereignis" disabled="@disabled">
+                            <InputSelect @bind-Value="informationControl.ereignis" disabled="@disabled" class="input">
                                 <option selected disabled>Bitte wählen Sie aus</option>
                                 <option value="Nachweis einer SARS-CoV-2 Infektion">Nachweis einer SARS-CoV-2 Infektion</option>
                                 <option value="Ungeschützer Kontakt zu einer SARS-CoV-2 infizierten Person">Ungeschützer Kontakt zu einer SARS-CoV-2 infizierten Person</option>
@@ -206,25 +206,25 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Beschreibung:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="informationControl.beschreibung_ereignis" disabled="@disabled" />
+                            <InputText @bind-Value="informationControl.beschreibung_ereignis" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Datum der Meldung:</label></div>
                         <div class="tb">
-                            <InputText type="datetime-local" @bind-Value="informationControl.datum_meldung" disabled="@disabled"></InputText>
+                            <InputText type="datetime-local" @bind-Value="informationControl.datum_meldung" disabled="@disabled" class="input"></InputText>
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Grund:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="informationControl.grund_meldung" disabled="@disabled" />
+                            <InputText @bind-Value="informationControl.grund_meldung" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Kommentar:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="informationControl.meldung_kommentar" disabled="@disabled" />
+                            <InputText @bind-Value="informationControl.meldung_kommentar" disabled="@disabled" class="input" />
                         </div>
                     </div>
                 </div>

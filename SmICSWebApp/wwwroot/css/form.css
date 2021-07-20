@@ -32,7 +32,7 @@
     background-color: transparent;
 }
 
-input {
+.input {
     border: 2px lightgrey;
     width: 50%;
     margin: 1%;
@@ -46,6 +46,7 @@ input {
     color: white;
     margin-right: 2%;
     float: right;
+    border: none;
 }
 
 #button:hover {
