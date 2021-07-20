@@ -16,7 +16,8 @@
 
         <div class="card-body col-10">
             <div style="padding: 30px 0px 100px 0px;">
-                @if (sortedPatStationary == null)
+                @*<h3>Patienten im Krankenhaus</h3>*@
+                @if (patStationary == null)
                 {
                     @if (status == true)
                     {
@@ -174,6 +175,7 @@
 @code {
     PatData patData = new PatData();
     List<StationaryDataModel> sortedPatStationary = new();
+    List<StationaryDataModel> patStationary;
     List<PatientMovementModel> patMovtList;
     PatientMovementModel patientMovement;
     private int moveCount;
@@ -193,7 +195,7 @@
     {
         try
         {
-            List<StationaryDataModel> patStationary = dataService.GetAllPatByDate(patData.datum);
+            patStationary = dataService.GetAllPatByDate(patData.datum);
             sortedPatStationary = patStationary.OrderBy(x => x.Datum_Uhrzeit_der_Aufnahme).ToList();
         }
         catch (Exception)
