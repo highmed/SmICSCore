@@ -4,6 +4,10 @@
 @using Microsoft.Extensions.Logging
 @using SmICSCoreLib.AQL.RKIConfig
 @using Newtonsoft.Json.Linq
+@using SmICSWebApp.Data
+
+@inject RKIConfigService RKIConfigService
+
 
 <div class="">
     <div class="welcome_header_config">
@@ -22,63 +26,24 @@
                     <div id="div_card_2">
 
                         <div id="div_card_3_a">
-                            <div id="div_card_4">
-                                <div id="div_card_5">
-                                    <div>
-                                        <label for="Station" class="tb_bez">Station</label>
-                                    </div>
-                                    <div>
-                                        <InputText id="Station" @bind-Value="RKIConfigForm.Station" class="input-field" />
-                                    </div>
-                                </div>
-                                <div id="div_card_5">
-                                    <div>
-                                        <label for="Erreger" class="tb_bez">Erreger</label>
-                                    </div>
-                                    <div>
-                                        <InputText id="Erreger" @bind-Value="RKIConfigForm.Erreger" class="input-field" />
-                                    </div>
-                                </div>
-                                <div id="div_card_5">
-                                    <div>
-                                        <label for="Zeitraum" class="tb_bez">Zeitraum</label>
-                                    </div>
-                                    <div>
-                                        <InputText id="Zeitraum" @bind-Value="RKIConfigForm.Zeitraum" class="input-field"/>
-                                    </div>
-                                </div>
-                                <div id="div_card_5">
-                                    <div>
-                                        <label for="Retro" class="tb_bez">Retrospektiv</label>
-                                    </div>
-                                    <div class="check">
-                                        <InputCheckbox @bind-Value="RKIConfigForm.Retro" id="op1" class="css-checkbox"
-                                                       @onchange="eventArgs => { CheckboxClicked(eventArgs.Value); }" />
-                                        <label class="css-label" for="op1"></label>
-                                    </div>
-                                </div>
-                            </div>
+                            <span class="span-tr">Regeln</span>
                             @foreach (var frag in DynamicFragment)
                             {
-                                <div id="div_card_4">
-                                    <div id="div_card_5">
-                                        <div>
-                                            <label for="@DynamicFragment.IndexOf(frag)" class="tb_bez"></label>
-                                        </div>
-                                        <div>
-                                            @frag
-                                        </div>
+                                <div class="sort_card">
+                                    <div id="div_card_4" class="space-1">
+                                        @frag
                                     </div>
-                                    <div id="div_card_5">
-                                        <button id="btn" type="button" @onclick="()=>DeleteSubconsent(frag)"><i class="oi oi-minus"></i></button>
+                                    <div id="div_card_4" class="space-2">
+                                        <button id="btn" type="button" @onclick="()=>DeleteRules(frag)"><i class="oi oi-minus"></i></button>
                                     </div>
                                 </div>
+                                
                             }
                         </div>
 
                         <div id="div_card_3_b">
                             <div>
-                                <button id="btn" type="button" @onclick="@RenderComponent"><i class="oi oi-plus"></i></button>
+                                <button id="btn" type="button" @onclick="@AddRules"><i class="oi oi-plus"></i></button>
                             </div>
                         </div>
 
@@ -129,12 +94,12 @@
         Zeitpunkt = DateTime.Now.ToString("h:mm:ss tt");
     }
 
-    private void DeleteSubconsent(RenderFragment frag)
+    private void DeleteRules(RenderFragment frag)
     {
         DynamicFragment.Remove(frag);
     }
 
-    private void RenderComponent()
+    private void AddRules()
     {
         RKIConfigTemplate RKIConfigFormAdds = new RKIConfigTemplate();
         RKIConfigForm.RKIConfigFormAdd.Add(RKIConfigFormAdds);
@@ -152,28 +117,18 @@
         var ZeitraumExpr = System.Linq.Expressions.Expression.Lambda<Func<System.String>>(propGetExpr);
 
 
-        //builder.OpenComponent<SubconsentBuilder>(0);
-        //builder.AddAttribute(0, "Station", RKIConfigFormAdds.Station);
+        builder.OpenComponent<RKIConfigRules>(0);
+        builder.AddAttribute(0, "Station", RKIConfigFormAdds.Station);
         //builder.AddAttribute(0, "StationChanged", EventCallback.Factory.Create<System.String>(this, str => RKIConfigFormAdds.Station = str));
         //builder.AddAttribute(0, "StationExpression", StationExpr);
-        //builder.AddAttribute(0, "Erreger", RKIConfigFormAdds.Erreger);
+        builder.AddAttribute(0, "Erreger", RKIConfigFormAdds.Erreger);
         //builder.AddAttribute(0, "ErregerChanged", EventCallback.Factory.Create<System.String>(this, str => RKIConfigFormAdds.Erreger = str));
         //builder.AddAttribute(0, "ErregerExpression", ErregerExpr);
-        //builder.AddAttribute(0, "Zeitraum", RKIConfigFormAdds.Zeitraum);
+        builder.AddAttribute(0, "Zeitraum", RKIConfigFormAdds.Zeitraum);
         //builder.AddAttribute(0, "ZeitraumChanged", EventCallback.Factory.Create<System.String>(this, str => RKIConfigFormAdds.Zeitraum = str));
         //builder.AddAttribute(0, "ZeitraumExpression", ZeitraumExpr);
-        //builder.CloseComponent();
+        builder.AddAttribute(0, "Retro", RKIConfigFormAdds.Retro);
+        builder.CloseComponent();
     };
 
-    void CheckboxClicked(object checkedValue)
-    {
-        if ((bool)checkedValue == true)
-        {
-            checkedValue = false;
-        }
-        else
-        {
-            checkedValue = true;
-        }
-    }
 }

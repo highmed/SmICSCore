@@ -1,0 +1,84 @@
+﻿
+<div id="div_card_5">
+    <div>
+        <label for="Station" class="tb-bez-header">Station</label>
+    </div>
+    <div>
+        <InputSelect @bind-Value="Station">
+            <option selected disabled>Bitte wählen Sie aus</option>
+            <option value="Vorhanden">Vorhanden</option>
+        </InputSelect>
+    </div>
+</div>
+<div id="div_card_5">
+    <div>
+        <label for="Erreger" class="tb-bez-header">Erreger</label>
+    </div>
+    <div>
+        <InputSelect @bind-Value="Erreger">
+            <option selected disabled>Bitte wählen Sie aus</option>
+            <option value="MRSA">Methicillin-Resistant Staphylococcus aureus (MRSA)</option>
+            <option value="Klebsiella pneumoniae">Klebsiella pneumoniae</option>
+            <option value="Escherichia coli">Escherichia coli</option>
+            <option value="Acinetobacter baumannii">Acinetobacter baumannii</option>
+            <option value="MSSA">Methicillin-Susceptible Staphylococcus aureus (MSSA)</option>
+            <option value="SARS-CoV-2">SARS-CoV-2</option>
+        </InputSelect>
+    </div>
+</div>
+<div id="div_card_5">
+    <div>
+        <label for="Zeitraum" class="tb-bez-header">Zeitraum</label>
+    </div>
+    <div>
+        <InputSelect @bind-Value="Zeitraum">
+            <option selected disabled>Bitte wählen Sie aus</option>
+            <option value="1">1 Woche</option>
+            <option value="2">2 Wochen</option>
+            <option value="3">3 Wochen</option>
+            <option value="4">4 Wochen</option>
+            <option value="5">5 Wochen</option>
+            <option value="6">6 Wochen</option>
+            <option value="7">7 Wochen</option>
+            <option value="8">8 Wochen</option>
+            <option value="9">9 Wochen</option>
+            <option value="10">10 Wochen</option>
+            <option value="11">11 Wochen</option>
+            <option value="12">12 Wochen</option>
+        </InputSelect>
+    </div>
+</div>
+<div id="div_card_5">
+    <div>
+        <label for="Retro" class="tb-bez-header">Retrospektiv</label>
+    </div>
+    <div class="check">
+        <InputCheckbox @bind-Value="Retro" id="op1" class="css-checkbox"
+                       @onchange="eventArgs => { CheckboxClicked(eventArgs.Value); }" />
+        <label class="css-label" for="op1"></label>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Station { get; set; }
+    [Parameter]
+    public string Erreger { get; set; }
+    [Parameter]
+    public string Zeitraum { get; set; }
+    [Parameter]
+    public bool Retro { get; set; }
+
+    void CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue == true)
+        {
+            checkedValue = false;
+        }
+        else
+        {
+            checkedValue = true;
+        }
+    }
+
+}

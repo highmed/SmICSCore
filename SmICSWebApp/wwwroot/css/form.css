@@ -81,6 +81,9 @@ select {
     padding-bottom: 2px;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.select-space {
     width: 50%;
 }
 
