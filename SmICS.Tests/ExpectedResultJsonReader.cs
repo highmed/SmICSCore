@@ -37,13 +37,19 @@ namespace SmICSFactory.Tests
                     case ExpectedType.STATIONARY:
                         if (patients[resultNo].GetType() == typeof(PatientInfos))
                         { 
-                            ParseStationaryPatData(arr, patients[resultNo] as PatientInfos);
+                            ParseStationaryPat(arr, patients[resultNo] as PatientInfos);
                         }
                         break;
                     case ExpectedType.PATIENT_MOVEMENT_FROM_STATION:
                         if (patients[resultNo].GetType() == typeof(PatientInfos))
                         {
                             ParsePatMovementFromStation(arr, patients[resultNo] as PatientInfos);
+                        }
+                        break;
+                    case ExpectedType.COUNT_DATA_MODEL:
+                        if (patients[resultNo].GetType() == typeof(PatientInfos))
+                        {
+                            ParseGetCovidPat(arr);
                         }
                         break;
                 }
@@ -82,18 +88,22 @@ namespace SmICSFactory.Tests
             }
         }
 
-        private static void ParseStationaryPatData(JArray array, PatientInfos info)
+        private static void ParseStationaryPat(JArray array, PatientInfos info)
         {
             foreach (JObject obj in array)
             {
-                obj.Add(new JProperty("PatientID", info.EHR_ID));
-                obj.Add(new JProperty("FallID", info.FallID));
+                if (info.EHR_ID != null && info.FallID != null)
+                {
+                    obj.Add(new JProperty("PatientID", info.EHR_ID));
+                    obj.Add(new JProperty("FallID", info.FallID));
+                }
+                
                 obj.Property("Datum_Uhrzeit_der_Aufnahme").Value = DateTime.Parse(obj.Property("Datum_Uhrzeit_der_Aufnahme").Value.ToString());
                 obj.Property("Datum_Uhrzeit_der_Entlassung").Value = DateTime.Parse(obj.Property("Datum_Uhrzeit_der_Entlassung").Value.ToString());
                 obj.Property("Aufnahmeanlass").Value = obj.Property("Aufnahmeanlass").Value;
                 obj.Property("Art_der_Entlassung").Value = obj.Property("Art_der_Entlassung").Value;
                 obj.Property("Versorgungsfallgrund").Value = obj.Property("Versorgungsfallgrund").Value;
-                obj.Property("Station").Value = obj.Property("Station").Value;
+                //obj.Property("Station").Value = obj.Property("Station").Value;
 
             }
         }
@@ -114,6 +124,16 @@ namespace SmICSFactory.Tests
                 obj.Property("FachabteilungsID").Value = obj.Property("FachabteilungsID").Value;
 
             }
+        }
+
+        private static void ParseGetCovidPat(JArray array)
+        {
+            foreach (JObject obj in array)
+            {
+                obj.Property("PatientID").Value = obj.Property("PatientID").Value;
+                obj.Property("Fallkennung").Value = obj.Property("Fallkennung").Value;
+                obj.Property("Zeitpunkt_des_Probeneingangs").Value = obj.Property("Zeitpunkt_des_Probeneingangs").Value;
+           }
         }
     }
 }

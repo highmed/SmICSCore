@@ -1,16 +1,8 @@
-﻿using SmICSWebApp.Helper;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 using SmICSCoreLib.AQL.Patient_Stay;
 using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.Patient_Stay.Count;
-using System.IO;
-using ExcelDataReader;
-using System.Net;
-using System.Data;
-using SmICSCoreLib.JSONFileStream;
-using System.Collections;
 using SmICSCoreLib.AQL.PatientInformation;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
@@ -31,18 +23,46 @@ namespace SmICSWebApp.Data
 
         //Load EhrData
 
-        //Get all hospitalized patients by ID, CaseID and Date.
-        public List<StationaryDataModel> GetStationaryPat(string patientID, string fallkennung, DateTime datum)
+        //Liste alle Stationär behandelte Patienten druch PatientId, FallID und Datum.
+        public List<StationaryDataModel> StationaryPatForNosku(string patientID, string fallID, DateTime datum)
         {
-            List<StationaryDataModel> stationaryDatas = _patinet_Stay.Stationary_Stay(patientID, fallkennung, datum);
-            return stationaryDatas;
+            try
+            {
+                List<StationaryDataModel> stationaryDatas = _patinet_Stay.Stationary_Stay(patientID, fallID, datum);
+                return stationaryDatas;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
-        //Get all hospitalized patients by ID and CaseID.
-        public List<StationaryDataModel> StayFromCase(string patientId, string fallkennung)
+        //Liste Stationär behandelte Patienten druch PatientId und FallID
+        public List<StationaryDataModel> StationaryPatByCaseID(string patientID, string fallID)
         {
-            List<StationaryDataModel> patStationary = _patinet_Stay.StayFromCase(patientId, fallkennung);
-            return patStationary;
+            try
+            {
+                List<StationaryDataModel> patStationary = _patinet_Stay.StayFromCase(patientID, fallID);
+                return patStationary;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        //Liste alle Stationär behandelte Patienten druch PatientId, FallID und Datum.
+        public List<StationaryDataModel> StationaryPatByDate(DateTime datum)
+        {
+            try
+            {
+                List<StationaryDataModel> patStationary = _patinet_Stay.StayFromDate(datum);
+                return patStationary;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public List<PatientMovementModel> GetPatMovement(string patientId)
@@ -105,35 +125,12 @@ namespace SmICSWebApp.Data
             return allNegativPat;
         }
 
-        public List<StationaryDataModel> GetPatStationary(string patientId, string fallId)
-        {
-            List<StationaryDataModel> patStationary = _patinet_Stay.StayFromCase(patientId, fallId);
-            return patStationary;
-        }
 
-        public List<StationaryDataModel> GetAllPatByDate(DateTime datum)
-        {
-            List<StationaryDataModel> patStationary;
-            try
-            {
-                patStationary = _patinet_Stay.StayFromDate(datum);
-                return patStationary;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-        }
-
-        public List<SymptomModel> GetAllSymByPat(string patientId, DateTime datum)
-        {
-            List<SymptomModel> symptomListe = _patientInformation.Symptoms_By_PatientId(patientId, datum);
-            return symptomListe;
-        }
-
+        //Noskumale Regeln
         public List<Patient> GetAllNoskumalPat(List<CountDataModel> positivPatList)
         {
+            Symptom symptom = new(_patientInformation, this);
+
             List<Patient> patNoskumalList = new();
             List<string> symptomList = new List<string>(new string[] { "Chill (finding)", "Cough (finding)", "Dry cough (finding)",
             "Diarrhea (finding)", "Fever (finding)", "Fever greater than 100.4 Fahrenheit", "38° Celsius (finding)", "Nausea (finding)",
@@ -141,22 +138,22 @@ namespace SmICSWebApp.Data
 
             foreach (CountDataModel positivPat in positivPatList)
             {
-                List<StationaryDataModel> statPatList = GetStationaryPat(positivPat.PatientID, positivPat.Fallkennung, positivPat.Zeitpunkt_des_Probeneingangs);
+                List<StationaryDataModel> statPatList = StationaryPatForNosku(positivPat.PatientID, positivPat.Fallkennung, positivPat.Zeitpunkt_des_Probeneingangs);
 
                 if (statPatList != null || statPatList.Count != 0)
                 {
                     foreach (StationaryDataModel statPatient in statPatList)
                     {
-                        List<SymptomModel> symptoms = GetAllSymByPat(statPatient.PatientID, statPatient.Datum_Uhrzeit_der_Aufnahme);
+                        List<SymptomModel> symptoms = symptom.GetAllSymByPatID(statPatient.PatientID, statPatient.Datum_Uhrzeit_der_Aufnahme);
                         if (symptoms is null || symptoms.Count == 0)
                         {
                             patNoskumalList.Add(new Patient(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
                         }
                         else
                         {
-                            foreach (var symptom in symptoms)
+                            foreach (var symptomItem in symptoms)
                             {
-                                if (!symptomList.Contains(symptom.NameDesSymptoms))
+                                if (!symptomList.Contains(symptomItem.NameDesSymptoms))
                                 {
                                     patNoskumalList.Add(new Patient(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
                                 }
@@ -224,20 +221,21 @@ namespace SmICSWebApp.Data
 
         public int PatStay(List<CountDataModel> positivPat)
         {
-            double start;
-            double gesamt = 0;
+            double start, gesamt = 0;
             foreach (CountDataModel item in positivPat)
             {
-                List<StationaryDataModel> statPatList = _patinet_Stay.StayFromCase(item.PatientID, item.Fallkennung);
-
-                foreach (StationaryDataModel statData in statPatList)
+                List<StationaryDataModel> statPatList = StationaryPatByCaseID(item.PatientID, item.Fallkennung);
+                if (statPatList != null && statPatList.Count != 0)
                 {
-                    if (statData.Datum_Uhrzeit_der_Entlassung.GetHashCode() == 0)
+                    foreach (StationaryDataModel statData in statPatList)
                     {
-                        statData.Datum_Uhrzeit_der_Entlassung = DateTime.Now;
+                        if (statData.Datum_Uhrzeit_der_Entlassung.GetHashCode() == 0)
+                        {
+                            statData.Datum_Uhrzeit_der_Entlassung = DateTime.Now;
+                        }
+                        start = (statData.Datum_Uhrzeit_der_Entlassung - statData.Datum_Uhrzeit_der_Aufnahme).TotalDays;
+                        gesamt += start;
                     }
-                    start = (statData.Datum_Uhrzeit_der_Entlassung - statData.Datum_Uhrzeit_der_Aufnahme).TotalDays;
-                    gesamt += start;
                 }
             }
             return Convert.ToInt32(gesamt);

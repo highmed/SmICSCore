@@ -153,7 +153,8 @@
     private Bundesland bundesland = new();
     private Landkreis landkreis = new();
     private string stand;
-    private string rValue = "";
+    private string rValue;
+    private string rWert7TageVortag;
     private string lkDefult;
     private string path;
     private bool status;
@@ -170,7 +171,6 @@
         chartStatus = false;
         data.bl = "Baden-Württemberg";
         data.gen = "Stuttgart";
-        await Task.Run(LoadRValue);
         await Task.Run(LoadRkiData);
         GetChart();
         GetStatus();
@@ -193,6 +193,7 @@
             if (dailyReport != null)
             {
                 stand = dailyReport.Bericht.Stand;
+                rValue = dailyReport.Bericht.RWert7Tage;
                 bundeslaender = dailyReport.Bericht.Bundesland;
                 foreach (var item in bundeslaender)
                 {
@@ -211,6 +212,7 @@
                 if (dailyReport != null)
                 {
                     stand = dailyReport.Bericht.Stand;
+                    rValue = dailyReport.Bericht.RWert7Tage;
                     bundeslaender = dailyReport.Bericht.Bundesland;
                     foreach (var item in bundeslaender)
                     {
@@ -230,16 +232,8 @@
             bundesland = null;
             lkArray = null;
             landkreis = null;
-            status = false;
-        }
-    }
-
-    private void LoadRValue()
-    {
-        rValue = rkiRestApi.GetRValue(2).Replace(",", ".");
-        if (rValue == null)
-        {
             rValue = ".k.A";
+            status = false;
         }
     }
 

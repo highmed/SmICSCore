@@ -1,0 +1,65 @@
+{
+  "0": [
+    {
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-31T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-09T16:00:00Z"
+    }
+  ],
+  "1": [
+    {
+      "Datum_Uhrzeit_der_Aufnahme": "2021-01-02T09:00:00",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-01-09T15:00:00"
+    }
+  ],
+  "2": [
+    {
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-01T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-05-14T16:00:00Z"
+    }
+  ],
+  "3": [
+    {
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-31T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-04T16:00:00Z"
+    }
+  ],
+  "4": [
+    {
+      "Datum_Uhrzeit_der_Aufnahme": "2021-01-02T09:00:00",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-01-07T15:00:00"
+    }
+  ],
+  "5": [
+    {
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-28T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-05T16:00:00Z"
+    }
+  ],
+  "6": [
+    {
+      "Datum_Uhrzeit_der_Aufnahme": "2021-01-03T09:00:00",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-01-09T15:00:00"
+    }
+  ]
+}

@@ -195,7 +195,7 @@
     {
         try
         {
-            patStationary = dataService.GetAllPatByDate(patData.datum);
+            patStationary = dataService.StationaryPatByDate(patData.datum);
             sortedPatStationary = patStationary.OrderBy(x => x.Datum_Uhrzeit_der_Aufnahme).ToList();
         }
         catch (Exception)

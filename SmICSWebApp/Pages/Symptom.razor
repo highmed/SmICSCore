@@ -533,8 +533,8 @@
 
     private void GetPatStationary(string patientId, string fallId, string secPatientId, string secFallId)
     {
-        patStationary = dataService.GetPatStationary(patientId, fallId);
-        secPatStationary = dataService.GetPatStationary(secPatientId, secFallId);
+        patStationary = dataService.StationaryPatByCaseID(patientId, fallId);
+        secPatStationary = dataService.StationaryPatByCaseID(secPatientId, secFallId);
     }
 
     public class SymptomData

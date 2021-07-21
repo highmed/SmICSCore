@@ -6,6 +6,7 @@ namespace SmICSFactory.Tests
         PATIENT_MOVEMENT,
         LAB_DATA,
         STATIONARY,
-        PATIENT_MOVEMENT_FROM_STATION
+        PATIENT_MOVEMENT_FROM_STATION,
+        COUNT_DATA_MODEL
     }
 }
