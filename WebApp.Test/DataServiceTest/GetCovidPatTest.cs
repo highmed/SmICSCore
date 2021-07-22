@@ -22,10 +22,12 @@ namespace WebApp.Test.DataServiceTest
 
             Assert.Equal(expected.Count, actual.Count);
 
-            int i = 0;
-            Assert.Equal(expected[i].PatientID, actual[i].PatientID);
-            Assert.Equal(expected[i].Fallkennung, actual[i].Fallkennung);
-            Assert.Equal(expected[i].Zeitpunkt_des_Probeneingangs, actual[i].Zeitpunkt_des_Probeneingangs);
+            for (int i = 0; i < 24; i++)
+            {
+                Assert.Equal(expected[i].PatientID, actual[i].PatientID);
+                Assert.Equal(expected[i].Fallkennung, actual[i].Fallkennung);
+                Assert.Equal(expected[i].Zeitpunkt_des_Probeneingangs.ToString("yyyy-MM-dd"), actual[i].Zeitpunkt_des_Probeneingangs.ToString("yyyy-MM-dd"));
+            }
 
         }
 
@@ -35,12 +37,8 @@ namespace WebApp.Test.DataServiceTest
             {
                 List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/EHRID_CovidPat.json");
 
-                //int i = 0;
-                for (int i = 0; i < 24; i++)
-                {
-                    yield return new object[] { "260373001", i };
-                }
-               
+                yield return new object[] { "260373001", 0 };
+
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
