@@ -17,6 +17,8 @@ using SmICSCoreLib.AQL.Patient_Stay.Count;
 using SmICSCoreLib.AQL.Patient_Stay.Cases;
 using SmICSCoreLib.AQL.Patient_Stay.WeekCase;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace SmICSWebApp.Controllers
 {
@@ -74,6 +76,7 @@ namespace SmICSWebApp.Controllers
         /// <param name="parameter"></param>
         /// <returns></returns>
         [Route("Patient_Labordaten_Ps")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public ActionResult<List<LabDataModel>> Patient_Labordaten_Ps([FromBody] PatientListParameter parameter)
         {
@@ -98,6 +101,7 @@ namespace SmICSWebApp.Controllers
         /// <param name="parameter"></param>
         /// <returns></returns>
         [Route("Patient_Bewegung_Ps")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public ActionResult<List<PatientMovementModel>> Patient_Bewegung_Ps([FromBody] PatientListParameter parameter)
         {
