@@ -278,8 +278,8 @@ namespace SmICSCoreLib.StatistikServices
                         try
                         {
                             bericht.GesamtImpfung = Convert.ToDouble(resultImpfung.Tables[1].Rows[20][2]).ToString("#,##");
-                            bericht.ErstImpfung = resultImpfung.Tables[1].Rows[20][5].ToString().Substring(0, 4).Replace(",", ".");
-                            bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[20][9].ToString().Substring(0, 4).Replace(",", ".");
+                            bericht.ErstImpfung = resultImpfung.Tables[1].Rows[20][5].ToString();
+                            bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[20][9].ToString();
                             bericht.ImpfStatus = true;
                         }
                         catch (Exception)
