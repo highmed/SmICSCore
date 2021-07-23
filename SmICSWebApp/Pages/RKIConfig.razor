@@ -11,12 +11,25 @@
 
 <div class="">
     <div class="welcome_header_config">
-        <h1>RKI Konfigurationen</h1>
+        <h1>Konfigurationen zur Erkennung von Erregerhäufungen</h1>
     </div>
     <div class="welcome_text_config">
         <div class="index_config">
             <div class="index-text_config">
-                <span class="oi oi-info" aria-hidden="true">&nbsp;&nbsp;</span> In diesem Bereich können Informationen hinterlegt werden, die die Handhabung dieser Funktion für den Nutzer erklärt.
+                <span class="oi oi-info" aria-hidden="true">&nbsp;&nbsp;</span> Basierend auf den vorliegenden, vergangenen Erregerbefunden im Klinikum ist das SmICS in der Lage, Ihnen einen Hinweis darauf zu geben, 
+                ob zu einem bestimmten Zeitpunkt mehr positive Erregerbefunde als üblich vorliegen ("Erregerhäufung"). <br/>
+                In diesem Konfigurationsbereich haben Sie die Möglichkeit, verschiedene Regeln zu definieren, nach denen der statistische Algorithmus arbeiten soll.<br/><br/>
+
+                Eine Regel besteht immer aus (1) der Wahl einer Station (oder aller Stationen), (2) der Wahl eines Erregers (zur Auswahl stehen Ihnen aktuell 6 Erreger), 
+                (3) der Wahl eines "Look Back"-Zeitraumes (diese Variable bestimmt, welcher Umfang an vergangenen Daten mit in die Berechnung einbezogen werden soll, z.B. die letzten 1-12 Wochen), 
+                und (4) der Wahl, ob diese Regel zusätzlich einmalig retrospektiv - d.h. auf den gesamten Datenbestand - ausgeführt werden soll (die Standardeinstellung ist hier "Nein", 
+                d. h. die Regel wird nur auf die aktuellen Datenbestände bis zum in (3) definierten Zeitraum angewendet).<br/>
+                Die von Ihnen angelegten Regeln werden täglich durchlaufen und die Ergebnisse neu berechnet. Dazu müssen Sie unter "Tgl. Ausführzeit der Regeln" eine Uhrzeit angeben, zu der die Berechnung stattfinden soll.
+                <br/><br/>
+                Alle Regeln stehen Ihnen in der Visualisierung zur "Epidemiologischen Kurve" zur Auswahl zur Verfügung. Je nach Auswahl wird Ihnen dann dort die vom Algorithmus berechnete Entwicklung 
+                und Einschätzung dargestellt.
+                <br/><br/>
+                Bitte beachten Sie: Die retrospektive Auswertung (4) ist ein sehr zeit- und rechenintensiver Prozess, der nur im Ausnahmefall oder zu Analysenzwecken gewählt werden sollte.
             </div>
             <div id="div_card_1" class="">
                 <EditForm Model="@RKIConfigForm" OnValidSubmit="@HandleValidSubmit">
