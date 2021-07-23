@@ -6,7 +6,11 @@
     <div>
         <InputSelect @bind-Value="Station">
             <option selected disabled>Bitte wählen Sie aus</option>
-            <option value="Vorhanden">Vorhanden</option>
+            <option value="Gesamtklink">Gesamtklink</option>
+            @*@foreach (var item in station)
+        {
+            <option value="@item">@item</option>
+        }*@
         </InputSelect>
     </div>
 </div>
@@ -53,9 +57,9 @@
         <label for="Retro" class="tb-bez-header">Retrospektiv</label>
     </div>
     <div class="check">
-        <InputCheckbox @bind-Value="Retro" id="op1" class="css-checkbox"
+        <InputCheckbox @bind-Value="Retro" id="@("op"+ID)" class="css-checkbox"
                        @onchange="eventArgs => { CheckboxClicked(eventArgs.Value); }" />
-        <label class="css-label" for="op1"></label>
+        <label class="css-label" for="@("op"+ID)"></label>
     </div>
 </div>
 
@@ -68,6 +72,10 @@
     public string Zeitraum { get; set; }
     [Parameter]
     public bool Retro { get; set; }
+    [Parameter]
+    public int ID { get; set; }
+
+    //List<SymptomModel> patListBySym;
 
     void CheckboxClicked(object checkedValue)
     {

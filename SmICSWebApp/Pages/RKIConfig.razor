@@ -104,10 +104,10 @@
         RKIConfigTemplate RKIConfigFormAdds = new RKIConfigTemplate();
         RKIConfigForm.RKIConfigFormAdd.Add(RKIConfigFormAdds);
 
-        DynamicFragment.Add(CreateComponent(RKIConfigFormAdds));
+        DynamicFragment.Add(CreateComponent(RKIConfigFormAdds, DynamicFragment.Count));
     }
 
-    private RenderFragment CreateComponent(RKIConfigTemplate RKIConfigFormAdds) => builder =>
+    private RenderFragment CreateComponent(RKIConfigTemplate RKIConfigFormAdds, int ID) => builder =>
     {
         var propGetExpr = System.Linq.Expressions.Expression.Property(System.Linq.Expressions.Expression.Constant(RKIConfigFormAdds), "Station");
         var StationExpr = System.Linq.Expressions.Expression.Lambda<Func<System.String>>(propGetExpr);
@@ -128,6 +128,7 @@
         //builder.AddAttribute(0, "ZeitraumChanged", EventCallback.Factory.Create<System.String>(this, str => RKIConfigFormAdds.Zeitraum = str));
         //builder.AddAttribute(0, "ZeitraumExpression", ZeitraumExpr);
         builder.AddAttribute(0, "Retro", RKIConfigFormAdds.Retro);
+        builder.AddAttribute(0, "ID", ID);
         builder.CloseComponent();
     };
 
