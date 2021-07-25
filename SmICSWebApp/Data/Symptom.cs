@@ -32,6 +32,7 @@ namespace SmICSWebApp.Data
             }
         }
 
+        //Alle Symptome, die bei einem Patient in einem bestimmten Datum aufgetreten sind.
         public List<SymptomModel> GetAllSymByPatID(string patientId, DateTime datum)
         {
             try
@@ -45,6 +46,7 @@ namespace SmICSWebApp.Data
             }        
         }
 
+        //Alle Symptome, die in einem bestimmten Datum aufgetreten sind.
         public List<SymptomModel> GetAllPatBySym(string symptom, DateTime datum)
         {
             List<SymptomModel> symptomListe = _patientInformation.Patient_By_Symptom(symptom);
@@ -60,6 +62,7 @@ namespace SmICSWebApp.Data
             return symListe;
         }
 
+        //Alle Symptome, die in einem bestimmten Datum i einer Station aufgetreten sind.
         public List<SymptomModel> GetAllPatBySta(string symptom, DateTime datum, string station)
         {
             List<SymptomModel> patientListe = GetAllPatBySym(symptom, datum);

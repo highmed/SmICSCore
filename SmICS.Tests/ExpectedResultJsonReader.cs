@@ -52,6 +52,12 @@ namespace SmICSFactory.Tests
                             ParseGetCovidPat(arr);
                         }
                         break;
+                    case ExpectedType.SYMPTOM_MODEL:
+                        if (patients[resultNo].GetType() == typeof(PatientInfos))
+                        {
+                            ParseSymptomeData(arr, patients[resultNo] as PatientInfos);
+                        }
+                        break;
                 }
 
                 return arr.ToObject<List<T>>();
@@ -134,6 +140,28 @@ namespace SmICSFactory.Tests
                 obj.Property("Fallkennung").Value = obj.Property("Fallkennung").Value;
                 obj.Property("Zeitpunkt_des_Probeneingangs").Value = obj.Property("Zeitpunkt_des_Probeneingangs").Value;
            }
+        }
+
+        private static void ParseSymptomeData(JArray array, PatientInfos info)
+        {
+            foreach (JObject obj in array)
+            {
+                if (info.EHR_ID != null)
+                {
+                    obj.Add(new JProperty("PatientID", info.EHR_ID));
+                    obj.Add(new JProperty("Beginn", info.Beginn));
+                    obj.Property("Rueckgang").Value = DateTime.Parse(obj.Property("Rueckgang").Value.ToString());
+                    obj.Property("NameDesSymptoms").Value = obj.Property("NameDesSymptoms").Value;
+                }
+                else
+                {
+                    obj.Add(new JProperty("NameDesSymptoms", info.NameDesSymptoms));
+                    obj.Property("Beginn").Value = DateTime.Parse(obj.Property("Beginn").Value.ToString());
+                    obj.Property("Rueckgang").Value = DateTime.Parse(obj.Property("Rueckgang").Value.ToString());
+                    obj.Property("NameDesSymptoms").Value = obj.Property("NameDesSymptoms").Value;
+                }
+               
+            }
         }
     }
 }

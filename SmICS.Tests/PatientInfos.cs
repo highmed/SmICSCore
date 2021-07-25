@@ -11,6 +11,7 @@ namespace SmICSFactory.Tests
     {
         public string FallID { get; set; }
         public string StationID { get; set; }
+        public string NameDesSymptoms { get; set; }
        
         public DateTime Beginn { get; set; }
         public DateTime Ende { get; set; }
