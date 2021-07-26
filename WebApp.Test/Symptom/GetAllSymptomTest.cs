@@ -1,11 +1,11 @@
-﻿using SmICSFactory.Tests;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
-using Xunit;
-using SmICSCoreLib.REST;
 using SmICSDataGenerator.Tests;
+using System.Collections.Generic;
+using SmICSFactory.Tests;
+using System.Collections;
+using SmICSCoreLib.REST;
+using Xunit;
 
 namespace WebApp.Test.Symptom
 {
@@ -13,33 +13,29 @@ namespace WebApp.Test.Symptom
     {
         [Theory]
         [ClassData(typeof(SymptomTestData))]
-        public void ProcessorTest(string ehrID, DateTime beginn, int ResultSetID)
+        public void ProcessorTest(int ResultSetID)
         {
             RestDataAccess _data = TestConnection.Initialize();
 
             SymptomFactory factory = new SymptomFactory(_data);
-            List<SymptomModel> actual = factory.SymptomByPatient(ehrID, beginn);
+            List<SymptomModel> actual = factory.ProcessNoParam();
             List<SymptomModel> expected = GetSymptom(ResultSetID);
 
             Assert.Equal(expected.Count, actual.Count);
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 9; i++)
             {
-                Assert.Equal(expected[i].PatientenID, actual[i].PatientenID);
-                //Assert.Equal(expected[i].Beginn.ToString("yyyy-MM-dd"), actual[i].Beginn.ToString("yyyy-MM-dd"));
-                Assert.Equal(expected[i].Rueckgang.ToString("yyyy-MM-dd"), actual[i].Rueckgang.ToString("yyyy-MM-dd"));
                 Assert.Equal(expected[i].NameDesSymptoms, actual[i].NameDesSymptoms);
+                Assert.Equal(expected[i].Anzahl_Patienten, actual[i].Anzahl_Patienten);
             }
 
         }
 
         private class SymptomTestData : IEnumerable<object[]>
         {
-            List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/EHRID_Symptome.json");
-
             public IEnumerator<object[]> GetEnumerator()
             {
-                 yield return new object[] { patient[0].EHR_ID, patient[0].Beginn, 0 };
+                 yield return new object[] { 0 };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -47,8 +43,8 @@ namespace WebApp.Test.Symptom
 
         private List<SymptomModel> GetSymptom(int ResultSetID)
         {
-            string testResultPath = "../../../../WebApp.Test/Resources/SymptomTestResults.json";
-            string parameterPath = "../../../../WebApp.Test/Resources/EHRID_Symptome.json";
+            string testResultPath = "../../../../WebApp.Test/Resources/AllSymptomResult.json";
+            string parameterPath = "../../../../WebApp.Test/Resources/Empty_Symptome.json";
 
             List<SymptomModel> result = ExpectedResultJsonReader.ReadResults<SymptomModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ExpectedType.SYMPTOM_MODEL);
             return result;
