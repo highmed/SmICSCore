@@ -7,7 +7,7 @@ namespace WebApp.Test
 {
     public class BLReportTest
     {
-        RkiRestApi rkiRestApi = new();
+        RkiService rkiRestApi = new();
 
         [Fact]
         public void BLReportSerializeTest()

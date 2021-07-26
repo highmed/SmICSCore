@@ -4,7 +4,7 @@
 @using SmICSCoreLib.StatistikServices
 @using System;
 
-@inject RkiRestApi rkiRestApi
+@inject RkiService rkiService
 
 <h3>Statistik (Prototyp)</h3>
 
@@ -471,7 +471,7 @@
     private void SetRKIData()
     {
 
-        bool check = rkiRestApi.SerializeRkiData();
+        bool check = rkiService.SerializeRkiData();
         if (check == false)
         {
             status = false;
@@ -483,7 +483,7 @@
         try
         {
             path = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
-            dailyReport = rkiRestApi.DeserializeRkiData(path);
+            dailyReport = rkiService.DeserializeRkiData(path);
             stand = dailyReport.Bericht.Stand;
             standAktuell = dailyReport.Bericht.StandAktuell;
             blStandAktuell = dailyReport.Bericht.BlStandAktuell;
@@ -511,7 +511,7 @@
             try
             {
                 pathLastDay = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
-                lastReport = rkiRestApi.DeserializeRkiData(pathLastDay);
+                lastReport = rkiService.DeserializeRkiData(pathLastDay);
                 if (lastReport != null)
                 {
                     inzidenz7TageVortag = lastReport.Bericht.Inzidenz7Tage;
@@ -523,8 +523,8 @@
                 inzidenz7TageVortag = inzidenz7Tage;
             }
 
-            inzidenzColor = rkiRestApi.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
-            rWertColor = rkiRestApi.SetCaseColor(rWert7Tage, rWert7TageVortag);
+            inzidenzColor = rkiService.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
+            rWertColor = rkiService.SetCaseColor(rWert7Tage, rWert7TageVortag);
         }
         catch (Exception ex)
         {
@@ -537,7 +537,7 @@
 
     private void GetLastReport()
     {
-        lastReport = rkiRestApi.DeserializeRkiData(pathLastDay);
+        lastReport = rkiService.DeserializeRkiData(pathLastDay);
         bundeslaender = lastReport.Bericht.Bundesland;
         blStandAktuell = lastReport.Bericht.BlStandAktuell;
         stand = lastReport.Bericht.Stand;

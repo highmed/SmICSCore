@@ -5,7 +5,7 @@ namespace WebApp.Test
 {
     public class SetMapColorTest
     {
-        RkiRestApi rkiRestApi = new();
+        RkiService rkiRestApi = new();
 
         [Fact]
         public void CkeckSetMapColor()

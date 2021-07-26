@@ -6,7 +6,7 @@ namespace WebApp.Test
 {
     public class DataSetTest
     {
-        RkiRestApi rkiRestApi = new();
+        RkiService rkiRestApi = new();
 
         [Fact]
         public void CkeckRespone()

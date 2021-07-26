@@ -9,7 +9,7 @@ namespace WebApp.Test
 {
     public class DistrictTest
     {
-        RkiRestApi rkiRestApi = new();
+        RkiService rkiRestApi = new();
 
         [Fact]
         public void CkeckRespone()

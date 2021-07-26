@@ -146,7 +146,7 @@ namespace SmICSFactory.Tests
         {
             foreach (JObject obj in array)
             {
-                if (info.NameDesSymptoms == null)
+                if (info.NameDesSymptoms == null && info.EHR_ID == null)
                 {
                     obj.Property("NameDesSymptoms").Value = obj.Property("NameDesSymptoms").Value;
                     obj.Property("Anzahl_Patienten").Value = obj.Property("Anzahl_Patienten").Value;
@@ -163,7 +163,7 @@ namespace SmICSFactory.Tests
                     obj.Add(new JProperty("NameDesSymptoms", info.NameDesSymptoms));
                     obj.Property("Beginn").Value = DateTime.Parse(obj.Property("Beginn").Value.ToString());
                     obj.Property("Rueckgang").Value = DateTime.Parse(obj.Property("Rueckgang").Value.ToString());
-                    obj.Property("PatientID").Value = obj.Property("PatientID").Value;
+                    obj.Property("PatientenID").Value = obj.Property("PatientenID").Value;
                 }
                
             }

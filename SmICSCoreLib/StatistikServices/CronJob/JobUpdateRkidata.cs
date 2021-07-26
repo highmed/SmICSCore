@@ -22,7 +22,7 @@ namespace SmICSCoreLib.StatistikServices.CronJob
 
         public Task Execute(IJobExecutionContext context)
         {
-            RkiRestApi rkiRestApi = new();
+            RkiService rkiRestApi = new();
             string dailyReportPath = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
             string blReportPath = @"../WebApp.Test/Resources/BLReport.json";
             string lkReportPath = @"../SmICSWebApp/Resources/Rkidata/BLReport.json";

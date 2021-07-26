@@ -5,22 +5,22 @@ using SmICSCoreLib.AQL.PatientInformation;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
 
-
-namespace SmICSWebApp.Data
+namespace SmICSCoreLib.StatistikServices
 {
-    public class Symptom
+    public class SymptomService
     {
         private readonly IPatientInformation _patientInformation;
-        private readonly DataService _dataService;     
+        private readonly EhrDataService _dataService;
 
-        public Symptom(IPatientInformation patientInformation, DataService dataService)
+        public SymptomService(IPatientInformation patientInformation, EhrDataService dataService)
         {
             _patientInformation = patientInformation;
             _dataService = dataService;
         }
 
+        //Alle Symptome mit anzahl der Patienten, bei denen das Symptom min. 1mal aufgetreten ist.
         public List<SymptomModel> GetAllSymptom()
-        {          
+        {
             try
             {
                 List<SymptomModel> symptomListe = _patientInformation.Patient_Symptom();
@@ -43,7 +43,7 @@ namespace SmICSWebApp.Data
             catch (Exception)
             {
                 return null;
-            }        
+            }
         }
 
         //Alle Symptome, die in einem bestimmten Datum aufgetreten sind.
@@ -62,7 +62,7 @@ namespace SmICSWebApp.Data
             return symListe;
         }
 
-        //Alle Symptome, die in einem bestimmten Datum i einer Station aufgetreten sind.
+        //Alle Symptome, die in einem bestimmten Datum in einer Station aufgetreten sind.
         public List<SymptomModel> GetAllPatBySta(string symptom, DateTime datum, string station)
         {
             List<SymptomModel> patientListe = GetAllPatBySym(symptom, datum);
@@ -86,7 +86,8 @@ namespace SmICSWebApp.Data
         }
 
         //Stationen in den ein Symptome min.3mal bei Stationär behandelte Patient aufgetreten ist.
-        public Dictionary<string, int> GetSymGroup(string symptom, DateTime datum)
+        //Rueckgabe:(Station, Haeufigkeit). 
+        public Dictionary<string, int> GetSymGroup(string symptom, DateTime datum, int min)
         {
             List<PatientMovementModel> patBewegungen = new List<PatientMovementModel>();
             List<SymptomModel> patinetList = GetAllPatBySym(symptom, datum);
@@ -106,7 +107,7 @@ namespace SmICSWebApp.Data
             Dictionary<string, int> finalList = new Dictionary<string, int>();
             foreach (var item in result)
             {
-                if (item.Count >= 3)
+                if (item.Count >= min)
                 {
                     finalList.Add(item.StationID, item.Count);
                 }
@@ -115,7 +116,7 @@ namespace SmICSWebApp.Data
         }
 
         //List der kombination: Symptom (Station, Haeufigkeit).  
-        public Dictionary<string, Dictionary<string, int>> GetAllSymGroup(DateTime datum)
+        public Dictionary<string, Dictionary<string, int>> GetAllSymGroup(DateTime datum, int min)
         {
             Dictionary<string, Dictionary<string, int>> allSymGroup = new Dictionary<string, Dictionary<string, int>>();
             List<SymptomModel> symptomListe = GetAllSymptom();
@@ -123,7 +124,7 @@ namespace SmICSWebApp.Data
             {
                 foreach (var item in symptomListe)
                 {
-                    Dictionary<string, int> symGroup = GetSymGroup(item.NameDesSymptoms, datum);
+                    Dictionary<string, int> symGroup = GetSymGroup(item.NameDesSymptoms, datum, min);
                     if (symGroup.Count != 0)
                     {
                         allSymGroup.Add(item.NameDesSymptoms, symGroup);
@@ -136,6 +137,7 @@ namespace SmICSWebApp.Data
                 return null;
             }
         }
+
 
     }
 }

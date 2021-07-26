@@ -5,8 +5,8 @@
 @using SmICSCoreLib.AQL.PatientInformation.PatientMovement
 @using SmICSCoreLib.AQL.Patient_Stay.Stationary
 
-@inject SmICSWebApp.Data.Symptom symptom
-@inject SmICSWebApp.Data.DataService dataService
+@inject SmICSCoreLib.StatistikServices.SymptomService symptomService
+@inject SmICSCoreLib.StatistikServices.EhrDataService ehrDataService
 
 <h3>Statistik (Prototyp)</h3>
 
@@ -452,7 +452,8 @@
 
     private void GetAllSym()
     {
-        allSymGroup = symptom.GetAllSymGroup(symptomData.datum);
+        //Symptom min. 3mal in einer Station aufgetreten ist.
+        allSymGroup = symptomService.GetAllSymGroup(symptomData.datum, 3);
         if (allSymGroup == null)
         {
             status = false;
@@ -461,7 +462,7 @@
 
     private void GetPatListBySta(string symptomName, string station)
     {
-        patListBySym = symptom.GetAllPatBySta(symptomName, symptomData.datum, station);
+        patListBySym = symptomService.GetAllPatBySta(symptomName, symptomData.datum, station);
     }
 
     private void NextFirst()
@@ -506,7 +507,7 @@
 
     private void GetPatMovement(string patientId)
     {
-        firstMovementList = dataService.GetPatMovement(patientId);
+        firstMovementList = ehrDataService.GetPatMovement(patientId);
         moveCount = firstMovementList.Count();
 
         if (moveCount != 0)
@@ -523,7 +524,7 @@
 
     private void GetNextPatMov(string patientId)
     {
-        secondMovementList = dataService.GetPatMovement(patientId);
+        secondMovementList = ehrDataService.GetPatMovement(patientId);
         secMoveCount = secondMovementList.Count();
         if (secMoveCount != 0)
         {
@@ -533,8 +534,8 @@
 
     private void GetPatStationary(string patientId, string fallId, string secPatientId, string secFallId)
     {
-        patStationary = dataService.StationaryPatByCaseID(patientId, fallId);
-        secPatStationary = dataService.StationaryPatByCaseID(secPatientId, secFallId);
+        patStationary = ehrDataService.StationaryPatByCaseID(patientId, fallId);
+        secPatStationary = ehrDataService.StationaryPatByCaseID(secPatientId, secFallId);
     }
 
     public class SymptomData

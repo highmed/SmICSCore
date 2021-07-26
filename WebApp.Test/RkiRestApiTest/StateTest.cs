@@ -8,7 +8,7 @@ namespace WebApp.Test
 {
     public class StateTest
     {
-        RkiRestApi rkiRestApi = new();
+        RkiService rkiRestApi = new();
 
         [Fact]
         public void CkeckRespone()

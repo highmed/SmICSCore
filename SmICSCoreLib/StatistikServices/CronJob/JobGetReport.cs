@@ -17,7 +17,7 @@ namespace SmICSCoreLib.StatistikServices.CronJob
         }
         public Task Execute(IJobExecutionContext context)
         {         
-            RkiRestApi rkiRestApi = new();
+            RkiService rkiRestApi = new();
             bool status = rkiRestApi.SerializeRkiData();
             if (status == true)
             {

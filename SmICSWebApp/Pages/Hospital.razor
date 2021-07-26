@@ -1,13 +1,13 @@
 ﻿@page "/hospital"
 
-@using SmICSWebApp.Data
+@using SmICSCoreLib.StatistikDataModels;
 @using System.Collections.Generic;
 @using SmICSCoreLib.AQL.Patient_Stay.Count;
 @using SmICSCoreLib.AQL.Patient_Stay.Stationary
 @using ChartJs.Blazor.LineChart
 @using ChartJs.Blazor.PieChart
 
-@inject DataService dataService
+@inject SmICSCoreLib.StatistikServices.EhrDataService ehrDataService
 @inject IJSRuntime JSRuntime
 
 <h3>Statistik (Prototyp)</h3>
@@ -328,15 +328,15 @@
     {
         try
         {
-            allPositivTest = dataService.GetAllPositivTest();
-            allPositivPat = dataService.GetAllPatByTest(allPositivTest);
-            allNegativTest = dataService.GetAllNegativTest();
-            allNegativPat = dataService.GetAllPatByTest(allNegativTest);
+            allPositivTest = ehrDataService.GetAllPositivTest();
+            allPositivPat = ehrDataService.GetAllPatByTest(allPositivTest);
+            allNegativTest = ehrDataService.GetAllNegativTest();
+            allNegativPat = ehrDataService.GetAllPatByTest(allNegativTest);
 
-            allNoskumalPat = dataService.GetAllNoskumalPat(allPositivTest);
-            noskumalPatByContact = dataService.GetNoskumalByContact(allNoskumalPat, allPositivPat);
+            allNoskumalPat = ehrDataService.GetAllNoskumalPat(allPositivTest);
+            noskumalPatByContact = ehrDataService.GetNoskumalByContact(allNoskumalPat, allPositivPat);
             anzahlFaelle = allPositivPat.Count() - allNoskumalPat.Count();
-            anzahlPatTage = dataService.PatStay(allPositivPat);
+            anzahlPatTage = ehrDataService.PatStay(allPositivPat);
 
             Dictionary<string, int> sortDictPositiv = GetDataLineChart(allPositivPat);
             Dictionary<string, int> sortDictNegativ = GetDataLineChart(allNegativPat);
@@ -556,7 +556,7 @@
         //Aktive Faelle
         foreach (var item in allPositivPat)
         {
-            patStationary = dataService.StationaryPatByCaseID(item.PatientID, item.Fallkennung);
+            patStationary = ehrDataService.StationaryPatByCaseID(item.PatientID, item.Fallkennung);
             if (patStationary != null)
             {
                 foreach (var pat in patStationary)

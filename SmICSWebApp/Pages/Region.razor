@@ -9,7 +9,7 @@
 @using ChartJs.Blazor.LineChart
 @using SmICSCoreLib.JSONFileStream;
 
-@inject RkiRestApi rkiRestApi
+@inject RkiService rkiService
 
 <h3>Statistik (Prototyp)</h3>
 
@@ -189,7 +189,7 @@
         try
         {
             path = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
-            dailyReport = rkiRestApi.DeserializeRkiData(path);
+            dailyReport = rkiService.DeserializeRkiData(path);
             if (dailyReport != null)
             {
                 stand = dailyReport.Bericht.Stand;
@@ -207,8 +207,8 @@
             }
             else
             {
-                rkiRestApi.SerializeRkiData();
-                dailyReport = rkiRestApi.DeserializeRkiData(path);
+                rkiService.SerializeRkiData();
+                dailyReport = rkiService.DeserializeRkiData(path);
                 if (dailyReport != null)
                 {
                     stand = dailyReport.Bericht.Stand;
@@ -280,7 +280,7 @@
         Dictionary<string, int> rkiDatenLk = new();
 
         string filePath = @"../SmICSWebApp/Resources/Rkidata/LKReport.json";
-        LKReportJson lKReportJson = rkiRestApi.LKReportDeserialize(filePath);
+        LKReportJson lKReportJson = rkiService.LKReportDeserialize(filePath);
 
         foreach (var item in lKReportJson.LKReport)
         {
@@ -308,7 +308,7 @@
 
         //Report blReportJson = rkiRestApi.BLReportDeserialize("BLReport - 2021");
         string filePath = @"../SmICSWebApp/Resources/Rkidata/BLReport.json";
-        Report blReportJson = rkiRestApi.BLReportDeserialize(filePath);
+        Report blReportJson = rkiService.BLReportDeserialize(filePath);
 
         foreach (var item in blReportJson.BLReport)
         {

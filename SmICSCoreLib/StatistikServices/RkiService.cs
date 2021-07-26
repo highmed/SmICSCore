@@ -11,7 +11,7 @@ using System.Net;
 
 namespace SmICSCoreLib.StatistikServices
 {
-    public class RkiRestApi
+    public class RkiService
     {
         private readonly RestClient client = new();
 

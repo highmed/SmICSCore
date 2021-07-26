@@ -7,15 +7,16 @@ using SmICSCoreLib.AQL.PatientInformation;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.General;
+using SmICSCoreLib.StatistikDataModels;
 
-namespace SmICSWebApp.Data
+namespace SmICSCoreLib.StatistikServices
 {
-    public class DataService
+    public class EhrDataService
     {
         private readonly IPatinet_Stay _patinet_Stay;
         private readonly IPatientInformation _patientInformation;
 
-        public DataService(IPatinet_Stay patinet_Stay, IPatientInformation patientInformation)
+        public EhrDataService(IPatinet_Stay patinet_Stay, IPatientInformation patientInformation)
         {
             _patinet_Stay = patinet_Stay;
             _patientInformation = patientInformation;
@@ -129,7 +130,7 @@ namespace SmICSWebApp.Data
         //Noskumale Regeln
         public List<Patient> GetAllNoskumalPat(List<CountDataModel> positivPatList)
         {
-            Symptom symptom = new(_patientInformation, this);
+            SymptomService symptom = new(_patientInformation, this);
 
             List<Patient> patNoskumalList = new();
             List<string> symptomList = new List<string>(new string[] { "Chill (finding)", "Cough (finding)", "Dry cough (finding)",

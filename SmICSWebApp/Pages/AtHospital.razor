@@ -4,8 +4,9 @@
 @using SmICSCoreLib.AQL.Patient_Stay.Stationary
 @using SmICSCoreLib.AQL.PatientInformation.PatientMovement
 @using System.ComponentModel.DataAnnotations
-@inject SmICSWebApp.Data.Symptom symptom
-@inject SmICSWebApp.Data.DataService dataService
+
+@inject SmICSCoreLib.StatistikServices.EhrDataService ehrDataService
+
 
 <h3>Statistik (Prototyp)</h3>
 
@@ -195,7 +196,7 @@
     {
         try
         {
-            patStationary = dataService.StationaryPatByDate(patData.datum);
+            patStationary = ehrDataService.StationaryPatByDate(patData.datum);
             sortedPatStationary = patStationary.OrderBy(x => x.Datum_Uhrzeit_der_Aufnahme).ToList();
         }
         catch (Exception)
@@ -207,7 +208,7 @@
 
     private void GetPatMovement(string patientId)
     {
-        patMovtList = dataService.GetPatMovement(patientId);
+        patMovtList = ehrDataService.GetPatMovement(patientId);
         moveCount = patMovtList.Count();
         if (moveCount != 0)
         {

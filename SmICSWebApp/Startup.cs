@@ -37,9 +37,9 @@ namespace SmICSWebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSmICSLibrary();
-            services.AddSingleton<DataService>();  
-            services.AddSingleton<RkiRestApi>();
-            services.AddSingleton<Symptom>();
+            services.AddSingleton<RkiService>();            
+            services.AddSingleton<SymptomService>();
+            services.AddSingleton<EhrDataService>();
 
             //CronJob GetReport
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
