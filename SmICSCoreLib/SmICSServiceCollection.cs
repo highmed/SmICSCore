@@ -3,6 +3,7 @@ using SmICSCoreLib.AQL.PatientInformation;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 using SmICSCoreLib.AQL.Contact_Nth_Network;
 using SmICSCoreLib.AQL.Lab;
 using SmICSCoreLib.AQL.Lab.EpiKurve;
@@ -15,6 +16,10 @@ using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.Patient_Stay.Count;
 using SmICSCoreLib.AQL.Patient_Stay.Cases;
 using SmICSCoreLib.AQL.Patient_Stay.WeekCase;
+using SmICSCoreLib.AQL.Employees;
+using SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl;
+using SmICSCoreLib.AQL.Employees.ContactTracing;
+using SmICSCoreLib.AQL.Employees.PersonData;
 
 namespace SmICS
 {
@@ -29,6 +34,7 @@ namespace SmICS
             services.AddTransient<IPatientLabordataFactory, PatientLabordataFactory>();
             services.AddTransient<IMibiPatientLaborDataFactory, MibiPatientLaborDataFactory>();
             services.AddTransient<ISymptomFactory, SymptomFactory>();
+            services.AddTransient<IVaccinationFactory, VaccinationFactory>();
 
             services.AddTransient<IPatientInformation, PatientInformation>();
 
@@ -48,6 +54,11 @@ namespace SmICS
             services.AddTransient<ICountFactory, CountFactory>();
             services.AddTransient<ICaseFactory, CaseFactory>();
             services.AddTransient<IWeekCaseFactory, WeekCaseFactory>();
+
+            services.AddTransient<IEmployeeInformation, EmployeeInformation>();
+            services.AddTransient<IContactTracingFactory, ContactTracingFactory>();
+            services.AddTransient<IPersInfoInfecCtrlFactory, PersInfoInfecCtrlFactory>();
+            services.AddTransient<IPersonDataFactory, PersonDataFactory>();
 
             return services;
         }

@@ -84,7 +84,7 @@
                     "_type": "ELEMENT",
                     "name": {
                         "_type": "DV_TEXT",
-                        "value": "Zugehöriger Versorgungsfall (Kennung)"
+                        "value": "Zugehörige Versorgungsfall-Kennung"
                     },
                     "archetype_node_id": "at0001",
                     "value": {
@@ -109,32 +109,7 @@
                     "_type": "ELEMENT",
                     "name": {
                         "_type":"DV_TEXT",
-                        "value": "Zugehöriger Abteilungsfall (Kennung)"
-                    },
-                    "archetype_node_id": "at0001",
-                    "value":{
-                        "_type": "DV_TEXT",
-                        "value": "410077198718092881DER"
-                    }
-                }]
-            },{
-                "_type": "CLUSTER",
-                "name": {
-                    "_type": "DV_TEXT",
-                    "value": "Versorgungstellenkontakt"
-                },
-                "archetype_details":{
-                    "archetype_id": {
-                        "value": "openEHR-EHR-CLUSTER.case_identification.v0"
-                    },
-                    "rm_version": "1.0.4"
-                },
-                "archetype_node_id":"openEHR-EHR-CLUSTER.case_identification.v0",
-                "items":[{
-                    "_type": "ELEMENT",
-                    "name": {
-                        "_type":"DV_TEXT",
-                        "value": "Zugehöriger Versorgungsstellenkontakt (Kennung)"
+                        "value": "Zugehörige Versorgungsfall-Kennung"
                     },
                     "archetype_node_id": "at0001",
                     "value":{
@@ -149,7 +124,7 @@
         "_type": "ADMIN_ENTRY",
         "name": {
             "_type": "DV_TEXT",
-            "value": "Versorgungsaufenthalt"
+            "value": "Versorgungsort"
         },
         "archetype_details": {
             "archetype_id":{
@@ -192,7 +167,7 @@
                     "value": "2021-01-01T09:00:00"
                 }
             },{
-                "_type": "ELEMENT",
+               "_type": "ELEMENT",
                 "name": {
                     "_type": "DV_TEXT",
                     "value": "Ende"
@@ -201,7 +176,7 @@
                 "value":{
                     "_type": "DV_DATE_TIME",
                     "value": "2021-01-03T12:00:00"
-                }
+                } 
             },{
                 "_type": "ELEMENT",
                 "name": {
@@ -228,6 +203,45 @@
                 "archetype_node_id": "openEHR-EHR-CLUSTER.location.v1",
                 "items":[{
                     "_type": "ELEMENT",
+                    "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Standorttyp"
+                    },
+                    "archetype_node_id": "at0040",
+                    "value":{
+                        "_type": "DV_TEXT",
+                        "value": "OL"
+                    }
+                },{
+                    "_type": "ELEMENT",
+                    "name": {
+                        "_type": "DV_TEXT",
+                        "value": "Standortbeschreibung"
+                    },
+                    "archetype_node_id": "at0046",
+                    "value":{
+                        "_type": "DV_TEXT",
+                        "value": "Kardiologie"
+                    }
+                },{
+                    "_type": "ELEMENT",
+                    "name":{
+                        "_type":"DV_TEXT",
+                        "value": "Standortschlüssel"
+                    },
+                    "archetype_node_id": "at0048",
+                    "value": {
+                        "_type": "DV_CODED_TEXT",
+                        "value": "0100",
+                        "defining_code":{
+                            "terminology_id":{
+                                "value": "§301 SGB V"
+                            },
+                            "code_string": "0100"
+                        }
+                    }
+                },{
+                     "_type": "ELEMENT",
                     "name": {
                         "_type": "DV_TEXT",
                         "value": "Campus"
@@ -263,7 +277,7 @@
                      "_type": "ELEMENT",
                     "name": {
                         "_type": "DV_TEXT",
-                        "value": "Station"
+                        "value": "Stationskennung"
                     },
                     "archetype_node_id": "at0027",
                     "value":{
@@ -274,7 +288,7 @@
                      "_type": "ELEMENT",
                     "name": {
                         "_type": "DV_TEXT",
-                        "value": "Zimmer"
+                        "value": "Zimmerkennung"
                     },
                     "archetype_node_id": "at0029",
                     "value":{
@@ -285,23 +299,12 @@
                      "_type": "ELEMENT",
                     "name": {
                         "_type": "DV_TEXT",
-                        "value": "Bettplatz"
+                        "value": "Bettplatzkennung"
                     },
                     "archetype_node_id": "at0034",
                     "value":{
                         "_type": "DV_TEXT",
                         "value": "Bettplatzkennung 1"
-                    }
-                },{
-                    "_type": "ELEMENT",
-                    "name": {
-                        "_type": "DV_TEXT",
-                        "value": "Zusätzliche Beschreibung"
-                    },
-                    "archetype_node_id": "at0046",
-                    "value": {
-                        "_type": "DV_TEXT",
-                        "value": "Beschreibung 1"
                     }
                 },{
                     "_type": "CLUSTER",
@@ -338,93 +341,7 @@
                             "_type": "DV_TEXT",
                             "value": "Bett"
                         }
-                    },{
-                        "_type": "ELEMENT",
-                        "name": {
-                            "_type": "DV_TEXT",
-                            "value": "Eindeutige Identifikationsnummer (ID)"
-                        },
-                        "archetype_node_id": "at0021",
-                        "value": {
-                            "_type": "DV_IDENTIFIER",
-                            "id": "0001"
-                        }
                     }]
-                }]
-            },{
-                "_type": "CLUSTER",
-                "name": {
-                    "_type": "DV_TEXT",
-                    "value": "Fachliche Organisationseinheit"
-                },
-                "archetype_details": {
-                    "archetype_id": {
-                        "value": "openEHR-EHR-CLUSTER.organization.v0"
-                    },
-                    "rm_version": "1.0.4"
-                },
-                "archetype_node_id": "openEHR-EHR-CLUSTER.organization.v0",
-                "items":[{
-                    "_type": "ELEMENT",
-                    "name": {
-                        "_type": "DV_TEXT",
-                        "value": "Typ"
-                    },
-                    "archetype_node_id": "at0051",
-                    "value": {
-                        "_type": "DV_TEXT",
-                        "value": "Healthcare Provider"
-                    }
-                },{
-                    "_type": "ELEMENT",
-                    "name": {
-                        "_type": "DV_TEXT",
-                        "value": "Fachabteilungsschlüssel"
-                    },
-                    "archetype_node_id": "at0024",
-                    "value": {
-                        "_type": "DV_CODED_TEXT",
-                        "value": "Kardiologie",
-                        "defining_code": {
-                            "terminology_id": {
-                                "value": "Anhang 1 der BPflV (31.12.2003)"
-                            },
-                            "code_string": "0300"
-                        }
-                    }
-                },{
-                    "_type": "ELEMENT",
-                    "name": {
-                        "_type": "DV_TEXT",
-                        "value": "Name"
-                    },
-                    "archetype_node_id": "at0052",
-                    "value": {
-                        "_type": "DV_TEXT",
-                        "value": "Name der Organisationseinheit"
-                    }
-                },{
-                    "_type": "ELEMENT",
-                    "name": {
-                        "_type": "DV_TEXT",
-                        "value": "Aktiv/Inaktiv"
-                    },
-                    "archetype_node_id": "at0050",
-                    "value": {
-                        "_type": "DV_BOOLEAN",
-                        "value": true
-                    }
-                },{
-                    "_type": "ELEMENT",
-                    "name": {
-                        "_type": "DV_TEXT",
-                        "value": "Zusätzliche Beschreibung"
-                    },
-                    "archetype_node_id": "at0046",
-                    "value": {
-                        "_type": "DV_TEXT",
-                        "value": "Beschreibung 1"
-                    }
                 }]
             },{
                 "_type": "ELEMENT",

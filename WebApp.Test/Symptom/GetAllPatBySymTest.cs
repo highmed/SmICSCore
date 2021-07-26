@@ -6,6 +6,7 @@ using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using Xunit;
 using SmICSCoreLib.REST;
 using SmICSDataGenerator.Tests;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace WebApp.Test.Symptom
 {
@@ -13,13 +14,13 @@ namespace WebApp.Test.Symptom
     {
         [Theory]
         [ClassData(typeof(SymptomTestData))]
-        public void ProcessorTest(string nameDesSymptoms, int ResultSetID)
+        public void ProcessorTest(string nameDesSymptoms, int ResultSetID, int ehrNo)
         {
             RestDataAccess _data = TestConnection.Initialize();
 
-            SymptomFactory factory = new SymptomFactory(_data);
+            SymptomFactory factory = new SymptomFactory(_data, NullLogger<SymptomFactory>.Instance);
             List<SymptomModel> actual = factory.PatientBySymptom(nameDesSymptoms);
-            List<SymptomModel> expected = GetSymptom(ResultSetID);
+            List<SymptomModel> expected = GetSymptom(ResultSetID, ehrNo);
 
             Assert.Equal(expected.Count, actual.Count);
 
@@ -39,18 +40,18 @@ namespace WebApp.Test.Symptom
 
             public IEnumerator<object[]> GetEnumerator()
             {
-                 yield return new object[] { patient[0].NameDesSymptoms, 0 };
+                 yield return new object[] { patient[0].NameDesSymptoms, 0, 0 };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        private List<SymptomModel> GetSymptom(int ResultSetID)
+        private List<SymptomModel> GetSymptom(int ResultSetID, int ehrNo)
         {
             string testResultPath = "../../../../WebApp.Test/Resources/SymptomResults.json";
             string parameterPath = "../../../../WebApp.Test/Resources/Symptome.json";
 
-            List<SymptomModel> result = ExpectedResultJsonReader.ReadResults<SymptomModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ExpectedType.SYMPTOM_MODEL);
+            List<SymptomModel> result = ExpectedResultJsonReader.ReadResults<SymptomModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ehrNo, ExpectedType.SYMPTOM_MODEL);
             return result;
         }
     }

@@ -14,13 +14,13 @@ namespace WebApp.Test.DataServiceTest
 
         [Theory]
         [ClassData(typeof(StationaryTestData))]
-        public void ProcessorTest(DateTime dateTime, int expectedResultSet)
+        public void ProcessorTest(DateTime dateTime, int expectedResultSet, int ehrNo)
         {
             RestDataAccess _data = TestConnection.Initialize();
 
             StationaryFactory factory = new StationaryFactory(_data);
             List<StationaryDataModel> actual = factory.ProcessFromDate(dateTime);
-            List<StationaryDataModel> expected = GetExpectedStationaryDataModels(expectedResultSet);
+            List<StationaryDataModel> expected = GetExpectedStationaryDataModels(expectedResultSet, ehrNo);
 
             int i = 0;
             //Assert.Equal(expected.Count, actual.Count);
@@ -41,7 +41,7 @@ namespace WebApp.Test.DataServiceTest
                 List<PatientInfos> patientInfos = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/EHRID_Stationary.json");
                 
                 int i = 0;
-                yield return new object[] { patientInfos[i].Datum_Uhrzeit_der_Aufnahme, i };
+                yield return new object[] { patientInfos[i].Datum_Uhrzeit_der_Aufnahme, i, i };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -49,12 +49,12 @@ namespace WebApp.Test.DataServiceTest
 
 
         //Get Expected Data
-        private List<StationaryDataModel> GetExpectedStationaryDataModels(int ResultSetID)
+        private List<StationaryDataModel> GetExpectedStationaryDataModels(int ResultSetID, int ehrNo)
         {
             string testResultPath = "../../../../WebApp.Test/Resources/StationaryPatByDateTestResults.json";
             string parameterPath = "../../../../WebApp.Test/Resources/EHRID_Stationary.json";
 
-            List<StationaryDataModel> result = ExpectedResultJsonReader.ReadResults<StationaryDataModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ExpectedType.STATIONARY);
+            List<StationaryDataModel> result = ExpectedResultJsonReader.ReadResults<StationaryDataModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ehrNo, ExpectedType.STATIONARY);
             return result;
         }
     }

@@ -7,9 +7,17 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Logging
 @using Newtonsoft.Json.Linq
+@using SmICSCoreLib.AQL.Employees
+@using SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl
 
 @inject ILogger<FormPersInfoInfectCtrl> Logger
+@inject PersInfoInfectCtrlService PersInfoInfectCtrlService
 
+<div class="zurueck-bottom">
+    <NavLink class="nav-link" href="contactIndex" Match="NavLinkMatch.All">
+        <span class="oi oi-chevron-left" aria-hidden="true">&nbsp;</span> zur&uuml;ck
+    </NavLink>
+</div>
 <div class="con">
     <div class="deph_1">
         <h3>Personeninformationen zur Infektionskontrolle</h3>
@@ -18,12 +26,23 @@
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="deph_2">
+                <span class="span">Mitarbeiterdaten</span>
+                <div class="table">
+                    <div class="tr">
+                        <div class="tb tb_bez"><label>Mitarbeiter ID:</label></div>
+                        <div class="tb">
+                            <InputText @bind-Value="ehr_id" disabled="@disabled" class="input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="deph_2">
                 <span class="span">Context</span>
                 <div class="table">
                     <div class="tr">
                         <div class="tb tb_bez"><label>Bericht ID:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="informationControl.berichtID" disabled="@disabled" />
+                            <InputText @bind-Value="informationControl.berichtID" disabled="@disabled" class="input" />
                         </div>
                     </div>
                 </div>
@@ -36,18 +55,18 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Sind Symptome oder Anzeichen vorhanden?</label></div>
                             <div class="tb">
-                                <InputSelect @bind-Value="informationControl.symp_vorhanden" disabled="@disabled">
+                                <InputSelect @bind-Value="informationControl.symp_vorhanden" disabled="@disabled" class="input">
                                     <option selected disabled>Bitte wählen Sie aus</option>
-                                    <option value="vorhanden">vorhanden</option>
-                                    <option value="nicht vorhanden">nicht vorhanden</option>
-                                    <option value="unbekannt">unbekannt</option>
+                                    <option value="Vorhanden">Vorhanden</option>
+                                    <option value="Nicht vorhanden">Nicht vorhanden</option>
+                                    <option value="Unbekannt">Unbekannt</option>
                                 </InputSelect>
                             </div>
                         </div>
                         <div class="tr">
                             <div class="tb tb_bez"><label>Auftreten von Symptomen oder Anzeichen:</label></div>
                             <div class="tb">
-                                <InputDate @bind-Value="informationControl.symp_auftreten" @bind-Value:format="dd/MM/yyyy HH:ii:ss" disabled="@disabled" />
+                                <InputText type="datetime-local" @bind-Value="informationControl.symp_auftreten" @bind-Value:format="dd/MM/yyyy HH:ii:ss" disabled="@disabled" class="input"/>
                             </div>
                         </div>
                     </div>
@@ -57,7 +76,7 @@
                             <div class="tr">
                                 <div class="tb tb_bez"><label>Bezeichnung des Symptoms oder Anzeichens:</label></div>
                                 <div class="tb">
-                                    <InputText @bind-Value="informationControl.bez_symp" disabled="@disabled" />
+                                    <InputText @bind-Value="informationControl.bez_symp" disabled="@disabled" class="input" />
                                 </div>
                             </div>
                         </div>
@@ -66,7 +85,7 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Allgemeiner Kommentar:</label></div>
                             <div class="tb">
-                                <InputText @bind-Value="informationControl.allg_kommentar" disabled="@disabled" />
+                                <InputText @bind-Value="informationControl.allg_kommentar" disabled="@disabled" class="input" />
                             </div>
                         </div>
                     </div>
@@ -86,7 +105,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Erregername:</label></div>
                         <div class="tb">
-                            <InputSelect @bind-Value="informationControl.erreg_name" disabled="@disabled">
+                            <InputSelect @bind-Value="informationControl.erreg_name" disabled="@disabled" class="input">
                                 <option selected disabled>Bitte wählen Sie aus</option>
                                 <option value="SARS-COV-2">SARS-COV-2</option>
                             </InputSelect>
@@ -95,7 +114,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Zeitpunkt der Kennzeichnung:</label></div>
                         <div class="tb">
-                            <InputDate @bind-Value="informationControl.zeitpunkt_kennzeichnung" disabled="@disabled" />
+                            <InputText type="datetime-local" @bind-Value="informationControl.zeitpunkt_kennzeichnung" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
@@ -109,7 +128,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Zuletzt aktualisiert:</label></div>
                         <div class="tb">
-                            <InputDate @bind-Value="informationControl.zuletzt_aktuell" disabled="@disabled" />
+                            <InputText type="datetime-local" @bind-Value="informationControl.zuletzt_aktuell" disabled="@disabled" class="input" />
                         </div>
                     </div>
                 </div>
@@ -128,7 +147,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Grund für die Freistellung:</label></div>
                         <div class="tb">
-                            <InputSelect @bind-Value="informationControl.grund" disabled="@disabled">
+                            <InputSelect @bind-Value="informationControl.grund" disabled="@disabled" class="input">
                                 <option selected disabled>Bitte wählen Sie aus</option>
                                 <option value="Nachweis einer SARS-CoV-2 Infektion">Nachweis einer SARS-CoV-2 Infektion</option>
                                 <option value="Ungeschützer Kontakt zu einer SARS-CoV-2 infizierten Person">Ungeschützer Kontakt zu einer SARS-CoV-2 infizierten Person</option>
@@ -139,25 +158,25 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Beschreibung:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="informationControl.beschreibung" disabled="@disabled" />
+                            <InputText @bind-Value="informationControl.beschreibung" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Startdatum der Freistellung:</label></div>
                         <div class="tb">
-                            <InputDate @bind-Value="informationControl.start_freistellung" disabled="@disabled" />
+                            <InputText type="date" @bind-Value="informationControl.start_freistellung" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Wiederaufnahme der Arbeit:</label></div>
                         <div class="tb">
-                            <InputDate @bind-Value="informationControl.wiederaufnahme" disabled="@disabled" />
+                            <InputText type="date" @bind-Value="informationControl.wiederaufnahme" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Kommentar:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="informationControl.kommentar_freistellung" disabled="@disabled" />
+                            <InputText @bind-Value="informationControl.kommentar_freistellung" disabled="@disabled" class="input" />
                         </div>
                     </div>
                 </div>
@@ -176,7 +195,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Zu meldendes Ereignis:</label></div>
                         <div class="tb">
-                            <InputSelect @bind-Value="informationControl.ereignis" disabled="@disabled">
+                            <InputSelect @bind-Value="informationControl.ereignis" disabled="@disabled" class="input">
                                 <option selected disabled>Bitte wählen Sie aus</option>
                                 <option value="Nachweis einer SARS-CoV-2 Infektion">Nachweis einer SARS-CoV-2 Infektion</option>
                                 <option value="Ungeschützer Kontakt zu einer SARS-CoV-2 infizierten Person">Ungeschützer Kontakt zu einer SARS-CoV-2 infizierten Person</option>
@@ -187,25 +206,25 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Beschreibung:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="informationControl.beschreibung_ereignis" disabled="@disabled" />
+                            <InputText @bind-Value="informationControl.beschreibung_ereignis" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Datum der Meldung:</label></div>
                         <div class="tb">
-                            <InputDate @bind-Value="informationControl.datum_meldung" disabled="@disabled"></InputDate>
+                            <InputText type="datetime-local" @bind-Value="informationControl.datum_meldung" disabled="@disabled" class="input"></InputText>
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Grund:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="informationControl.grund_meldung" disabled="@disabled" />
+                            <InputText @bind-Value="informationControl.grund_meldung" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Kommentar:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="informationControl.meldung_kommentar" disabled="@disabled" />
+                            <InputText @bind-Value="informationControl.meldung_kommentar" disabled="@disabled" class="input" />
                         </div>
                     </div>
                 </div>
@@ -223,7 +242,8 @@
 @code{ private bool disabled;
     private string message;
     private string messageStyles = "visibility:hidden";
-    private PersonInformationInfectionControl informationControl = new PersonInformationInfectionControl();
+    private PersInfoInfecCtrlModel informationControl = new PersInfoInfecCtrlModel();
+    private string ehr_id;
 
     private void HandleValidSubmit()
     {
@@ -231,10 +251,10 @@
         try
         {
             JObject o = (JObject)JToken.FromObject(informationControl);
+            PersInfoInfectCtrlService.PersInfoInfectCtrlServiceDataStorage(o, ehr_id);
             disabled = true;
             messageStyles = "color:green";
-            //message = "Das Formular wurde übermittelt.";
-            message = o.ToString();
+            message = "Das Formular wurde übermittelt.";
         }
         catch (Exception ex)
         {
@@ -243,53 +263,6 @@
             messageStyles = "color:red";
             message = "Es wurde ein fehler festgestellt beim Übermitteln des Formulars.";
         }
-    }
-    public class PersonInformationInfectionControl
-    {
-        [Required]
-        public string berichtID { get; set; }
-        [Required]
-        public string symp_vorhanden { get; set; }
-        [Required]
-        public Nullable<DateTime> symp_auftreten { get; set; } = null;
-        [Required]
-        public string bez_symp { get; set; }
-
-        public string allg_kommentar { get; set; }
-
-        public bool erreg_nachweis { get; set; } = false;
-        [Required]
-        public string erreg_name { get; set; }
-        [Required]
-        public Nullable<DateTime> zeitpunkt_kennzeichnung { get; set; } = null;
-
-        public bool erreg_Nachweis_klinik { get; set; } = false;
-        [Required]
-        public Nullable<DateTime> zuletzt_aktuell { get; set; } = null;
-
-        public bool freigetsellt { get; set; } = false;
-        [Required]
-        public string grund { get; set; }
-        [Required]
-        public string beschreibung { get; set; }
-        [Required]
-        public Nullable<DateTime> start_freistellung { get; set; } = null;
-        [Required]
-        public Nullable<DateTime> wiederaufnahme { get; set; } = null;
-
-        public string kommentar_freistellung { get; set; }
-
-        public bool meldung { get; set; } = false;
-        [Required]
-        public string ereignis { get; set; }
-        [Required]
-        public string beschreibung_ereignis { get; set; }
-        [Required]
-        public Nullable<DateTime> datum_meldung { get; set; } = null;
-        [Required]
-        public string grund_meldung { get; set; }
-
-        public string meldung_kommentar { get; set; }
     }
 
     void CheckboxClicked(object checkedValue)

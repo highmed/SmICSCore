@@ -17,7 +17,7 @@ namespace WebApp.Test.DataServiceTest
     {
         [Theory]
         [ClassData(typeof(PatientMovementTestData))]
-        public void ProcessorTest(string ehrID, string station, DateTime starttime, DateTime endtime, int ResultSetID)
+        public void ProcessorTest(string ehrID, string station, DateTime starttime, DateTime endtime, int ResultSetID, int ehrNo)
         {
             RestDataAccess _data = TestConnection.Initialize();
 
@@ -28,7 +28,7 @@ namespace WebApp.Test.DataServiceTest
 
             PatientMovementFactory factory = new PatientMovementFactory(_data, NullLogger<PatientMovementFactory>.Instance);
             List<PatientMovementModel> actual = factory.ProcessFromStation(patientParams, station, starttime, endtime);
-            List<PatientMovementModel> expected = GetPatMovementFromStation(ResultSetID);
+            List<PatientMovementModel> expected = GetPatMovementFromStation(ResultSetID,  ehrNo);
 
             Assert.Equal(expected.Count, actual.Count);
 
@@ -51,18 +51,18 @@ namespace WebApp.Test.DataServiceTest
                 List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/EHRID_PatMovement.json");
 
                 int i = 0;
-                yield return new object[] { patient[i].EHR_ID, patient[i].StationID, patient[i].Beginn, patient[i].Ende , i };
+                yield return new object[] { patient[i].EHR_ID, patient[i].StationID, patient[i].Beginn, patient[i].Ende , i, i };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        private List<PatientMovementModel> GetPatMovementFromStation(int ResultSetID)
+        private List<PatientMovementModel> GetPatMovementFromStation(int ResultSetID, int ehrNo)
         {
             string testResultPath = "../../../../WebApp.Test/Resources/PatMovementTestResults.json";
             string parameterPath = "../../../../WebApp.Test/Resources/EHRID_PatMovement.json";
 
-            List<PatientMovementModel> result = ExpectedResultJsonReader.ReadResults<PatientMovementModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ExpectedType.PATIENT_MOVEMENT_FROM_STATION);
+            List<PatientMovementModel> result = ExpectedResultJsonReader.ReadResults<PatientMovementModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ehrNo, ExpectedType.PATIENT_MOVEMENT_FROM_STATION);
             return result;
         }
     }

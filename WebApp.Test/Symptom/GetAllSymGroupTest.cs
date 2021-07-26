@@ -16,6 +16,7 @@ using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.Patient_Stay.Count;
 using SmICSCoreLib.AQL.Patient_Stay.Cases;
 using System;
+using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 
 namespace WebApp.Test.Symptom
 {
@@ -58,10 +59,11 @@ namespace WebApp.Test.Symptom
         {
             IPatientMovementFactory patMoveFac = new PatientMovementFactory(rest, NullLogger<PatientMovementFactory>.Instance);
             IPatientLabordataFactory patLabFac = new PatientLabordataFactory(rest, NullLogger<PatientLabordataFactory>.Instance);
-            ISymptomFactory symptomFac = new SymptomFactory(rest);
+            ISymptomFactory symptomFac = new SymptomFactory(rest, NullLogger<SymptomFactory>.Instance);
             IMibiPatientLaborDataFactory mibiLabFac = new MibiPatientLaborDataFactory(rest);
+            IVaccinationFactory vaccFac = new VaccinationFactory(rest, NullLogger<VaccinationFactory>.Instance);
 
-            return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac);
+            return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac);
         }
 
 

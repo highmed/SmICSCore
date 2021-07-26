@@ -14,18 +14,19 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
 
         [Theory]
         [ClassData(typeof(LabTestData))]
-        public void ProcessorTest(string ehrID, int expectedResultSet)
+        public void ProcessorTest(int ehrNo, int expectedResultSet)
         {
             RestDataAccess _data = TestConnection.Initialize();
+            List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
 
             PatientListParameter patientParams = new PatientListParameter()
             {
-                patientList = new List<string>() { ehrID }
+                patientList = new List<string>() { patient[ehrNo].EHR_ID }
             };
 
             PatientLabordataFactory factory = new PatientLabordataFactory(_data, NullLogger<PatientLabordataFactory>.Instance);
             List<LabDataModel> actual = factory.Process(patientParams);
-            List<LabDataModel> expected = GetExpectedLabDataModels(expectedResultSet);
+            List<LabDataModel> expected = GetExpectedLabDataModels(expectedResultSet, ehrNo);
 
             Assert.Equal(expected.Count, actual.Count);
 
@@ -51,22 +52,21 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
-                for (int i = 0; i <= 17; i++)
+                for (int i = 16; i <= 33; i++)
                 {
-                    yield return new object[] { patient[i].EHR_ID, i };
+                    yield return new object[] { i, i };
                 }
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        private List<LabDataModel> GetExpectedLabDataModels(int ResultSetID)
+        private List<LabDataModel> GetExpectedLabDataModels(int ResultSetID, int ehrNo)
         {
             string path = "../../../../TestData/LabDataTestResults.json";
             string parameterPath = "../../../../TestData/GeneratedEHRIDs.json";
 
-            List<LabDataModel> result = ExpectedResultJsonReader.ReadResults<LabDataModel, PatientIDs > (path, parameterPath, ResultSetID, ExpectedType.LAB_DATA);
+            List<LabDataModel> result = ExpectedResultJsonReader.ReadResults<LabDataModel, PatientIDs>(path, parameterPath, ResultSetID, ehrNo, ExpectedType.LAB_DATA);
             return result;
 
         }

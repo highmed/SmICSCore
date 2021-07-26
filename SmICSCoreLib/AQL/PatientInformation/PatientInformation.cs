@@ -5,6 +5,7 @@ using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 using SmICSCoreLib.Util;
 using System;
 using System.Collections;
@@ -19,14 +20,15 @@ namespace SmICSCoreLib.AQL.PatientInformation
         private IPatientLabordataFactory _patLabFac;
         private IMibiPatientLaborDataFactory _mibiLabFac;
         private ISymptomFactory _symptomFac;
+        private IVaccinationFactory _vaccFac;
 
-        public PatientInformation(IPatientMovementFactory patMoveFac, IPatientLabordataFactory patLabFac, 
-                                    ISymptomFactory symptomFac, IMibiPatientLaborDataFactory mibiLabFac) 
+        public PatientInformation(IPatientMovementFactory patMoveFac, IPatientLabordataFactory patLabFac, ISymptomFactory symptomFac, IMibiPatientLaborDataFactory mibiLabFac, IVaccinationFactory vaccFac) 
         {
             _patMoveFac = patMoveFac;
             _patLabFac = patLabFac;
             _mibiLabFac = mibiLabFac;
             _symptomFac = symptomFac;
+            _vaccFac = vaccFac;
         }
        
         public List<PatientMovementModel> Patient_Bewegung_Ps(PatientListParameter parameter)
@@ -49,7 +51,7 @@ namespace SmICSCoreLib.AQL.PatientInformation
             return _mibiLabFac.Process(parameter);
         }
         
-        public List<SymptomModel> Patient_Symptom_TTPs(PatientListParameter parameter)
+        public List<SymptomModel> Patient_Symptom(PatientListParameter parameter)
         {
             return _symptomFac.Process(parameter);
         }
@@ -67,6 +69,11 @@ namespace SmICSCoreLib.AQL.PatientInformation
         public List<SymptomModel> Symptoms_By_PatientId(string patientId, DateTime datum)
         {
             return _symptomFac.SymptomByPatient(patientId, datum);
+        }
+
+        public List<VaccinationModel> Patient_Vaccination(PatientListParameter parameter)
+        {
+            return _vaccFac.Process(parameter);
         }
 
     }

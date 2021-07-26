@@ -12,13 +12,13 @@ namespace WebApp.Test.DataServiceTest
     {
         [Theory]
         [ClassData(typeof(CovidPatTestData))]
-        public void ProcessorTest( string nachweis, int ResultSetID)
+        public void ProcessorTest( string nachweis, int ResultSetID, int ehrNo)
         {
             RestDataAccess _data = TestConnection.Initialize();
 
             CountFactory factory = new CountFactory(_data);
             List<CountDataModel> actual = factory.Process(nachweis);
-            List<CountDataModel> expected = GetCovidPat(ResultSetID);
+            List<CountDataModel> expected = GetCovidPat(ResultSetID, ehrNo);
 
             Assert.Equal(expected.Count, actual.Count);
 
@@ -37,19 +37,19 @@ namespace WebApp.Test.DataServiceTest
             {
                 List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/EHRID_CovidPat.json");
 
-                yield return new object[] { "260373001", 0 };
+                yield return new object[] { "260373001", 0, 0};
 
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        private List<CountDataModel> GetCovidPat(int ResultSetID)
+        private List<CountDataModel> GetCovidPat(int ResultSetID, int ehrNo)
         {
             string testResultPath = "../../../../WebApp.Test/Resources/CovidPatTestResults.json";
             string parameterPath = "../../../../WebApp.Test/Resources/EHRID_CovidPat.json";
 
-            List<CountDataModel> result = ExpectedResultJsonReader.ReadResults<CountDataModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ExpectedType.COUNT_DATA_MODEL);
+            List<CountDataModel> result = ExpectedResultJsonReader.ReadResults<CountDataModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ehrNo, ExpectedType.COUNT_DATA_MODEL);
             return result;
         }
     }

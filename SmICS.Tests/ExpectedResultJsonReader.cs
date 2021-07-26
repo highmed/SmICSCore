@@ -4,17 +4,18 @@ using SmICSDataGenerator.Tests;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace SmICSFactory.Tests
 {
     public class ExpectedResultJsonReader
     {
-        public static List<T> ReadResults<T, U>(string testResultPath, string parameterPath, int resultNo, ExpectedType type) where U : new()
+        public static List<T> ReadResults<T, U>(string testResultPath, string parameterPath, int resultNo, int ehrNo, ExpectedType type) where U : new()
         {
             List<U> patients = SmICSCoreLib.JSONFileStream.JSONReader<U>.Read(parameterPath);
 
-            using (StreamReader reader = new (testResultPath, Encoding.UTF7))
+            using (StreamReader reader = new(testResultPath, Encoding.UTF7))
             {
                 string json = reader.ReadToEnd();
                 JObject jObject = JsonConvert.DeserializeObject<JObject>(json);
@@ -23,46 +24,59 @@ namespace SmICSFactory.Tests
                 switch (type)
                 {
                     case ExpectedType.PATIENT_MOVEMENT:
-                        if (patients[resultNo].GetType() == typeof(PatientIDs))
+                        if (patients[ehrNo].GetType() == typeof(PatientIDs))
                         {
-                            ParsePatientMovement(arr, patients[resultNo] as PatientIDs);
+                            ParsePatientMovement(arr, patients[ehrNo] as PatientIDs);
                         }
                         break;
                     case ExpectedType.LAB_DATA:
-                        if (patients[resultNo].GetType() == typeof(PatientIDs))
+                        if (patients[ehrNo].GetType() == typeof(PatientIDs))
                         {
-                            ParseLabData(arr, patients[resultNo] as PatientIDs);
+                            ParseLabData(arr, patients[ehrNo] as PatientIDs);
                         }
                         break;
                     case ExpectedType.STATIONARY:
-                        if (patients[resultNo].GetType() == typeof(PatientInfos))
-                        { 
-                            ParseStationaryPat(arr, patients[resultNo] as PatientInfos);
+                        if (patients[ehrNo].GetType() == typeof(PatientInfos))
+                        {
+                            ParseStationaryPatData(arr, patients[ehrNo] as PatientInfos);
                         }
                         break;
+                    case ExpectedType.PATIENT_SYMPTOM:
+                        if (patients[ehrNo].GetType() == typeof(PatientIDs))
+                        {
+                            ParsePatientSymptom(arr, patients[ehrNo] as PatientIDs);
+                        }
+                        break;
+                    case ExpectedType.PATIENT_VACCINATION:
+                        if (patients[ehrNo].GetType() == typeof(PatientIDs))
+                        {
+                            ParsePatientVaccination(arr, patients[ehrNo] as PatientIDs);
+                        }
+                        break;
+
                     case ExpectedType.PATIENT_MOVEMENT_FROM_STATION:
-                        if (patients[resultNo].GetType() == typeof(PatientInfos))
+                        if (patients[ehrNo].GetType() == typeof(PatientInfos))
                         {
                             ParsePatMovementFromStation(arr, patients[resultNo] as PatientInfos);
                         }
                         break;
                     case ExpectedType.COUNT_DATA_MODEL:
-                        if (patients[resultNo].GetType() == typeof(PatientInfos))
+                        if (patients[ehrNo].GetType() == typeof(PatientInfos))
                         {
                             ParseGetCovidPat(arr);
                         }
                         break;
                     case ExpectedType.SYMPTOM_MODEL:
-                        if (patients[resultNo].GetType() == typeof(PatientInfos))
+                        if (patients[ehrNo].GetType() == typeof(PatientInfos))
                         {
                             ParseSymptomeData(arr, patients[resultNo] as PatientInfos);
                         }
                         break;
                 }
-
                 return arr.ToObject<List<T>>();
-            }
+            }    
         }
+
 
         private static void ParsePatientMovement(JArray array, PatientIDs id)
         {
@@ -94,6 +108,50 @@ namespace SmICSFactory.Tests
             }
         }
 
+        private static void ParsePatientSymptom(JArray array, PatientIDs id)
+        {
+            foreach (JObject obj in array)
+            {
+                obj.Add(new JProperty("PatientenID", id.EHR_ID));
+                obj.Property("BefundDatum").Value = DateTime.Parse(obj.Property("BefundDatum").Value.ToString());
+                obj.Property("Beginn").Value = DateTime.Parse(obj.Property("Beginn").Value.ToString());
+
+                if (obj.Property("Rueckgang").Value.Type == JTokenType.Null)
+                {
+                    obj.Property("Rueckgang").Value = DateTime.Now;
+                }
+                else
+                {
+                    obj.Property("Rueckgang").Value = DateTime.Parse(obj.Property("Rueckgang").Value.ToString());
+                }
+            }
+        }
+
+        private static void ParsePatientVaccination(JArray array, PatientIDs id)
+        {
+            foreach (JObject obj in array)
+            {
+                obj.Add(new JProperty("PatientenID", id.EHR_ID));
+                obj.Property("DokumentationsID").Value = DateTime.Parse(obj.Property("DokumentationsID").Value.ToString());
+            }
+        }
+
+        private static void ParseStationaryPatData(JArray array, PatientInfos info)
+        {
+            foreach (JObject obj in array)
+            {
+                obj.Add(new JProperty("PatientID", info.EHR_ID));
+                obj.Add(new JProperty("FallID", info.FallID));
+                obj.Property("Datum_Uhrzeit_der_Aufnahme").Value = DateTime.Parse(obj.Property("Datum_Uhrzeit_der_Aufnahme").Value.ToString());
+                obj.Property("Datum_Uhrzeit_der_Entlassung").Value = DateTime.Parse(obj.Property("Datum_Uhrzeit_der_Entlassung").Value.ToString());
+                obj.Property("Aufnahmeanlass").Value = obj.Property("Aufnahmeanlass").Value;
+                obj.Property("Art_der_Entlassung").Value = obj.Property("Art_der_Entlassung").Value;
+                obj.Property("Versorgungsfallgrund").Value = obj.Property("Versorgungsfallgrund").Value;
+                //obj.Property("Station").Value = obj.Property("Station").Value;
+
+            }
+        }
+        
         private static void ParseStationaryPat(JArray array, PatientInfos info)
         {
             foreach (JObject obj in array)
@@ -103,7 +161,7 @@ namespace SmICSFactory.Tests
                     obj.Add(new JProperty("PatientID", info.EHR_ID));
                     obj.Add(new JProperty("FallID", info.FallID));
                 }
-                
+
                 obj.Property("Datum_Uhrzeit_der_Aufnahme").Value = DateTime.Parse(obj.Property("Datum_Uhrzeit_der_Aufnahme").Value.ToString());
                 obj.Property("Datum_Uhrzeit_der_Entlassung").Value = DateTime.Parse(obj.Property("Datum_Uhrzeit_der_Entlassung").Value.ToString());
                 obj.Property("Aufnahmeanlass").Value = obj.Property("Aufnahmeanlass").Value;
@@ -122,7 +180,7 @@ namespace SmICSFactory.Tests
                 obj.Add(new JProperty("StationID", info.StationID));
                 obj.Add(new JProperty("Beginn", info.Beginn));
                 obj.Add(new JProperty("Ende", info.Ende));
-              
+
                 obj.Property("FallID").Value = obj.Property("FallID").Value;
                 obj.Property("Bewegungsart_l").Value = obj.Property("Bewegungsart_l").Value;
                 obj.Property("Raum").Value = obj.Property("Raum").Value;
@@ -139,7 +197,7 @@ namespace SmICSFactory.Tests
                 obj.Property("PatientID").Value = obj.Property("PatientID").Value;
                 obj.Property("Fallkennung").Value = obj.Property("Fallkennung").Value;
                 obj.Property("Zeitpunkt_des_Probeneingangs").Value = obj.Property("Zeitpunkt_des_Probeneingangs").Value;
-           }
+            }
         }
 
         private static void ParseSymptomeData(JArray array, PatientInfos info)
@@ -165,8 +223,10 @@ namespace SmICSFactory.Tests
                     obj.Property("Rueckgang").Value = DateTime.Parse(obj.Property("Rueckgang").Value.ToString());
                     obj.Property("PatientenID").Value = obj.Property("PatientenID").Value;
                 }
-               
+
             }
         }
     }
+
 }
+
