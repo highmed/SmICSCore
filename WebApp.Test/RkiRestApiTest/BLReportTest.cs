@@ -1,4 +1,5 @@
-﻿using SmICSCoreLib.StatistikDataModels;
+﻿using SmICSCoreLib.JSONFileStream;
+using SmICSCoreLib.StatistikDataModels;
 using SmICSCoreLib.StatistikServices;
 using System;
 using Xunit;
@@ -50,13 +51,20 @@ namespace WebApp.Test
         [Fact]
         public void UpdateBlRkidataTest()
         {
+            //string pathFile = @"../../../../WebApp.Test/Resources";
+            //Report report = rkiRestApi.GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile",
+            //                                       2, 2, 3, 1, 422);
+            //JSONWriter.Write(report, pathFile, "BLReport");
+
             string dailyReportPath = @"../../../../WebApp.Test/Resources/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
-            string BLReportPath    = @"../../../../WebApp.Test/Resources/BLReport.json";
+            string BLReportPath = @"../../../../WebApp.Test/Resources/BLReport.json";
             string targetPath = @"../../../../WebApp.Test/Resources";
             string blFilename = ("BLReport");
             bool status = rkiRestApi.UpdateBlRkidata(dailyReportPath, BLReportPath, targetPath, blFilename);
 
             Assert.True(status);
+            //Assert.NotNull(report);
+
         }
 
     }
