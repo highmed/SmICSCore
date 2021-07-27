@@ -10,6 +10,7 @@ namespace SmICSFactory.Tests
         COUNT_DATA_MODEL,
         SYMPTOM_MODEL,
         PATIENT_SYMPTOM,
-        PATIENT_VACCINATION
+        PATIENT_VACCINATION,
+        PATIENT
     }
 }

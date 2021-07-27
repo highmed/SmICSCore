@@ -72,6 +72,12 @@ namespace SmICSFactory.Tests
                             ParseSymptomeData(arr, patients[resultNo] as PatientInfos);
                         }
                         break;
+                    case ExpectedType.PATIENT:
+                        if (patients[ehrNo].GetType() == typeof(PatientInfos))
+                        {
+                            ParsePatNoskumal(arr, patients[resultNo] as PatientInfos);
+                        }
+                        break;
                 }
                 return arr.ToObject<List<T>>();
             }    
@@ -226,6 +232,19 @@ namespace SmICSFactory.Tests
 
             }
         }
+
+        private static void ParsePatNoskumal(JArray array, PatientInfos info)
+        {
+            foreach (JObject obj in array)
+            {
+                obj.Property("PatientID").Value = obj.Property("PatientID").Value;
+                obj.Property("Aufnahme").Value = DateTime.Parse(obj.Property("Aufnahme").Value.ToString());
+                obj.Property("Entlastung").Value = DateTime.Parse(obj.Property("Entlastung").Value.ToString());
+                obj.Property("Probenentnahme").Value = DateTime.Parse(obj.Property("Probenentnahme").Value.ToString());
+            }
+        }
+
+
     }
 
 }
