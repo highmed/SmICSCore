@@ -94,16 +94,6 @@ namespace SmICSFactory.Tests
             {
                 obj.Add(new JProperty("PatientenID", id.EHR_ID));
                 obj.Property("BefundDatum").Value = DateTime.Parse(obj.Property("BefundDatum").Value.ToString());
-                obj.Property("Beginn").Value = DateTime.Parse(obj.Property("Beginn").Value.ToString());
-
-                if (obj.Property("Rueckgang").Value.Type == JTokenType.Null)
-                {
-                    obj.Property("Rueckgang").Value = DateTime.Now;
-                }
-                else
-                {
-                    obj.Property("Rueckgang").Value = DateTime.Parse(obj.Property("Rueckgang").Value.ToString());
-                }
             }
         }
 

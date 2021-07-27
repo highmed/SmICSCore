@@ -6,6 +6,7 @@ using SmICSFactory.Tests;
 using System.Collections;
 using System.Collections.Generic;
 using Xunit;
+using System.Text.RegularExpressions;
 
 
 namespace SmICSDataGenerator.Tests.PatientInformationTests
@@ -34,15 +35,15 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
             {
                 Assert.Equal(expected[i].PatientenID, actual[i].PatientenID);
                 Assert.Equal(expected[i].BefundDatum.ToString("s"), actual[i].BefundDatum.ToUniversalTime().ToString("s"));
-                Assert.Equal(expected[i].NameDesSymptoms, actual[i].NameDesSymptoms);
-                Assert.Equal(expected[i].Lokalisation, actual[i].Lokalisation);
-                Assert.Equal(expected[i].Beginn.ToString("s"), actual[i].Beginn.ToUniversalTime().ToString("s"));
-                Assert.Equal(expected[i].Schweregrad, actual[i].Schweregrad);
-                Assert.Equal(expected[i].Rueckgang.ToString("s"), actual[i].Rueckgang.ToUniversalTime().ToString("s"));
-                Assert.Equal(expected[i].AusschlussAussage, actual[i].AusschlussAussage);
-                Assert.Equal(expected[i].Diagnose, actual[i].Diagnose);
-                Assert.Equal(expected[i].UnbekanntesSymptom, actual[i].UnbekanntesSymptom);
-                Assert.Equal(expected[i].AussageFehlendeInfo, actual[i].AussageFehlendeInfo);
+                Assert.Equal(expected[i].NameDesSymptoms == null ? null : Regex.Replace(expected[i].NameDesSymptoms, @"\s", ""), actual[i].NameDesSymptoms == null ? null : Regex.Replace(actual[i].NameDesSymptoms, @"\s", ""));
+                Assert.Equal(expected[i].Lokalisation == null ? null : Regex.Replace(expected[i].Lokalisation, @"\s", ""), actual[i].Lokalisation == null ? null : Regex.Replace(actual[i].Lokalisation, @"\s", ""));
+                Assert.Equal(expected[i].Beginn.Value.ToString("s"), actual[i].Beginn.Value.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].Schweregrad == null ? null : Regex.Replace(expected[i].Schweregrad, @"\s", ""), actual[i].Schweregrad == null ? null : Regex.Replace(actual[i].Schweregrad, @"\s", ""));
+                Assert.Equal(expected[i].Rueckgang.Value.ToString("s"), actual[i].Rueckgang.Value.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].AusschlussAussage == null ? null : Regex.Replace(expected[i].AusschlussAussage, @"\s", ""), actual[i].AusschlussAussage == null ? null : Regex.Replace(actual[i].AusschlussAussage, @"\s", ""));
+                Assert.Equal(expected[i].Diagnose == null ? null : Regex.Replace(expected[i].Diagnose, @"\s", ""), actual[i].Diagnose == null ? null : Regex.Replace(actual[i].Diagnose, @"\s", ""));
+                Assert.Equal(expected[i].UnbekanntesSymptom == null ? null : Regex.Replace(expected[i].UnbekanntesSymptom, @"\s", ""), actual[i].UnbekanntesSymptom == null ? null : Regex.Replace(actual[i].UnbekanntesSymptom, @"\s", ""));
+                Assert.Equal(expected[i].AussageFehlendeInfo == null ? null : Regex.Replace(expected[i].AussageFehlendeInfo, @"\s", ""), actual[i].AussageFehlendeInfo == null ? null : Regex.Replace(actual[i].AussageFehlendeInfo, @"\s", ""));
             }
         }
 

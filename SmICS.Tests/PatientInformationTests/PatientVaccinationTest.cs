@@ -6,6 +6,7 @@ using SmICSFactory.Tests;
 using System.Collections;
 using System.Collections.Generic;
 using Xunit;
+using System.Text.RegularExpressions;
 
 
 namespace SmICSDataGenerator.Tests.PatientInformationTests
@@ -34,11 +35,11 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
             {
                 Assert.Equal(expected[i].PatientenID, actual[i].PatientenID);
                 Assert.Equal(expected[i].DokumentationsID.ToString("s"), actual[i].DokumentationsID.ToUniversalTime().ToString("s"));
-                Assert.Equal(expected[i].Impfstoff, actual[i].Impfstoff);
-                Assert.Equal(expected[i].Dosierungsreihenfolge, actual[i].Dosierungsreihenfolge);
-                Assert.Equal(expected[i].Dosiermenge, actual[i].Dosiermenge);
-                Assert.Equal(expected[i].ImpfungGegen, actual[i].ImpfungGegen);
-                Assert.Equal(expected[i].Abwesendheit, actual[i].Abwesendheit);
+                Assert.Equal(Regex.Replace(expected[i].Impfstoff, @"\s", ""), Regex.Replace(actual[i].Impfstoff, @"\s", ""));
+                Assert.Equal(expected[i].Dosierungsreihenfolge.ToString(), actual[i].Dosierungsreihenfolge);
+                Assert.Equal(expected[i].Dosiermenge.ToString(), actual[i].Dosiermenge);
+                Assert.Equal(Regex.Replace(expected[i].ImpfungGegen, @"\s", ""), Regex.Replace(actual[i].ImpfungGegen, @"\s", ""));
+                Assert.Equal(expected[i].Abwesendheit == null ? null : Regex.Replace(expected[i].Abwesendheit, @"\s", ""), actual[i].Abwesendheit == null ? null : Regex.Replace(actual[i].Abwesendheit, @"\s", ""));
             }
         }
 
@@ -52,11 +53,11 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                 yield return new object[] { 3, 3 };
                 yield return new object[] { 13, 4 };
                 yield return new object[] { 15, 5 };
-                //yield return new object[] { 17, 6 };
-                //yield return new object[] { 18, 7 };
-                //yield return new object[] { 19, 8 };
-                //yield return new object[] { 20, 9 };
-                //yield return new object[] { 21, 10 };
+                yield return new object[] { 16, 6 };
+                yield return new object[] { 17, 7 };
+                yield return new object[] { 18, 8 };
+                yield return new object[] { 19, 9 };
+                yield return new object[] { 20, 10 };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

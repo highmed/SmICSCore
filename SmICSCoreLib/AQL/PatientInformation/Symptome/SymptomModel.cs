@@ -7,7 +7,7 @@ namespace SmICSCoreLib.AQL.PatientInformation.Symptome
 {
     public class SymptomModel
     {
-        [JsonProperty(PropertyName ="PatientenID")]
+        [JsonProperty(PropertyName = "PatientenID")]
         public string PatientenID { get; set; }
 
         [JsonProperty(PropertyName = "BefundID")]
@@ -16,18 +16,14 @@ namespace SmICSCoreLib.AQL.PatientInformation.Symptome
         public DateTime BefundDatum { get; set; }
         [JsonProperty(PropertyName = "NameDesSymptoms")]
         public string NameDesSymptoms { get; set; }
-
-        [JsonProperty(PropertyName = "Anzahl_Patienten")]
-        public int Anzahl_Patienten { get; set; }
-
         [JsonProperty(PropertyName = "Lokalisation")]
         public string Lokalisation { get; set; }
         [JsonProperty(PropertyName = "Beginn")]
-        public DateTime Beginn { get; set; }
+        public Nullable<DateTime> Beginn { get; set; } = null;
         [JsonProperty(PropertyName = "Schweregrad")]
         public string Schweregrad { get; set; }
         [JsonProperty(PropertyName = "Rueckgang")]
-        public DateTime Rueckgang { get; set; }
+        public Nullable<DateTime> Rueckgang { get; set; } = null;
         [JsonProperty(PropertyName = "AusschlussAussage")]
         public string AusschlussAussage { get; set; }
         [JsonProperty(PropertyName = "Diagnose")]

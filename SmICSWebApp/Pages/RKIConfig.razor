@@ -6,6 +6,7 @@
 @using Newtonsoft.Json.Linq
 @using SmICSWebApp.Data
 
+
 @inject RKIConfigService RKIConfigService
 
 
@@ -122,24 +123,10 @@
 
     private RenderFragment CreateComponent(RKIConfigTemplate RKIConfigFormAdds, int ID) => builder =>
     {
-        var propGetExpr = System.Linq.Expressions.Expression.Property(System.Linq.Expressions.Expression.Constant(RKIConfigFormAdds), "Station");
-        var StationExpr = System.Linq.Expressions.Expression.Lambda<Func<System.String>>(propGetExpr);
-        propGetExpr = System.Linq.Expressions.Expression.Property(System.Linq.Expressions.Expression.Constant(RKIConfigFormAdds), "Erreger");
-        var ErregerExpr = System.Linq.Expressions.Expression.Lambda<Func<System.String>>(propGetExpr);
-        propGetExpr = System.Linq.Expressions.Expression.Property(System.Linq.Expressions.Expression.Constant(RKIConfigFormAdds), "Zeitraum");
-        var ZeitraumExpr = System.Linq.Expressions.Expression.Lambda<Func<System.String>>(propGetExpr);
-
-
         builder.OpenComponent<RKIConfigRules>(0);
         builder.AddAttribute(0, "Station", RKIConfigFormAdds.Station);
-        //builder.AddAttribute(0, "StationChanged", EventCallback.Factory.Create<System.String>(this, str => RKIConfigFormAdds.Station = str));
-        //builder.AddAttribute(0, "StationExpression", StationExpr);
         builder.AddAttribute(0, "Erreger", RKIConfigFormAdds.Erreger);
-        //builder.AddAttribute(0, "ErregerChanged", EventCallback.Factory.Create<System.String>(this, str => RKIConfigFormAdds.Erreger = str));
-        //builder.AddAttribute(0, "ErregerExpression", ErregerExpr);
         builder.AddAttribute(0, "Zeitraum", RKIConfigFormAdds.Zeitraum);
-        //builder.AddAttribute(0, "ZeitraumChanged", EventCallback.Factory.Create<System.String>(this, str => RKIConfigFormAdds.Zeitraum = str));
-        //builder.AddAttribute(0, "ZeitraumExpression", ZeitraumExpr);
         builder.AddAttribute(0, "Retro", RKIConfigFormAdds.Retro);
         builder.AddAttribute(0, "ID", ID);
         builder.CloseComponent();

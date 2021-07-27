@@ -1,4 +1,5 @@
-﻿
+﻿@using SmICSCoreLib.AQL.PatientInformation.PatientMovement
+
 <div id="div_card_5">
     <div>
         <label for="Station" class="tb-bez-header">Station</label>
@@ -8,9 +9,9 @@
             <option selected disabled>Bitte wählen Sie aus</option>
             <option value="Gesamtklink">Gesamtklink</option>
             @*@foreach (var item in station)
-        {
-            <option value="@item">@item</option>
-        }*@
+                {
+                    <option value="@item">@item</option>
+                }*@
         </InputSelect>
     </div>
 </div>
@@ -75,7 +76,17 @@
     [Parameter]
     public int ID { get; set; }
 
-    //List<SymptomModel> patListBySym;
+    List<PatientMovementModel> StationList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Run(GetAllStations);
+    }
+
+    private void GetAllStations()
+    {
+
+    }
 
     void CheckboxClicked(object checkedValue)
     {
