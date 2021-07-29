@@ -42,6 +42,8 @@ namespace WebApp.Test
             string BLReportPath = @"../../../../WebApp.Test/Resources/LKReport.json";
             string targetPath = @"../../../../WebApp.Test/Resources";
             string blFilename = ("LKReport");
+            rkiRestApi.SerializeRkiData(targetPath);
+
             bool status = rkiRestApi.UpdateLklRkidata(dailyReportPath, BLReportPath, targetPath, blFilename);
 
             Assert.True(status);

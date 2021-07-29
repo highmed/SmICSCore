@@ -36,7 +36,7 @@ namespace WebApp.Test.Symptom
 
         private class SymptomTestData : IEnumerable<object[]>
         {
-            List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/Symptome.json");
+            List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/Symptome_Group.json");
 
             public IEnumerator<object[]> GetEnumerator()
             {
@@ -49,7 +49,7 @@ namespace WebApp.Test.Symptom
         private List<SymptomModel> GetSymptom(int ResultSetID, int ehrNo)
         {
             string testResultPath = "../../../../WebApp.Test/Resources/SymptomResults.json";
-            string parameterPath = "../../../../WebApp.Test/Resources/Symptome.json";
+            string parameterPath = "../../../../WebApp.Test/Resources/Symptome_Group.json";
 
             List<SymptomModel> result = ExpectedResultJsonReader.ReadResults<SymptomModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ehrNo, ExpectedType.SYMPTOM_MODEL);
             return result;

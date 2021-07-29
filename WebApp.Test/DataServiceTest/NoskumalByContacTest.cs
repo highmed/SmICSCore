@@ -1,8 +1,6 @@
 ﻿using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using SmICSDataGenerator.Tests;
 using System.Collections.Generic;
-using SmICSFactory.Tests;
-using System.Collections;
 using SmICSCoreLib.REST;
 using SmICSCoreLib.StatistikServices;
 using Xunit;
@@ -21,9 +19,8 @@ namespace WebApp.Test.DataServiceTest
 {
     public class NoskumalByContactTest
     {
-        [Theory]
-        [ClassData(typeof(SymptomTestData))]
-        public void ProcessorTest(int ResultSetID, int ehrNo)
+        [Fact]
+        public void ProcessorTest()
         {
             RestDataAccess _data = TestConnection.Initialize();
 
@@ -34,7 +31,7 @@ namespace WebApp.Test.DataServiceTest
             List<Patient> noskumalList = dataService.GetAllNoskumalPat(positivPatList);
 
             List<Patient> actual = dataService.GetNoskumalByContact(noskumalList, positivPatList);
-            List<Patient> expected = GetPatient(ResultSetID, ehrNo);
+            List<Patient> expected = GetPatientList();
 
             Assert.Equal(expected.Count, actual.Count);
             
@@ -59,23 +56,10 @@ namespace WebApp.Test.DataServiceTest
             return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac);
         }
 
-
-        private class SymptomTestData : IEnumerable<object[]>
+        private List<Patient> GetPatientList()
         {
-            public IEnumerator<object[]> GetEnumerator()
-            {
-                yield return new object[] { 0, 0 };
-            }
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        }
-
-        private List<Patient> GetPatient(int ResultSetID, int ehrNo)
-        {
-            string testResultPath = "../../../../WebApp.Test/Resources/NoskPatByContactTestResults.json";
-            string parameterPath = "../../../../WebApp.Test/Resources/EHRID_NoskumalPat.json";
-
-            List<Patient> result = ExpectedResultJsonReader.ReadResults<Patient, PatientInfos>(testResultPath, parameterPath, ResultSetID, ehrNo, ExpectedType.PATIENT);
-            return result;
+            List<Patient> patientList = new();
+            return patientList;
         }
     }
 }

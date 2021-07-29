@@ -36,5 +36,13 @@ namespace SmICSCoreLib.AQL.PatientInformation.Symptome
         public string UnbekanntesSymptom { get; set; }
         [JsonProperty(PropertyName = "AussageFehlendeInfo")]
         public string AussageFehlendeInfo { get; set; }
+
+        public SymptomModel(){}
+
+        public SymptomModel(string nameDesSymptoms, int anzahl_Patienten)
+        {
+            NameDesSymptoms = nameDesSymptoms;
+            Anzahl_Patienten = anzahl_Patienten;
+        }
     }
 }

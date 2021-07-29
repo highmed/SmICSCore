@@ -1,10 +1,5 @@
 [
   {
-    "EHR_ID": "eae9b822-6015-430c-a694-123249e977eb",
-    "FallID": "00000027",
-    "Datum_Uhrzeit_der_Aufnahme": "2020-02-09T12:13:00"
-  },
-  {
     "EHR_ID": "f7f106b1-3aef-481e-aa76-af9092dc63dc",
     "FallID": "00000020",
     "Datum_Uhrzeit_der_Aufnahme": "2020-11-28T12:13:00"

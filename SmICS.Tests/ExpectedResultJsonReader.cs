@@ -146,15 +146,22 @@ namespace SmICSFactory.Tests
         {
             foreach (JObject obj in array)
             {
-                obj.Add(new JProperty("PatientID", info.EHR_ID));
-                obj.Add(new JProperty("FallID", info.FallID));
-                obj.Property("Datum_Uhrzeit_der_Aufnahme").Value = DateTime.Parse(obj.Property("Datum_Uhrzeit_der_Aufnahme").Value.ToString());
+                if (info.EHR_ID != null)
+                {
+                    obj.Add(new JProperty("PatientID", info.EHR_ID));
+                    obj.Add(new JProperty("FallID", info.FallID));
+                    obj.Add(new JProperty("Datum_Uhrzeit_der_Aufnahme", info.Datum_Uhrzeit_der_Aufnahme));
+                }
+                else
+                {
+                    obj.Property("PatientID").Value = obj.Property("PatientID").Value;
+                    obj.Property("FallID").Value = obj.Property("FallID").Value;
+                    obj.Property("Datum_Uhrzeit_der_Aufnahme").Value = DateTime.Parse(obj.Property("Datum_Uhrzeit_der_Aufnahme").Value.ToString());
+                }
                 obj.Property("Datum_Uhrzeit_der_Entlassung").Value = DateTime.Parse(obj.Property("Datum_Uhrzeit_der_Entlassung").Value.ToString());
                 obj.Property("Aufnahmeanlass").Value = obj.Property("Aufnahmeanlass").Value;
                 obj.Property("Art_der_Entlassung").Value = obj.Property("Art_der_Entlassung").Value;
-                obj.Property("Versorgungsfallgrund").Value = obj.Property("Versorgungsfallgrund").Value;
-                //obj.Property("Station").Value = obj.Property("Station").Value;
-
+                obj.Property("Versorgungsfallgrund").Value = obj.Property("Versorgungsfallgrund").Value;    
             }
         }
         
@@ -173,7 +180,6 @@ namespace SmICSFactory.Tests
                 obj.Property("Aufnahmeanlass").Value = obj.Property("Aufnahmeanlass").Value;
                 obj.Property("Art_der_Entlassung").Value = obj.Property("Art_der_Entlassung").Value;
                 obj.Property("Versorgungsfallgrund").Value = obj.Property("Versorgungsfallgrund").Value;
-                //obj.Property("Station").Value = obj.Property("Station").Value;
 
             }
         }
@@ -185,8 +191,7 @@ namespace SmICSFactory.Tests
                 obj.Add(new JProperty("PatientID", info.EHR_ID));
                 obj.Add(new JProperty("StationID", info.StationID));
                 obj.Add(new JProperty("Beginn", info.Beginn));
-                obj.Add(new JProperty("Ende", info.Ende));
-
+                obj.Property("Ende").Value = DateTime.Parse(obj.Property("Ende").Value.ToString());
                 obj.Property("FallID").Value = obj.Property("FallID").Value;
                 obj.Property("Bewegungsart_l").Value = obj.Property("Bewegungsart_l").Value;
                 obj.Property("Raum").Value = obj.Property("Raum").Value;

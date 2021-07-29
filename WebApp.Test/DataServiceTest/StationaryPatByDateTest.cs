@@ -22,28 +22,27 @@ namespace WebApp.Test.DataServiceTest
             List<StationaryDataModel> actual = factory.ProcessFromDate(dateTime);
             List<StationaryDataModel> expected = GetExpectedStationaryDataModels(expectedResultSet, ehrNo);
 
-            int i = 0;
-            //Assert.Equal(expected.Count, actual.Count);
-            //Assert.Equal(expected[i].PatientID, actual[i].PatientID);
-            //Assert.Equal(expected[i].FallID, actual[i].FallID);
-            //Assert.Equal(expected[i].Datum_Uhrzeit_der_Entlassung, actual[i].Datum_Uhrzeit_der_Entlassung);
-
-            Assert.Equal(expected[i].Versorgungsfallgrund, actual[i].Versorgungsfallgrund);
-            Assert.Equal(expected[i].Aufnahmeanlass, actual[i].Aufnahmeanlass);
-            Assert.Equal(expected[i].Art_der_Entlassung, actual[i].Art_der_Entlassung);
- 
+            Assert.Equal(expected.Count, actual.Count);
+            for (int i = 0; i < expected.Count; i++)
+            {
+                Assert.Equal(expected[i].PatientID, actual[i].PatientID);
+                Assert.Equal(expected[i].FallID, actual[i].FallID);
+                //Assert.Equal(expected[i].Datum_Uhrzeit_der_Aufnahme, actual[i].Datum_Uhrzeit_der_Aufnahme);
+                //Assert.Equal(expected[i].Datum_Uhrzeit_der_Entlassung, actual[i].Datum_Uhrzeit_der_Entlassung);
+                Assert.Equal(expected[i].Versorgungsfallgrund, actual[i].Versorgungsfallgrund);
+                Assert.Equal(expected[i].Aufnahmeanlass, actual[i].Aufnahmeanlass);
+                Assert.Equal(expected[i].Art_der_Entlassung, actual[i].Art_der_Entlassung);
+            }
         }
 
         private class StationaryTestData : IEnumerable<object[]>
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                List<PatientInfos> patientInfos = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/EHRID_Stationary.json");
-                
+                List<PatientInfos> patientInfos = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/EHRID_Stationary.json");              
                 int i = 0;
                 yield return new object[] { patientInfos[i].Datum_Uhrzeit_der_Aufnahme, i, i };
             }
-
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 

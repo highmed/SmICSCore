@@ -36,10 +36,12 @@ namespace WebApp.Test.DataServiceTest
             Assert.Equal(expected[i].PatientID, actual[i].PatientID);
             Assert.Equal(expected[i].FallID, actual[i].FallID);
             Assert.Equal(expected[i].Bewegungsart_l, actual[i].Bewegungsart_l);
-            Assert.Equal(expected[i].Beginn.ToString("s"), actual[i].Beginn.ToString("s"));
-            //Assert.Equal(expected[i].Ende.ToString("g"), actual[i].Ende.ToString("g"));
+            Assert.Equal(expected[i].Beginn.ToString("yyyy-MM-dd"), actual[i].Beginn.ToString("yyyy-MM-dd"));
+            Assert.Equal(expected[i].Ende.ToString("yyyy-MM-dd"), actual[i].Ende.ToString("yyyy-MM-dd"));
             Assert.Equal(expected[i].StationID, actual[i].StationID);
             Assert.Equal(expected[i].Raum, actual[i].Raum);
+            //Assert.Equal(expected[i].Fachabteilung, actual[i].Fachabteilung);
+            Assert.Equal(expected[i].FachabteilungsID, actual[i].FachabteilungsID);
 
         }
 
@@ -49,7 +51,6 @@ namespace WebApp.Test.DataServiceTest
             public IEnumerator<object[]> GetEnumerator()
             {
                 List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/EHRID_PatMovement.json");
-
                 int i = 0;
                 yield return new object[] { patient[i].EHR_ID, patient[i].StationID, patient[i].Beginn, patient[i].Ende , i, i };
             }

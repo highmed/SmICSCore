@@ -1,12 +1,6 @@
 {
   "0": [
     {
-      "Datum_Uhrzeit_der_Entlassung": "2020-03-04T12:13:00",
-      "Aufnahmeanlass": "Einweisung durch einen Arzt",
-      "Art_der_Entlassung": "Behandlung regulär beendet",
-      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär"
-    },
-    {
       "Datum_Uhrzeit_der_Entlassung": "2020-12-12T12:13:00",
       "Aufnahmeanlass": "Einweisung durch einen Arzt",
       "Art_der_Entlassung": "Behandlung regulär beendet",

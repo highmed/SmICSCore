@@ -470,8 +470,8 @@
 
     private void SetRKIData()
     {
-
-        bool check = rkiService.SerializeRkiData();
+        string path = @"../SmICSWebApp/Resources/statistik/json";
+        bool check = rkiService.SerializeRkiData(path);
         if (check == false)
         {
             status = false;

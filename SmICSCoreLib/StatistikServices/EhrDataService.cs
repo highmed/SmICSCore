@@ -24,7 +24,7 @@ namespace SmICSCoreLib.StatistikServices
 
         //Load EhrData
 
-        //Liste alle Stationär behandelte Patienten druch PatientId, FallID und Datum.
+        //Liste alle Stationaer behandelte Patienten mit: PatientID, FallID und Datum.
         public List<StationaryDataModel> StationaryPatForNosku(string patientID, string fallID, DateTime datum)
         {
             try
@@ -38,7 +38,7 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        //Liste Stationär behandelte Patienten druch PatientId und FallID
+        //Liste Stationaer behandelte Patienten mit: PatientId und FallID.
         public List<StationaryDataModel> StationaryPatByCaseID(string patientID, string fallID)
         {
             try
@@ -52,7 +52,7 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        //Liste alle Stationär behandelte Patienten druch PatientId, FallID und Datum.
+        //Liste alle Stationaer behandelte Patienten mit: Datum.
         public List<StationaryDataModel> StationaryPatByDate(DateTime datum)
         {
             try
@@ -66,6 +66,7 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
+        // Liste Patientenbewegungen mit: PatientIDs
         public List<PatientMovementModel> GetPatMovement(string patientId)
         {
             List<string> patientList = new();
@@ -76,7 +77,7 @@ namespace SmICSCoreLib.StatistikServices
             return patientMovement;
         }
 
-        // Get all patientmovements by patientID, Station, Starttime and Endtime
+        // Liste Patientenbewegungen mit: PatientID, Station, Starttime and Endtime
         public List<PatientMovementModel> GetPatMovementFromStation(List<string> patientList, string station, DateTime starttime, DateTime endtime)
         {
             PatientListParameter patListParameter = new();
@@ -85,18 +86,28 @@ namespace SmICSCoreLib.StatistikServices
             return patientMovement;
         }
 
+        // Liste CovidPatienten mit: BefundNachweis
         public List<CountDataModel> GetCovidPat(string nachweis)
         {
             List<CountDataModel> covidPat = _patinet_Stay.CovidPat(nachweis);
             return covidPat;
         }
 
+        // Liste alle positive Tests mit: PositiveNachweis
         public List<CountDataModel> GetAllPositivTest()
         {
             List<CountDataModel> allPositivTest = GetCovidPat("260373001");
             return allPositivTest;
         }
 
+        // Liste alle negative Tests mit: NegativeNachweis
+        public List<CountDataModel> GetAllNegativTest()
+        {
+            List<CountDataModel> allNegativPat = GetCovidPat("260415000");
+            return allNegativPat;
+        }
+
+        // Liste alle Patienten die einmal positive oder negative waren: Liste positive/negative Patienten
         public List<CountDataModel> GetAllPatByTest(List<CountDataModel> allTest)
         {
             List<CountDataModel> testPat = new();
@@ -120,14 +131,8 @@ namespace SmICSCoreLib.StatistikServices
             return testPat;
         }
 
-        public List<CountDataModel> GetAllNegativTest()
-        {
-            List<CountDataModel> allNegativPat = GetCovidPat("260415000");
-            return allNegativPat;
-        }
-
-
         //Noskumale Regeln
+        //1.Regel Stationaer Behandlung, keine Symptome bei Aufnahme und positive Test ab Tag 4.
         public List<Patient> GetAllNoskumalPat(List<CountDataModel> positivPatList)
         {
             SymptomService symptom = new(_patientInformation, this);
@@ -167,6 +172,7 @@ namespace SmICSCoreLib.StatistikServices
             return patNoskumalList;
         }
 
+        //2.Regel Kontakt mit einem positiven Patient 
         public List<Patient> GetNoskumalByContact(List<Patient> allNoskumalPat, List<CountDataModel> allPositivPat)
         {
             List<Patient> patNoskumalList = new();
@@ -220,6 +226,7 @@ namespace SmICSCoreLib.StatistikServices
             return patientMovement;
         }
 
+        //Anzahl Patiententage im Krankenhaus: Liste positive Patienten
         public int PatStay(List<CountDataModel> positivPat)
         {
             double start, gesamt = 0;

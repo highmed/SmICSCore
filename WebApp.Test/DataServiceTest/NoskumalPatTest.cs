@@ -16,14 +16,14 @@ using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.Patient_Stay.Count;
 using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 using SmICSCoreLib.StatistikDataModels;
+using System;
 
 namespace WebApp.Test.DataServiceTest
 {
     public class NoskumalPatTest
     {
-        [Theory]
-        [ClassData(typeof(SymptomTestData))]
-        public void ProcessorTest(int ResultSetID, int ehrNo)
+        [Fact]
+        public void ProcessorTest()
         {
             RestDataAccess _data = TestConnection.Initialize();
 
@@ -32,11 +32,17 @@ namespace WebApp.Test.DataServiceTest
             EhrDataService dataService = new (patinet_Stay, patientInformation);
             List<CountDataModel> positivPatList= dataService.GetAllPositivTest();
 
-
             List<Patient> actual = dataService.GetAllNoskumalPat(positivPatList);
-            List<Patient> expected = GetPatient(ResultSetID, ehrNo);
+            List<Patient> expected = GetPatientList();
 
             Assert.Equal(expected.Count, actual.Count);
+            for (int i = 0; i < expected.Count; i++)
+            {
+                Assert.Equal(expected[i].PatientID, actual[i].PatientID);
+                Assert.Equal(expected[i].Probenentnahme, actual[i].Probenentnahme);
+                Assert.Equal(expected[i].Aufnahme, actual[i].Aufnahme);
+                Assert.Equal(expected[i].Entlastung, actual[i].Entlastung);
+            }
             
         }
 
@@ -59,23 +65,19 @@ namespace WebApp.Test.DataServiceTest
             return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac);
         }
 
-
-        private class SymptomTestData : IEnumerable<object[]>
+        private List<Patient> GetPatientList()
         {
-            public IEnumerator<object[]> GetEnumerator()
-            {
-                yield return new object[] { 0, 0 };
-            }
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        }
-
-        private List<Patient> GetPatient(int ResultSetID, int ehrNo)
-        {
-            string testResultPath = "../../../../WebApp.Test/Resources/NoskumalPatTestResults.json";
-            string parameterPath = "../../../../WebApp.Test/Resources/EHRID_NoskumalPat.json";
-
-            List<Patient> result = ExpectedResultJsonReader.ReadResults<Patient, PatientInfos>(testResultPath, parameterPath, ResultSetID, ehrNo, ExpectedType.PATIENT);
-            return result;
+            List<Patient> patientList = new();
+            patientList.Add(new Patient("52afa449-07a2-4d57-bb7a-86e7960124ac", DateTime.Parse("08.02.2020 11:13:00"), DateTime.Parse("08.02.2020 12:13:00"), DateTime.Parse("20.02.2020 12:13:00")));
+            patientList.Add(new Patient("52afa449-07a2-4d57-bb7a-86e7960124ac", DateTime.Parse("08.02.2020 11:13:00"), DateTime.Parse("08.02.2020 12:13:00"), DateTime.Parse("20.02.2020 12:13:00")));
+            patientList.Add(new Patient("959c26c9-de4a-40b8-bf76-a315574d3da7", DateTime.Parse("01.12.2020 09:13:09"), DateTime.Parse("27.11.2020 12:13:00"), DateTime.Parse("12.12.2020 12:13:00")));
+            patientList.Add(new Patient("386ff697-7fe4-4fe0-942c-eb389b81704f", DateTime.Parse("02.12.2020 12:13:33"), DateTime.Parse("28.11.2020 12:13:00"), DateTime.Parse("12.12.2020 12:13:00")));
+            patientList.Add(new Patient("f7f106b1-3aef-481e-aa76-af9092dc63dc", DateTime.Parse("02.12.2020 12:40:33"), DateTime.Parse("28.11.2020 12:13:00"), DateTime.Parse("12.12.2020 12:13:00")));
+            patientList.Add(new Patient("c74f6215-4fc2-42a5-a3ad-f92536ca64dc", DateTime.Parse("01.01.2021 11:00:00"), DateTime.Parse("01.01.2021 09:00:00"), DateTime.Parse("05.01.2021 15:00:00")));
+            patientList.Add(new Patient("96cdcae3-6c08-4eb7-8e41-45b012bf61d4", DateTime.Parse("02.01.2021 11:00:00"), DateTime.Parse("02.01.2021 09:00:00"), DateTime.Parse("07.01.2021 15:00:00")));
+            patientList.Add(new Patient("059d9e68-c096-4ee7-8551-c088a5488813", DateTime.Parse("03.01.2021 11:00:00"), DateTime.Parse("02.01.2021 09:00:00"), DateTime.Parse("09.01.2021 15:00:00")));
+            patientList.Add(new Patient("7dab2503-06f1-4c42-b4a4-76ddaae08794", DateTime.Parse("03.01.2021 11:00:00"), DateTime.Parse("03.01.2021 09:00:00"), DateTime.Parse("09.01.2021 15:00:00")));
+            return patientList;
         }
     }
 }

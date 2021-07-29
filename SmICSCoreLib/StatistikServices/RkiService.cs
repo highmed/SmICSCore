@@ -304,9 +304,9 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        public bool SerializeRkiData()
+        public bool SerializeRkiData(string path)
         {
-            string path = @"../SmICSWebApp/Resources/statistik/json";
+            //string path = @"../SmICSWebApp/Resources/statistik/json";
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);

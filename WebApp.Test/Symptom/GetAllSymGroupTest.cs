@@ -14,7 +14,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
 using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.Patient_Stay.Count;
-using SmICSCoreLib.AQL.Patient_Stay.Cases;
 using System;
 using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 
@@ -34,17 +33,11 @@ namespace WebApp.Test.Symptom
             SymptomService symptomService = new (patientInformation, dataService);
 
             Dictionary<string, Dictionary<string, int>> actual = symptomService.GetAllSymGroup(datum, min);
-            Dictionary<string, Dictionary<string, int>> expected = new Dictionary<string, Dictionary<string, int>>() {{ "Cough (finding)",     new Dictionary<string, int>()  {{ "Stationskennung X", 7 }} }, 
-                                                                                                                      { "Diarrhea (finding)",  new Dictionary<string, int>()  {{ "Stationskennung X", 3 }} },
-                                                                                                                      { "Fatigue (finding)",   new Dictionary<string, int>()  {{ "Stationskennung X", 3 }} },
-                                                                                                                      { "Fever (finding)",     new Dictionary<string, int>()  {{ "Stationskennung X", 4 }} },
-                                                                                                                      { "Vomiting (disorder)", new Dictionary<string, int>()  {{ "Stationskennung X", 4 }} },
-                                                                                                                      };
+            Dictionary<string, Dictionary<string, int>> expected = GetSymptomList();
 
             Assert.Equal(expected.Count, actual.Count);
             Assert.Equal(expected.Keys, actual.Keys);
-            Assert.Equal(expected.Values, actual.Values);
-            
+            Assert.Equal(expected.Values, actual.Values);          
         }
 
         private Patinet_Stay CreatePatinetStay(IRestDataAccess rest)
@@ -66,7 +59,6 @@ namespace WebApp.Test.Symptom
             return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac);
         }
 
-
         private class SymptomTestData : IEnumerable<object[]>
         {
             List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/Symptome_Group.json");
@@ -76,6 +68,19 @@ namespace WebApp.Test.Symptom
                 yield return new object[] {patient[0].Beginn, 3 };
             }
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        private Dictionary<string, Dictionary<string, int>> GetSymptomList()
+        {
+            Dictionary<string, Dictionary<string, int>> symptomList =  new Dictionary<string,Dictionary<string, int>>()
+            {
+                { "Cough (finding)",     new Dictionary<string, int>()  {{ "Stationskennung X", 7 }} },                  
+                { "Diarrhea (finding)",  new Dictionary<string, int>()  {{ "Stationskennung X", 3 }} },
+                { "Fatigue (finding)",   new Dictionary<string, int>()  {{ "Stationskennung X", 3 }} },
+                { "Fever (finding)",     new Dictionary<string, int>()  {{ "Stationskennung X", 4 }} },
+                { "Vomiting (disorder)", new Dictionary<string, int>()  {{ "Stationskennung X", 4 }} },
+            };
+            return symptomList;
         }
     }
 }

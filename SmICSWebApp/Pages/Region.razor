@@ -157,6 +157,7 @@
     private string rWert7TageVortag;
     private string lkDefult;
     private string path;
+    private string rkipPath;
     private bool status;
     private bool chartStatus;
     private int anzahlFaelle;
@@ -189,6 +190,8 @@
         try
         {
             path = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            rkipPath = @"../SmICSWebApp/Resources/statistik/json";
+
             dailyReport = rkiService.DeserializeRkiData(path);
             if (dailyReport != null)
             {
@@ -207,7 +210,7 @@
             }
             else
             {
-                rkiService.SerializeRkiData();
+                rkiService.SerializeRkiData(rkipPath);
                 dailyReport = rkiService.DeserializeRkiData(path);
                 if (dailyReport != null)
                 {

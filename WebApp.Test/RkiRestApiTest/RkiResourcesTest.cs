@@ -48,7 +48,8 @@ namespace WebApp.Test
         [Fact]
         public void CkeckSerializtion()
         {
-            bool status = rkiRestApi.SerializeRkiData();
+            string path = @"../SmICSWebApp/Resources/statistik/json";
+            bool status = rkiRestApi.SerializeRkiData(path);
 
             Assert.True(status);
         }

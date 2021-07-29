@@ -37,7 +37,6 @@ namespace WebApp.Test.Symptom
         private class SymptomTestData : IEnumerable<object[]>
         {
             List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/EHRID_Symptome.json");
-
             public IEnumerator<object[]> GetEnumerator()
             {
                  yield return new object[] { patient[0].EHR_ID, patient[0].Beginn, 0, 0 };

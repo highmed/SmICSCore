@@ -318,7 +318,8 @@ namespace SmICSCoreLib.AQL
                                 $"CONTAINS COMPOSITION c " +
                                 $"CONTAINS OBSERVATION k[openEHR-EHR-OBSERVATION.symptom_sign.v0] " +
                                 $"where PatientenID='{patientId}' " +
-                                $"and Beginn like '{datum.Date.ToString("yyyy-MM-dd").Insert(10,"*")}'");
+                                $"and Beginn >= '{datum.Date.ToString("yyyy-MM-dd")}' ");
+                                //$"and Beginn like '{datum.Date.ToString("yyyy-MM-dd").Insert(10,"*")}'");
         }
        
         public static AQLQuery StayFromCase(string patientId, string fallId)
