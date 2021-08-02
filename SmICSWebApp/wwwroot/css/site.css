@@ -273,7 +273,7 @@ footer.page-footer a {
         width: 80px;
         height: 80px;
         animation: spin 1300ms linear infinite;
-        top: 100%;
+        top: 50%;
         left: 40%;
         position: absolute;
     }
