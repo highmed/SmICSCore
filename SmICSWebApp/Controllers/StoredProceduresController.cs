@@ -163,20 +163,20 @@ namespace SmICSWebApp.Controllers
         //}
 
         
-        [Route("Patient_Count")]
-        [HttpPost]
-        public ActionResult<List<CountDataModel>> Patient_Count(string nachweis)
-        {
-            try
-            {
-                return _patinet_Stay.CovidPat(nachweis);
-            }
-            catch (Exception e)
-            {
+        //[Route("Patient_Count")]
+        //[HttpPost]
+        //public ActionResult<List<CountDataModel>> Patient_Count(string nachweis)
+        //{
+        //    try
+        //    {
+        //        return _patinet_Stay.CovidPat(nachweis);
+        //    }
+        //    catch (Exception e)
+        //    {
                 
-                return ErrorHandling(e);
-            }
-        }
+        //        return ErrorHandling(e);
+        //    }
+        //}
 
         //[Route("Patient_Case")]
         //[HttpPost]
@@ -206,48 +206,48 @@ namespace SmICSWebApp.Controllers
         //    }
         //}
 
-        [Route("NECAlgorithm")]
-        [HttpPost]
-        public ActionResult NECAlgorithm([FromBody] List<NECResultDataModel> parameter)
-        {
-            try
-            {
-                _algorithm.NECResultFile(parameter);
-                return NoContent();  
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }
+        //[Route("NECAlgorithm")]
+        //[HttpPost]
+        //public ActionResult NECAlgorithm([FromBody] List<NECResultDataModel> parameter)
+        //{
+        //    try
+        //    {
+        //        _algorithm.NECResultFile(parameter);
+        //        return NoContent();  
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return ErrorHandling(e);
+        //    }
+        //}
 
-        [Route("NECAlgorithmResult")]
-        [HttpPost]
-        public ActionResult<List<NECResultDataModel>> NECAlgorithmResult([FromBody] TimespanParameter parameter)
-        {
-            try
-            {
-                return _algorithm.NECAlgorithmResult(parameter);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }
+        //[Route("NECAlgorithmResult")]
+        //[HttpPost]
+        //public ActionResult<List<NECResultDataModel>> NECAlgorithmResult([FromBody] TimespanParameter parameter)
+        //{
+        //    try
+        //    {
+        //        return _algorithm.NECAlgorithmResult(parameter);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return ErrorHandling(e);
+        //    }
+        //}
 
-        [Route("NEC_Dataset")]
-        [HttpGet]
-        public ActionResult<NECCombinedDataModel> NEC_Dataset([FromQuery] DateTime parameter)
-        {
-            try
-            {
-                return _algorithm.NEC_Dataset(parameter);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }
+        //[Route("NEC_Dataset")]
+        //[HttpGet]
+        //public ActionResult<NECCombinedDataModel> NEC_Dataset([FromQuery] DateTime parameter)
+        //{
+        //    try
+        //    {
+        //        return _algorithm.NEC_Dataset(parameter);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return ErrorHandling(e);
+        //    }
+        //}
 
         /*[Route("RKI_Dataset")]
         [HttpPost]
