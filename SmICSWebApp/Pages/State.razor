@@ -480,8 +480,8 @@
     {
         try
         {
-            //path = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
-            path = @"../SmICSWebApp/Resources/statistik/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            path = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            //path = @"../SmICSWebApp/Resources/statistik/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
             dailyReport = rkiService.DeserializeRkiData(path);
             stand = dailyReport.Bericht.Stand;
             standAktuell = dailyReport.Bericht.StandAktuell;
