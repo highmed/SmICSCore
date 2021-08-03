@@ -8,6 +8,10 @@ using SmICSCoreLib.AQL.Algorithm;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.AQL.Employees;
+using SmICSCoreLib.AQL.Employees.ContactTracing;
+using SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl;
+using SmICSCoreLib.AQL.Employees.PersonData;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.Lab.EpiKurve;
 using SmICSCoreLib.AQL.Algorithm.NEC;
@@ -32,8 +36,9 @@ namespace SmICSWebApp.Controllers
         private readonly IContactNetworkFactory _contact;
         private readonly IAlgorithmData _algorithm;
         private readonly IPatinet_Stay _patinet_Stay;
+        private readonly IEmployeeInformation _employeeinformation;
 
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, ILabData labData, IPatientInformation patientInformation, IContactNetworkFactory contact, IAlgorithmData algorithm, IPatinet_Stay patinet_Stay)
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, ILabData labData, IPatientInformation patientInformation, IContactNetworkFactory contact, IAlgorithmData algorithm, IPatinet_Stay patinet_Stay, IEmployeeInformation employeeInfo)
         {
             _logger = logger;
             _labData = labData;
@@ -41,6 +46,7 @@ namespace SmICSWebApp.Controllers
             _contact = contact;
             _algorithm = algorithm;
             _patinet_Stay = patinet_Stay;
+            _employeeinformation = employeeInfo;
         }
 
         /// <summary></summary>
@@ -280,5 +286,46 @@ namespace SmICSWebApp.Controllers
             }
         }
         */
+        [Route("Employee_ContactTracing")]
+        [HttpPost]
+        public ActionResult<List<ContactTracingModel>> Employee_ContactTracing([FromBody] PatientListParameter parameter)
+        {
+            try
+            {
+                return _employeeinformation.Employee_ContactTracing(parameter);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
+
+        [Route("Employee_PersonData")]
+        [HttpPost]
+        public ActionResult<List<PersonDataModel>> Employee_PersonData([FromBody] PatientListParameter parameter)
+        {
+            try
+            {
+                return _employeeinformation.Employee_PersonData(parameter);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
+
+        [Route("Employee_PersInfoInfecCtrl")]
+        [HttpPost]
+        public ActionResult<List<PersInfoInfecCtrlModel>> Employee_PersInfoInfecCtrl([FromBody] PatientListParameter parameter)
+        {
+            try
+            {
+                return _employeeinformation.Employee_PersInfoInfecCtrl(parameter);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
     }
 }

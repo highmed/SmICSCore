@@ -1,0 +1,264 @@
+﻿@page "/formcontacttracing"
+
+@using SmICSWebApp.Data
+@using System.ComponentModel.DataAnnotations
+@using System.Net
+@using System.Net.Http
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Logging
+@using Newtonsoft.Json.Linq
+@using SmICSCoreLib.AQL.Employees.ContactTracing
+
+@inject ILogger<FormContactTracing> Logger
+@inject ContactTracingService ContactTracingService
+
+
+<div class="zurueck-bottom">
+    <NavLink class="nav-link" href="contactIndex" Match="NavLinkMatch.All">
+        <span class="oi oi-chevron-left" aria-hidden="true">&nbsp;</span> zur&uuml;ck
+    </NavLink>
+</div> 
+
+<div class="con">
+    <div class="deph_1">
+        <h3>Bericht zur Kontaktverfolgung</h3>
+
+        <EditForm Model="@contact_tracing" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="deph_2">
+                <span class="span">Mitarbeiterdaten</span>
+                <div class="table">
+                    <div class="tr">
+                        <div class="tb tb_bez"><label>Mitarbeiter ID:</label></div>
+                        <div class="tb">
+                            <InputText @bind-Value="ehr_id" disabled="@disabled" class="input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="deph_2">
+                <span class="span">Context</span>
+                <div class="table">
+                    <div class="tr">
+                        <div class="tb tb_bez"><label>Bericht ID:</label></div>
+                        <div class="tb">
+                            <InputText @bind-Value="contact_tracing.bericht_id" disabled="@disabled" class="input" />
+                        </div>
+                    </div>
+                </div>
+                <div class="deph_3">
+                    <span class="span">Eventsummary</span>
+                    <div class="table">
+                        <div class="tr">
+                            <div class="tb tb_bez"><label>Event-Kennung :</label></div>
+                            <div class="tb">
+                                <InputText @bind-Value="contact_tracing.event_kennung" disabled="@disabled" class="input" />
+                            </div>
+                        </div>
+                        <div class="tr">
+                            <div class="tb tb_bez"><label>Event-Art :</label></div>
+                            <div class="tb">
+                                <InputSelect @bind-Value="contact_tracing.event_art" disabled="@disabled" class="input">
+                                    <option selected disabled>Bitte wählen Sie aus</option>
+                                    <option value="Kontakt">Kontakt</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deph_4">
+                        <span class="span">Beteiligte Personen (Person 1)</span>
+                        <div class="table">
+                            <div class="tr">
+                                <div class="tb tb_bez"><label>Art der Person :</label></div>
+                                <div class="tb">
+                                    <InputSelect @bind-Value="contact_tracing.art_der_person_1" disabled="@disabled" class="input">
+                                        <option selected disabled>Bitte wählen Sie aus</option>
+                                        <option value="Kontaktperson">Kontaktperson</option>
+                                        <option value="Indexperson">Indexperson</option>
+                                    </InputSelect>
+                                </div>
+                            </div>
+                            <div class="tr">
+                                <div class="tb tb_bez"><label>ID der Person :</label></div>
+                                <div class="tb">
+                                    <InputText @bind-Value="contact_tracing.art_der_person_1_ID" disabled="@disabled" class="input" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deph_4">
+                        <span class="span">Beteiligte Personen (Person 2)</span>
+                        <div class="table">
+                            <div class="tr">
+                                <div class="tb tb_bez"><label>Art der Person :</label></div>
+                                <div class="tb">
+                                    <InputSelect @bind-Value="contact_tracing.art_der_person_2" disabled="@disabled" class="input">
+                                        <option selected disabled>Bitte wählen Sie aus</option>
+                                        <option value="Kontaktperson">Kontaktperson</option>
+                                        <option value="Indexperson">Indexperson</option>
+                                    </InputSelect>
+                                </div>
+                            </div>
+                            <div class="tr">
+                                <div class="tb tb_bez"><label>ID der Person :</label></div>
+                                <div class="tb">
+                                    <InputText @bind-Value="contact_tracing.art_der_person_2_ID" disabled="@disabled" class="input" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table">
+                        <div class="tr">
+                            <div class="tb tb_bez"><label>Event-Kategorie :</label></div>
+                            <div class="tb">
+                                <InputSelect @bind-Value="contact_tracing.event_kategorie" disabled="@disabled" class="input">
+                                    <option selected disabled>Bitte wählen Sie aus</option>
+                                    <option value="Ia">Ia</option>
+                                    <option value="Ib">Ib</option>
+                                    <option value="II">II</option>
+                                    <option value="III">III</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="tr">
+                            <div class="tb tb_bez"><label>Kommentar :</label></div>
+                            <div class="tb">
+                                <InputText @bind-Value="contact_tracing.kontakt_kommentar" disabled="@disabled" class="input" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="deph_2">
+                <span class="span">Kontakt</span>
+                <div class="table">
+                    <div class="tr">
+                        <div class="tb tb_bez"><label>Beschreibung :</label></div>
+                        <div class="tb">
+                            <InputText @bind-Value="contact_tracing.beschreibung" disabled="@disabled" class="input" />
+                        </div>
+                    </div>
+                    <div class="tr">
+                        <div class="tb tb_bez"><label>Beginn :</label></div>
+                        <div class="tb">
+                            <InputText type="datetime-local" @bind-Value="contact_tracing.beginn" disabled="@disabled" class="input" />
+                        </div>
+                    </div>
+                    <div class="tr">
+                        <div class="tb tb_bez"><label>Ende :</label></div>
+                        <div class="tb">
+                            <InputText type="datetime-local" @bind-Value="contact_tracing.ende" disabled="@disabled" class="input" />
+                        </div>
+                    </div>
+                    <div class="tr">
+                        <div class="tb tb_bez"><label>Ort :</label></div>
+                        <div class="tb">
+                            <InputSelect @bind-Value="contact_tracing.ort" disabled="@disabled" class="input">
+                                <option selected disabled>Bitte wählen Sie aus</option>
+                                <option value="Innenraum">Innenraum</option>
+                                <option value="Außenbereich">Außenbereich</option>
+                            </InputSelect>
+                        </div>
+                    </div>
+                    <div class="tr">
+                        <div class="tb tb_bez"><label>Gesamtdauer :</label></div>
+                        <div class="tb">
+                            <InputSelect @bind-Value="contact_tracing.gesamtdauer" disabled="@disabled" class="input">
+                                <option selected disabled>Bitte wählen Sie aus</option>
+                                <option value="&lt;15min">&lt;15min</option>
+                                <option value="&gt;15min">&gt;15min</option>
+                                <option value="&gt;30min">&gt;30min</option>
+                            </InputSelect>
+                        </div>
+                    </div>
+                    <div class="tr">
+                        <div class="tb tb_bez"><label>Abstand :</label></div>
+                        <div class="tb">
+                            <InputSelect @bind-Value="contact_tracing.abstand" disabled="@disabled" class="input">
+                                <option selected disabled>Bitte wählen Sie aus</option>
+                                <option value="&lt;2m">&lt;2m</option>
+                                <option value="&gt;2m">&gt;2m</option>
+                                <option value="1,5m - 2m">1,5m - 2m</option>
+                            </InputSelect>
+                        </div>
+                    </div>
+                </div>
+                <div class="deph_3">
+                    <span class="span">Schutzkleidung</span>
+                    <div class="table">
+                        <div class="tr">
+                            <div class="tb tb_bez"><label>Schutzkleidung :</label></div>
+                            <div class="tb">
+                                <InputSelect @bind-Value="contact_tracing.schutzkleidung" disabled="@disabled" class="input">
+                                    <option selected disabled>Bitte wählen Sie aus</option>
+                                    <option value="Kittel">Kittel</option>
+                                    <option value="Augenschutz">Augenschutz</option>
+                                    <option value="Chirurgische Maske">Chirurgische Maske</option>
+                                    <option value="FFP2">FFP2</option>
+                                    <option value="FFP3">FFP3</option>
+                                    <option value="Community- Maske">Community- Maske</option>
+                                    <option value="Keine Schutzkleidung">Keine Schutzkleidung</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="tr">
+                            <div class="tb tb_bez"><label>Person :</label></div>
+                            <div class="tb">
+                                <InputSelect @bind-Value="contact_tracing.person" disabled="@disabled" class="input">
+                                    <option selected disabled>Bitte wählen Sie aus</option>
+                                    <option value="Idexperson">Idexperson</option>
+                                    <option value="Kontaktperson">Kontaktperson</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table">
+                    <div class="tr">
+                        <div class="tb tb_bez"><label>Kommentar :</label></div>
+                        <div class="tb">
+                            <InputText @bind-Value="contact_tracing.kommentar" disabled="@disabled" class="input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input id="button" type="submit" />
+            <input name="send" type="hidden"
+                   value="<Antiforgery token here>" />
+            <p style="@messageStyles">
+                @message
+            </p>
+        </EditForm>
+    </div>
+</div>
+
+@code { 
+    private bool disabled;
+    private string message;
+    private string messageStyles = "visibility:hidden";
+    private ContactTracingModel contact_tracing = new ContactTracingModel();
+    private string ehr_id;
+
+    private void HandleValidSubmit()
+    {
+
+        try
+        {
+
+            JObject o = (JObject)JToken.FromObject(contact_tracing);
+            disabled = true;
+            messageStyles = "color:green";
+            ContactTracingService.ContactTracingDataStorage(o, ehr_id);
+            message = "Das Formular wurde übermittelt.";
+
+        } catch (Exception ex)
+        {
+            Logger.LogError("Formular Übermittlungsproblem: {Message}", ex.Message);
+            disabled = true;
+            messageStyles = "color:red";
+            message = "Es wurde ein fehler festgestellt beim Übermitteln des Formulars.";
+        }
+    }
+
+}

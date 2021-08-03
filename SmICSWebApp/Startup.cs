@@ -48,6 +48,10 @@ namespace SmICSWebApp
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 00 12 ? * *"));
             services.AddHostedService<QuartzHostedService>();
 
+            services.AddSingleton<ContactTracingService>();
+            services.AddSingleton<PersonInformationService>();
+            services.AddSingleton<PersInfoInfectCtrlService>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AQL API", Version = "v1" });
@@ -61,19 +65,19 @@ namespace SmICSWebApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
-            OpenehrConfig.openehrUser = "etltestuser";
-            OpenehrConfig.openehrPassword = "etltestuser#01";
-            OpenehrConfig.openehrAdaptor = "BETTER";
+            //OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
+            //OpenehrConfig.openehrUser = "etltestuser";
+            //OpenehrConfig.openehrPassword = "etltestuser#01";
+            //OpenehrConfig.openehrAdaptor = "BETTER";
 
             /*OpenehrConfig.openehrEndpoint = "https://172.0.0.1:8080/ehrbase/rest/openehr/v1";
             OpenehrConfig.openehrUser = "test";
             OpenehrConfig.openehrPassword = "test";
             OpenehrConfig.openehrAdaptor = "STANDARD";*/
 
-            //OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
-            //OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
-            //OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
+            OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
+            OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
+            OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
 
             if (env.IsDevelopment())
             {
