@@ -1,0 +1,112 @@
+{
+  "0": [
+    {
+      "DokumentationsID": "2020-01-28T10:24:08Z",
+      "Impfstoff": "Influenza virus vaccine",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "ImpfungGegen": "Influenza",
+      "Abwesendheit": null
+    }
+  ],
+  "1": [
+    {
+      "DokumentationsID": "2020-01-16T10:24:08Z",
+      "Impfstoff": "Influenza virus vaccine",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "ImpfungGegen": "Influenza",
+      "Abwesendheit": null
+    }
+  ],
+  "2": [
+    {
+      "DokumentationsID": "2020-02-17T10:24:08Z",
+      "Impfstoff": "Human papillomavirus vaccine",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "ImpfungGegen": "Disease caused by Rotavirus",
+      "Abwesendheit": null
+    }
+  ],
+  "3": [
+    {
+      "DokumentationsID": "2020-08-13T10:24:08Z",
+      "Impfstoff": "Rotavirus vaccine",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "ImpfungGegen": "Disease caused by Rotavirus",
+      "Abwesendheit": null
+    }
+  ],
+  "4": [
+    {
+      "DokumentationsID": "2020-01-28T10:24:08Z",
+      "Impfstoff": "Influenza virus vaccine",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "ImpfungGegen": "Influenza",
+      "Abwesendheit": null
+    }
+  ],
+  "5": [
+    {
+      "DokumentationsID": "2020-02-17T10:24:08Z",
+      "Impfstoff": "Human papillomavirus vaccine",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "ImpfungGegen": "Disease caused by Rotavirus",
+      "Abwesendheit": null
+    }
+  ],
+  "6": [
+    {
+      "DokumentationsID": "2021-01-05T11:30:00Z",
+      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 antigen (medicinal product)",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "ImpfungGegen": "Infectious disease (disorder)",
+      "Abwesendheit": null
+    }
+  ],
+  "7": [
+    {
+      "DokumentationsID": "2021-01-07T12:30:00Z",
+      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 antigen (medicinal product)",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "ImpfungGegen": "Infectious disease (disorder)",
+      "Abwesendheit": null
+    }
+  ],
+  "8": [
+    {
+      "DokumentationsID": "2021-01-09T10:30:00Z",
+      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 antigen (medicinal product)",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "ImpfungGegen": "Infectious disease (disorder)",
+      "Abwesendheit": null
+    }
+  ],
+  "9": [
+    {
+      "DokumentationsID": "2021-01-09T12:30:00Z",
+      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "ImpfungGegen": "Infectious disease (disorder)",
+      "Abwesendheit": null
+    }
+  ],
+  "10": [
+    {
+      "DokumentationsID": "2021-01-08T16:35:00Z",
+      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
+      "Dosierungsreihenfolge": 1,
+      "Dosiermenge": 1,
+      "ImpfungGegen": "Infectious disease (disorder)",
+      "Abwesendheit": null
+    }
+  ]
+}
