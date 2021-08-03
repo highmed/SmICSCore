@@ -75,7 +75,5 @@ namespace WebApp.Test
             Assert.True(dailyReport.Bericht.StandAktuell);
         }
 
-      
-
     }
 }

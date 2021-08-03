@@ -21,6 +21,9 @@ namespace WebApp.Test
         [Fact]
         public void LKReportDeserializeTest()
         {
+            string targetPath = @"../../../../WebApp.Test/Resources";
+            rkiRestApi.LKReportSerialize(targetPath);
+
             string filePath = @"../../../../WebApp.Test/Resources/LKReport.json";
             LKReportJson lKReportJson = rkiRestApi.LKReportDeserialize(filePath);
 
@@ -48,7 +51,6 @@ namespace WebApp.Test
 
             Assert.True(status);
         }
-
 
     }
 }
