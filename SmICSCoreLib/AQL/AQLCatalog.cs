@@ -15,7 +15,7 @@ namespace SmICSCoreLib.AQL
         private AQLCatalog() { }        
         public static AQLQuery GetEHRID(string subjectID)
         {
-            return new AQLQuery("GetEHRID",$"SELECT DISTINCT e/ehr_id/value as PatientID FROM EHR e CONTAINS COMPOSITION c WHERE e/ehr_status/subject/external_ref/id/value='{subjectID}' and e/ehr_status/subject/external_ref/namespace='SmICSTests'");
+            return new AQLQuery("GetEHRID",$"SELECT DISTINCT e/ehr_id/value as ID FROM EHR e CONTAINS COMPOSITION c WHERE e/ehr_status/subject/external_ref/id/value='{subjectID}' and e/ehr_status/subject/external_ref/namespace='SmICSTests'");
         }
         public static AQLQuery ContactPatientWards(ContactParameter parameter)
         {

@@ -111,7 +111,7 @@ namespace SmICSCoreLib.Tests.TestData
         private string ExistsPatient(RestDataAccess _data, string patientNo)
         {
             List<Patient> patient = _data.AQLQuery<Patient>(AQLCatalog.GetEHRID(patientNo));
-            return patient != null ? patient[0].PatientID : null;
+            return patient != null ? patient[0].ID : null;
         }
 
         private RestDataAccess CreateDataAccess()
@@ -141,7 +141,7 @@ namespace SmICSCoreLib.Tests.TestData
 
         private class Patient
         {
-            public string PatientID { get; set; }
+            public string ID { get; set; }
         }
     }
 }
