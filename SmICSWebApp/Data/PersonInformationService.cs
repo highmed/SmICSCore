@@ -27,8 +27,8 @@ namespace SmICSWebApp.Data
             string ehr_id = (string)JObject.Parse(createEntry.ToString())["personID"];
             try
             {
-                 if(createEntry != null)
-                 {
+                if (createEntry != null)
+                {
                     var base_composition = "{\"_type\":\"COMPOSITION\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Personendaten\"}";
                     var base_uid = ",\"uid\":{\"_type\":\"OBJECT_VERSION_ID\",\"value\":\"a066baca-fe84-4a54-b5d7-04b5cfbbc87e::Infektionskontrolle::1\"}";
                     var base_archetype_details = ",\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-COMPOSITION.personendaten.v0\"},\"template_id\":{\"value\":\"Personendaten\"},\"rm_version\":\"1.0.4\"}";
@@ -47,7 +47,7 @@ namespace SmICSWebApp.Data
                     {
                         base_art_d_person = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Art der Person\"},\"archetype_node_id\":\"at0008\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["art_der_person"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0009\"}}}";
                     }
-                    else if(base_art_d_person == "Patient")
+                    else if (base_art_d_person == "Patient")
                     {
                         base_art_d_person = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Art der Person\"},\"archetype_node_id\":\"at0008\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["art_der_person"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0010\"}}}";
                     }
@@ -120,7 +120,7 @@ namespace SmICSWebApp.Data
             {
                 throw new Exception($"Failed to POST data");
             }
-  
+
         }
 
         private void SaveComposition(string subjectID, string writeResult)

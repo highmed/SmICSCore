@@ -25,7 +25,6 @@ namespace SmICSWebApp.Data
         {
             string composer = "SmICS";
 
-            //.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")
             try
             {
                 if (createEntry != null)
@@ -52,7 +51,7 @@ namespace SmICSWebApp.Data
                     var base_art_d_person_2_ID = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"ID der Person\"},\"archetype_node_id\":\"at0010\",\"value\":{\"_type\":\"DV_IDENTIFIER\",\"id\":\"" + JObject.Parse(createEntry.ToString())["art_der_person_2_ID"] + "\"}}]}";
                     var base_event_kategorie = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Event-Kategorie\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["event_kategorie"] + "\"}}";
                     var base_event_kommentar = (string)JObject.Parse(createEntry.ToString())["kontakt_kommentar"];
-                    if (base_event_kommentar != null) 
+                    if (base_event_kommentar != null)
                     {
                         base_event_kommentar = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kommentar\"},\"archetype_node_id\":\"at0006\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["kontakt_kommentar"] + "\"}}";
                     }
@@ -74,7 +73,8 @@ namespace SmICSWebApp.Data
                     if (base_person != "Indexperson")
                     {
                         base_person = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["person"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0004\"}}}]}";
-                    }else
+                    }
+                    else
                     {
                         base_person = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["person"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0003\"}}}]}";
                     }
@@ -95,9 +95,9 @@ namespace SmICSWebApp.Data
                     var obj = JsonConvert.DeserializeObject(json_all);
                     var finishedJson = JsonConvert.SerializeObject(obj, Formatting.Indented);
 
-                    File.WriteAllText(@".. / .. / .. / .. / TestData / contacttracing.txt", finishedJson);
+                    //File.WriteAllText(@".. / .. / .. / .. / TestData / contacttracing.txt", finishedJson);
 
-                    //SaveComposition(ehr_id, finishedJson);
+                    SaveComposition(ehr_id, finishedJson);
                 }
 
             }
@@ -136,7 +136,7 @@ namespace SmICSWebApp.Data
                 string returnValue = responseMessage.Content.ReadAsStringAsync().Result;
                 _logger.LogInformation($"Succeded to POST data: ({responseMessage.StatusCode}): {returnValue}");
             }
-                
+
         }
 
         private string ExistsSubject(IRestDataAccess _data, string subjectID)
@@ -152,5 +152,5 @@ namespace SmICSWebApp.Data
             public string Status { get; set; }
         }
     }
-    
+
 }
