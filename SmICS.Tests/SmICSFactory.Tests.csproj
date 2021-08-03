@@ -18,4 +18,8 @@
     <ProjectReference Include="..\SmICSWebApp\SmICSWebApp.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="StatistikServicesTests\" />
+  </ItemGroup>
+
 </Project>
