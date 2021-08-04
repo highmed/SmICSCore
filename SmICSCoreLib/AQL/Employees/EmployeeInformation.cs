@@ -25,7 +25,7 @@ namespace SmICSCoreLib.AQL.Employees
             _empPersDataFac = empPersDataFac;
 
         }
-        public List<ContactTracingModel> Employee_ContactTracing(PatientListParameter parameter)
+        public List<ContactTracingReceiveModel> Employee_ContactTracing(PatientListParameter parameter)
         {
             return _empConTracFac.Process(parameter);
         }

@@ -12,7 +12,7 @@ namespace SmICSCoreLib.AQL.Employees
 {
     public interface IEmployeeInformation
     {
-        List<ContactTracingModel> Employee_ContactTracing(PatientListParameter parameter);
+        List<ContactTracingReceiveModel> Employee_ContactTracing(PatientListParameter parameter);
         List<PersInfoInfecCtrlModel> Employee_PersInfoInfecCtrl(PatientListParameter parameter);
         List<PersonDataModel> Employee_PersonData(PatientListParameter parameter);
 

@@ -272,8 +272,6 @@ namespace SmICSWebApp.Controllers
         }
 
         [Route("Patient_Symptom")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
         [HttpPost]
         public ActionResult<List<SymptomModel>> Patient_Symptom([FromBody] PatientListParameter parameter)
         {
@@ -288,8 +286,6 @@ namespace SmICSWebApp.Controllers
         }
 
         [Route("Patient_Vaccination")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
         [HttpPost]
         public ActionResult<List<VaccinationModel>> Patient_Vaccination([FromBody] PatientListParameter parameter)
         {
@@ -304,10 +300,8 @@ namespace SmICSWebApp.Controllers
         }
 
         [Route("Employee_ContactTracing")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
         [HttpPost]
-        public ActionResult<List<ContactTracingModel>> Employee_ContactTracing([FromBody] PatientListParameter parameter)
+        public ActionResult<List<ContactTracingReceiveModel>> Employee_ContactTracing([FromBody] PatientListParameter parameter)
         {
             try
             {
@@ -320,8 +314,6 @@ namespace SmICSWebApp.Controllers
         }
 
         [Route("Employee_PersonData")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
         [HttpPost]
         public ActionResult<List<PersonDataModel>> Employee_PersonData([FromBody] PatientListParameter parameter)
         {
@@ -336,8 +328,6 @@ namespace SmICSWebApp.Controllers
         }
 
         [Route("Employee_PersInfoInfecCtrl")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
         [HttpPost]
         public ActionResult<List<PersInfoInfecCtrlModel>> Employee_PersInfoInfecCtrl([FromBody] PatientListParameter parameter)
         {

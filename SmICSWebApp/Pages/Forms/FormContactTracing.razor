@@ -1,10 +1,6 @@
 ﻿@page "/formcontacttracing"
 
 @using SmICSWebApp.Data
-@using System.ComponentModel.DataAnnotations
-@using System.Net
-@using System.Net.Http
-@using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Logging
 @using Newtonsoft.Json.Linq
 @using SmICSCoreLib.AQL.Employees.ContactTracing
@@ -17,7 +13,7 @@
     <NavLink class="nav-link" href="contactIndex" Match="NavLinkMatch.All">
         <span class="oi oi-chevron-left" aria-hidden="true">&nbsp;</span> zur&uuml;ck
     </NavLink>
-</div> 
+</div>
 
 <div class="con">
     <div class="deph_1">
@@ -43,7 +39,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Bericht ID:</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="contact_tracing.bericht_id" disabled="@disabled" class="input" />
+                            <InputText @bind-Value="contact_tracing.BerichtID" disabled="@disabled" class="input" />
                         </div>
                     </div>
                 </div>
@@ -53,13 +49,13 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Event-Kennung :</label></div>
                             <div class="tb">
-                                <InputText @bind-Value="contact_tracing.event_kennung" disabled="@disabled" class="input" />
+                                <InputText @bind-Value="contact_tracing.EventKennung" disabled="@disabled" class="input" />
                             </div>
                         </div>
                         <div class="tr">
                             <div class="tb tb_bez"><label>Event-Art :</label></div>
                             <div class="tb">
-                                <InputSelect @bind-Value="contact_tracing.event_art" disabled="@disabled" class="input">
+                                <InputSelect @bind-Value="contact_tracing.EventArt" disabled="@disabled" class="input">
                                     <option selected disabled>Bitte wählen Sie aus</option>
                                     <option value="Kontakt">Kontakt</option>
                                 </InputSelect>
@@ -72,7 +68,7 @@
                             <div class="tr">
                                 <div class="tb tb_bez"><label>Art der Person :</label></div>
                                 <div class="tb">
-                                    <InputSelect @bind-Value="contact_tracing.art_der_person_1" disabled="@disabled" class="input">
+                                    <InputSelect @bind-Value="contact_tracing.ArtDerPerson1" disabled="@disabled" class="input">
                                         <option selected disabled>Bitte wählen Sie aus</option>
                                         <option value="Kontaktperson">Kontaktperson</option>
                                         <option value="Indexperson">Indexperson</option>
@@ -82,7 +78,7 @@
                             <div class="tr">
                                 <div class="tb tb_bez"><label>ID der Person :</label></div>
                                 <div class="tb">
-                                    <InputText @bind-Value="contact_tracing.art_der_person_1_ID" disabled="@disabled" class="input" />
+                                    <InputText @bind-Value="contact_tracing.PersonenID1" disabled="@disabled" class="input" />
                                 </div>
                             </div>
                         </div>
@@ -93,7 +89,7 @@
                             <div class="tr">
                                 <div class="tb tb_bez"><label>Art der Person :</label></div>
                                 <div class="tb">
-                                    <InputSelect @bind-Value="contact_tracing.art_der_person_2" disabled="@disabled" class="input">
+                                    <InputSelect @bind-Value="contact_tracing.ArtDerPerson2" disabled="@disabled" class="input">
                                         <option selected disabled>Bitte wählen Sie aus</option>
                                         <option value="Kontaktperson">Kontaktperson</option>
                                         <option value="Indexperson">Indexperson</option>
@@ -103,7 +99,7 @@
                             <div class="tr">
                                 <div class="tb tb_bez"><label>ID der Person :</label></div>
                                 <div class="tb">
-                                    <InputText @bind-Value="contact_tracing.art_der_person_2_ID" disabled="@disabled" class="input" />
+                                    <InputText @bind-Value="contact_tracing.PersonenID2" disabled="@disabled" class="input" />
                                 </div>
                             </div>
                         </div>
@@ -112,7 +108,7 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Event-Kategorie :</label></div>
                             <div class="tb">
-                                <InputSelect @bind-Value="contact_tracing.event_kategorie" disabled="@disabled" class="input">
+                                <InputSelect @bind-Value="contact_tracing.EventKategorie" disabled="@disabled" class="input">
                                     <option selected disabled>Bitte wählen Sie aus</option>
                                     <option value="Ia">Ia</option>
                                     <option value="Ib">Ib</option>
@@ -124,7 +120,7 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Kommentar :</label></div>
                             <div class="tb">
-                                <InputText @bind-Value="contact_tracing.kontakt_kommentar" disabled="@disabled" class="input" />
+                                <InputText @bind-Value="contact_tracing.EventKommentar" disabled="@disabled" class="input" />
                             </div>
                         </div>
                     </div>
@@ -136,25 +132,25 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Beschreibung :</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="contact_tracing.beschreibung" disabled="@disabled" class="input" />
+                            <InputText @bind-Value="contact_tracing.Beschreibung" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Beginn :</label></div>
                         <div class="tb">
-                            <InputText type="datetime-local" @bind-Value="contact_tracing.beginn" disabled="@disabled" class="input" />
+                            <InputText type="datetime-local" @bind-Value="contact_tracing.Beginn" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Ende :</label></div>
                         <div class="tb">
-                            <InputText type="datetime-local" @bind-Value="contact_tracing.ende" disabled="@disabled" class="input" />
+                            <InputText type="datetime-local" @bind-Value="contact_tracing.Ende" disabled="@disabled" class="input" />
                         </div>
                     </div>
                     <div class="tr">
                         <div class="tb tb_bez"><label>Ort :</label></div>
                         <div class="tb">
-                            <InputSelect @bind-Value="contact_tracing.ort" disabled="@disabled" class="input">
+                            <InputSelect @bind-Value="contact_tracing.Ort" disabled="@disabled" class="input">
                                 <option selected disabled>Bitte wählen Sie aus</option>
                                 <option value="Innenraum">Innenraum</option>
                                 <option value="Außenbereich">Außenbereich</option>
@@ -164,7 +160,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Gesamtdauer :</label></div>
                         <div class="tb">
-                            <InputSelect @bind-Value="contact_tracing.gesamtdauer" disabled="@disabled" class="input">
+                            <InputSelect @bind-Value="contact_tracing.Gesamtdauer" disabled="@disabled" class="input">
                                 <option selected disabled>Bitte wählen Sie aus</option>
                                 <option value="&lt;15min">&lt;15min</option>
                                 <option value="&gt;15min">&gt;15min</option>
@@ -175,7 +171,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Abstand :</label></div>
                         <div class="tb">
-                            <InputSelect @bind-Value="contact_tracing.abstand" disabled="@disabled" class="input">
+                            <InputSelect @bind-Value="contact_tracing.Abstand" disabled="@disabled" class="input">
                                 <option selected disabled>Bitte wählen Sie aus</option>
                                 <option value="&lt;2m">&lt;2m</option>
                                 <option value="&gt;2m">&gt;2m</option>
@@ -190,7 +186,7 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Schutzkleidung :</label></div>
                             <div class="tb">
-                                <InputSelect @bind-Value="contact_tracing.schutzkleidung" disabled="@disabled" class="input">
+                                <InputSelect @bind-Value="contact_tracing.Schutzkleidung" disabled="@disabled" class="input">
                                     <option selected disabled>Bitte wählen Sie aus</option>
                                     <option value="Kittel">Kittel</option>
                                     <option value="Augenschutz">Augenschutz</option>
@@ -205,7 +201,7 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Person :</label></div>
                             <div class="tb">
-                                <InputSelect @bind-Value="contact_tracing.person" disabled="@disabled" class="input">
+                                <InputSelect @bind-Value="contact_tracing.Person" disabled="@disabled" class="input">
                                     <option selected disabled>Bitte wählen Sie aus</option>
                                     <option value="Idexperson">Idexperson</option>
                                     <option value="Kontaktperson">Kontaktperson</option>
@@ -218,7 +214,7 @@
                     <div class="tr">
                         <div class="tb tb_bez"><label>Kommentar :</label></div>
                         <div class="tb">
-                            <InputText @bind-Value="contact_tracing.kommentar" disabled="@disabled" class="input" />
+                            <InputText @bind-Value="contact_tracing.Kommentar" disabled="@disabled" class="input" />
                         </div>
                     </div>
                 </div>
@@ -233,11 +229,11 @@
     </div>
 </div>
 
-@code { 
+@code {
     private bool disabled;
     private string message;
     private string messageStyles = "visibility:hidden";
-    private ContactTracingModel contact_tracing = new ContactTracingModel();
+    private ContactTracingPostModel contact_tracing = new ContactTracingPostModel();
     private string ehr_id;
 
     private void HandleValidSubmit()
@@ -252,7 +248,8 @@
             ContactTracingService.ContactTracingDataStorage(o, ehr_id);
             message = "Das Formular wurde übermittelt.";
 
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             Logger.LogError("Formular Übermittlungsproblem: {Message}", ex.Message);
             disabled = true;

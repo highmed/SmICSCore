@@ -54,7 +54,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                for (int i = 16; i <= 37; i++)
+                for (int i = 0; i <= 37; i++)
                 {
                     yield return new object[] { i, i };
                 }
