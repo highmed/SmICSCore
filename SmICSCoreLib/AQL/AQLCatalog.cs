@@ -417,8 +417,8 @@ namespace SmICSCoreLib.AQL
                                 c/context/other_context[at0001]/items[at0002]/value/value as BerichtID,
                                 z/items[at0001]/value/value as EventKennung,
                                 z/items[at0002]/value/value as EventArt,
-                                z/items[at0007]/items[at0011]/value/value as ArtDerPerson1,
-                                z/items[at0007]/items[at0010]/value/id as PersonenID1,
+                                z/items[at0007]/items[at0011]/value/value as ArtDerPerson,
+                                z/items[at0007]/items[at0010]/value/id as PersonenID,
                                 z/items[at0004]/value/value as EventKategorie,
                                 z/items[at0006]/value/value as EventKommentar,
                                 a/description[at0001]/items[at0009]/value/value as Beschreibung,
@@ -498,7 +498,7 @@ namespace SmICSCoreLib.AQL
                                CLUSTER f[openEHR-EHR-CLUSTER.address_cc.v0] AND
                                CLUSTER g[openEHR-EHR-CLUSTER.telecom_details.v0] AND
                                CLUSTER h[openEHR-EHR-CLUSTER.individual_professional.v0])
-                               WHERE c/archetype_details/template_id='Personendaten' matches { patientList.ToAQLMatchString() }");
+                               WHERE c/archetype_details/template_id='Personendaten' AND e/ehr_id/value matches { patientList.ToAQLMatchString() }");
         }
 
     }

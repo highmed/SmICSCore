@@ -288,7 +288,7 @@ namespace SmICSWebApp.Controllers
         */
         [Route("Employee_ContactTracing")]
         [HttpPost]
-        public ActionResult<List<ContactTracingModel>> Employee_ContactTracing([FromBody] PatientListParameter parameter)
+        public ActionResult<List<ContactTracingReceiveModel>> Employee_ContactTracing([FromBody] PatientListParameter parameter)
         {
             try
             {

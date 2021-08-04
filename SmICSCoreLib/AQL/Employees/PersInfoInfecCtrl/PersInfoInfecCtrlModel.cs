@@ -8,6 +8,9 @@ namespace SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl
 {
     public class PersInfoInfecCtrlModel
     {
+        [JsonProperty(PropertyName = "PatientID")]
+        [Required]
+        public string PatientID { get; set; }
         [JsonProperty(PropertyName = "BerichtID")]
         [Required]
         public string BerichtID { get; set; }

@@ -13,14 +13,14 @@ namespace SmICSCoreLib.AQL.Employees.ContactTracing
         {
             _restData = restData;
         }
-        public List<ContactTracingModel> Process(PatientListParameter parameter)
+        public List<ContactTracingReceiveModel> Process(PatientListParameter parameter)
         {
 
-            List<ContactTracingModel> ctList = _restData.AQLQuery<ContactTracingModel>(AQLCatalog.EmployeeContactTracing(parameter));
+            List<ContactTracingReceiveModel> ctList = _restData.AQLQuery<ContactTracingReceiveModel>(AQLCatalog.EmployeeContactTracing(parameter));
 
             if (ctList is null)
             {
-                return new List<ContactTracingModel>();
+                return new List<ContactTracingReceiveModel>();
             }
 
             return ctList;

@@ -8,6 +8,9 @@ namespace SmICSCoreLib.AQL.Employees.ContactTracing
 {
     public class ContactTracingModel
     {
+        [JsonProperty(PropertyName = "PatientID")]
+        [Required]
+        public string PatientID { get; set; }
         [JsonProperty(PropertyName = "BerichtID")]
         [Required]
         public string BerichtID { get; set; }
@@ -19,18 +22,6 @@ namespace SmICSCoreLib.AQL.Employees.ContactTracing
         [JsonProperty(PropertyName = "EventArt")]
         [Required]
         public string EventArt { get; set; }
-        [JsonProperty(PropertyName = "ArtDerPerson1")]
-        [Required]
-        public string ArtDerPerson1 { get; set; }
-        [JsonProperty(PropertyName = "PersonenID1")]
-        [Required]
-        public string PersonenID1 { get; set; }
-        [JsonProperty(PropertyName = "ArtDerPerson2")]
-        [Required]
-        public string ArtDerPerson2 { get; set; }
-        [JsonProperty(PropertyName = "PersonenID2")]
-        [Required]
-        public string PersonenID2 { get; set; }
         [JsonProperty(PropertyName = "EventKategorie")]
         [Required]
         public string EventKategorie { get; set; }
