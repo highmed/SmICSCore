@@ -414,27 +414,24 @@ namespace SmICSCoreLib.AQL
         {
             return new AQLQuery("EmployeeContactTracing", $@"SELECT e/ehr_id/value as PatientID,
                                 c/context/start_time/value as DokumentationsID,
-                                c/context/other_context[at0001]/items[at0002]/value as BerichtID,
-                                z/items[at0001]/value as EventKennung,
-                                z/items[at0002]/value as EventArt,
-                                z/items[at0007]/items[at0011]/value as ArtDerPerson,
-                                z/items[at0007]/items[at0010]/value as PersonenID,
-                                z/items[at0004]/value as EventKategorie,
-                                z/items[at0006]/value as EventKommentar,
-                                a/description[at0001]/items[at0009]/value as Beschreibung,
-                                a/description[at0001]/items[at0006]/value as Beginn,
-                                a/description[at0001]/items[at0016]/value as Ende,
-                                a/description[at0001]/items[at0017]/value as Ort,
-                                a/description[at0001]/items[at0003]/value as Gesamtdauer,
-                                a/description[at0001]/items[at0008]/value as Abstand,
-                                x/items[at0001]/value as Schutzkleidung,
-                                x/items[at0002]/value as Person,
-                                a/description[at0001]/items[at0007]/value as Kommentar
+                                c/context/other_context[at0001]/items[at0002]/value/value as BerichtID,
+                                z/items[at0001]/value/value as EventKennung,
+                                z/items[at0002]/value/value as EventArt,
+                                z/items[at0007]/items[at0011]/value/value as ArtDerPerson1,
+                                z/items[at0007]/items[at0010]/value/id as PersonenID1,
+                                z/items[at0004]/value/value as EventKategorie,
+                                z/items[at0006]/value/value as EventKommentar,
+                                a/description[at0001]/items[at0009]/value/value as Beschreibung,
+                                a/description[at0001]/items[at0006]/value/value as Beginn,
+                                a/description[at0001]/items[at0016]/value/value as Ende,
+                                a/description[at0001]/items[at0017]/value/value as Ort,
+                                a/description[at0001]/items[at0003]/value/value as Gesamtdauer,
+                                a/description[at0001]/items[at0008]/value/value as Abstand,
+                                x/items[at0001]/value/value as Schutzkleidung,
+                                x/items[at0002]/value/value as Person,
+                                a/description[at0001]/items[at0007]/value/value as Kommentar
                                 FROM EHR e
-                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report.v1]
-                                CONTAINS (CLUSTER z[openEHR-EHR-CLUSTER.eventsummary.v0] AND
-                                CONTAINS ACTION a[openEHR-EHR-ACTION.contact.v0]
-                                CONTAINS (CLUSTER x[openEHR-EHR-CLUSTER.protective_clothing_.v0]))
+                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report.v1] CONTAINS (CLUSTER z[openEHR-EHR-CLUSTER.eventsummary.v0] OR ACTION a[openEHR-EHR-ACTION.contact.v0] CONTAINS (CLUSTER x[openEHR-EHR-CLUSTER.protective_clothing_.v0]))
                                 WHERE c/archetype_details/template_id='Bericht zur Kontaktverfolgung' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
         }
 
@@ -442,65 +439,66 @@ namespace SmICSCoreLib.AQL
         {
             return new AQLQuery("EmployeePersInfoInfecCtrl", $@"SELECT e/ehr_id/value as PatientID,
                                 c/context/start_time/value as DokumentationsID,
-                                c/context/other_context[at0001]/items[at0002]/value as BerichtID,
-                                o/data[at0001]/events[at0002]/data[at0003]/items[at0028]/value as SymptomVorhanden,
-                                o/data[at0001]/events[at0002]/data[at0003]/items[at0029]/value as AufgetretenSeit,
-                                o/data[at0001]/events[at0002]/data[at0003]/items[at0022]/items[at0004]/value as Symptom,
-                                o/data[at0001]/events[at0002]/data[at0003]/items[at0025]/value as SymptomKommentar,
-                                a/data[at0001]/items[at0005]/value as Nachweis,
-                                a/data[at0001]/items[at0012]/value as Erregername,
-                                a/data[at0001]/items[at0015]/value as Zeitpunkt,
-                                a/data[at0001]/items[at0011]/value as KlinischerNachweis,
-                                a/protocol[at0003]/items[at0004]/value LetzteAktualisierung,
-                                b/data[at0001]/items[at0008]/value as Freistellung,
-                                b/data[at0001]/items[at0005]/value as Grund,
-                                b/data[at0001]/items[at0002]/value as Beschreibung,
-                                b/data[at0001]/items[at0003]/value as Startdatum,
-                                b/data[at0001]/items[at0004]/value as Enddatum,
-                                b/data[at0001]/items[at0007]/value as AbwesendheitKommentar,
-                                d/data[at0001]/items[at0009]/value as Meldung,
-                                d/data[at0001]/items[at0003]/value as Ereignis,
-                                d/data[at0001]/items[at0004]/value as Ereignisbeschreibung,
-                                d/data[at0001]/items[at0005]/value as Datum,
-                                d/data[at0001]/items[at0006]/value as Ereignisgrund,
-                                d/data[at0001]/items[at0007]/value as EreignisKommentar
+                                c/context/other_context[at0001]/items[at0002]/value/value as BerichtID,
+                                o/data[at0001]/events[at0002]/data[at0003]/items[at0028]/value/value as SymptomVorhanden,
+                                o/data[at0001]/events[at0002]/data[at0003]/items[at0029]/value/value as AufgetretenSeit,
+                                o/data[at0001]/events[at0002]/data[at0003]/items[at0022]/items[at0004]/value/value as Symptom,
+                                o/data[at0001]/events[at0002]/data[at0003]/items[at0025]/value/value as SymptomKommentar,
+                                a/data[at0001]/items[at0005]/value/value as Nachweis,
+                                a/data[at0001]/items[at0012]/value/value as Erregername,
+                                a/data[at0001]/items[at0015]/value/value as Zeitpunkt,
+                                a/data[at0001]/items[at0011]/value/value as KlinischerNachweis,
+                                a/protocol[at0003]/items[at0004]/value/value as LetzteAktualisierung,
+                                b/data[at0001]/items[at0008]/value/value as Freistellung,
+                                b/data[at0001]/items[at0005]/value/value as Grund,
+                                b/data[at0001]/items[at0002]/value/value as Beschreibung,
+                                b/data[at0001]/items[at0003]/value/value as Startdatum,
+                                b/data[at0001]/items[at0004]/value/value as Enddatum,
+                                b/data[at0001]/items[at0007]/value/value as AbwesendheitKommentar,
+                                d/data[at0001]/items[at0009]/value/value as Meldung,
+                                d/data[at0001]/items[at0003]/value/value as Ereignis,
+                                d/data[at0001]/items[at0004]/value/value as Ereignisbeschreibung,
+                                d/data[at0001]/items[at0005]/value/value as Datum,
+                                d/data[at0001]/items[at0006]/value/value as Ereignisgrund,
+                                d/data[at0001]/items[at0007]/value/value as EreignisKommentar
                                 FROM EHR e
                                 CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report.v1]
-                                CONTAINS (OBSERVATION o[openEHR-EHR-OBSERVATION.symptom_sign_screening.v0]
-                                AND CONTAINS EVALUATION a[openEHR-EHR-EVALUATION.flag_pathogen.v0]
-                                AND CONTAINS EVALUATION b[openEHR-EHR-EVALUATION.exemption_from_work.v0]
-                                AND CONTAINS ADMIN ENTRY d[openEHR-EHR-ADMIN_ENTRY.report_to_health_department.v0])
+                                CONTAINS (OBSERVATION o[openEHR-EHR-OBSERVATION.symptom_sign_screening.v0] and 
+                                EVALUATION a[openEHR-EHR-EVALUATION.flag_pathogen.v0] and 
+                                EVALUATION b[openEHR-EHR-EVALUATION.exemption_from_work.v0] and ADMIN_ENTRY d[openEHR-EHR-ADMIN_ENTRY.report_to_health_department.v0]) 
                                 WHERE c/archetype_details/template_id='Personeninformation zur Infektionskontrolle' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
         }
 
         public static AQLQuery EmployeePersonData(PatientListParameter patientList)
         {
             return new AQLQuery("EmployeePersonData", $@"SELECT e/ehr_id/value as PatientID,
-                                c/context/start_time/value as DokumentationsID,
-                                c/context/other_context[at0003]/items[at0004]/value as PersonID,
-                                a/data[at0001]/items[at0008]/value as Person,
-                                b/items[at0002]/items[at0017]/value as Titel,
-                                b/items[at0002]/items[at0003]/value as Vorname,
-                                b/items[at0002]/items[at0004]/value as WeitererVorname,
-                                b/items[at0002]/items[at0005]/value as Nachname,
-                                b/items[at0002]/items[at0018]/value as Suffix,
-                                d/items[at0001]/value as Geburtsdatum,
-                                f/items[at0011]/value as Anschrift,
-                                f/items[at0012]/value as Stadt,
-                                f/items[at0014]/value as PLZ,
-                                g/items[at0001]/items[at0004]/value as Kontakttyp,
-                                g/items[at0001]/items[at0003]/items[at0007]/value as Nummer,
-                                h/items[at0003]/items[at0006]/value as Fachbezeichnung,
-                                h/items[at0011]
-                                FROM EHR e
-                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.personendaten.v0]
-                                CONTAINS ADMIN ENTRY a[openEHR-EHR-ADMIN_ENTRY.person_data.v0]
-                                CONTAINS (CLUSTER b[openEHR-EHR-CLUSTER.person_name.v0] AND
-                                CLUSTER d[openEHR-DEMOGRAPHIC-CLUSTER.person_birth_data_iso.v0] AND
-                                CLUSTER f[openEHR-EHR-CLUSTER.address_cc.v0] AND
-                                CLUSTER g[openEHR-EHR-CLUSTER.telecom_details.v0] AND
-                                CLUSTER h[openEHR-EHR-CLUSTER.individual_professional.v0])
-                                WHERE c/archetype_details/template_id='Personendaten' and e/ehr_id/value matches { patientList.ToAQLMatchString() }");
+                               c/context/start_time/value as DokumentationsID,
+                               c/context/other_context[at0003]/items[at0004]/value/value as PersonID,
+                               a/data[at0001]/items[at0008]/value/value as ArtDerPerson,
+                               b/items[at0002]/items[at0017]/value/value as Titel,
+                               b/items[at0002]/items[at0003]/value/value as Vorname,
+                               b/items[at0002]/items[at0004]/value/value as WeitererVorname,
+                               b/items[at0002]/items[at0005]/value/value as Nachname,
+                               b/items[at0002]/items[at0018]/value/value as Suffix,
+                               d/items[at0001]/value/value as Geburtsdatum,
+                               f/items[at0011]/value/value as Zeile,
+                               f/items[at0012]/value/value as Stadt,
+                               f/items[at0014]/value/value as Plz,
+                               g/items[at0001]/items[at0004]/value/value as Kontakttyp,
+                               g/items[at0001]/items[at0003]/items[at0007]/value/value as Nummer,
+                               h/items[at0003]/items[at0006]/value/value as Fachbezeichnung,
+                               f/items[at0011]/value/value AS HeilZeile,
+                               f/items[at0012]/value/value AS HeilStadt,
+                               f/items[at0014]/value/value AS HeilPLZ
+                               FROM EHR e
+                               CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.personendaten.v0]
+                               CONTAINS ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.person_data.v0]
+                               CONTAINS (CLUSTER b[openEHR-EHR-CLUSTER.person_name.v0] AND
+                               CLUSTER d[openEHR-DEMOGRAPHIC-CLUSTER.person_birth_data_iso.v0] AND
+                               CLUSTER f[openEHR-EHR-CLUSTER.address_cc.v0] AND
+                               CLUSTER g[openEHR-EHR-CLUSTER.telecom_details.v0] AND
+                               CLUSTER h[openEHR-EHR-CLUSTER.individual_professional.v0])
+                               WHERE c/archetype_details/template_id='Personendaten' matches { patientList.ToAQLMatchString() }");
         }
 
     }

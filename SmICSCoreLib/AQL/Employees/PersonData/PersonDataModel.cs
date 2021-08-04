@@ -1,62 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 using Newtonsoft.Json;
 
 namespace SmICSCoreLib.AQL.Employees.PersonData
 {
     public class PersonDataModel
     {
-        [JsonProperty(PropertyName = "personID")]
+        [JsonProperty(PropertyName = "PersonID")]
         [Required]
-        public string personID { get; set; }
-        [JsonProperty(PropertyName = "dokumentations_id")]
-        public string dokumentations_id { get; set; }
-        [JsonProperty(PropertyName = "art_der_person")]
+        public string PersonID { get; set; }
+        [JsonProperty(PropertyName = "DokumentationsID")]
+        public string DokumentationsID { get; set; }
+        [JsonProperty(PropertyName = "ArtDerPerson")]
         [Required]
-        public string art_der_person { get; set; }
-        [JsonProperty(PropertyName = "titel")]
-        public string titel { get; set; }
-        [JsonProperty(PropertyName = "vorname")]
+        public string ArtDerPerson { get; set; }
+        [JsonProperty(PropertyName = "Titel")]
+        public string Titel { get; set; }
+        [JsonProperty(PropertyName = "Vorname")]
         [Required]
-        public string vorname { get; set; }
-        [JsonProperty(PropertyName = "weiterer_vorname")]
-        public string weiterer_vorname { get; set; }
-        [JsonProperty(PropertyName = "nachname")]
+        public string Vorname { get; set; }
+        [JsonProperty(PropertyName = "WeitererVorname")]
+        public string WeitererVorname { get; set; }
+        [JsonProperty(PropertyName = "Nachname")]
         [Required]
-        public string nachname { get; set; }
-        [JsonProperty(PropertyName = "suffix")]
-        public string suffix { get; set; }
-        [JsonProperty(PropertyName = "geburtsdatum")]
+        public string Nachname { get; set; }
+        [JsonProperty(PropertyName = "Suffix")]
+        public string Suffix { get; set; }
+        [JsonProperty(PropertyName = "Geburtsdatum")]
         [Required]
-        public string geburtsdatum { get; set; }
-        [JsonProperty(PropertyName = "zeile")]
+        public string Geburtsdatum { get; set; }
+        [JsonProperty(PropertyName = "Zeile")]
         [Required]
-        public string zeile { get; set; }
-        [JsonProperty(PropertyName = "stadt")]
+        public string Zeile { get; set; }
+        [JsonProperty(PropertyName = "Stadt")]
         [Required]
-        public string stadt { get; set; }
-        [JsonProperty(PropertyName = "plz")]
+        public string Stadt { get; set; }
+        [JsonProperty(PropertyName = "Plz")]
         [Required]
-        public string plz { get; set; }
-        [JsonProperty(PropertyName = "kontakttyp")]
+        public string Plz { get; set; }
+        [JsonProperty(PropertyName = "Kontakttyp")]
         [Required]
-        public string kontakttyp { get; set; }
-        [JsonProperty(PropertyName = "nummer")]
+        public string Kontakttyp { get; set; }
+        [JsonProperty(PropertyName = "Nummer")]
         [Required]
-        public string nummer { get; set; }
-        [JsonProperty(PropertyName = "fach_bez")]
+        public string Nummer { get; set; }
+        [JsonProperty(PropertyName = "Fachbezeichnung")]
         [Required]
-        public string fach_bez { get; set; }
-        [JsonProperty(PropertyName = "zeile_heil")]
+        public string Fachbezeichnung { get; set; }
+        [JsonProperty(PropertyName = "HeilZeile")]
         [Required]
-        public string zeile_heil { get; set; }
-        [JsonProperty(PropertyName = "stadt_heil")]
+        public string HeilZeile { get; set; }
+        [JsonProperty(PropertyName = "HeilStadt")]
         [Required]
-        public string stadt_heil { get; set; }
-        [JsonProperty(PropertyName = "plz_heil")]
+        public string HeilStadt { get; set; }
+        [JsonProperty(PropertyName = "HeilPLZ")]
         [Required]
-        public string plz_heil { get; set; }
+        public string HeilPLZ { get; set; }
     }
 }

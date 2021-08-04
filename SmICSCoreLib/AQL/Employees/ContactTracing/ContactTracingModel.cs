@@ -8,58 +8,58 @@ namespace SmICSCoreLib.AQL.Employees.ContactTracing
 {
     public class ContactTracingModel
     {
-        [JsonProperty(PropertyName = "bericht_id")]
+        [JsonProperty(PropertyName = "BerichtID")]
         [Required]
-        public string bericht_id { get; set; }
-        [JsonProperty(PropertyName = "dokumentations_id")]
-        public string dokumentations_id { get; set; }
-        [JsonProperty(PropertyName = "event_kennung")]
+        public string BerichtID { get; set; }
+        [JsonProperty(PropertyName = "DokumentationsID")]
+        public string DokumentationsID { get; set; }
+        [JsonProperty(PropertyName = "EventKennung")]
         [Required]
-        public string event_kennung { get; set; }
-        [JsonProperty(PropertyName = "event_art")]
+        public string EventKennung { get; set; }
+        [JsonProperty(PropertyName = "EventArt")]
         [Required]
-        public string event_art { get; set; }
-        [JsonProperty(PropertyName = "art_der_person_1")]
+        public string EventArt { get; set; }
+        [JsonProperty(PropertyName = "ArtDerPerson1")]
         [Required]
-        public string art_der_person_1 { get; set; }
-        [JsonProperty(PropertyName = "art_der_person_1_ID")]
+        public string ArtDerPerson1 { get; set; }
+        [JsonProperty(PropertyName = "PersonenID1")]
         [Required]
-        public string art_der_person_1_ID { get; set; }
-        [JsonProperty(PropertyName = "art_der_person_2")]
+        public string PersonenID1 { get; set; }
+        [JsonProperty(PropertyName = "ArtDerPerson2")]
         [Required]
-        public string art_der_person_2 { get; set; }
-        [JsonProperty(PropertyName = "art_der_person_2_ID")]
+        public string ArtDerPerson2 { get; set; }
+        [JsonProperty(PropertyName = "PersonenID2")]
         [Required]
-        public string art_der_person_2_ID { get; set; }
-        [JsonProperty(PropertyName = "event_kategorie")]
+        public string PersonenID2 { get; set; }
+        [JsonProperty(PropertyName = "EventKategorie")]
         [Required]
-        public string event_kategorie { get; set; }
-        [JsonProperty(PropertyName = "kontakt_kommentar")]
-        public string kontakt_kommentar { get; set; }
-        [JsonProperty(PropertyName = "beschreibung")]
-        public string beschreibung { get; set; }
-        [JsonProperty(PropertyName = "beginn")]
+        public string EventKategorie { get; set; }
+        [JsonProperty(PropertyName = "EventKommentar")]
+        public string EventKommentar { get; set; }
+        [JsonProperty(PropertyName = "Beschreibung")]
+        public string Beschreibung { get; set; }
+        [JsonProperty(PropertyName = "Beginn")]
         [Required]
-        public string beginn { get; set; } = null;
-        [JsonProperty(PropertyName = "ende")]
+        public string Beginn { get; set; } = null;
+        [JsonProperty(PropertyName = "Ende")]
         [Required]
-        public string ende { get; set; }
-        [JsonProperty(PropertyName = "ort")]
+        public string Ende { get; set; }
+        [JsonProperty(PropertyName = "Ort")]
         [Required]
-        public string ort { get; set; }
-        [JsonProperty(PropertyName = "gesamtdauer")]
+        public string Ort { get; set; }
+        [JsonProperty(PropertyName = "Gesamtdauer")]
         [Required]
-        public string gesamtdauer { get; set; }
-        [JsonProperty(PropertyName = "abstand")]
+        public string Gesamtdauer { get; set; }
+        [JsonProperty(PropertyName = "Abstand")]
         [Required]
-        public string abstand { get; set; }
-        [JsonProperty(PropertyName = "schutzkleidung")]
+        public string Abstand { get; set; }
+        [JsonProperty(PropertyName = "Schutzkleidung")]
         [Required]
-        public string schutzkleidung { get; set; }
-        [JsonProperty(PropertyName = "person")]
+        public string Schutzkleidung { get; set; }
+        [JsonProperty(PropertyName = "Person")]
         [Required]
-        public string person { get; set; }
-        [JsonProperty(PropertyName = "kommentar")]
-        public string kommentar { get; set; }
+        public string Person { get; set; }
+        [JsonProperty(PropertyName = "Kommentar")]
+        public string Kommentar { get; set; }
     }
 }

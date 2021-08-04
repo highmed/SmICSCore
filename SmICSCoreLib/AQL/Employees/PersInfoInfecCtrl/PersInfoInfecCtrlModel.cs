@@ -8,53 +8,53 @@ namespace SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl
 {
     public class PersInfoInfecCtrlModel
     {
-        [JsonProperty(PropertyName = "berichtID")]
+        [JsonProperty(PropertyName = "BerichtID")]
         [Required]
-        public string berichtID { get; set; }
-        [JsonProperty(PropertyName = "dokumentations_id")]
-        public string dokumentations_id { get; set; }
-        [JsonProperty(PropertyName = "symp_vorhanden")]
-        public string symp_vorhanden { get; set; }
-        [JsonProperty(PropertyName = "symp_auftreten")]
-        public string symp_auftreten { get; set; }
-        [JsonProperty(PropertyName = "bez_symp")]
+        public string BerichtID { get; set; }
+        [JsonProperty(PropertyName = "DokumentationsID")]
+        public string DokumentationsID { get; set; }
+        [JsonProperty(PropertyName = "SymptomVorhanden")]
+        public string SymptomVorhanden { get; set; }
+        [JsonProperty(PropertyName = "AufgetretenSeit")]
+        public string AufgetretenSeit { get; set; }
+        [JsonProperty(PropertyName = "Symptom")]
         [Required]
-        public string bez_symp { get; set; }
-        [JsonProperty(PropertyName = "allg_kommentar")]
-        public string allg_kommentar { get; set; }
-        [JsonProperty(PropertyName = "erreg_nachweis")]
-        public bool erreg_nachweis { get; set; } = false;
-        [JsonProperty(PropertyName = "erreg_name")]
-        public string erreg_name { get; set; }
-        [JsonProperty(PropertyName = "zeitpunkt_kennzeichnung")]
-        public string zeitpunkt_kennzeichnung { get; set; }
-        [JsonProperty(PropertyName = "erreg_Nachweis_klinik")]
-        public bool erreg_Nachweis_klinik { get; set; } = false;
-        [JsonProperty(PropertyName = "zuletzt_aktuell")]
-        public string zuletzt_aktuell { get; set; }
-        [JsonProperty(PropertyName = "freigetsellt")]
-        public bool freigetsellt { get; set; } = false;
-        [JsonProperty(PropertyName = "grund")]
-        public string grund { get; set; }
-        [JsonProperty(PropertyName = "beschreibung")]
-        public string beschreibung { get; set; }
-        [JsonProperty(PropertyName = "start_freistellung")]
-        public string start_freistellung { get; set; }
-        [JsonProperty(PropertyName = "wiederaufnahme")]
-        public string wiederaufnahme { get; set; }
-        [JsonProperty(PropertyName = "kommentar_freistellung")]
-        public string kommentar_freistellung { get; set; }
-        [JsonProperty(PropertyName = "meldung")]
-        public bool meldung { get; set; } = false;
-        [JsonProperty(PropertyName = "ereignis")]
-        public string ereignis { get; set; }
-        [JsonProperty(PropertyName = "beschreibung_ereignis")]
-        public string beschreibung_ereignis { get; set; }
-        [JsonProperty(PropertyName = "datum_meldung")]
-        public string datum_meldung { get; set; }
-        [JsonProperty(PropertyName = "grund_meldung")]
-        public string grund_meldung { get; set; }
-        [JsonProperty(PropertyName = "meldung_kommentar")]
-        public string meldung_kommentar { get; set; }
+        public string Symptom { get; set; }
+        [JsonProperty(PropertyName = "SymptomKommentar")]
+        public string SymptomKommentar { get; set; }
+        [JsonProperty(PropertyName = "Nachweis")]
+        public bool Nachweis { get; set; } = false;
+        [JsonProperty(PropertyName = "Erregername")]
+        public string Erregername { get; set; }
+        [JsonProperty(PropertyName = "Zeitpunkt")]
+        public string Zeitpunkt { get; set; }
+        [JsonProperty(PropertyName = "KlinischerNachweis")]
+        public bool KlinischerNachweis { get; set; } = false;
+        [JsonProperty(PropertyName = "LetzteAktualisierung")]
+        public string LetzteAktualisierung { get; set; }
+        [JsonProperty(PropertyName = "Freistellung")]
+        public bool Freistellung { get; set; } = false;
+        [JsonProperty(PropertyName = "Grund")]
+        public string Grund { get; set; }
+        [JsonProperty(PropertyName = "Beschreibung")]
+        public string Beschreibung { get; set; }
+        [JsonProperty(PropertyName = "Startdatum")]
+        public string Startdatum { get; set; }
+        [JsonProperty(PropertyName = "Enddatum")]
+        public string Enddatum { get; set; }
+        [JsonProperty(PropertyName = "AbwesendheitKommentar")]
+        public string AbwesendheitKommentar { get; set; }
+        [JsonProperty(PropertyName = "Meldung")]
+        public bool Meldung { get; set; } = false;
+        [JsonProperty(PropertyName = "Ereignis")]
+        public string Ereignis { get; set; }
+        [JsonProperty(PropertyName = "Ereignisbeschreibung")]
+        public string Ereignisbeschreibung { get; set; }
+        [JsonProperty(PropertyName = "Datum")]
+        public string Datum { get; set; }
+        [JsonProperty(PropertyName = "Ereignisgrund")]
+        public string Ereignisgrund { get; set; }
+        [JsonProperty(PropertyName = "EreignisKommentar")]
+        public string EreignisKommentar { get; set; }
     }
 }
