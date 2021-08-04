@@ -17,17 +17,17 @@
 
         <div class="card-body col-10">
             <div style="padding: 30px 0px 100px 0px;">
-                @*<h3>Patienten im Krankenhaus</h3>*@
                 @if (patStationary == null)
                 {
-                    @if (status == true)
-                    {
-                        <p><em>Daten werden geladen...</em></p>
-                        <div class="spinner"></div> }
-                    else
+                    @if (status == false)
                     {
                         <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
                         <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+                    }
+                    else
+                    {
+                        <p><em>Daten werden geladen...</em></p>
+                        <div class="spinner"></div>
                     }
                 }
                 else
@@ -190,6 +190,12 @@
     {
         status = true;
         await Task.Run(GetAllPat);
+
+        if (patStationary == null && status == true)
+        {
+            patStationary = null;
+            status = false;
+        }
     }
 
     private void GetAllPat()
@@ -201,24 +207,30 @@
         }
         catch (Exception)
         {
-
             status = false;
         }
     }
 
     private void GetPatMovement(string patientId)
     {
-        patMovtList = ehrDataService.GetPatMovement(patientId);
-        moveCount = patMovtList.Count();
-        if (moveCount != 0)
+        try
         {
-            patientMovement = patMovtList.First();
-        }
+            patMovtList = ehrDataService.GetPatMovement(patientId);
+            moveCount = patMovtList.Count();
+            if (moveCount != 0)
+            {
+                patientMovement = patMovtList.First();
+            }
 
-        first = 0;
-        second = 0;
-        indexFirst = 1;
-        indexSec = 1;
+            first = 0;
+            second = 0;
+            indexFirst = 1;
+            indexSec = 1;
+        }
+        catch (Exception)
+        {
+            status = false;
+        }
     }
 
     private void NextFirst()

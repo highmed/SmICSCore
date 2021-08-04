@@ -138,6 +138,5 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-
     }
 }

@@ -22,14 +22,15 @@
             <div style="padding: 0px 0px 100px 0px;">
                 @if (lkArray == null)
                 {
-                    @if (status == true)
-                    {
-                        <p><em>Daten werden geladen...</em></p>
-                        <div class="spinner"></div> }
-                    else
+                    @if (status == false)
                     {
                         <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
                         <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+                    }
+                    else
+                    {
+                        <p><em>Daten werden geladen...</em></p>
+                        <div class="spinner"></div>
                     }
                 }
                 else
@@ -160,8 +161,6 @@
     private string rkipPath;
     private bool status;
     private bool chartStatus;
-    private int anzahlFaelle;
-    private int anzahlPatTage;
 
     private Chart _chart;
     private LineConfig config;
@@ -174,13 +173,10 @@
         data.gen = "Stuttgart";
         await Task.Run(LoadRkiData);
         GetChart();
-        GetStatus();
-    }
 
-    private void GetStatus()
-    {
-        if (lkArray == null)
+        if (lkArray == null && status == true)
         {
+            lkArray = null;
             status = false;
         }
     }
@@ -309,7 +305,6 @@
     {
         Dictionary<string, int> rkiDatenBl = new();
 
-        //Report blReportJson = rkiRestApi.BLReportDeserialize("BLReport - 2021");
         string filePath = @"../SmICSWebApp/Resources/Rkidata/BLReport.json";
         Report blReportJson = rkiService.BLReportDeserialize(filePath);
 
@@ -342,7 +337,8 @@
         return rkiDatenBl;
     }
 
-    private void GetChart(){
+    private void GetChart()
+    {
 
         if (chartStatus == false)
         {
@@ -388,7 +384,7 @@
                         Scales = new Scales
                         {
                             XAxes = new List<CartesianAxis>
-        {
+    {
                             new CategoryAxis
                             {
                                  ScaleLabel = new ScaleLabel
@@ -398,7 +394,7 @@
                             }
                         },
                             YAxes = new List<CartesianAxis>
-         {
+     {
                             new LinearCartesianAxis
                             {
                                 Ticks = new LinearCartesianTicks

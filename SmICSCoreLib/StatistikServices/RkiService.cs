@@ -592,7 +592,7 @@ namespace SmICSCoreLib.StatistikServices
 
         public bool BLReportSerialize(string path)
         {
-            Report report = GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 1, 422);
+            Report report = GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 1, 457);
             try
             {
                 if (!Directory.Exists(path))
@@ -611,7 +611,7 @@ namespace SmICSCoreLib.StatistikServices
 
         public bool LKReportSerialize(string path)
         {
-            LKReportJson lKReportJson = GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 3, 228);
+            LKReportJson lKReportJson = GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 3, 263);
             try
             {
                 if (!Directory.Exists(path))
@@ -662,39 +662,53 @@ namespace SmICSCoreLib.StatistikServices
             try
             {
                 DailyReport dailyReport = DeserializeRkiData(dailyReportPath);
-                Bundesland[] bundeslaender = dailyReport.Bericht.Bundesland;
-                Report report = new();
-                BLReportAttribute[] bLAttributeObj;
-                ArrayList reportArrayList = new();
-                ArrayList blAttributeArrayList = new();
-                BLReportAttribute[] blReportAttributeArray;
-
-                Report blReportJson = BLReportDeserialize(blReportPath);
-                int count = 0;
-                foreach (var bl in blReportJson.BLReport)
+                if (dailyReport != null)
                 {
-                    BLReport blReport = new();
-                    BLReportAttribute bLReportAttributeObj = new();
-                    bLAttributeObj = bl.BLReportAttribute;
-                    blAttributeArrayList = new ArrayList(bLAttributeObj);
+                    Bundesland[] bundeslaender = dailyReport.Bericht.Bundesland;
+                    Report report = new();
+                    BLReportAttribute[] bLAttributeObj;
+                    ArrayList reportArrayList = new();
+                    ArrayList blAttributeArrayList = new();
+                    BLReportAttribute[] blReportAttributeArray;
 
-                    bLReportAttributeObj.Datum = DateTime.Now.ToString("dd.MM.yyyy");
-                    bLReportAttributeObj.Fahlzahl = (int)double.Parse(bundeslaender[count].BlAttribute.Faelle7BL);
+                    Report blReportJson = BLReportDeserialize(blReportPath);
+                    if (blReportJson != null)
+                    {
+                        int count = 0;
+                        foreach (var bl in blReportJson.BLReport)
+                        {
+                            BLReport blReport = new();
+                            BLReportAttribute bLReportAttributeObj = new();
+                            bLAttributeObj = bl.BLReportAttribute;
+                            blAttributeArrayList = new ArrayList(bLAttributeObj);
 
-                    blAttributeArrayList.Add(bLReportAttributeObj);
-                    blReportAttributeArray = (BLReportAttribute[])blAttributeArrayList.ToArray(typeof(BLReportAttribute));
-                    blReport.BLReportAttribute = blReportAttributeArray;
-                    blReport.BlName = bl.BlName;
-                    reportArrayList.Add(blReport);
-                    count++;
+                            bLReportAttributeObj.Datum = DateTime.Now.ToString("dd.MM.yyyy");
+                            bLReportAttributeObj.Fahlzahl = (int)double.Parse(bundeslaender[count].BlAttribute.Faelle7BL);
+
+                            blAttributeArrayList.Add(bLReportAttributeObj);
+                            blReportAttributeArray = (BLReportAttribute[])blAttributeArrayList.ToArray(typeof(BLReportAttribute));
+                            blReport.BLReportAttribute = blReportAttributeArray;
+                            blReport.BlName = bl.BlName;
+                            reportArrayList.Add(blReport);
+                            count++;
+                        }
+
+                        BLReport[] blReportArray = (BLReport[])reportArrayList.ToArray(typeof(BLReport));
+                        report.BLReport = blReportArray;
+                        report.Datum = DateTime.Now.ToString("dd.MM.yyyy");
+
+                        JSONWriter.Write(report, targetPath, filename);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
-
-                BLReport[] blReportArray = (BLReport[])reportArrayList.ToArray(typeof(BLReport));
-                report.BLReport = blReportArray;
-                report.Datum = DateTime.Now.ToString("dd.MM.yyyy");
-               
-                JSONWriter.Write(report, targetPath, filename);
-                return true;
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception)
             {
@@ -707,71 +721,83 @@ namespace SmICSCoreLib.StatistikServices
             try
             {
                 DailyReport dailyReport = DeserializeRkiData(dailyReportPath);
-                Bundesland[] bundeslaender = dailyReport.Bericht.Bundesland;
-                ArrayList allLkArrayList = new();
-
-                foreach (var blItem in bundeslaender)
+                if (dailyReport != null)
                 {
-                    Landkreis[] lk = blItem.Landkreise;
+                    Bundesland[] bundeslaender = dailyReport.Bericht.Bundesland;
+                    ArrayList allLkArrayList = new();
 
-                    foreach (var lkItem in lk)
+                    foreach (var blItem in bundeslaender)
                     {
-                        allLkArrayList.Add(lkItem);
-                    } 
-                }
-                Landkreis[] landkreise = (Landkreis[])allLkArrayList.ToArray(typeof(Landkreis));
-                Landkreis[] landkreiseSort = landkreise.OrderBy(c => c.LandkreisName).ToArray();
+                        Landkreis[] lk = blItem.Landkreise;
 
-                LKReportJson report = new();
-                LKReportAttribute[] lkAttributeObj;
-                ArrayList reportArrayList = new();
-                ArrayList lkAttributeArrayList = new();
-                LKReportAttribute[] lkReportAttributeArray;
-                LKReportJson lklReportJson = LKReportDeserialize(lkReportPath);
-
-                foreach (var lk in lklReportJson.LKReport)
-                {
-                    foreach (var landkreis in landkreiseSort)
-                    {
-                        if (lk.AdmUnitId == landkreis.AdmUnitId)
+                        foreach (var lkItem in lk)
                         {
-                            LKReport lkReport = new();
-                            LKReportAttribute lkReportAttributeObj = new();
-                            lkAttributeObj = lk.LKReportAttribute;
-                            lkAttributeArrayList = new ArrayList(lkAttributeObj);
-
-                            lkReportAttributeObj.Datum = DateTime.Now.ToString("dd.MM.yyyy");
-                            try
-                            {
-                                lkReportAttributeObj.Fahlzahl = (int)double.Parse(landkreis.Faelle7Lk);
-                            }
-                            catch
-                            {
-                                lkReportAttributeObj.Fahlzahl = 0;
-                            }
-
-                            lkAttributeArrayList.Add(lkReportAttributeObj);
-                            lkReportAttributeArray = (LKReportAttribute[])lkAttributeArrayList.ToArray(typeof(LKReportAttribute));
-                            lkReport.LKReportAttribute = lkReportAttributeArray;
-
-                            if (lkReport.AdmUnitId == 5358)
-                            {
-                                lkReport.LKName = lk.LKName;
-                                lkReport.AdmUnitId = lk.AdmUnitId;
-                            }
-                            lkReport.LKName = lk.LKName;
-                            lkReport.AdmUnitId = lk.AdmUnitId;
-                            reportArrayList.Add(lkReport);
+                            allLkArrayList.Add(lkItem);
                         }
                     }
+                    Landkreis[] landkreise = (Landkreis[])allLkArrayList.ToArray(typeof(Landkreis));
+                    Landkreis[] landkreiseSort = landkreise.OrderBy(c => c.LandkreisName).ToArray();
 
+                    LKReportJson report = new();
+                    LKReportAttribute[] lkAttributeObj;
+                    ArrayList reportArrayList = new();
+                    ArrayList lkAttributeArrayList = new();
+                    LKReportAttribute[] lkReportAttributeArray;
+                    LKReportJson lklReportJson = LKReportDeserialize(lkReportPath);
+                    if (lklReportJson != null)
+                    {
+                        foreach (var lk in lklReportJson.LKReport)
+                        {
+                            foreach (var landkreis in landkreiseSort)
+                            {
+                                if (lk.AdmUnitId == landkreis.AdmUnitId)
+                                {
+                                    LKReport lkReport = new();
+                                    LKReportAttribute lkReportAttributeObj = new();
+                                    lkAttributeObj = lk.LKReportAttribute;
+                                    lkAttributeArrayList = new ArrayList(lkAttributeObj);
+
+                                    lkReportAttributeObj.Datum = DateTime.Now.ToString("dd.MM.yyyy");
+                                    try
+                                    {
+                                        lkReportAttributeObj.Fahlzahl = (int)double.Parse(landkreis.Faelle7Lk);
+                                    }
+                                    catch
+                                    {
+                                        lkReportAttributeObj.Fahlzahl = 0;
+                                    }
+
+                                    lkAttributeArrayList.Add(lkReportAttributeObj);
+                                    lkReportAttributeArray = (LKReportAttribute[])lkAttributeArrayList.ToArray(typeof(LKReportAttribute));
+                                    lkReport.LKReportAttribute = lkReportAttributeArray;
+
+                                    if (lkReport.AdmUnitId == 5358)
+                                    {
+                                        lkReport.LKName = lk.LKName;
+                                        lkReport.AdmUnitId = lk.AdmUnitId;
+                                    }
+                                    lkReport.LKName = lk.LKName;
+                                    lkReport.AdmUnitId = lk.AdmUnitId;
+                                    reportArrayList.Add(lkReport);
+                                }
+                            }
+                        }
+                        LKReport[] lkReportArray = (LKReport[])reportArrayList.ToArray(typeof(LKReport));
+                        report.LKReport = lkReportArray;
+                        report.Datum = DateTime.Now.ToString("dd.MM.yyyy");
+
+                        JSONWriter.Write(report, targetPath, filename);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
-                LKReport[] lkReportArray = (LKReport[])reportArrayList.ToArray(typeof(LKReport));
-                report.LKReport = lkReportArray;
-                report.Datum = DateTime.Now.ToString("dd.MM.yyyy");
-               
-                JSONWriter.Write(report, targetPath, filename);
-                return true;
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception e)
             {

@@ -32,7 +32,6 @@
                 {
                     if (standAktuell == false)
                     {
-
                         <div class="row" style=" display: inline-block; margin-left: 16px;">
                             <div class="row">
                                 <p><em>weitere Daten stehen derzeit nicht verfügung!</em></p>
@@ -455,14 +454,11 @@
         datum = DateTime.Now;
         await Task.Run(SetRKIData);
         await Task.Run(GetRKIData);
-        //GetStatus();
-    }
 
-    private void GetStatus()
-    {
-        if (standAktuell == false)
+        if (status == false && standAktuell == true)
         {
             status = false;
+            standAktuell = false;
         }
     }
 
@@ -481,7 +477,6 @@
         try
         {
             path = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
-            //path = @"../SmICSWebApp/Resources/statistik/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
             dailyReport = rkiService.DeserializeRkiData(path);
             stand = dailyReport.Bericht.Stand;
             standAktuell = dailyReport.Bericht.StandAktuell;
@@ -510,7 +505,6 @@
             try
             {
                 pathLastDay = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
-                //pathLastDay = @"../SmICSWebApp/Resources/statistik/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
                 lastReport = rkiService.DeserializeRkiData(pathLastDay);
                 if (lastReport != null)
                 {
@@ -530,8 +524,6 @@
         {
             status = true;
             standAktuell = false;
-            //rWert7Tage = "k.A.";
-            //rWertColor = "#F35C58";
         }
     }
 

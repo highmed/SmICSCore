@@ -19,17 +19,17 @@
 
         <div class="card-body col-10">
             <div style="padding: 0px 0px 100px 0px;">
-                <h3>@*Fallzahlen im Krankenhaus*@</h3>
                 @if (allPositivTest == null)
                 {
-                    @if (status == true)
-                    {
-                        <p><em>Daten werden geladen...</em></p>
-                        <div class="spinner"></div> }
-                    else
+                    @if (status == false)
                     {
                         <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
                         <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+                    }
+                    else
+                    {
+                        <p><em>Daten werden geladen...</em></p>
+                        <div class="spinner"></div>
                     }
                 }
                 else
@@ -322,6 +322,12 @@
         showNosk = false;
         showNoskByCont = false;
         await Task.Run(LoadEhrData);
+
+        if (allPositivTest == null && status == true)
+        {
+            allPositivTest = null;
+            status = false;
+        }
     }
 
     private void LoadEhrData()
@@ -340,11 +346,11 @@
 
             Dictionary<string, int> sortDictPositiv = GetDataLineChart(allPositivPat);
             Dictionary<string, int> sortDictNegativ = GetDataLineChart(allNegativPat);
-            LineChart(sortDictPositiv, sortDictNegativ);
-
+            if (sortDictPositiv != null && sortDictNegativ != null)
+            {
+                LineChart(sortDictPositiv, sortDictNegativ);
+            }
             DailyCases();
-
-            status = true;
         }
         catch (Exception)
         {
@@ -418,22 +424,29 @@
 
     private Dictionary<string, int> GetDataLineChart(List<CountDataModel> patientenTest)
     {
-        sortEhrDaten = new();
-        int i;
-        foreach (var pat in patientenTest)
+        try
         {
-            if (sortEhrDaten.ContainsKey(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM")))
+            sortEhrDaten = new();
+            int i;
+            foreach (var pat in patientenTest)
             {
-                sortEhrDaten.TryGetValue(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), out i);
-                sortEhrDaten.Remove(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"));
-                sortEhrDaten.Add(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), i + 1);
+                if (sortEhrDaten.ContainsKey(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM")))
+                {
+                    sortEhrDaten.TryGetValue(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), out i);
+                    sortEhrDaten.Remove(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"));
+                    sortEhrDaten.Add(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), i + 1);
+                }
+                else
+                {
+                    sortEhrDaten.Add(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), 1);
+                }
             }
-            else
-            {
-                sortEhrDaten.Add(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), 1);
-            }
+            return sortEhrDaten;
         }
-        return sortEhrDaten;
+        catch (Exception)
+        {
+            return null;
+        }
     }
 
     private void LineChart(Dictionary<string, int> sortDictPositiv, Dictionary<string, int> sortDictNegativ)

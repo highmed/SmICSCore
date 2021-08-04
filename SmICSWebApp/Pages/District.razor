@@ -16,88 +16,96 @@
 
         <div class="card-body col-10">
             <div style="padding: 0px 0px 100px 0px;">
-                @if (@standAktuell == false)
+                @if (status == false)
                 {
-                    <p><em>Daten werden geladen...</em></p>
-                    <div class="spinner"></div>
+                    @if (standAktuell == false)
+                    {
+                        <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
+                        <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+                    }
+                    else
+                    {
+                        <p><em>Daten werden geladen...</em></p>
+                        <div class="spinner"></div>
+                    }
                 }
                 else
                 {
-                    <div class="row">
-                        <div class="col-6">
+                    if (standAktuell == false)
+                    {
+                        <div class="row" style=" display: inline-block; margin-left: 16px;">
                             <div class="row">
-                                <div class="col-md-3 col-xxl-3 d-flex">
-                                    <div class="card flex-fill">
-                                        <div class="card-header" id="head-info">
-                                            <h6 class="card-title"> COVID-19-Fälle </h6>
-                                        </div>
-                                        <div class="card-body" id="body-info">
-                                            <span class="h5 d-inline-block mt-1 mb-3">@fallzahl</span>
-                                            <p class="mb-2">+ @fallzahlVortag</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-xxl-3 d-flex">
-                                    <div class="card flex-fill">
-                                        <div class="card-header" id="head-info">
-                                            <h6 class="card-title"> COVID-19-Todesfälle </h6>
-                                        </div>
-                                        <div class="card-body" id="body-info">
-                                            <span class="h5 d-inline-block mt-1 mb-3">@todesfaelle</span>
-                                            <p class="mb-2">+ @todesfaelleVortag</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-xxl-3 d-flex">
-                                    <div class="card flex-fill">
-                                        <div class="card-header" id="head-info" style="background-color: @inzidenzColor">
-                                            <h6 class="card-title">  7-Tage-Inzidenz  </h6>
-                                        </div>
-                                        <div class="card-body" id="body-info">
-                                            <span class="h5 d-inline-block mt-1 mb-3">@inzidenz7Tage</span>
-                                            <p class="mb-2"> @inzidenz7TageVortag</p>
+                                <p><em>weitere Daten stehen derzeit nicht verfügung!</em></p>
+                            </div>
+                            <div class="row">
+                                <button class="btn btn-primary" @onclick="GetLastReport"> Daten von Vortag laden </button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-md-3 col-xxl-3 d-flex">
+                                        <div class="card flex-fill">
+                                            <div class="card-header" id="head-info">
+                                                <h6 class="card-title"> COVID-19-Fälle </h6>
+                                            </div>
+                                            <div class="card-body" id="body-info">
+                                                <span class="h5 d-inline-block mt-1 mb-3">@fallzahl</span>
+                                                <p class="mb-2">+ @fallzahlVortag</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3 col-xxl-3 d-flex">
-                                    <div class="card flex-fill">
-                                        <div class="card-header" id="head-info" style="background-color: @rWertColor">
-                                            <h6 class="card-title">  7-Tage-R-Wert </h6>
+                                    <div class="col-md-3 col-xxl-3 d-flex">
+                                        <div class="card flex-fill">
+                                            <div class="card-header" id="head-info">
+                                                <h6 class="card-title"> COVID-19-Todesfälle </h6>
+                                            </div>
+                                            <div class="card-body" id="body-info">
+                                                <span class="h5 d-inline-block mt-1 mb-3">@todesfaelle</span>
+                                                <p class="mb-2">+ @todesfaelleVortag</p>
+                                            </div>
                                         </div>
-                                        <div class="card-body" id="body-info">
-                                            <span class="h5 d-inline-block mt-1 mb-3">@rWert7Tage</span>
-                                            <p class="mb-2">@rWert7TageVortag</p>
+                                    </div>
+                                    <div class="col-md-3 col-xxl-3 d-flex">
+                                        <div class="card flex-fill">
+                                            <div class="card-header" id="head-info" style="background-color: @inzidenzColor">
+                                                <h6 class="card-title">  7-Tage-Inzidenz  </h6>
+                                            </div>
+                                            <div class="card-body" id="body-info">
+                                                <span class="h5 d-inline-block mt-1 mb-3">@inzidenz7Tage</span>
+                                                <p class="mb-2"> @inzidenz7TageVortag</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-xxl-3 d-flex">
+                                        <div class="card flex-fill">
+                                            <div class="card-header" id="head-info" style="background-color: @rWertColor">
+                                                <h6 class="card-title">  7-Tage-R-Wert </h6>
+                                            </div>
+                                            <div class="card-body" id="body-info">
+                                                <span class="h5 d-inline-block mt-1 mb-3">@rWert7Tage</span>
+                                                <p class="mb-2">@rWert7TageVortag</p>
 
+                                            </div>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
+
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="col-6">
 
                             </div>
                         </div>
+                        <br>
 
-                        <div class="col-6">
-
-                        </div>
-                    </div>
-                    <br>
-
-                    <div class="row">
-                        @if (@blStandAktuell == false)
-                        {
-                            <div class="row" style=" display: inline-block; margin: 0px 0px 0px 40px">
-                                <div class="row">
-                                    <p><em>weitere Daten stehen derzeit nicht verfügung!</em></p>
-                                </div>
-                                <div class="row">
-                                    <button class="btn btn-primary" @onclick="GetLastReport"> Daten von Vortag laden </button>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
+                        <div class="row">
                             <div class="col-10 d-flex">
                                 <div class="card flex-fill">
                                     <div class="card-header">
@@ -153,13 +161,9 @@
                                     </div>
                                 </div>
                             </div>
-                        }
-                    </div>
-                    <br>
-
-                    <div class="row">
-
-                    </div>
+                        </div>
+                        <br>
+                    }
                 }
             </div>
         </div>
@@ -170,8 +174,7 @@
     private DateTime datum = DateTime.Now;
     private DailyReport dailyReport = new DailyReport();
     private DailyReport lastReport = new DailyReport();
-    private bool standAktuell;
-    private bool blStandAktuell;
+    private bool standAktuell, blStandAktuell, status;
     private string rWert7Tage;
     private string rWert7TageVortag;
     private string inzidenz7Tage;
@@ -189,15 +192,22 @@
     private ArrayList landkreise = new ArrayList();
     private Landkreis[] lkArray;
     private Landkreis[] lkArrayLast;
-    private string path;
-    private string pathLastDay;
+    private string path, pathLastDay;
 
     [Parameter]
     public string lb { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        status = false;
+        standAktuell = true;
         await Task.Run(GetRKIData);
+
+        if (status == false && standAktuell == true)
+        {
+            status = false;
+            standAktuell = false;
+        }
     }
 
     private void GetRKIData()
@@ -254,18 +264,52 @@
 
             inzidenzColor = rkiService.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
             rWertColor = rkiService.SetCaseColor(rWert7Tage, rWert7TageVortag);
+            status = true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine(ex);
+            status = true;
+            standAktuell = false;
         }
     }
 
     private void GetLastReport()
     {
-        lkArray = lkArrayLast;
-        blStandAktuell = lastReport.Bericht.BlStandAktuell;
-        stand = lastReport.Bericht.Stand;
+        try
+        {
+            pathLastDay = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
+            lastReport = rkiService.DeserializeRkiData(pathLastDay);
+            if (lastReport != null)
+            {
+                blStandAktuell = lastReport.Bericht.BlStandAktuell;
+                standAktuell = lastReport.Bericht.StandAktuell;
+                stand = lastReport.Bericht.Stand;
+                rWert7Tage = lastReport.Bericht.RWert7Tage;
+                rWert7TageVortag = lastReport.Bericht.RWert7TageVortag;
+                lastBundeslaender = lastReport.Bericht.Bundesland;
+                foreach (var lastBundesland in lastBundeslaender)
+                {
+                    if (lastBundesland.BlAttribute.Bundesland == lb)
+                    {
+                        string vortag = lastBundesland.BlAttribute.FallzahlGesamt;
+                        fallzahlVortag = Int32.Parse(fallzahl.Replace(".", "").Trim()) - Int32.Parse(vortag.Replace(".", "").Trim());
+                        string vortag2 = lastBundesland.BlAttribute.Todesfaelle;
+                        todesfaelleVortag = Int32.Parse(todesfaelle.Replace(".", "").Trim()) - Int32.Parse(vortag2.Replace(".", "").Trim());
+                        inzidenz7TageVortag = lastBundesland.BlAttribute.Inzidenz7Tage;
+                        lkArrayLast = lastBundesland.Landkreise;
+                    }
+                }
+                lkArray = lkArrayLast;
+                inzidenzColor = rkiService.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
+                rWertColor = rkiService.SetCaseColor(rWert7Tage, rWert7TageVortag);
+                status = true;
+            }
+        }
+        catch (Exception)
+        {
+            status = false;
+            standAktuell = false;
+        }
     }
 
 }
