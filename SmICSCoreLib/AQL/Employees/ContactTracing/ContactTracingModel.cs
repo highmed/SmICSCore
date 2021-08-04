@@ -9,7 +9,6 @@ namespace SmICSCoreLib.AQL.Employees.ContactTracing
     public class ContactTracingModel
     {
         [JsonProperty(PropertyName = "PatientID")]
-        [Required]
         public string PatientID { get; set; }
         [JsonProperty(PropertyName = "BerichtID")]
         [Required]

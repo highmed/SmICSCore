@@ -7,7 +7,6 @@ namespace SmICSCoreLib.AQL.Employees.PersonData
     public class PersonDataModel
     {
         [JsonProperty(PropertyName = "PatientID")]
-        [Required]
         public string PatientID { get; set; }
         [JsonProperty(PropertyName = "PersonID")]
         [Required]
