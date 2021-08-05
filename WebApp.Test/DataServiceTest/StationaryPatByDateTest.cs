@@ -22,13 +22,15 @@ namespace WebApp.Test.DataServiceTest
             List<StationaryDataModel> actual = factory.ProcessFromDate(dateTime);
             List<StationaryDataModel> expected = GetExpectedStationaryDataModels(expectedResultSet, ehrNo);
 
+
+
             Assert.Equal(expected.Count, actual.Count);
             for (int i = 0; i < expected.Count; i++)
             {
                 Assert.Equal(expected[i].PatientID, actual[i].PatientID);
                 Assert.Equal(expected[i].FallID, actual[i].FallID);
-                //Assert.Equal(expected[i].Datum_Uhrzeit_der_Aufnahme, actual[i].Datum_Uhrzeit_der_Aufnahme);
-                //Assert.Equal(expected[i].Datum_Uhrzeit_der_Entlassung, actual[i].Datum_Uhrzeit_der_Entlassung);
+                Assert.Equal(expected[i].Datum_Uhrzeit_der_Aufnahme.ToUniversalTime().ToString("s"), actual[i].Datum_Uhrzeit_der_Aufnahme.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].Datum_Uhrzeit_der_Entlassung, actual[i].Datum_Uhrzeit_der_Entlassung);
                 Assert.Equal(expected[i].Versorgungsfallgrund, actual[i].Versorgungsfallgrund);
                 Assert.Equal(expected[i].Aufnahmeanlass, actual[i].Aufnahmeanlass);
                 Assert.Equal(expected[i].Art_der_Entlassung, actual[i].Art_der_Entlassung);

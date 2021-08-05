@@ -22,6 +22,9 @@ namespace WebApp.Test
         [Fact]
         public void BLReportDeserializeTest()
         {
+            string targetPath = @"../../../../WebApp.Test/Resources";
+            rkiRestApi.BLReportSerialize(targetPath);
+
             string filePath = @"../../../../WebApp.Test/Resources/BLReport.json";
             Report report = rkiRestApi.BLReportDeserialize(filePath);
 

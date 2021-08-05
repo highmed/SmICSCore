@@ -27,8 +27,8 @@ namespace WebApp.Test.Symptom
             for (int i = 0; i < 3; i++)
             {
                 Assert.Equal(expected[i].PatientenID, actual[i].PatientenID);
-                //Assert.Equal(expected[i].Beginn.ToString("yyyy-MM-dd"), actual[i].Beginn.ToString("yyyy-MM-dd"));
-                Assert.Equal(expected[i].Rueckgang.ToString("yyyy-MM-dd"), actual[i].Rueckgang.ToString("yyyy-MM-dd"));
+                Assert.Equal(expected[i].Beginn.ToString("yyyy.MM.dd"), actual[i].Beginn.ToUniversalTime().ToString("yyyy.MM.dd"));
+                Assert.Equal(expected[i].Rueckgang.ToString("yyyy.MM.dd"), actual[i].Rueckgang.ToUniversalTime().ToString("yyyy.MM.dd"));
                 Assert.Equal(expected[i].NameDesSymptoms, actual[i].NameDesSymptoms);
             }
 

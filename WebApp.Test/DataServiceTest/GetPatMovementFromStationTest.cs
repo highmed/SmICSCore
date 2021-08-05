@@ -1,4 +1,4 @@
-﻿using SmICSCoreLib.AQL.Patient_Stay.Stationary;
+﻿using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Xunit;
 using SmICSFactory.Tests;
@@ -40,9 +40,8 @@ namespace WebApp.Test.DataServiceTest
             Assert.Equal(expected[i].Ende.ToString("yyyy-MM-dd"), actual[i].Ende.ToString("yyyy-MM-dd"));
             Assert.Equal(expected[i].StationID, actual[i].StationID);
             Assert.Equal(expected[i].Raum, actual[i].Raum);
-            //Assert.Equal(expected[i].Fachabteilung, actual[i].Fachabteilung);
+            Assert.Equal(Regex.Replace(expected[i].Fachabteilung, @"\s", ""), Regex.Replace(actual[i].Fachabteilung, @"\s", ""));
             Assert.Equal(expected[i].FachabteilungsID, actual[i].FachabteilungsID);
-
         }
 
 

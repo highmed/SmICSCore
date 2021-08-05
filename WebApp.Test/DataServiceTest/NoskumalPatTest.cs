@@ -72,7 +72,6 @@ namespace WebApp.Test.DataServiceTest
             patientList.Add(new Patient("52afa449-07a2-4d57-bb7a-86e7960124ac", DateTime.Parse("08.02.2020 11:13:00"), DateTime.Parse("08.02.2020 12:13:00"), DateTime.Parse("20.02.2020 12:13:00")));
             patientList.Add(new Patient("959c26c9-de4a-40b8-bf76-a315574d3da7", DateTime.Parse("01.12.2020 09:13:09"), DateTime.Parse("27.11.2020 12:13:00"), DateTime.Parse("12.12.2020 12:13:00")));
             patientList.Add(new Patient("386ff697-7fe4-4fe0-942c-eb389b81704f", DateTime.Parse("02.12.2020 12:13:33"), DateTime.Parse("28.11.2020 12:13:00"), DateTime.Parse("12.12.2020 12:13:00")));
-            patientList.Add(new Patient("f7f106b1-3aef-481e-aa76-af9092dc63dc", DateTime.Parse("02.12.2020 12:40:33"), DateTime.Parse("28.11.2020 12:13:00"), DateTime.Parse("12.12.2020 12:13:00")));
             patientList.Add(new Patient("c74f6215-4fc2-42a5-a3ad-f92536ca64dc", DateTime.Parse("01.01.2021 11:00:00"), DateTime.Parse("01.01.2021 09:00:00"), DateTime.Parse("05.01.2021 15:00:00")));
             patientList.Add(new Patient("96cdcae3-6c08-4eb7-8e41-45b012bf61d4", DateTime.Parse("02.01.2021 11:00:00"), DateTime.Parse("02.01.2021 09:00:00"), DateTime.Parse("07.01.2021 15:00:00")));
             patientList.Add(new Patient("059d9e68-c096-4ee7-8551-c088a5488813", DateTime.Parse("03.01.2021 11:00:00"), DateTime.Parse("02.01.2021 09:00:00"), DateTime.Parse("09.01.2021 15:00:00")));

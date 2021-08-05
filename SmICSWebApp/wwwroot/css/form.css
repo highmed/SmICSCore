@@ -1,4 +1,5 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
 .con {
     display: flex;
     flex-direction: column;
@@ -27,6 +28,7 @@
     margin-left: 3%;
     background-color: #F8F8F8;
 }
+
 .deph_1 {
     border: 0px dotted lightgrey;
     background-color: transparent;
@@ -49,9 +51,9 @@
     border: none;
 }
 
-#button:hover {
-    opacity: 1
-}
+    #button:hover {
+        opacity: 1
+    }
 
 select {
     -webkit-appearance: button;
@@ -140,21 +142,21 @@ input[type="checkbox"].css-checkbox {
     border: 0;
 }
 
-input[type="checkbox"].css-checkbox + label.css-label {
-    padding-left: 30px;
-    height: 25px;
-    display: inline-block;
-    line-height: 25px;
-    background-repeat: no-repeat;
-    background-position: 0 0;
-    font-size: 25px;
-    vertical-align: middle;
-    cursor: pointer;
-}
+    input[type="checkbox"].css-checkbox + label.css-label {
+        padding-left: 30px;
+        height: 25px;
+        display: inline-block;
+        line-height: 25px;
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        font-size: 25px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
 
-input[type="checkbox"].css-checkbox:checked + label.css-label {
-    background-position: 0 -25px;
-}
+    input[type="checkbox"].css-checkbox:checked + label.css-label {
+        background-position: 0 -25px;
+    }
 
 label.css-label {
     background-image: url("../resources/csscheckbox.png");
@@ -205,6 +207,7 @@ label.css-label {
     color: #637492;
     text-shadow: 1px 1px 5px lightgrey;
 }
+
 .zurueck-bottom {
     font-size: 20px;
 }
@@ -224,10 +227,9 @@ label.css-label {
         margin-bottom: 2%;
         padding: 2%;
     }
-    
 }
 
-@media (min-width: 1624px){
+@media (min-width: 1624px) {
 
     .form-image {
         display: flex;

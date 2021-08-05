@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.IO;
 using SmICSCoreLib.REST;
 using System.Net.Http;
 using Newtonsoft.Json;
@@ -25,7 +24,6 @@ namespace SmICSWebApp.Data
         {
             string composer = "SmICS";
 
-            //.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss")
             try
             {
                 if (createEntry != null)
@@ -41,47 +39,48 @@ namespace SmICSWebApp.Data
                     var base_context = ",\"context\":{\"_type\":\"EVENT_CONTEXT\",\"start_time\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss") + "\"}";
                     var base_setting = ",\"setting\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"other care\",\"defining_code\":{\"terminology_id\":{\"value\":\"openehr\"},\"code_string\":\"238\"}}";
                     var base_other_context = ",\"other_context\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0001\",\"items\":[";
-                    var base_bericht_id = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Bericht ID\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["bericht_id"] + "\"}}";
+                    var base_bericht_id = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Bericht ID\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["BerichtID"] + "\"}}";
                     var base_event_cluster = ",{\"_type\":\"CLUSTER\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Eventsummary\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-CLUSTER.eventsummary.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-CLUSTER.eventsummary.v0\",\"items\":[";
-                    var base_event_kennung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Event-Kennung\"},\"archetype_node_id\":\"at0001\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["event_kennung"] + "\"}}";
-                    var base_event_art = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Event-Art\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["event_art"] + "\"}}";
+                    var base_event_kennung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Event-Kennung\"},\"archetype_node_id\":\"at0001\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["EventKennung"] + "\"}}";
+                    var base_event_art = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Event-Art\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["EventArt"] + "\"}}";
                     var base_bet_person_cluster = ",{\"_type\":\"CLUSTER\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Beteiligte Personen\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"at0007\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"at0007\",\"items\":[";
-                    var base_art_d_person_1 = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Art der Person\"},\"archetype_node_id\":\"at0011\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["art_der_person_1"] + "\"}}";
-                    var base_art_d_person_1_ID = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"ID der Person\"},\"archetype_node_id\":\"at0010\",\"value\":{\"_type\":\"DV_IDENTIFIER\",\"id\":\"" + JObject.Parse(createEntry.ToString())["art_der_person_1_ID"] + "\"}}]}";
-                    var base_art_d_person_2 = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Art der Person\"},\"archetype_node_id\":\"at0011\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["art_der_person_2"] + "\"}}";
-                    var base_art_d_person_2_ID = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"ID der Person\"},\"archetype_node_id\":\"at0010\",\"value\":{\"_type\":\"DV_IDENTIFIER\",\"id\":\"" + JObject.Parse(createEntry.ToString())["art_der_person_2_ID"] + "\"}}]}";
-                    var base_event_kategorie = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Event-Kategorie\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["event_kategorie"] + "\"}}";
-                    var base_event_kommentar = (string)JObject.Parse(createEntry.ToString())["kontakt_kommentar"];
-                    if (base_event_kommentar != null) 
+                    var base_art_d_person_1 = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Art der Person\"},\"archetype_node_id\":\"at0011\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["ArtDerPerson1"] + "\"}}";
+                    var base_art_d_person_1_ID = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"ID der Person\"},\"archetype_node_id\":\"at0010\",\"value\":{\"_type\":\"DV_IDENTIFIER\",\"id\":\"" + JObject.Parse(createEntry.ToString())["PersonenID1"] + "\"}}]}";
+                    var base_art_d_person_2 = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Art der Person\"},\"archetype_node_id\":\"at0011\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["ArtDerPerson2"] + "\"}}";
+                    var base_art_d_person_2_ID = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"ID der Person\"},\"archetype_node_id\":\"at0010\",\"value\":{\"_type\":\"DV_IDENTIFIER\",\"id\":\"" + JObject.Parse(createEntry.ToString())["PersonenID2"] + "\"}}]}";
+                    var base_event_kategorie = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Event-Kategorie\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["EventKategorie"] + "\"}}";
+                    var base_event_kommentar = (string)JObject.Parse(createEntry.ToString())["EventKommentar"];
+                    if (base_event_kommentar != null)
                     {
-                        base_event_kommentar = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kommentar\"},\"archetype_node_id\":\"at0006\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["kontakt_kommentar"] + "\"}}";
+                        base_event_kommentar = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kommentar\"},\"archetype_node_id\":\"at0006\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["EventKommentar"] + "\"}}";
                     }
                     var base_close_other_context = "]}]}}";
                     var base_content = ",\"content\":[{\"_type\":\"ACTION\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kontakt\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-ACTION.contact.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-ACTION.contact.v0\",\"language\":{\"terminology_id\":{\"value\":\"ISO_639-1\"},\"code_string\":\"de\"},\"encoding\":{\"terminology_id\":{\"value\":\"IANA_character-sets\"},\"code_string\":\"UTF-8\"},\"subject\":{\"_type\":\"PARTY_SELF\"},\"time\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss") + "\"},\"ism_transition\":{\"current_state\":{\"value\":\"planned\",\"defining_code\":{\"terminology_id\":{\"value\":\"openehr\"},\"code_string\":\"526\"}}},\"description\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0001\",\"items\":[";
-                    var base_beschreibung = (string)JObject.Parse(createEntry.ToString())["beschreibung"];
+                    var base_beschreibung = (string)JObject.Parse(createEntry.ToString())["Beschreibung"];
                     if (base_beschreibung != null)
                     {
-                        base_beschreibung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Beschreibung\"},\"archetype_node_id\":\"at0009\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["beschreibung"] + "\"}},";
+                        base_beschreibung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Beschreibung\"},\"archetype_node_id\":\"at0009\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Beschreibung"] + "\"}},";
                     }
-                    var base_beginn = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Beginn\"},\"archetype_node_id\":\"at0006\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["beginn"] + "\"}}";
-                    var base_ende = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Ende\"},\"archetype_node_id\":\"at0016\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["ende"] + "\"}}";
-                    var base_ort = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Ort\"},\"archetype_node_id\":\"at0017\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["ort"] + "\"}}";
-                    var base_gesamtdauer = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Gesamtdauer\"},\"archetype_node_id\":\"at0003\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["gesamtdauer"] + "\"}}";
-                    var base_abstand = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Abstand\"},\"archetype_node_id\":\"at0008\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["abstand"] + "\"}}";
+                    var base_beginn = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Beginn\"},\"archetype_node_id\":\"at0006\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Beginn"] + "\"}}";
+                    var base_ende = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Ende\"},\"archetype_node_id\":\"at0016\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Ende"] + "\"}}";
+                    var base_ort = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Ort\"},\"archetype_node_id\":\"at0017\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Ort"] + "\"}}";
+                    var base_gesamtdauer = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Gesamtdauer\"},\"archetype_node_id\":\"at0003\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Gesamtdauer"] + "\"}}";
+                    var base_abstand = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Abstand\"},\"archetype_node_id\":\"at0008\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Abstand"] + "\"}}";
                     var base_kleidung_cluster = ",{\"_type\":\"CLUSTER\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Schutzkleidung\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-CLUSTER.protective_clothing_.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-CLUSTER.protective_clothing_.v0\",\"items\":[";
-                    var base_schutzkleidung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Schutzkleidung\"},\"archetype_node_id\":\"at0001\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["schutzkleidung"] + "\"}}";
-                    var base_person = (string)JObject.Parse(createEntry.ToString())["person"];
+                    var base_schutzkleidung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Schutzkleidung\"},\"archetype_node_id\":\"at0001\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Schutzkleidung"] + "\"}}";
+                    var base_person = (string)JObject.Parse(createEntry.ToString())["Person"];
                     if (base_person != "Indexperson")
                     {
-                        base_person = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["person"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0004\"}}}]}";
-                    }else
-                    {
-                        base_person = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["person"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0003\"}}}]}";
+                        base_person = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Person"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0004\"}}}]}";
                     }
-                    var base_kommentar = (string)JObject.Parse(createEntry.ToString())["kommentar"];
+                    else
+                    {
+                        base_person = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Person"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0003\"}}}]}";
+                    }
+                    var base_kommentar = (string)JObject.Parse(createEntry.ToString())["Kommentar"];
                     if (base_kommentar != null)
                     {
-                        base_kommentar = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kommentar\"},\"archetype_node_id\":\"at0007\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["kommentar"] + "\"}}";
+                        base_kommentar = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kommentar\"},\"archetype_node_id\":\"at0007\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Kommentar"] + "\"}}";
                     }
                     var base_composition_ende = "]}}]}";
 
@@ -95,9 +94,9 @@ namespace SmICSWebApp.Data
                     var obj = JsonConvert.DeserializeObject(json_all);
                     var finishedJson = JsonConvert.SerializeObject(obj, Formatting.Indented);
 
-                    File.WriteAllText(@".. / .. / .. / .. / TestData / contacttracing.txt", finishedJson);
+                    //File.WriteAllText(@".. / .. / .. / .. / TestData / contacttracing.txt", finishedJson);
 
-                    //SaveComposition(ehr_id, finishedJson);
+                    SaveComposition(ehr_id, finishedJson);
                 }
 
             }
@@ -136,7 +135,7 @@ namespace SmICSWebApp.Data
                 string returnValue = responseMessage.Content.ReadAsStringAsync().Result;
                 _logger.LogInformation($"Succeded to POST data: ({responseMessage.StatusCode}): {returnValue}");
             }
-                
+
         }
 
         private string ExistsSubject(IRestDataAccess _data, string subjectID)
@@ -152,5 +151,5 @@ namespace SmICSWebApp.Data
             public string Status { get; set; }
         }
     }
-    
+
 }

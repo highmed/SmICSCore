@@ -48,19 +48,10 @@ namespace WebApp.Test
         [Fact]
         public void CkeckSerializtion()
         {
-            string path = @"../SmICSWebApp/Resources/statistik/json";
+            string path = @"../../../../WebApp.Test/Resources/";
             bool status = rkiRestApi.SerializeRkiData(path);
 
             Assert.True(status);
-        }
-
-        [Fact]
-        public void CkeckDeserializtion()
-        {
-            string dailyReportPath = @"../../../../WebApp.Test/Resources/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
-            DailyReport dailyReport = rkiRestApi.DeserializeRkiData(dailyReportPath);
-
-            Assert.True(dailyReport.Bericht.StandAktuell);
         }
 
         [Fact]
@@ -70,6 +61,18 @@ namespace WebApp.Test
             DailyReport dailyReport = rkiRestApi.DeserializeRkiData(dailyReportPath);
 
             Assert.Null(dailyReport);
+        }
+
+        [Fact]
+        public void CkeckDeserializtion()
+        {
+            string path = @"../../../../WebApp.Test/Resources/";
+            rkiRestApi.SerializeRkiData(path);
+
+            string dailyReportPath = @"../../../../WebApp.Test/Resources/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            DailyReport dailyReport = rkiRestApi.DeserializeRkiData(dailyReportPath);
+
+            Assert.True(dailyReport.Bericht.StandAktuell);
         }
 
     }
