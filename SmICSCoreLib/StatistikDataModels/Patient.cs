@@ -14,8 +14,11 @@ namespace SmICSCoreLib.StatistikDataModels
         [JsonProperty(PropertyName = "Aufnahme_Datum")]
         public DateTime Aufnahme { get; set; }
 
-        [JsonProperty(PropertyName = "Entlastung_cDatum")]
+        [JsonProperty(PropertyName = "Entlastung_Datum")]
         public DateTime Entlastung { get; set; }
+
+        [JsonProperty(PropertyName = "Infektion")]
+        public string Infektion { get; set; }
 
         public Patient() { }
         public Patient(string patientID, DateTime probenentnahme, DateTime aufnahme, DateTime entlastung)
@@ -24,6 +27,12 @@ namespace SmICSCoreLib.StatistikDataModels
             Probenentnahme = probenentnahme;
             Aufnahme = aufnahme;
             Entlastung = entlastung;
+        }
+
+        public Patient(string patientID, DateTime probenentnahme, DateTime aufnahme, DateTime entlastung, string infektion) 
+            : this(patientID, probenentnahme, aufnahme, entlastung)
+        {
+            Infektion = infektion;
         }
     }
 }

@@ -152,13 +152,13 @@ namespace SmICSWebApp.Controllers
         /// <returns></returns>
         [Route("Infection_Situation")]
         [HttpPost]
-        public ActionResult<List<Patient>> Infection_Situation()
+        public ActionResult<List<Patient>> Infection_Situation([FromBody] PatientListParameter parameter)
         {
             _logger.LogInformation("CALLED Infection_Situation without any parameters");
 
             try
             {
-                return _patientInformation.Infection_Situation();
+                return _patientInformation.Infection_Situation(parameter);
             }
             catch (Exception e)
             {

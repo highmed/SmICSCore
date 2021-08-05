@@ -82,9 +82,9 @@ namespace SmICSCoreLib.AQL.PatientInformation
             return _vaccFac.Process(parameter);
         }
 
-        public List<Patient> Infection_Situation()
+        public List<Patient> Infection_Situation(PatientListParameter parameter)
         {
-            return _infecFac.Process();
+            return _infecFac.Process(parameter);
         }
     }
 
