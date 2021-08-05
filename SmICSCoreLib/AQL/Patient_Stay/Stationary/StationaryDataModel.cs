@@ -28,6 +28,9 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Stationary
 
         [JsonProperty(PropertyName = "Datum_Uhrzeit_der_Entlassung")]
         public DateTime Datum_Uhrzeit_der_Entlassung { get; set; }
+        
+        [JsonProperty(PropertyName = "Station")]
+        public string Station { get; set; }
 
         public StationaryDataModel() { }
         public StationaryDataModel(StationaryDataReceiveModel stationaryDataReceiveModel)
@@ -40,6 +43,7 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Stationary
             Datum_Uhrzeit_der_Aufnahme = stationaryDataReceiveModel.Datum_Uhrzeit_der_Aufnahme;
             Art_der_Entlassung = stationaryDataReceiveModel.Art_der_Entlassung;
             Datum_Uhrzeit_der_Entlassung = stationaryDataReceiveModel.Datum_Uhrzeit_der_Entlassung;
+            Station = stationaryDataReceiveModel.Station;
         }
 
     }

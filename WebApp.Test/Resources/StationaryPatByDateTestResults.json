@@ -1,0 +1,49 @@
+{
+  "0": [
+    {
+      "PatientID": "875a0bc9-cab4-499d-84ec-4cf12ff6bff1",
+      "FallID": "99999902",
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-31T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-09T18:00:00Z"
+    },
+    {
+      "PatientID": "05fed599-81f2-4e23-8f4f-4f868273980a",
+      "FallID": "99999903",
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-01T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-05-14T18:00:00Z"
+    },
+    {
+      "PatientID": "05fed599-81f2-4e23-8f4f-4f868273980a",
+      "FallID": "99999904",
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-31T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-04T18:00:00Z"
+    },
+    {
+      "PatientID": "86167e76-dc85-4877-932a-a56cfd51ce7c",
+      "FallID": "99999901",
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-28T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-05T18:00:00Z"
+    },
+    {
+      "PatientID": "7dab2503-06f1-4c42-b4a4-76ddaae08794",
+      "FallID": "00000004",
+      "Datum_Uhrzeit_der_Aufnahme": "2021-01-03T09:00:00",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-01-09T15:00:00"
+    }
+  ]
+}

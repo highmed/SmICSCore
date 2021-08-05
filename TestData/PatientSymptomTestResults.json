@@ -1,0 +1,466 @@
+{
+  "0": [
+    {
+      "BefundDatum": "2020-12-02T09:47:45Z",
+      "NameDesSymptoms": "Vomiting (disorder)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-12-02T09:47:45Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-12-04T12:34:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-12-02T12:45:00Z",
+      "NameDesSymptoms": "Diarrhea (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-12-02T12:45:00Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-12-06T09:30:20",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "1": [
+    {
+      "BefundDatum": "2020-12-03T10:47:45Z",
+      "NameDesSymptoms": "Diarrhea (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-12-03T09:47:45Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-12-05T09:34:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-12-03T22:47:45Z",
+      "NameDesSymptoms": "Vomiting (disorder)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-12-03T22:47:45Z",
+      "Schweregrad": "Moderate (severity modifier) (qualifier value)",
+      "Rueckgang": "2020-12-04T01:34:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "2": [
+    {
+      "BefundDatum": "2020-12-03T09:47:45Z",
+      "NameDesSymptoms": "Diarrhea (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-12-03T09:47:45Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-12-05T12:34:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-12-03T20:47:45Z",
+      "NameDesSymptoms": "Vomiting (disorder)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-12-03T20:47:45Z",
+      "Schweregrad": "Moderate (severity modifier) (qualifier value)",
+      "Rueckgang": "2020-12-04T00:34:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "3": [
+    {
+      "BefundDatum": "2020-12-05T20:47:45Z",
+      "NameDesSymptoms": "Vomiting (disorder)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-12-05T20:47:45Z",
+      "Schweregrad": "Moderate (severity modifier) (qualifier value)",
+      "Rueckgang": "2020-12-06T00:34:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "4": [
+    {
+      "BefundDatum": "2020-02-10T16:29:49Z",
+      "NameDesSymptoms": "Fever (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-02-10T16:29:49Z",
+      "Schweregrad": "Moderate (severity modifier) (qualifier value)",
+      "Rueckgang": "2020-03-14T10:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-02-10T20:47:45Z",
+      "NameDesSymptoms": "Cough (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-02-10T20:47:45Z",
+      "Schweregrad": "Moderate (severity modifier) (qualifier value)",
+      "Rueckgang": "2020-02-17T00:34:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "5": [
+    {
+      "BefundDatum": "2020-02-13T14:59:59Z",
+      "NameDesSymptoms": "Fatigue (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-02-13T14:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-03-21T02:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-02-13T21:47:45Z",
+      "NameDesSymptoms": "Cough (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-02-13T21:47:45Z",
+      "Schweregrad": "Moderate (severity modifier) (qualifier value)",
+      "Rueckgang": "2020-02-22T09:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-02-13T23:59:59Z",
+      "NameDesSymptoms": "Feeling feverish (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-02-13T23:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-03-17T02:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "6": [
+    {
+      "BefundDatum": "2020-02-13T20:59:59Z",
+      "NameDesSymptoms": "Fatigue (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-02-13T20:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-03-22T12:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-02-13T20:59:59Z",
+      "NameDesSymptoms": "Feeling feverish (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-02-13T20:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-03-19T12:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-02-13T23:49:49Z",
+      "NameDesSymptoms": "Cough (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-02-13T23:49:49Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-02-25T09:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "7": [
+    {
+      "BefundDatum": "2020-02-15T16:49:49Z",
+      "NameDesSymptoms": "Fever (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-02-15T16:49:49Z",
+      "Schweregrad": "Moderate (severity modifier) (qualifier value)",
+      "Rueckgang": "2020-03-20T14:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-02-15T20:49:49Z",
+      "NameDesSymptoms": "Cough (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-02-15T20:49:49Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-02-28T09:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "8": [
+    {
+      "BefundDatum": "2020-02-15T16:29:49Z",
+      "NameDesSymptoms": "Cough (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-02-15T16:29:49Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-03-02T10:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-02-15T23:59:59Z",
+      "NameDesSymptoms": "Fever (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-02-15T23:59:59Z",
+      "Schweregrad": "Moderate (severity modifier) (qualifier value)",
+      "Rueckgang": "2020-03-22T02:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "9": [
+    {
+      "BefundDatum": "2020-03-13T14:59:59Z",
+      "NameDesSymptoms": "Dyspnea (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-03-13T14:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-03-18T17:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-03-13T18:59:59Z",
+      "NameDesSymptoms": "Cough (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-03-13T18:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-03-22T17:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-03-13T18:59:59Z",
+      "NameDesSymptoms": "Nasal discharge (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-03-13T18:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-03-22T17:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "10": [
+    {
+      "BefundDatum": "2020-03-17T10:59:59Z",
+      "NameDesSymptoms": "Fever greater than 100.4 Fahrenheit / 38° Celsius (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-03-17T10:59:59Z",
+      "Schweregrad": "Moderate (severity modifier) (qualifier value)",
+      "Rueckgang": "2020-03-18T15:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-03-17T10:59:59Z",
+      "NameDesSymptoms": "Nasal discharge (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-03-17T10:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-03-24T07:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-03-17T10:59:59Z",
+      "NameDesSymptoms": "Pain in throat (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-03-17T10:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-03-24T07:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "11": [
+    {
+      "BefundDatum": "2020-03-19T10:59:59Z",
+      "NameDesSymptoms": "Fever (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-03-19T10:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-03-20T03:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-03-19T14:59:59Z",
+      "NameDesSymptoms": "Cough (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-03-19T14:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-04-01T07:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "12": [
+    {
+      "BefundDatum": "2020-03-22T00:59:59Z",
+      "NameDesSymptoms": "Fever (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-03-22T00:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-03-24T03:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-03-22T14:59:59Z",
+      "NameDesSymptoms": "Cough (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-03-22T14:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-04-09T10:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-03-22T14:59:59Z",
+      "NameDesSymptoms": "Fatigue (finding)",
+      "Lokalisation": "Anatomische Lokalisation 51",
+      "Beginn": "2020-03-22T14:59:59Z",
+      "Schweregrad": "Mild (qualifier value)",
+      "Rueckgang": "2020-04-04T12:35:20Z",
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "13": [
+    {
+      "BefundDatum": "2020-02-14T11:47:45Z",
+      "NameDesSymptoms": null,
+      "Lokalisation": null,
+      "Beginn": null,
+      "Schweregrad": null,
+      "Rueckgang": null,
+      "AusschlussAussage": "Known absent (qualifier value)",
+      "Diagnose": "Fever (finding)",
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-03-19T10:59:59Z",
+      "NameDesSymptoms": null,
+      "Lokalisation": null,
+      "Beginn": null,
+      "Schweregrad": null,
+      "Rueckgang": null,
+      "AusschlussAussage": "Known absent (qualifier value)",
+      "Diagnose": "Cough (finding)",
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "14": [
+    {
+      "BefundDatum": "2020-03-19T15:59:59Z",
+      "NameDesSymptoms": null,
+      "Lokalisation": null,
+      "Beginn": null,
+      "Schweregrad": null,
+      "Rueckgang": null,
+      "AusschlussAussage": "Known absent (qualifier value)",
+      "Diagnose": "Cough (finding)",
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-03-19T15:59:59Z",
+      "NameDesSymptoms": null,
+      "Lokalisation": null,
+      "Beginn": null,
+      "Schweregrad": null,
+      "Rueckgang": null,
+      "AusschlussAussage": "Known absent (qualifier value)",
+      "Diagnose": "Fever (finding)",
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    }
+  ],
+  "15": [
+    {
+      "BefundDatum": "2020-03-22T08:59:59Z",
+      "NameDesSymptoms": null,
+      "Lokalisation": null,
+      "Beginn": null,
+      "Schweregrad": null,
+      "Rueckgang": null,
+      "AusschlussAussage": "Known absent (qualifier value)",
+      "Diagnose": "Cough (finding)",
+      "UnbekanntesSymptom": null,
+      "AussageFehlendeInfo": null
+    },
+    {
+      "BefundDatum": "2020-03-22T08:59:59Z",
+      "NameDesSymptoms": null,
+      "Lokalisation": null,
+      "Beginn": null,
+      "Schweregrad": null,
+      "Rueckgang": null,
+      "AusschlussAussage": null,
+      "Diagnose": null,
+      "UnbekanntesSymptom": "Rigor (finding)",
+      "AussageFehlendeInfo": "Unknown (qualifier value)"
+    }
+  ]
+}

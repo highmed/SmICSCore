@@ -69,7 +69,7 @@ namespace SmICSCoreLib.Tests.TestData
         {
             JArray patientArray = new JArray();
             RestDataAccess _data = CreateDataAccess();
-            for (int i = 17; i <= 34; i++)
+            for (int i = 1; i <= 34; i++)
             {
                 JObject patientObj = new JObject();
                 string patientNo = i.ToString();

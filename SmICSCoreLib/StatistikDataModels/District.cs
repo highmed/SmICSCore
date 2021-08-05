@@ -69,5 +69,8 @@ namespace SmICSCoreLib.StatistikDataModels
 
         [JsonProperty(PropertyName = "last_update")]
         public string Last_update { get; set; }
+
+        [JsonProperty(PropertyName = "AdmUnitId")]
+        public int AdmUnitId { get; set; }
     }
 }

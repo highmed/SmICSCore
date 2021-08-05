@@ -16,9 +16,10 @@ namespace SmICSCoreLib.StatistikServices.CronJob
             _logger = logger;
         }
         public Task Execute(IJobExecutionContext context)
-        {         
-            RkiRestApi rkiRestApi = new();
-            bool status = rkiRestApi.SerializeRkiData();
+        {
+            string path = @"../SmICSWebApp/Resources/statistik/json";
+            RkiService rkiRestApi = new();
+            bool status = rkiRestApi.SerializeRkiData(path);
             if (status == true)
             {
                 _logger.LogInformation($"**DailyReport wurde am " + DateTime.Now.ToString("dd-MMM-yyyy hh:mm:ss") + " erfolgreich durchgeführt!");

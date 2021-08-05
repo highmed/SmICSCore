@@ -3,6 +3,7 @@ using SmICSCoreLib.AQL.PatientInformation;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 using SmICSCoreLib.AQL.Contact_Nth_Network;
 using SmICSCoreLib.AQL.Lab;
 using SmICSCoreLib.AQL.Lab.EpiKurve;
@@ -33,6 +34,7 @@ namespace SmICS
             services.AddTransient<IPatientLabordataFactory, PatientLabordataFactory>();
             services.AddTransient<IMibiPatientLaborDataFactory, MibiPatientLaborDataFactory>();
             services.AddTransient<ISymptomFactory, SymptomFactory>();
+            services.AddTransient<IVaccinationFactory, VaccinationFactory>();
 
             services.AddTransient<IPatientInformation, PatientInformation>();
 
