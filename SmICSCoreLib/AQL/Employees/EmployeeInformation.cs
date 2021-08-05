@@ -1,14 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
+﻿
 using SmICSCoreLib.AQL.General;
-using SmICSCoreLib.AQL.Employees;
 using SmICSCoreLib.AQL.Employees.ContactTracing;
 using SmICSCoreLib.AQL.Employees.PersonData;
 using SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl;
-using SmICSCoreLib.Util;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SmICSCoreLib.AQL.Employees
 {
@@ -25,7 +20,7 @@ namespace SmICSCoreLib.AQL.Employees
             _empPersDataFac = empPersDataFac;
 
         }
-        public List<ContactTracingModel> Employee_ContactTracing(PatientListParameter parameter)
+        public List<ContactTracingReceiveModel> Employee_ContactTracing(PatientListParameter parameter)
         {
             return _empConTracFac.Process(parameter);
         }

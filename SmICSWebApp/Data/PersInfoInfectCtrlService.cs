@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.IO;
 using SmICSCoreLib.REST;
 using System.Net.Http;
 using Newtonsoft.Json;
@@ -39,7 +38,7 @@ namespace SmICSWebApp.Data
                     var base_context = ",\"context\":{\"_type\":\"EVENT_CONTEXT\",\"start_time\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss") + "\"}";
                     var base_setting = ",\"setting\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"other care\",\"defining_code\":{\"terminology_id\":{\"value\":\"openehr\"},\"code_string\":\"238\"}}";
                     var base_other_context = ",\"other_context\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0001\",\"items\":[";
-                    var base_bericht_id = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Bericht ID\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["berichtID"] + "\"}}]}}";
+                    var base_bericht_id = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Bericht ID\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["BerichtID"] + "\"}}]}}";
                     var base_content_beginn = ",\"content\":[";
 
 
@@ -49,10 +48,10 @@ namespace SmICSWebApp.Data
                     var base_end_cluster = "";
                     var base_cluster_spez_symp = "";
 
-                    var base_anzeichen = (string)JObject.Parse(createEntry.ToString())["symp_vorhanden"];
-                    var base_symp_auftreten = (string)JObject.Parse(createEntry.ToString())["symp_auftreten"];
-                    var base_spez_symp = (string)JObject.Parse(createEntry.ToString())["bez_symp"];
-                    var base_all_komm = (string)JObject.Parse(createEntry.ToString())["allg_kommentar"];
+                    var base_anzeichen = (string)JObject.Parse(createEntry.ToString())["SymptomVorhanden"];
+                    var base_symp_auftreten = (string)JObject.Parse(createEntry.ToString())["AufgetretenSeit"];
+                    var base_spez_symp = (string)JObject.Parse(createEntry.ToString())["Symptom"];
+                    var base_all_komm = (string)JObject.Parse(createEntry.ToString())["SymptomKommentar"];
 
 
                     if (base_anzeichen != null | base_symp_auftreten != null | base_spez_symp != null | base_all_komm != null)
@@ -63,38 +62,38 @@ namespace SmICSWebApp.Data
 
                         if (base_anzeichen == "Vorhanden")
                         {
-                            base_anzeichen = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Sind Symptome oder Anzeichen vorhanden?\"},\"archetype_node_id\":\"at0028\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["symp_vorhanden"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0031\"}}},";
+                            base_anzeichen = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Sind Symptome oder Anzeichen vorhanden?\"},\"archetype_node_id\":\"at0028\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["SymptomVorhanden"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0031\"}}},";
                         }
                         else if (base_anzeichen == "Nicht vorhanden")
                         {
-                            base_anzeichen = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Sind Symptome oder Anzeichen vorhanden?\"},\"archetype_node_id\":\"at0028\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["symp_vorhanden"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0032\"}}},";
+                            base_anzeichen = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Sind Symptome oder Anzeichen vorhanden?\"},\"archetype_node_id\":\"at0028\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["SymptomVorhanden"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0032\"}}},";
                         }
                         else if (base_anzeichen == "Unbekannt")
                         {
-                            base_anzeichen = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Sind Symptome oder Anzeichen vorhanden?\"},\"archetype_node_id\":\"at0028\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["symp_vorhanden"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0033\"}}},";
+                            base_anzeichen = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Sind Symptome oder Anzeichen vorhanden?\"},\"archetype_node_id\":\"at0028\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["SymptomVorhanden"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0033\"}}},";
                         }
 
                         if (base_symp_auftreten != null)
                         {
-                            base_symp_auftreten = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Auftreten von Symptomen oder Anzeichen\"},\"archetype_node_id\":\"at0029\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["symp_auftreten"] + "\"}},";
+                            base_symp_auftreten = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Auftreten von Symptomen oder Anzeichen\"},\"archetype_node_id\":\"at0029\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["AufgetretenSeit"] + "\"}},";
                         }
 
                         base_cluster_spez_symp = "{\"_type\":\"CLUSTER\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Spezifisches Symptom/Anzeichen\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"at0022\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"at0022\",\"items\":[";
-                        base_spez_symp = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Bezeichnung des Symptoms oder Anzeichens.\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["bez_symp"] + "\"}}]}";
+                        base_spez_symp = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Bezeichnung des Symptoms oder Anzeichens.\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Symptom"] + "\"}}]}";
 
                         if (base_all_komm != null)
                         {
-                            base_all_komm = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Allgemeiner Kommentar\"},\"archetype_node_id\":\"at0025\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["allg_kommentar"] + "\"}}";
+                            base_all_komm = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Allgemeiner Kommentar\"},\"archetype_node_id\":\"at0025\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["SymptomKommentar"] + "\"}}";
                         }
 
                         base_end_cluster = "]}}]}}";
                     }
                     var base_evulation_1 = "";
-                    var base_erreg_nachweis = (string)JObject.Parse(createEntry.ToString())["erreg_nachweis"];
-                    var base_erregname = (string)JObject.Parse(createEntry.ToString())["erreg_name"];
-                    var base_zeitpunkt_kenn = (string)JObject.Parse(createEntry.ToString())["zeitpunkt_kennzeichnung"];
-                    var base_erreg_nachweis_klinik = (string)JObject.Parse(createEntry.ToString())["erreg_Nachweis_klinik"];
-                    var base_zuletzt_akt = (string)JObject.Parse(createEntry.ToString())["zuletzt_aktuell"];
+                    var base_erreg_nachweis = (string)JObject.Parse(createEntry.ToString())["Nachweis"];
+                    var base_erregname = (string)JObject.Parse(createEntry.ToString())["Erregername"];
+                    var base_zeitpunkt_kenn = (string)JObject.Parse(createEntry.ToString())["Zeitpunkt"];
+                    var base_erreg_nachweis_klinik = (string)JObject.Parse(createEntry.ToString())["KlinischerNachweis"];
+                    var base_zuletzt_akt = (string)JObject.Parse(createEntry.ToString())["LetzteAktualisierung"];
                     var base_komma_1 = "";
                     var base_komma_2 = "";
                     var base_komma_3 = "";
@@ -130,7 +129,7 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_2 = ",";
                             }
-                            base_erregname = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Erregername\"},\"archetype_node_id\":\"at0012\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["erreg_name"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local_terms\"},\"code_string\":\"COV\"}}}";
+                            base_erregname = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Erregername\"},\"archetype_node_id\":\"at0012\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Erregername"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local_terms\"},\"code_string\":\"COV\"}}}";
                         }
 
                         if (base_zeitpunkt_kenn != null)
@@ -139,7 +138,7 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_3 = ",";
                             }
-                            base_zeitpunkt_kenn = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Zeitpunkt der Kennzeichnung\"},\"archetype_node_id\":\"at0015\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["zeitpunkt_kennzeichnung"] + "\"}}";
+                            base_zeitpunkt_kenn = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Zeitpunkt der Kennzeichnung\"},\"archetype_node_id\":\"at0015\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Zeitpunkt"] + "\"}}";
                         }
 
                         if (base_erreg_nachweis_klinik != "False")
@@ -162,7 +161,7 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_5 = ",";
                             }
-                            base_zuletzt_akt = "\"protocol\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0003\",\"items\":[{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Zuletzt aktualisiert\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["zuletzt_aktuell"] + "\"}}";
+                            base_zuletzt_akt = "\"protocol\":{\"_type\":\"ITEM_TREE\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Tree\"},\"archetype_node_id\":\"at0003\",\"items\":[{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Zuletzt aktualisiert\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["LetzteAktualisierung"] + "\"}}";
                         }
 
                         base_evu_ende = "]}}";
@@ -174,12 +173,12 @@ namespace SmICSWebApp.Data
                     }
 
                     var base_evulation_2 = "";
-                    var base_freigestellt = (string)JObject.Parse(createEntry.ToString())["freigetsellt"];
-                    var base_grund = (string)JObject.Parse(createEntry.ToString())["grund"];
-                    var base_beschreibung = (string)JObject.Parse(createEntry.ToString())["beschreibung"];
-                    var base_start_frei = (string)JObject.Parse(createEntry.ToString())["start_freistellung"];
-                    var base_wiederaufnahme = (string)JObject.Parse(createEntry.ToString())["wiederaufnahme"];
-                    var base_komm_frei = (string)JObject.Parse(createEntry.ToString())["kommentar_freistellung"];
+                    var base_freigestellt = (string)JObject.Parse(createEntry.ToString())["Freistellung"];
+                    var base_grund = (string)JObject.Parse(createEntry.ToString())["Grund"];
+                    var base_beschreibung = (string)JObject.Parse(createEntry.ToString())["Beschreibung"];
+                    var base_start_frei = (string)JObject.Parse(createEntry.ToString())["Startdatum"];
+                    var base_wiederaufnahme = (string)JObject.Parse(createEntry.ToString())["Enddatum"];
+                    var base_komm_frei = (string)JObject.Parse(createEntry.ToString())["AbwesendheitKommentar"];
                     var base_ende_evu_2 = "";
                     var base_komma_6 = "";
                     var base_komma_7 = "";
@@ -215,7 +214,7 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_7 = ",";
                             }
-                            base_grund = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Grund für die Freistellung\"},\"archetype_node_id\":\"at0005\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["grund"] + "\"}}";
+                            base_grund = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Grund für die Freistellung\"},\"archetype_node_id\":\"at0005\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Grund"] + "\"}}";
                         }
 
                         if (base_beschreibung != null)
@@ -224,7 +223,7 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_8 = ",";
                             }
-                            base_beschreibung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Beschreibung\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["beschreibung"] + "\"}}";
+                            base_beschreibung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Beschreibung\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Beschreibung"] + "\"}}";
                         }
 
                         if (base_start_frei != null)
@@ -233,7 +232,7 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_9 = ",";
                             }
-                            base_start_frei = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Startdatum der Freistellung\"},\"archetype_node_id\":\"at0003\",\"value\":{\"_type\":\"DV_DATE\",\"value\":\"" + JObject.Parse(createEntry.ToString())["start_freistellung"] + "\"}}";
+                            base_start_frei = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Startdatum der Freistellung\"},\"archetype_node_id\":\"at0003\",\"value\":{\"_type\":\"DV_DATE\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Startdatum"] + "\"}}";
                         }
 
                         if (base_wiederaufnahme != null)
@@ -242,7 +241,7 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_10 = ",";
                             }
-                            base_wiederaufnahme = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Wiederaufnahme der Arbeit\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_DATE\",\"value\":\"" + JObject.Parse(createEntry.ToString())["wiederaufnahme"] + "\"}}";
+                            base_wiederaufnahme = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Wiederaufnahme der Arbeit\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_DATE\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Enddatum"] + "\"}}";
                         }
 
                         if (base_komm_frei != null)
@@ -251,7 +250,7 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_11 = ",";
                             }
-                            base_komm_frei = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kommentar\"},\"archetype_node_id\":\"at0007\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["kommentar_freistellung"] + "\"}}";
+                            base_komm_frei = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kommentar\"},\"archetype_node_id\":\"at0007\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["AbwesendheitKommentar"] + "\"}}";
                         }
 
                         base_ende_evu_2 = "]}}";
@@ -262,12 +261,12 @@ namespace SmICSWebApp.Data
                     }
 
                     var base_admin_entry = "";
-                    var base_meldung = (string)JObject.Parse(createEntry.ToString())["meldung"];
-                    var base_ereignis = (string)JObject.Parse(createEntry.ToString())["ereignis"];
-                    var base_beschreibung_ereignis = (string)JObject.Parse(createEntry.ToString())["beschreibung_ereignis"];
-                    var base_datum_meldung = (string)JObject.Parse(createEntry.ToString())["datum_meldung"];
-                    var base_grund_meldung = (string)JObject.Parse(createEntry.ToString())["grund_meldung"];
-                    var base_meldung_komm = (string)JObject.Parse(createEntry.ToString())["meldung_kommentar"];
+                    var base_meldung = (string)JObject.Parse(createEntry.ToString())["Meldung"];
+                    var base_ereignis = (string)JObject.Parse(createEntry.ToString())["Ereignis"];
+                    var base_beschreibung_ereignis = (string)JObject.Parse(createEntry.ToString())["Ereignisbeschreibung"];
+                    var base_datum_meldung = (string)JObject.Parse(createEntry.ToString())["Datum"];
+                    var base_grund_meldung = (string)JObject.Parse(createEntry.ToString())["Ereignisgrund"];
+                    var base_meldung_komm = (string)JObject.Parse(createEntry.ToString())["EreignisKommentar"];
                     var base_end_admin_entry = "";
                     var base_komma_12 = "";
                     var base_komma_13 = "";
@@ -303,7 +302,7 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_13 = ",";
                             }
-                            base_ereignis = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Zu meldendes Ereignis\"},\"archetype_node_id\":\"at0003\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["ereignis"] + "\"}}";
+                            base_ereignis = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Zu meldendes Ereignis\"},\"archetype_node_id\":\"at0003\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Ereignis"] + "\"}}";
                         }
 
                         if (base_beschreibung_ereignis != null)
@@ -312,7 +311,7 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_14 = ",";
                             }
-                            base_beschreibung_ereignis = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Beschreibung\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["beschreibung_ereignis"] + "\"}}";
+                            base_beschreibung_ereignis = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Beschreibung\"},\"archetype_node_id\":\"at0004\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Ereignisbeschreibung"] + "\"}}";
                         }
 
                         if (base_datum_meldung != null)
@@ -321,7 +320,7 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_15 = ",";
                             }
-                            base_datum_meldung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Datum der Meldung\"},\"archetype_node_id\":\"at0005\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["datum_meldung"] + "\"}}";
+                            base_datum_meldung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Datum der Meldung\"},\"archetype_node_id\":\"at0005\",\"value\":{\"_type\":\"DV_DATE_TIME\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Datum"] + "\"}}";
                         }
 
                         if (base_grund_meldung != null)
@@ -330,7 +329,7 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_16 = ",";
                             }
-                            base_grund_meldung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Grund\"},\"archetype_node_id\":\"at0006\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["grund_meldung"] + "\"}}";
+                            base_grund_meldung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Grund\"},\"archetype_node_id\":\"at0006\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Ereignisgrund"] + "\"}}";
                         }
 
                         if (base_meldung_komm != null)
@@ -339,7 +338,7 @@ namespace SmICSWebApp.Data
                             {
                                 base_komma_17 = ",";
                             }
-                            base_meldung_komm = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kommentar\"},\"archetype_node_id\":\"at0007\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["meldung_kommentar"] + "\"}}";
+                            base_meldung_komm = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Kommentar\"},\"archetype_node_id\":\"at0007\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["EreignisKommentar"] + "\"}}";
                         }
                         base_end_admin_entry = "]}}";
                     }
