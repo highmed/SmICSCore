@@ -539,7 +539,10 @@ namespace SmICSCoreLib.AQL
 
         public static AQLQuery GetAllStationsForConfig ()
         {
-            return new AQLQuery("", $@"");
+            return new AQLQuery("RKIConfig", $@"SELECT Distinct b/items[at0027]/value/value as Station
+                                FROM EHR e
+                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
+                                CONTAINS CLUSTER b[openEHR-EHR-CLUSTER.location.v1]");
         }
 
     }

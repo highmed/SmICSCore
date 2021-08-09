@@ -1,4 +1,8 @@
 ﻿@using SmICSCoreLib.AQL.PatientInformation.PatientMovement
+@using SmICSCoreLib.AQL.RKIConfig
+@using SmICSWebApp.Data
+
+@inject RKIConfigService RKIConfigService
 
 <div id="div_card_5">
     <div>
@@ -8,10 +12,14 @@
         <InputSelect @bind-Value="Station">
             <option selected disabled>Bitte wählen Sie aus</option>
             <option value="Gesamtklink">Gesamtklink</option>
-            @*@foreach (var item in station)
+            @if (StationList != null)
+            {
+                foreach (var item in StationList)
                 {
-                    <option value="@item">@item</option>
-                }*@
+                   <option value="@item">@item</option>
+                }
+            }
+
         </InputSelect>
     </div>
 </div>
@@ -85,7 +93,15 @@
 
     private void GetAllStations()
     {
-
+        try
+        {
+            StationList = RKIConfigService.GetAllStations();
+        }
+        catch (Exception)
+        {
+            throw new Exception($"Failed to GET Station data");
+            
+        }
     }
 
     void CheckboxClicked(object checkedValue)
