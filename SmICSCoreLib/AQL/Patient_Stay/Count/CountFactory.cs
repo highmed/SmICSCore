@@ -1,4 +1,5 @@
-﻿using SmICSCoreLib.AQL.Patient_Stay.Count.ReceiveModel;
+﻿using SmICSCoreLib.AQL.General;
+using SmICSCoreLib.AQL.Patient_Stay.Count.ReceiveModel;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,18 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Count
             List<CountDataReceiveModel> countDataReceiveModels = _restData.AQLQuery<CountDataReceiveModel>(AQLCatalog.CovidPat(nachweis));
 
             if (countDataReceiveModels is null )
+            {
+                return new List<CountDataModel>();
+            }
+            return CountConstructor(countDataReceiveModels);
+        }
+
+        public List<CountDataModel> ProcessFromID(string nachweis, PatientListParameter parameter)
+        {
+
+            List<CountDataReceiveModel> countDataReceiveModels = _restData.AQLQuery<CountDataReceiveModel>(AQLCatalog.CovidPatByID(nachweis, parameter));
+
+            if (countDataReceiveModels is null)
             {
                 return new List<CountDataModel>();
             }

@@ -7,6 +7,7 @@ using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 using SmICSCoreLib.StatistikDataModels;
 
 namespace SmICSCoreLib.AQL.PatientInformation.Infection_situation
@@ -14,49 +15,94 @@ namespace SmICSCoreLib.AQL.PatientInformation.Infection_situation
     public class InfectionSituationFactory : IInfectionSituationFactory
     {
         private readonly string positiv = "260373001";
-        private readonly ILogger<InfectionSituationFactory> _logger;
-
+     
         private readonly ICountFactory _countFactory;
         private readonly IStationaryFactory _stationaryFactory;
         private readonly ISymptomFactory _symptomFactory;
         private readonly IPatientMovementFactory _patMoveFac;
+        private readonly IVaccinationFactory _vaccFac;
+        private readonly ILogger<InfectionSituationFactory> _logger;
 
 
-        public InfectionSituationFactory(ICountFactory countFactory, IStationaryFactory stationaryFactory, 
+        public InfectionSituationFactory(ICountFactory countFactory, IStationaryFactory stationaryFactory,
                                          ISymptomFactory symptomFactory, IPatientMovementFactory patMoveFac,
-                                         ILogger<InfectionSituationFactory> logger)
+                                         IVaccinationFactory vaccFac, ILogger<InfectionSituationFactory> logger)
         {
             _countFactory = countFactory;
             _stationaryFactory = stationaryFactory;
             _symptomFactory = symptomFactory;
             _patMoveFac = patMoveFac;
+            _vaccFac = vaccFac;
             _logger = logger;
         }
 
-        public List<Patient> Process(PatientListParameter parameter) {
-            
+        public List<Patient> Process(PatientListParameter parameter)
+        {
             List<Patient> patienten = new();
-            //Liste alle positive Patienten
-            List<CountDataModel> positivPatList = _countFactory.Process(positiv);          
-            List<Patient> PosPatientenListe = PossibleNosocomialsList(positivPatList);
-            List<Patient> ProPatientenListe = ProbableNosocomialsList(PosPatientenListe, positivPatList);
-            foreach (var patientID in parameter.patientList)
+            //Liste positive Patienten
+            List<CountDataModel> positivPatList = _countFactory.ProcessFromID(positiv, parameter);
+            List<CountDataModel> allPositivPatList = _countFactory.Process(positiv);
+
+            //Liste moegliche Nosokomiale Infektionen
+            List<Patient> posPatientenListe = PossibleNosocomialsList(positivPatList);
+            if (posPatientenListe != null && posPatientenListe.Count != 0)
             {
-                foreach (var posPat in PosPatientenListe)
+                //Liste wahrscheinliche Nosokomiale Infektionen
+                List<Patient> proPatientenListe = ProbableNosocomialsList(posPatientenListe, allPositivPatList);
+                foreach (var patientID in parameter.patientList)
                 {
-                    if (posPat.PatientID == patientID)
+                    if (posPatientenListe.Contains(new Patient { PatientID = patientID }))
                     {
-                        if (ProPatientenListe.Contains(posPat))
+                        Patient patient = posPatientenListe.Find(x => x.PatientID == patientID);
+                        PatientListParameter patListParameter = new();
+                        List<string> patientList = new();
+                        patientList.Add(patientID);
+                        patListParameter.patientList = patientList;
+                        List<VaccinationModel> patientVaccination = _vaccFac.Process(patListParameter);
+                        if (patientVaccination != null && patientVaccination.Count != 0)
                         {
-                            patienten.Add(new Patient(posPat.PatientID, posPat.Probenentnahme, posPat.Aufnahme, posPat.Entlastung, "Wahrscheinliche Nosokomiale"));
+                            List<string> listeImpfstoff = new();
+                            List<string> dosierungsreihenfolge = new();
+                            foreach (var vaccination in patientVaccination)
+                            {
+                                if (vaccination.ImpfungGegen == "Infectious disease (disorder)")
+                                {
+                                    listeImpfstoff.Add(vaccination.Impfstoff);
+                                    dosierungsreihenfolge.Add(vaccination.Dosierungsreihenfolge);
+                                    if (proPatientenListe.Contains(patient))
+                                    {
+                                        patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
+                                                                 "Wahrscheinliche Nosokomiale Infektion", true, listeImpfstoff, dosierungsreihenfolge));
+                                    }
+                                    else
+                                    {
+                                        patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
+                                                                  "Moegliche Nosokomiale Infektion", true, listeImpfstoff, dosierungsreihenfolge));
+                                    }
+                                }
+                            }
                         }
                         else
                         {
-                            patienten.Add(new Patient(posPat.PatientID, posPat.Probenentnahme, posPat.Aufnahme, posPat.Entlastung, "Mögliche Nosokomiale"));
+                            if (proPatientenListe.Contains(patient))
+                            {
+                                patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
+                                                          "Wahrscheinliche Nosokomiale Infektion", false, null, null));
+                            }
+                            else
+                            {
+                                patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
+                                                          "Mögliche Nosokomiale Infektion", false, null, null));
+                            }
                         }
-                    }          
+                    }
                 }
             }
+            //else
+            //{
+            //    patienten.Add(new Patient(patientID, "Keine Covid-19 Infektion nachgewiesen"));
+            //}
+
             return patienten;
         }
 
@@ -67,24 +113,22 @@ namespace SmICSCoreLib.AQL.PatientInformation.Infection_situation
             "Diarrhea (finding)", "Fever (finding)", "Fever greater than 100.4 Fahrenheit", "38° Celsius (finding)", "Nausea (finding)",
             "Pain in throat (finding)"});
 
-            //Hole alle positive Patienten
-            //List<CountDataModel> positivPatList = _countFactory.Process(positiv);
-
-
-            //Ueberpruefen, ob der Patient stationär behandelt ist
             foreach (CountDataModel positivPat in positivPatList)
             {
+                //Check, ob der Patient Stationaer Behandlung hat
                 List<StationaryDataModel> statPatList = _stationaryFactory.Process(positivPat.PatientID, positivPat.Fallkennung, positivPat.Zeitpunkt_des_Probeneingangs);
-
                 if (statPatList != null || statPatList.Count != 0)
                 {
                     foreach (StationaryDataModel statPatient in statPatList)
                     {
-                        //Ueberpruefen, ob der Patient am Aufnahmedatum Symptome hat
+                        //Check, ob der Patient am Aufnahmedatum Symptome hat
                         List<SymptomModel> symptoms = _symptomFactory.SymptomByPatient(statPatient.PatientID, statPatient.Datum_Uhrzeit_der_Aufnahme);
                         if (symptoms is null || symptoms.Count == 0)
                         {
-                            patNoskumalList.Add(new Patient(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
+                            patNoskumalList.Add(new Patient(positivPat.PatientID,
+                                                            positivPat.Zeitpunkt_des_Probeneingangs,
+                                                            statPatient.Datum_Uhrzeit_der_Aufnahme,
+                                                            statPatient.Datum_Uhrzeit_der_Entlassung));
                         }
                         else
                         {
@@ -92,14 +136,57 @@ namespace SmICSCoreLib.AQL.PatientInformation.Infection_situation
                             {
                                 if (!symptomList.Contains(symptom.NameDesSymptoms))
                                 {
-                                    patNoskumalList.Add(new Patient(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
+                                    patNoskumalList.Add(new Patient(positivPat.PatientID,
+                                                                    positivPat.Zeitpunkt_des_Probeneingangs,
+                                                                    statPatient.Datum_Uhrzeit_der_Aufnahme,
+                                                                    statPatient.Datum_Uhrzeit_der_Entlassung));
                                 }
                             }
                         }
-
                     }
                 }
             }
+
+            return patNoskumalList;
+        }
+
+        public List<Patient> ProbableNosocomialsList(List<Patient> allNoskumalPat, List<CountDataModel> allPositivPat)
+        {
+            List<string> patientList = new();
+            List<string> patientIDs = new();
+            PatientListParameter patListParameter = new();
+            List<Patient> patNoskumalList = new();
+            foreach (var patient in allNoskumalPat)
+            {
+                patientList.Add(patient.PatientID);
+                patListParameter.patientList = patientList;
+            }
+            List<PatientMovementModel> nosPatBewegungen = _patMoveFac.Process(patListParameter);
+            if (nosPatBewegungen.Count != 0)
+            {
+                foreach (var bewegung in nosPatBewegungen)
+                {
+                    if (bewegung.Beginn < bewegung.Ende.AddMinutes(-15))
+                    {
+                        List<PatientMovementModel> covdPatBewegungen = FindContact(allPositivPat, bewegung.PatientID,
+                            bewegung.Fachabteilung, bewegung.Beginn, bewegung.Ende);
+
+                        if (covdPatBewegungen.Count != 0)
+                        {
+                            patientIDs.Add(bewegung.PatientID);
+                        }
+                    }
+                }
+            }
+
+            foreach (var nosPat in allNoskumalPat)
+            {
+                if (patientIDs.Contains(nosPat.PatientID))
+                {
+                    patNoskumalList.Add(nosPat);
+                }
+            }
+
             return patNoskumalList;
         }
 
@@ -116,7 +203,6 @@ namespace SmICSCoreLib.AQL.PatientInformation.Infection_situation
             patListParameter.patientList = patientList;
 
             List<PatientMovementModel> patBewegungen = _patMoveFac.ProcessFromStation(patListParameter, station, beginn, ende);
-
             if (patBewegungen.Count != 0)
             {
                 foreach (var patBewegung in patBewegungen)
@@ -131,36 +217,5 @@ namespace SmICSCoreLib.AQL.PatientInformation.Infection_situation
             return patientMovement;
         }
 
-        public List<Patient> ProbableNosocomialsList(List<Patient> allNoskumalPat, List<CountDataModel> allPositivPat)
-        {
-            List<string> patientList = new();
-            PatientListParameter patListParameter = new();
-            List<Patient> patNoskumalList = new();
-
-            foreach (var patient in allNoskumalPat)
-            {               
-                patientList.Add(patient.PatientID);
-                patListParameter.patientList = patientList;
-
-                List<PatientMovementModel> patBewegungen = _patMoveFac.Process(patListParameter);
-                if (patBewegungen.Count != 0)
-                {
-                    foreach (var bewegung in patBewegungen)
-                    {
-                        if (bewegung.Beginn < bewegung.Ende.AddMinutes(-15))
-                        {
-                            List<PatientMovementModel> patientMovement = FindContact(allPositivPat, bewegung.PatientID,
-                                bewegung.Fachabteilung, bewegung.Beginn, bewegung.Ende);
-
-                            if (patientMovement.Count != 0)
-                            {
-                                patNoskumalList.Add(patient);
-                            }
-                        }
-                    }
-                }
-            }
-            return patNoskumalList;
-        }
     }
 }

@@ -408,6 +408,20 @@ namespace SmICSCoreLib.AQL
                                 a/items[at0024]/value/defining_code/code_string MATCHES {{'94500-6','94558-4', '94745-7'}} ORDER BY Zeitpunkt_des_Probeneingangs ASC");
         }
 
+        public static AQLQuery CovidPatByID(string nachweis, PatientListParameter patientList)
+        {
+            return new AQLQuery("CovidPat", $@"SELECT e/ehr_id/value as PatientID, 
+                                i/items[at0001]/value/value as Fallkennung, 
+                                m/items[at0034]/value/value as Zeitpunkt_des_Probeneingangs 
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] and 
+                                OBSERVATION z[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
+                                CONTAINS (CLUSTER a[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] and CLUSTER m [openEHR-EHR-CLUSTER.specimen.v1])) 
+                                WHERE  a/items[at0001,'Nachweis']/value/defining_code/code_string='{nachweis}'and 
+                                e/ehr_id/value matches { patientList.ToAQLMatchString() } and
+                                a/items[at0024]/value/defining_code/code_string MATCHES {{'94500-6','94558-4', '94745-7'}} ORDER BY Zeitpunkt_des_Probeneingangs ASC");
+        }
+
         public static AQLQuery PatientBySymptom(string symptom)
         {
             return new AQLQuery("PatientBySymptom", $@"SELECT e/ehr_id/value as PatientenID, 
