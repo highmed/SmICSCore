@@ -30,8 +30,8 @@ namespace SmICSCoreLib.AQL.PatientInformation.Infection_situation
                                          IVaccinationFactory vaccFac, ILogger<InfectionSituationFactory> logger)
         {
             _countFactory = countFactory;
-            _symptomFactory = symptomFactory;            _stationaryFactory = stationaryFactory;
-
+            _symptomFactory = symptomFactory;            
+            _stationaryFactory = stationaryFactory;
             _patMoveFac = patMoveFac;
             _vaccFac = vaccFac;
             _logger = logger;
@@ -204,16 +204,6 @@ namespace SmICSCoreLib.AQL.PatientInformation.Infection_situation
                     }
                 }
             }
-          
-
-            //foreach (var nosPat in allNoskumalPat)
-            //{
-            //    if (patientIDs.Contains(nosPat.PatientID))
-            //    {
-            //        patNoskumalList.Add(nosPat);
-            //    }
-            //}
-
             return patNoskumalList;
         }
 
