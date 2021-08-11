@@ -339,8 +339,8 @@
             allNegativTest = ehrDataService.GetAllNegativTest();
             allNegativPat = ehrDataService.GetAllPatByTest(allNegativTest);
 
-            allNoskumalPat = ehrDataService.GetAllNoskumalPat(allPositivTest);
-            noskumalPatByContact = ehrDataService.GetNoskumalByContact(allNoskumalPat, allPositivPat);
+            allNoskumalPat = ehrDataService.GetAllNoskumalPat(allPositivPat);
+            noskumalPatByContact = ehrDataService.GetNoskumalByContact(allNoskumalPat, allPositivTest);
             anzahlFaelle = allPositivPat.Count() - allNoskumalPat.Count();
             anzahlPatTage = ehrDataService.PatStay(allPositivPat);
 

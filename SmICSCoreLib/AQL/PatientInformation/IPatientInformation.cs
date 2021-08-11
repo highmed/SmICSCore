@@ -5,6 +5,7 @@ using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using SmICSCoreLib.AQL.PatientInformation.Vaccination;
+using SmICSCoreLib.StatistikDataModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,5 +24,6 @@ namespace SmICSCoreLib.AQL.PatientInformation
         List<SymptomModel> Patient_By_Symptom(string symptom);
         List<SymptomModel> Symptoms_By_PatientId(string patientId, DateTime datum);
         List<VaccinationModel> Patient_Vaccination(PatientListParameter parameter);
+        List<Patient> Infection_Situation(PatientListParameter parameter);
     }
 }

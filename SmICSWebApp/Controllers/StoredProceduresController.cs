@@ -23,6 +23,7 @@ using SmICSCoreLib.AQL.Patient_Stay.Cases;
 using SmICSCoreLib.AQL.Patient_Stay.WeekCase;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
+using SmICSCoreLib.StatistikDataModels;
 
 namespace SmICSWebApp.Controllers
 {
@@ -148,6 +149,30 @@ namespace SmICSWebApp.Controllers
             }
         }
 
+        /// <summary></summary>
+        /// <remarks>
+        /// Gibt alle mögliche Nosokomiale Infektion. 
+        /// Regeln für eine mögliche Nosokomiale Infektion sind: SARS-CoV-2 negative Test und keine SARS-CoV-2 Symptome bei Aufnahme. 
+        /// Positive PCR von SARS-CoV-2 ab Tag 4 nach stationärer Aufnahme.
+        /// </remarks>
+        /// <returns></returns>
+        [Route("Infection_Situation")]
+        [HttpPost]
+        public ActionResult<List<Patient>> Infection_Situation([FromBody] PatientListParameter parameter)
+        {
+            _logger.LogInformation("CALLED Infection_Situation without any parameters");
+
+            try
+            {
+                return _patientInformation.Infection_Situation(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("CALLED Infection_Situation:" + e.Message);
+                return ErrorHandling(e);
+            }
+        }
+
         //[Route("Patient_Stay_Stationary")]
         //[HttpPost]
         //public ActionResult<List<StationaryDataModel>> Patient_Stay_Stationary(string patientId)
@@ -162,7 +187,7 @@ namespace SmICSWebApp.Controllers
         //    }
         //}
 
-        
+
         //[Route("Patient_Count")]
         //[HttpPost]
         //public ActionResult<List<CountDataModel>> Patient_Count(string nachweis)
@@ -173,7 +198,7 @@ namespace SmICSWebApp.Controllers
         //    }
         //    catch (Exception e)
         //    {
-                
+
         //        return ErrorHandling(e);
         //    }
         //}
@@ -191,7 +216,7 @@ namespace SmICSWebApp.Controllers
         //        return ErrorHandling(e);
         //    }
         //} 
-        
+
         //[Route("Patient_WeekCase")]
         //[HttpPost]
         //public ActionResult<List<WeekCaseDataModel>> Patient_WeekCase(DateTime startDate, DateTime endDate)

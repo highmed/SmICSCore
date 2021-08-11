@@ -285,7 +285,7 @@ namespace SmICSCoreLib.AQL
                                 $"CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] " +
                                 $"CONTAINS (ADMIN_ENTRY r[openEHR-EHR-ADMIN_ENTRY.admission.v0] CONTAINS (CLUSTER w[openEHR-EHR-CLUSTER.location.v1]) and ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0])  " +
                                 $"where PatientID='{patientId}' and  " +
-                                $"Datum_Uhrzeit_der_Aufnahme >= '{datum.Date.AddDays(-4).ToString("yyyy-MM-dd")}' and " +
+                                $"Datum_Uhrzeit_der_Aufnahme < '{datum.Date.AddDays(-3).ToString("yyyy-MM-dd")}' and " +
                                 $"FallID='{fallkennung}'");
         }
 
@@ -318,8 +318,7 @@ namespace SmICSCoreLib.AQL
                                 $"CONTAINS COMPOSITION c " +
                                 $"CONTAINS OBSERVATION k[openEHR-EHR-OBSERVATION.symptom_sign.v0] " +
                                 $"where PatientenID='{patientId}' " +
-                                $"and Beginn >= '{datum.Date.ToString("yyyy-MM-dd")}' ");
-                                //$"and Beginn like '{datum.Date.ToString("yyyy-MM-dd").Insert(10,"*")}'");
+                                $"and Beginn = '{datum.Date.ToString("yyyy-MM-dd")}' ");
         }
        
         public static AQLQuery StayFromCase(string patientId, string fallId)
@@ -384,6 +383,20 @@ namespace SmICSCoreLib.AQL
                                 OBSERVATION z[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
                                 CONTAINS (CLUSTER a[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] and CLUSTER m [openEHR-EHR-CLUSTER.specimen.v1])) 
                                 WHERE  a/items[at0001,'Nachweis']/value/defining_code/code_string='{nachweis}'and 
+                                a/items[at0024]/value/defining_code/code_string MATCHES {{'94500-6','94558-4', '94745-7'}} ORDER BY Zeitpunkt_des_Probeneingangs ASC");
+        }
+
+        public static AQLQuery CovidPatByID(string nachweis, PatientListParameter patientList)
+        {
+            return new AQLQuery("CovidPat", $@"SELECT e/ehr_id/value as PatientID, 
+                                i/items[at0001]/value/value as Fallkennung, 
+                                m/items[at0034]/value/value as Zeitpunkt_des_Probeneingangs 
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] and 
+                                OBSERVATION z[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
+                                CONTAINS (CLUSTER a[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] and CLUSTER m [openEHR-EHR-CLUSTER.specimen.v1])) 
+                                WHERE  a/items[at0001,'Nachweis']/value/defining_code/code_string='{nachweis}'and 
+                                e/ehr_id/value matches { patientList.ToAQLMatchString() } and
                                 a/items[at0024]/value/defining_code/code_string MATCHES {{'94500-6','94558-4', '94745-7'}} ORDER BY Zeitpunkt_des_Probeneingangs ASC");
         }
 

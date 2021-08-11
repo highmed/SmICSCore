@@ -159,7 +159,8 @@ namespace SmICSCoreLib.StatistikServices
                         {
                             foreach (var symptomItem in symptoms)
                             {
-                                if (!symptomList.Contains(symptomItem.NameDesSymptoms))
+                                if (!symptomList.Contains(symptomItem.NameDesSymptoms) &&
+                                    !patNoskumalList.Contains(new Patient { PatientID = positivPat.PatientID }))
                                 {
                                     patNoskumalList.Add(new Patient(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
                                 }
@@ -189,7 +190,7 @@ namespace SmICSCoreLib.StatistikServices
                             List<PatientMovementModel> patientMovement = FindContact(allPositivPat, bewegung.PatientID,
                                 bewegung.Fachabteilung, bewegung.Beginn, bewegung.Ende);
 
-                            if (patientMovement.Count != 0)
+                            if (patientMovement.Count != 0 && !patNoskumalList.Contains(patient))
                             {
                                 patNoskumalList.Add(patient);
                             }
