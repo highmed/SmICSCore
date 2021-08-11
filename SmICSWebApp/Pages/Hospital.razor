@@ -332,8 +332,8 @@
             allNegativTest = dataService.GetAllNegativTest();
             allNegativPat = dataService.GetAllPatByTest(allNegativTest);
 
-            allNoskumalPat = dataService.GetAllNoskumalPat(allPositivTest);
-            noskumalPatByContact = dataService.GetNoskumalByContact(allNoskumalPat, allPositivPat);
+            allNoskumalPat = dataService.GetAllNoskumalPat(allPositivPat);
+            noskumalPatByContact = dataService.GetNoskumalByContact(allNoskumalPat, allPositivTest);
             anzahlFaelle = allPositivPat.Count() - allNoskumalPat.Count();
             anzahlPatTage = dataService.PatStay(allPositivPat);
 

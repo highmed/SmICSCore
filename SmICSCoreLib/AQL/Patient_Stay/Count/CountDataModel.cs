@@ -28,10 +28,19 @@ namespace SmICSCoreLib.AQL.Patient_Stay.Count
 
         public override bool Equals(object obj)
         {
-            if (obj == null) return false;
-            CountDataModel objAsPart = obj as CountDataModel;
-            if (objAsPart == null) return false;
-            else return (this.PatientID == objAsPart.PatientID);
+            return obj is CountDataModel model &&
+                   PatientID == model.PatientID &&
+                   Fallkennung == model.Fallkennung;
         }
+
+        //public override bool Equals(object obj)
+        //{
+        //    if (obj == null) return false;
+        //    CountDataModel objAsPart = obj as CountDataModel;
+        //    if (objAsPart == null) return false;
+        //    else return (this.PatientID == objAsPart.PatientID);
+        //}
+
+
     }
 }

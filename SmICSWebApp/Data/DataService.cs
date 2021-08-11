@@ -119,7 +119,6 @@ namespace SmICSWebApp.Data
             foreach (CountDataModel positivPat in positivPatList)
             {
                 List<StationaryDataModel> statPatList = GetStationaryPat(positivPat.PatientID, positivPat.Fallkennung, positivPat.Zeitpunkt_des_Probeneingangs);
-
                 if (statPatList != null || statPatList.Count != 0)
                 {
                     foreach (StationaryDataModel statPatient in statPatList)
@@ -133,13 +132,13 @@ namespace SmICSWebApp.Data
                         {
                             foreach (var symptom in symptoms)
                             {
-                                if (!symptomList.Contains(symptom.NameDesSymptoms))
+                                if (!symptomList.Contains(symptom.NameDesSymptoms) &&
+                                    !patNoskumalList.Contains(new Patient { PatientID = positivPat.PatientID }))
                                 {
                                     patNoskumalList.Add(new Patient(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
                                 }
                             }
                         }
-
                     }
                 }
             }
@@ -162,7 +161,7 @@ namespace SmICSWebApp.Data
                             List <PatientMovementModel> patientMovement = FindContact(allPositivPat, bewegung.PatientID, 
                                 bewegung.Fachabteilung, bewegung.Beginn, bewegung.Ende);
 
-                            if (patientMovement.Count != 0)
+                            if (patientMovement.Count != 0 && !patNoskumalList.Contains(patient))
                             {
                                 patNoskumalList.Add(patient);
                             }

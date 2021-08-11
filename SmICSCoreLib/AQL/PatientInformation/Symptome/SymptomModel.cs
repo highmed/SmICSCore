@@ -15,8 +15,8 @@ namespace SmICSCoreLib.AQL.PatientInformation.Symptome
         [JsonProperty(PropertyName = "NameDesSymptoms")]
         public string NameDesSymptoms { get; set; }
 
-        //[JsonProperty(PropertyName = "Anzahl_Patienten")]
-        //public int Anzahl_Patienten { get; set; }
+        [JsonProperty(PropertyName = "Anzahl_Patienten")]
+        public int Anzahl_Patienten { get; set; }
 
         [JsonProperty(PropertyName = "Lokalisation")]
         public string Lokalisation { get; set; }
@@ -34,5 +34,6 @@ namespace SmICSCoreLib.AQL.PatientInformation.Symptome
         public string UnbekanntesSymptom { get; set; }
         [JsonProperty(PropertyName = "AussageFehlendeInfo")]
         public string AussageFehlendeInfo { get; set; }
+
     }
 }

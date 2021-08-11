@@ -307,7 +307,7 @@ namespace SmICSCoreLib.AQL
                                 $"CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] " +
                                 $"CONTAINS (ADMIN_ENTRY r[openEHR-EHR-ADMIN_ENTRY.admission.v0] CONTAINS (CLUSTER w[openEHR-EHR-CLUSTER.location.v1]) and ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0])  " +
                                 $"where PatientID='{patientId}' and  " +
-                                $"Datum_Uhrzeit_der_Aufnahme <= '{datum.Date.AddDays(-4).ToString("yyyy-MM-dd")}' and " +
+                                $"Datum_Uhrzeit_der_Aufnahme < '{datum.Date.AddDays(-3).ToString("yyyy-MM-dd")}' and " +
                                 $"FallID='{fallkennung}'");
         }
 
@@ -340,7 +340,7 @@ namespace SmICSCoreLib.AQL
                                 $"CONTAINS COMPOSITION c " +
                                 $"CONTAINS OBSERVATION k[openEHR-EHR-OBSERVATION.symptom_sign.v0] " +
                                 $"where PatientenID='{patientId}' " +
-                                $"and Beginn like '{datum.Date.ToString("yyyy-MM-dd").Insert(10,"*")}'");
+                                $"and Beginn = '{datum.Date.ToString("yyyy-MM-dd")}' ");
         }
        
         public static AQLQuery StayFromCase(string patientId, string fallId)
