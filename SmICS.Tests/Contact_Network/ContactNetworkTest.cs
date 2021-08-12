@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
 using SmICSCoreLib.AQL.Contact_Nth_Network;
+using SmICSCoreLib.AQL.Patient_Stay.Count;
+using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.PatientInformation;
+using SmICSCoreLib.AQL.PatientInformation.Infection_situation;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
@@ -101,15 +104,16 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 
 		private PatientInformation CreatePatientInformation(IRestDataAccess rest)
 		{
-
 			IPatientMovementFactory patMoveFac = new PatientMovementFactory(rest, NullLogger<PatientMovementFactory>.Instance);
 			IPatientLabordataFactory patLabFac = new PatientLabordataFactory(rest, NullLogger<PatientLabordataFactory>.Instance);
 			ISymptomFactory symptomFac = new SymptomFactory(rest, NullLogger<SymptomFactory>.Instance);
-			IVaccinationFactory vaccFac = new VaccinationFactory(rest, NullLogger<VaccinationFactory>.Instance);
 			IMibiPatientLaborDataFactory mibiLabFac = new MibiPatientLaborDataFactory(rest);
+			IVaccinationFactory vaccFac = new VaccinationFactory(rest, NullLogger<VaccinationFactory>.Instance);
+			ICountFactory countFactory = new CountFactory(rest);
+			IStationaryFactory stationaryFactory = new StationaryFactory(rest); ;
+			IInfectionSituationFactory infecFac = new InfectionSituationFactory(countFactory, stationaryFactory, symptomFac, patMoveFac, vaccFac, NullLogger<InfectionSituationFactory>.Instance);
 
-			return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac);
-
+			return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac, infecFac);
 		}
 
 		private ContactModel CreateExpactedContactModel(List<int> contactOrder, int ehrNo)
