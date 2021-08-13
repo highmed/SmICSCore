@@ -101,7 +101,7 @@
 @code {
     private List<RenderFragment> DynamicFragment = new List<RenderFragment>();
 
-    private RKIConfigTemplate RKIConfigForm = new RKIConfigTemplate();
+    private List<RKIConfigTemplate> RKIConfigForm = new List<RKIConfigTemplate>();
     private string Zeitpunkt;
 
     private void HandleValidSubmit()
@@ -109,7 +109,7 @@
         try
         {
 
-            if (RKIConfigForm.RKIConfigFormAdd.Count > 0)
+            /*if (RKIConfigForm.RKIConfigFormAdd.Count > 0)
             {
                 if (Zeitpunkt is null)
                 {
@@ -120,7 +120,8 @@
                 {
                     RKIConfigForm.RKIConfigFormAdd.RemoveAt(index);
                 }
-            }
+            }*/
+            Zeitpunkt = DateTime.Now.ToString("h:mm:ss tt");
             JObject o = (JObject)JToken.FromObject(RKIConfigForm);
 
             RKIConfigService.StoreRules(o, Zeitpunkt);
@@ -140,17 +141,17 @@
 
     private void AddRules()
     {
-        RKIConfigRulesTemplate RKIConfigFormAdds = new RKIConfigRulesTemplate { Station = "" };
-        RKIConfigForm.RKIConfigFormAdd.Add(RKIConfigFormAdds);
+        RKIConfigTemplate RKIConfigFormAdds = new RKIConfigTemplate { Station = "" };
+        RKIConfigForm.Add(RKIConfigFormAdds);
 
         DynamicFragment.Add(CreateComponent(RKIConfigFormAdds, DynamicFragment.Count));
     }
 
-    private RenderFragment CreateComponent(RKIConfigRulesTemplate RKIConfigFormAdds, int ID) => builder =>
+    private RenderFragment CreateComponent(RKIConfigTemplate RKIConfigFormAdds, int ID) => builder =>
     {
         builder.OpenComponent<RKIConfigRules>(0);
         builder.AddAttribute(0, "ID", ID);
-        builder.AddAttribute(0, "RKIConfigForm", RKIConfigForm);
+        builder.AddAttribute(0, "RKIConfigForm", RKIConfigFormAdds);
         builder.CloseComponent();
     };
 

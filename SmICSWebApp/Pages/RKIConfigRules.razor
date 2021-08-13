@@ -9,7 +9,7 @@
         <label for="Station" class="tb-bez-header">Station</label>
     </div>
     <div>
-        <InputSelect @bind-Value="RKIConfigRulesForm.Station">
+        <InputSelect @bind-Value="RKIConfigForm.Station" id="@ID">
             <option selected disabled>Bitte wählen Sie aus</option>
             <option value="Gesamtklink">Gesamtklink</option>
             @if (StationList != null)
@@ -28,7 +28,7 @@
         <label for="Erreger" class="tb-bez-header">Erreger</label>
     </div>
     <div>
-        <InputSelect @bind-Value="RKIConfigRulesForm.Erreger">
+        <InputSelect @bind-Value="RKIConfigForm.Erreger" id="@ID">
             <option selected disabled>Bitte wählen Sie aus</option>
             <option value="MRSA">Methicillin-Resistant Staphylococcus aureus (MRSA)</option>
             <option value="Klebsiella pneumoniae">Klebsiella pneumoniae</option>
@@ -44,7 +44,7 @@
         <label for="Zeitraum" class="tb-bez-header">Zeitraum</label>
     </div>
     <div>
-        <InputSelect @bind-Value="RKIConfigRulesForm.Zeitraum">
+        <InputSelect @bind-Value="RKIConfigForm.Zeitraum" id="@ID">
             <option selected disabled>Bitte wählen Sie aus</option>
             <option value="1">1 Woche</option>
             <option value="2">2 Wochen</option>
@@ -66,7 +66,7 @@
         <label for="Retro" class="tb-bez-header">Retrospektiv</label>
     </div>
     <div class="check">
-        <InputCheckbox @bind-Value="RKIConfigRulesForm.Retro" id="@("op"+ID)" class="css-checkbox"
+        <InputCheckbox @bind-Value="RKIConfigForm.Retro" id="@("op"+ID)" class="css-checkbox"
                        @onchange="eventArgs => { CheckboxClicked(eventArgs.Value); }" />
         <label class="css-label" for="@("op"+ID)"></label>
     </div>
@@ -76,7 +76,7 @@
     [Parameter]
     public int ID { get; set; }
     [Parameter]
-    public RKIConfigRulesTemplate RKIConfigRulesForm { get; set; }
+    public RKIConfigTemplate RKIConfigForm { get; set; }
 
     List<PatientMovementModel> StationList;
 
