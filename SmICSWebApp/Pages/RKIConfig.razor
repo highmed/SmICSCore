@@ -7,6 +7,7 @@
 @using SmICSWebApp.Data
 
 
+@inject ILogger<RKIConfig> Logger
 @inject RKIConfigService RKIConfigService
 
 
@@ -17,19 +18,19 @@
     <div class="welcome_text_config">
         <div class="index_config">
             <div class="index-text_config">
-                <span class="oi oi-info" aria-hidden="true">&nbsp;&nbsp;</span> Basierend auf den vorliegenden, vergangenen Erregerbefunden im Klinikum ist das SmICS in der Lage, Ihnen einen Hinweis darauf zu geben, 
-                ob zu einem bestimmten Zeitpunkt mehr positive Erregerbefunde als üblich vorliegen ("Erregerhäufung"). <br/>
-                In diesem Konfigurationsbereich haben Sie die Möglichkeit, verschiedene Regeln zu definieren, nach denen der statistische Algorithmus arbeiten soll.<br/><br/>
+                <span class="oi oi-info" aria-hidden="true">&nbsp;&nbsp;</span> Basierend auf den vorliegenden, vergangenen Erregerbefunden im Klinikum ist das SmICS in der Lage, Ihnen einen Hinweis darauf zu geben,
+                ob zu einem bestimmten Zeitpunkt mehr positive Erregerbefunde als üblich vorliegen ("Erregerhäufung"). <br />
+                In diesem Konfigurationsbereich haben Sie die Möglichkeit, verschiedene Regeln zu definieren, nach denen der statistische Algorithmus arbeiten soll.<br /><br />
 
-                Eine Regel besteht immer aus (1) der Wahl einer Station (oder aller Stationen), (2) der Wahl eines Erregers (zur Auswahl stehen Ihnen aktuell 6 Erreger), 
-                (3) der Wahl eines "Look Back"-Zeitraumes (diese Variable bestimmt, welcher Umfang an vergangenen Daten mit in die Berechnung einbezogen werden soll, z.B. die letzten 1-12 Wochen), 
-                und (4) der Wahl, ob diese Regel zusätzlich einmalig retrospektiv - d.h. auf den gesamten Datenbestand - ausgeführt werden soll (die Standardeinstellung ist hier "Nein", 
-                d. h. die Regel wird nur auf die aktuellen Datenbestände bis zum in (3) definierten Zeitraum angewendet).<br/>
+                Eine Regel besteht immer aus (1) der Wahl einer Station (oder aller Stationen), (2) der Wahl eines Erregers (zur Auswahl stehen Ihnen aktuell 6 Erreger),
+                (3) der Wahl eines "Look Back"-Zeitraumes (diese Variable bestimmt, welcher Umfang an vergangenen Daten mit in die Berechnung einbezogen werden soll, z.B. die letzten 1-12 Wochen),
+                und (4) der Wahl, ob diese Regel zusätzlich einmalig retrospektiv - d.h. auf den gesamten Datenbestand - ausgeführt werden soll (die Standardeinstellung ist hier "Nein",
+                d. h. die Regel wird nur auf die aktuellen Datenbestände bis zum in (3) definierten Zeitraum angewendet).<br />
                 Die von Ihnen angelegten Regeln werden täglich durchlaufen und die Ergebnisse neu berechnet. Dazu müssen Sie unter "Tgl. Ausführzeit der Regeln" eine Uhrzeit angeben, zu der die Berechnung stattfinden soll.
-                <br/><br/>
-                Alle Regeln stehen Ihnen in der Visualisierung zur "Epidemiologischen Kurve" zur Auswahl zur Verfügung. Je nach Auswahl wird Ihnen dann dort die vom Algorithmus berechnete Entwicklung 
+                <br /><br />
+                Alle Regeln stehen Ihnen in der Visualisierung zur "Epidemiologischen Kurve" zur Auswahl zur Verfügung. Je nach Auswahl wird Ihnen dann dort die vom Algorithmus berechnete Entwicklung
                 und Einschätzung dargestellt.
-                <br/><br/>
+                <br /><br />
                 Bitte beachten Sie: Die retrospektive Auswertung (4) ist ein sehr zeit- und rechenintensiver Prozess, der nur im Ausnahmefall oder zu Analysenzwecken gewählt werden sollte.
             </div>
             <div id="div_card_1" class="">
@@ -51,7 +52,7 @@
                                         <button id="btn" type="button" @onclick="()=>DeleteRules(frag)"><i class="oi oi-minus"></i></button>
                                     </div>
                                 </div>
-                                
+
                             }
                         </div>
 
@@ -81,7 +82,7 @@
                 <div id="div_card_2">
                     <div id="div_card_3">
                         <div>
-                            
+
                         </div>
                     </div>
                     <div id="div_card_3">
@@ -105,7 +106,31 @@
 
     private void HandleValidSubmit()
     {
-        Zeitpunkt = DateTime.Now.ToString("h:mm:ss tt");
+        try
+        {
+
+            if (RKIConfigForm.RKIConfigFormAdd.Count > 0)
+            {
+                if (Zeitpunkt is null)
+                {
+                    Zeitpunkt = DateTime.Now.ToString("h:mm:ss tt");
+                }
+                List<int> indices = RKIConfigForm.RKIConfigFormAdd.Where(x => x.Station == "").Select(x => RKIConfigForm.RKIConfigFormAdd.IndexOf(x)).ToList();
+                foreach (int index in indices)
+                {
+                    RKIConfigForm.RKIConfigFormAdd.RemoveAt(index);
+                }
+            }
+            JObject o = (JObject)JToken.FromObject(RKIConfigForm);
+
+            RKIConfigService.StoreRules(o, Zeitpunkt);
+
+        }
+        catch (Exception e)
+        {
+            Logger.LogError("Übermittlungsproblem: {Message}", e.Message);
+        }
+
     }
 
     private void DeleteRules(RenderFragment frag)
@@ -115,20 +140,17 @@
 
     private void AddRules()
     {
-        RKIConfigTemplate RKIConfigFormAdds = new RKIConfigTemplate();
+        RKIConfigRulesTemplate RKIConfigFormAdds = new RKIConfigRulesTemplate { Station = "" };
         RKIConfigForm.RKIConfigFormAdd.Add(RKIConfigFormAdds);
 
         DynamicFragment.Add(CreateComponent(RKIConfigFormAdds, DynamicFragment.Count));
     }
 
-    private RenderFragment CreateComponent(RKIConfigTemplate RKIConfigFormAdds, int ID) => builder =>
+    private RenderFragment CreateComponent(RKIConfigRulesTemplate RKIConfigFormAdds, int ID) => builder =>
     {
         builder.OpenComponent<RKIConfigRules>(0);
-        builder.AddAttribute(0, "Station", RKIConfigFormAdds.Station);
-        builder.AddAttribute(0, "Erreger", RKIConfigFormAdds.Erreger);
-        builder.AddAttribute(0, "Zeitraum", RKIConfigFormAdds.Zeitraum);
-        builder.AddAttribute(0, "Retro", RKIConfigFormAdds.Retro);
         builder.AddAttribute(0, "ID", ID);
+        builder.AddAttribute(0, "RKIConfigForm", RKIConfigForm);
         builder.CloseComponent();
     };
 

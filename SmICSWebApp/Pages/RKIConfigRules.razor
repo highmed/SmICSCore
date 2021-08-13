@@ -9,14 +9,14 @@
         <label for="Station" class="tb-bez-header">Station</label>
     </div>
     <div>
-        <InputSelect @bind-Value="Station">
+        <InputSelect @bind-Value="RKIConfigRulesForm.Station">
             <option selected disabled>Bitte wählen Sie aus</option>
             <option value="Gesamtklink">Gesamtklink</option>
             @if (StationList != null)
             {
                 foreach (var item in StationList)
                 {
-                   <option value="@item">@item</option>
+                   <option value="@item.StationID">@item.StationID</option>
                 }
             }
 
@@ -28,7 +28,7 @@
         <label for="Erreger" class="tb-bez-header">Erreger</label>
     </div>
     <div>
-        <InputSelect @bind-Value="Erreger">
+        <InputSelect @bind-Value="RKIConfigRulesForm.Erreger">
             <option selected disabled>Bitte wählen Sie aus</option>
             <option value="MRSA">Methicillin-Resistant Staphylococcus aureus (MRSA)</option>
             <option value="Klebsiella pneumoniae">Klebsiella pneumoniae</option>
@@ -44,7 +44,7 @@
         <label for="Zeitraum" class="tb-bez-header">Zeitraum</label>
     </div>
     <div>
-        <InputSelect @bind-Value="Zeitraum">
+        <InputSelect @bind-Value="RKIConfigRulesForm.Zeitraum">
             <option selected disabled>Bitte wählen Sie aus</option>
             <option value="1">1 Woche</option>
             <option value="2">2 Wochen</option>
@@ -66,7 +66,7 @@
         <label for="Retro" class="tb-bez-header">Retrospektiv</label>
     </div>
     <div class="check">
-        <InputCheckbox @bind-Value="Retro" id="@("op"+ID)" class="css-checkbox"
+        <InputCheckbox @bind-Value="RKIConfigRulesForm.Retro" id="@("op"+ID)" class="css-checkbox"
                        @onchange="eventArgs => { CheckboxClicked(eventArgs.Value); }" />
         <label class="css-label" for="@("op"+ID)"></label>
     </div>
@@ -74,15 +74,9 @@
 
 @code {
     [Parameter]
-    public string Station { get; set; }
-    [Parameter]
-    public string Erreger { get; set; }
-    [Parameter]
-    public string Zeitraum { get; set; }
-    [Parameter]
-    public bool Retro { get; set; }
-    [Parameter]
     public int ID { get; set; }
+    [Parameter]
+    public RKIConfigRulesTemplate RKIConfigRulesForm { get; set; }
 
     List<PatientMovementModel> StationList;
 
@@ -100,7 +94,7 @@
         catch (Exception)
         {
             throw new Exception($"Failed to GET Station data");
-            
+
         }
     }
 
