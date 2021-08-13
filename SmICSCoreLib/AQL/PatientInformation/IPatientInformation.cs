@@ -23,5 +23,6 @@ namespace SmICSCoreLib.AQL.PatientInformation
         List<SymptomModel> Patient_By_Symptom(string symptom);
         List<SymptomModel> Symptoms_By_PatientId(string patientId, DateTime datum);
         List<VaccinationModel> Patient_Vaccination(PatientListParameter parameter);
+        List<PatientMovementModel> All_Stations();
     }
 }
