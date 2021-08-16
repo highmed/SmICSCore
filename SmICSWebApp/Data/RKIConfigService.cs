@@ -1,15 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using SmICSCoreLib.REST;
 using SmICSCoreLib.AQL.RKIConfig;
-using System.Threading;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation;
-using SmICSCoreLib.AQL;
-using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace SmICSWebApp.Data
 {
@@ -17,6 +13,7 @@ namespace SmICSWebApp.Data
     {
         private IRestDataAccess _restData;
         private readonly IPatientInformation _patientInformation;
+        private readonly string path = @"./Resources/RKIConfig/RKIConfig.json";
 
         public RKIConfigService(IPatientInformation patientInformation, IRestDataAccess restData)
         {
@@ -37,21 +34,57 @@ namespace SmICSWebApp.Data
             }
         }
 
-        public void StoreRules(JObject storedValues, string zeitpunkt)
+        public void StoreRules(List<RKIConfigTemplate> storedValues)
         {
             try
             {
-                Console.WriteLine(storedValues.ToString());
-                //var storedValuestojson = JsonConvert.DeserializeObject(JObject.Parse(storedValues.ToString()));
+                if (File.Exists(path) == false)
+                {
+                    string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
+                    File.WriteAllText(path, json);
+                }
+                else
+                {
+                    string json = File.ReadAllText(path);
+
+                    List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
+                    newList.AddRange(storedValues);
+
+                    string storeJson = JsonConvert.SerializeObject(newList.ToArray(), Formatting.Indented);
+                    File.WriteAllText(path, storeJson);
+                }
+                
             }
             catch(Exception)
             {
                 throw new Exception($"Failed to store data");
             }
         }
-        //public Task<IEnumerable<RKIConfigTemplate>> GetStationAsync(CancellationToken ct = default)
-        //{
-        //    return;
-        //}
+
+        public List<RKIConfigTemplate> ShowValues()
+        {
+            string json = File.ReadAllText(path);
+            List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
+
+            if(newList != null)
+            {
+                return newList;
+            }
+            else
+            {
+                return new List<RKIConfigTemplate>();
+            }
+        }
+
+        public void DeleteRuleInJson(int ID)
+        {
+            string json = File.ReadAllText(path);
+
+            List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
+            newList.RemoveAt(ID);
+
+            string storeJson = JsonConvert.SerializeObject(newList.ToArray(), Formatting.Indented);
+            File.WriteAllText(path, storeJson);
+        }
     }
 }

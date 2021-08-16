@@ -18,7 +18,7 @@
 }
 
 .index-text_config {
-    background-color: #56A5EC;
+    background-color: #5F90AF;
     opacity: 1;
     color: azure;
     padding: 0.2%;
@@ -163,4 +163,55 @@
     width: 5%;
     border: none !important;
     background-color: transparent !important;
+}
+
+.tb-config {
+    display: flex;
+    flex-direction: column;
+    padding: 1%;
+}
+
+.tb-header-config {
+    display: flex;
+    flex-direction: row;
+    color: white;
+    background-color: #5F90AF;
+}
+
+.tb-colunm-config {
+    display: flex;
+    flex-direction: row;
+}
+
+.tb-cell-config-1:nth-child(n+1){
+    background-color: #A3CBE5;
+    border: 2px solid white;
+    color: white;
+    width: 20%;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.tb-cell-config-1:nth-child(2n+1) {
+    background-color: #9DB8CF;
+    border: 2px solid white;
+    color: white;
+    width: 20%;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.tb-cell-config-2 {
+    border: none;
+    color: white;
+    width: 20%;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.span-tr-config {
+    margin-top: 2%;
+    color: #637492;
+    font-size: 22px;
+    margin-left: 1%;
 }

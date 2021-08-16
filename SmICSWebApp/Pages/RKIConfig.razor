@@ -79,17 +79,40 @@
                 <div class="span_hr">
                     <span>&nbsp;</span>
                 </div>
-                <div id="div_card_2">
-                    <div id="div_card_3">
-                        <div>
-
-                        </div>
+                <span class="span-tr-config">Gespeicherte Regeln</span>
+                <div class="tb-config">
+                    <div class="tb-header-config">
+                        <div class="tb-cell-config-2">Station</div>
+                        <div class="tb-cell-config-2">Erreger</div>
+                        <div class="tb-cell-config-2">Zeitraum</div>
+                        <div class="tb-cell-config-2">Retrospektiv</div>
+                        <div class="tb-cell-config-2">Erstellungsdatum</div>
+                        <div class="space-2">&nbsp;</div>
                     </div>
-                    <div id="div_card_3">
-                        <div>
-
+                    @foreach (var item in ConfigList)
+                    {
+                        <div class="tb-colunm-config" id="@ID">
+                            <div class="tb-cell-config-1">
+                                @item.Station
+                            </div>
+                            <div class="tb-cell-config-1">
+                                @item.Erreger
+                            </div>
+                            <div class="tb-cell-config-1">
+                                @item.Zeitraum
+                            </div>
+                            <div class="tb-cell-config-1">
+                                @item.Retro
+                            </div>
+                            <div class="tb-cell-config-1">
+                                @item.Erstellungsdatum
+                            </div>
+                            <div class="space-2" style="padding-left: 1%; padding: 0.25%;">
+                                <button id="btn" type="button" @onclick="()=>DeleteReadyRules(ID)"><i class="oi oi-minus"></i></button>
+                            </div>
                         </div>
-                    </div>
+                    }
+
                 </div>
             </div>
 
@@ -99,32 +122,51 @@
 
 
 @code {
+
+    [Parameter]
+    public int ID { get; set; }
     private List<RenderFragment> DynamicFragment = new List<RenderFragment>();
 
     private List<RKIConfigTemplate> RKIConfigForm = new List<RKIConfigTemplate>();
+    private List<RKIConfigTemplate> ConfigList = new List<RKIConfigTemplate>();
     private string Zeitpunkt;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Run(GetConfigs);
+    }
+
+    public void GetConfigs()
+    {
+        try
+        {
+            ConfigList = RKIConfigService.ShowValues();
+        }
+        catch
+        {
+            throw new Exception($"Failed to GET Config data");
+        }
+    }
 
     private void HandleValidSubmit()
     {
         try
         {
 
-            /*if (RKIConfigForm.RKIConfigFormAdd.Count > 0)
+            if (RKIConfigForm.Count > 0)
             {
                 if (Zeitpunkt is null)
                 {
                     Zeitpunkt = DateTime.Now.ToString("h:mm:ss tt");
                 }
-                List<int> indices = RKIConfigForm.RKIConfigFormAdd.Where(x => x.Station == "").Select(x => RKIConfigForm.RKIConfigFormAdd.IndexOf(x)).ToList();
+                List<int> indices = RKIConfigForm.Where(x => x.Station == "").Select(x => RKIConfigForm.IndexOf(x)).ToList();
                 foreach (int index in indices)
                 {
-                    RKIConfigForm.RKIConfigFormAdd.RemoveAt(index);
+                    RKIConfigForm.RemoveAt(index);
                 }
-            }*/
-            Zeitpunkt = DateTime.Now.ToString("h:mm:ss tt");
-            JObject o = (JObject)JToken.FromObject(RKIConfigForm);
+            }
 
-            RKIConfigService.StoreRules(o, Zeitpunkt);
+            RKIConfigService.StoreRules(RKIConfigForm);
 
         }
         catch (Exception e)
@@ -154,5 +196,11 @@
         builder.AddAttribute(0, "RKIConfigForm", RKIConfigFormAdds);
         builder.CloseComponent();
     };
+
+    private void DeleteReadyRules(int ID)
+    {
+        RKIConfigService.DeleteRuleInJson(ID);
+        Task.Run(GetConfigs);
+    }
 
 }
