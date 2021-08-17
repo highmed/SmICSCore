@@ -488,13 +488,15 @@ namespace SmICSCoreLib.StatistikServices
                 }
                 catch (Exception)
                 {
-                    color = "#8CA2AE";
+                    //color = "#8CA2AE";
+                    color = "#b0bec5";
                     return color;
                 }
             }
             else
             {
-                color = "#8CA2AE";
+                //color = "#8CA2AE";
+                color = "#b0bec5";
                 return color;
             }     
         }
