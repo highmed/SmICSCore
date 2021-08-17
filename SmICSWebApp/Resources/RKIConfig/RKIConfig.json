@@ -1,9 +1,30 @@
 [
   {
     "Station": "Gesamtklink",
+    "Erreger": "Escherichia coli",
+    "Zeitraum": "5",
+    "Retro": true,
+    "Erstellungsdatum": "2021-08-17T09:42:07Z"
+  },
+  {
+    "Station": "Gesamtklink",
     "Erreger": "SARS-CoV-2",
-    "Zeitraum": "6",
+    "Zeitraum": "8",
+    "Retro": true,
+    "Erstellungsdatum": "2021-08-17T09:56:57Z"
+  },
+  {
+    "Station": "Gesamtklink",
+    "Erreger": "MSSA",
+    "Zeitraum": "1",
     "Retro": false,
-    "Erstellungsdatum": "2021-08-16T18:57:12Z"
+    "Erstellungsdatum": "2021-08-17T10:05:34Z"
+  },
+  {
+    "Station": "Gesamtklink",
+    "Erreger": "MSSA",
+    "Zeitraum": "6",
+    "Retro": true,
+    "Erstellungsdatum": "2021-08-17T10:14:15Z"
   }
 ]

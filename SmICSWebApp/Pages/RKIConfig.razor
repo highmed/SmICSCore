@@ -148,7 +148,7 @@
         }
     }
 
-    private void HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
         try
         {
@@ -167,6 +167,9 @@
             }
 
             RKIConfigService.StoreRules(RKIConfigForm);
+            await Task.Run(GetConfigs);
+            DynamicFragment.RemoveRange(0, DynamicFragment.Count());
+            RKIConfigForm.RemoveRange(0, RKIConfigForm.Count());
 
         }
         catch (Exception e)
@@ -197,10 +200,10 @@
         builder.CloseComponent();
     };
 
-    private void DeleteReadyRules(int ID)
+    private async Task DeleteReadyRules(int ID)
     {
         RKIConfigService.DeleteRuleInJson(ID);
-        Task.Run(GetConfigs);
+        await Task.Run(GetConfigs);
     }
 
 }
