@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
+using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten.ReceiveModel;
 
 
 namespace SmICSCoreLib.AQL.RKIConfig
@@ -11,7 +11,7 @@ namespace SmICSCoreLib.AQL.RKIConfig
     {
         [Required]
         public string Station { get; set; }
-        public List<LabDataModel> ErregerID { get; set; }
+        public List<LabDataKeimReceiveModel> ErregerID { get; set; }
         [Required]
         public string Erreger { get; set; }
         [Required]

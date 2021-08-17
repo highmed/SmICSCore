@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
+using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten.ReceiveModel;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
+using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten.ReceiveModel;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using SmICSCoreLib.AQL.PatientInformation.Vaccination;
@@ -24,7 +26,7 @@ namespace SmICSCoreLib.AQL.PatientInformation
         List<SymptomModel> Symptoms_By_PatientId(string patientId, DateTime datum);
         List<VaccinationModel> Patient_Vaccination(PatientListParameter parameter);
         List<PatientMovementModel> All_Stations();
-        List<LabDataModel> ViroErreger(string name);
-        List<MibiLabDataModel> MikroErreger(string name);
+        List<LabDataKeimReceiveModel> ViroErreger(string name);
+        List<MibiLabDataKeimReceiveModel> MikroErreger(string name);
     }
 }

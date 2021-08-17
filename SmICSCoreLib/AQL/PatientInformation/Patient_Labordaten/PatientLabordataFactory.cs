@@ -48,12 +48,12 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten
             return labDataModels;
         }
 
-        public List<LabDataModel> ProcessGetErreger(string name)
+        public List<LabDataKeimReceiveModel> ProcessGetErreger(string name)
         {
-            List<LabDataModel> erregerList = _restData.AQLQuery<LabDataModel>(AQLCatalog.GetErregernameFromViro(name));
+            List<LabDataKeimReceiveModel> erregerList = _restData.AQLQuery<LabDataKeimReceiveModel>(AQLCatalog.GetErregernameFromViro(name));
             if (erregerList is null)
             {
-                return new List<LabDataModel>();
+                return new List<LabDataKeimReceiveModel>();
             }
 
             return erregerList;

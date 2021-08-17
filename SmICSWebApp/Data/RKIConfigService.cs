@@ -5,10 +5,10 @@ using SmICSCoreLib.REST;
 using SmICSCoreLib.AQL.RKIConfig;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
 using System.IO;
 using System.Linq;
+using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten.ReceiveModel;
+using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten.ReceiveModel;
 
 namespace SmICSWebApp.Data
 {
@@ -92,11 +92,11 @@ namespace SmICSWebApp.Data
             File.WriteAllText(path, storeJson);
         }
 
-        public List<LabDataModel> GetErregerListViro(string name)
+        public List<LabDataKeimReceiveModel> GetErregerListViro(string name)
         {
             try
             {
-                List<LabDataModel> erregerListe = _patientInformation.ViroErreger(name);
+                List<LabDataKeimReceiveModel> erregerListe = _patientInformation.ViroErreger(name);
                 return erregerListe;
             }
             catch (Exception)
@@ -105,11 +105,11 @@ namespace SmICSWebApp.Data
             }
         }
 
-        public List<MibiLabDataModel> GetErregerListMikro(string name)
+        public List<MibiLabDataKeimReceiveModel> GetErregerListMikro(string name)
         {
             try
             {
-                List<MibiLabDataModel> erregerList = _patientInformation.MikroErreger(name);
+                List<MibiLabDataKeimReceiveModel> erregerList = _patientInformation.MikroErreger(name);
                 return erregerList;
             }
             catch (Exception)
