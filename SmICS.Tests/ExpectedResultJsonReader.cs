@@ -139,6 +139,11 @@ namespace SmICSFactory.Tests
             {
                 obj.Add(new JProperty("PatientenID", id.EHR_ID));
                 obj.Property("DokumentationsID").Value = DateTime.Parse(obj.Property("DokumentationsID").Value.ToString());
+                obj.Property("Impfstoff").Value = obj.Property("Impfstoff").Value;
+                obj.Property("Dosierungsreihenfolge").Value = obj.Property("Dosierungsreihenfolge").Value;
+                obj.Property("Dosiermenge").Value = obj.Property("Dosiermenge").Value;
+                obj.Property("ImpfungGegen").Value = obj.Property("ImpfungGegen").Value;
+                obj.Property("Abwesendheit").Value = obj.Property("Abwesendheit").Value;
             }
         }
 
