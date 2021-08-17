@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 using System;
 using System.Collections.Generic;
 
@@ -21,15 +22,8 @@ namespace SmICSCoreLib.StatistikDataModels
         [JsonProperty(PropertyName = "Infektion")]
         public string Infektion { get; set; }
 
-        [JsonProperty(PropertyName = "Impfung")]
-        public bool Impfung { get; set; }
-
-        [JsonProperty(PropertyName = "Impfstoff")]
-        public List<string> Impfstoff { get; set; }
-
-        [JsonProperty(PropertyName = "Anzahl_Impfungen")]
-        public List<string> Anzahl_Impfungen { get; set; }
-
+        [JsonProperty(PropertyName = "VaccinationModel")]
+        public List<VaccinationModel> VaccinationModel { get; set; }
 
 
         public Patient() { }
@@ -41,19 +35,17 @@ namespace SmICSCoreLib.StatistikDataModels
             Entlastung = entlastung;
         }
 
-        public Patient(string patientID, DateTime probenentnahme, DateTime aufnahme, DateTime entlastung, string infektion,
-                        bool impfung, List<string> impfstoff, List<string> anzahl_Impfungen) : this(patientID, probenentnahme, aufnahme, entlastung)
-        {
-            Infektion = infektion;
-            Impfung = impfung;
-            Impfstoff = impfstoff;
-            Anzahl_Impfungen = anzahl_Impfungen;
-        }
-
         public Patient(string patientID, string infektion)
         {
             PatientID = patientID;
             Infektion = infektion;
+        }
+
+        public Patient(string patientID, DateTime probenentnahme, DateTime aufnahme, DateTime entlastung, string infektion, List<VaccinationModel> vaccinationModel) 
+            : this(patientID, probenentnahme, aufnahme, entlastung)
+        {
+            Infektion = infektion;
+            VaccinationModel = vaccinationModel;
         }
 
         public override bool Equals(object obj)

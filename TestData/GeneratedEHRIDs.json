@@ -134,5 +134,9 @@
   {
     "EHR_ID": "03ff2929-184c-4759-939b-d6fef9d4fa55",
     "Patient": "Patient34"
+  },
+  {
+    "EHR_ID": "59d61e75-7e3a-4227-a535-6009c40fb8a5",
+    "Patient": "Patient38"
   }
 ]

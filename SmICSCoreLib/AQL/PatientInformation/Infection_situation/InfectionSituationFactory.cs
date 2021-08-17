@@ -71,41 +71,20 @@ namespace SmICSCoreLib.AQL.PatientInformation.Infection_situation
                         List<string> patientList = new();
                         patientList.Add(patientID);
                         patListParameter.patientList = patientList;
-                        List<VaccinationModel> patientVaccination = _vaccFac.Process(patListParameter);
+                        List<VaccinationModel> patVaccination;
+                        List<VaccinationModel> patientVaccination = _vaccFac.ProcessSpecificVaccination(patListParameter, "Infectious disease (disorder)");
                         if (patientVaccination != null && patientVaccination.Count != 0)
                         {
-                            List<string> listeImpfstoff = new();
-                            List<string> dosierungsreihenfolge = new();
-                            foreach (var vaccination in patientVaccination)
+                            patVaccination = patientVaccination;
+                            if (proPatientenListe.Contains(patient))
                             {
-                                if (vaccination.ImpfungGegen == "Infectious disease (disorder)")
-                                {
-                                    listeImpfstoff.Add(vaccination.Impfstoff);
-                                    dosierungsreihenfolge.Add(vaccination.Dosierungsreihenfolge);
-                                    if (proPatientenListe.Contains(patient))
-                                    {
-                                        patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
-                                                                 "Wahrscheinliche Nosokomiale Infektion", true, listeImpfstoff, dosierungsreihenfolge));
-                                    }
-                                    else
-                                    {
-                                        patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
-                                                                  "Moegliche Nosokomiale Infektion", true, listeImpfstoff, dosierungsreihenfolge));
-                                    }
-                                }
-                                else
-                                {
-                                    if (proPatientenListe.Contains(patient))
-                                    {
-                                        patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
-                                                                  "Wahrscheinliche Nosokomiale Infektion", false, null, null));
-                                    }
-                                    else
-                                    {
-                                        patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
-                                                                  "Mögliche Nosokomiale Infektion", false, null, null));
-                                    }
-                                }
+                                patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
+                                                         "Wahrscheinliche Nosokomiale Infektion", patVaccination));
+                            }
+                            else
+                            {
+                                patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
+                                                          "Moegliche Nosokomiale Infektion", patVaccination));
                             }
                         }
                         else
@@ -113,22 +92,17 @@ namespace SmICSCoreLib.AQL.PatientInformation.Infection_situation
                             if (proPatientenListe.Contains(patient))
                             {
                                 patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
-                                                          "Wahrscheinliche Nosokomiale Infektion", false, null, null));
+                                                          "Wahrscheinliche Nosokomiale Infektion", null));
                             }
                             else
                             {
                                 patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
-                                                          "Mögliche Nosokomiale Infektion", false, null, null));
+                                                          "Moegliche Nosokomiale Infektion", null));
                             }
                         }
                     }
                 }
             }
-            //else
-            //{
-            //    patienten.Add(new Patient(patientID, "Keine Covid-19 Infektion nachgewiesen"));
-            //}
-
             return patienten;
         }
 
