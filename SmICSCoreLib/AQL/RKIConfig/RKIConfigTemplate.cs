@@ -1,6 +1,8 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 
 
 namespace SmICSCoreLib.AQL.RKIConfig
@@ -9,6 +11,7 @@ namespace SmICSCoreLib.AQL.RKIConfig
     {
         [Required]
         public string Station { get; set; }
+        public List<LabDataModel> ErregerID { get; set; }
         [Required]
         public string Erreger { get; set; }
         [Required]

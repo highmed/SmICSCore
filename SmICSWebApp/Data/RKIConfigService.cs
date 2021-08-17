@@ -5,7 +5,10 @@ using SmICSCoreLib.REST;
 using SmICSCoreLib.AQL.RKIConfig;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation;
+using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
+using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
 using System.IO;
+using System.Linq;
 
 namespace SmICSWebApp.Data
 {
@@ -38,6 +41,8 @@ namespace SmICSWebApp.Data
         {
             try
             {
+                storedValues.Where(w => w.Erreger == "SARS-CoV-2").ToList().ForEach(s => s.ErregerID = GetErregerListViro(s.Erreger));
+                //storedValues.Where(w => w.Erreger != "SARS-CoV-2").ToList().ForEach(s => s.ErregerID = GetErregerListMikro(s.Erreger));
                 if (File.Exists(path) == false)
                 {
                     string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
@@ -85,6 +90,32 @@ namespace SmICSWebApp.Data
 
             string storeJson = JsonConvert.SerializeObject(newList.ToArray(), Formatting.Indented);
             File.WriteAllText(path, storeJson);
+        }
+
+        public List<LabDataModel> GetErregerListViro(string name)
+        {
+            try
+            {
+                List<LabDataModel> erregerListe = _patientInformation.ViroErreger(name);
+                return erregerListe;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public List<MibiLabDataModel> GetErregerListMikro(string name)
+        {
+            try
+            {
+                List<MibiLabDataModel> erregerList = _patientInformation.MikroErreger(name);
+                return erregerList;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

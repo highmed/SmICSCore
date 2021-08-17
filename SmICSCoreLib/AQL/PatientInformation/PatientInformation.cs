@@ -81,6 +81,16 @@ namespace SmICSCoreLib.AQL.PatientInformation
             return _patMoveFac.ProcessGetStations();
         }
 
+        public List<LabDataModel> ViroErreger(string name)
+        {
+            return _patLabFac.ProcessGetErreger(name);
+        }
+
+        public List<MibiLabDataModel> MikroErreger(string name)
+        {
+            return _mibiLabFac.ProcessGetErreger(name);
+        }
+
     }
 
 }

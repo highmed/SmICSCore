@@ -6,5 +6,6 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten
     public interface IMibiPatientLaborDataFactory
     {
         List<MibiLabDataModel> Process(PatientListParameter parameter);
+        List<MibiLabDataModel> ProcessGetErreger(string name);
     }
 }

@@ -1,13 +1,7 @@
 [
   {
     "Station": "Gesamtklink",
-    "Erreger": "Escherichia coli",
-    "Zeitraum": "5",
-    "Retro": true,
-    "Erstellungsdatum": "2021-08-17T09:42:07Z"
-  },
-  {
-    "Station": "Gesamtklink",
+    "ErregerID": null,
     "Erreger": "SARS-CoV-2",
     "Zeitraum": "8",
     "Retro": true,
@@ -15,6 +9,7 @@
   },
   {
     "Station": "Gesamtklink",
+    "ErregerID": null,
     "Erreger": "MSSA",
     "Zeitraum": "1",
     "Retro": false,
@@ -22,9 +17,34 @@
   },
   {
     "Station": "Gesamtklink",
+    "ErregerID": null,
     "Erreger": "MSSA",
     "Zeitraum": "6",
     "Retro": true,
     "Erstellungsdatum": "2021-08-17T10:14:15Z"
+  },
+  {
+    "Station": "Gesamtklink",
+    "ErregerID": null,
+    "Erreger": "Acinetobacter baumannii",
+    "Zeitraum": "7",
+    "Retro": false,
+    "Erstellungsdatum": "2021-08-17T13:57:12Z"
+  },
+  {
+    "Station": "Gesamtklink",
+    "ErregerID": null,
+    "Erreger": "MRSA",
+    "Zeitraum": "7",
+    "Retro": true,
+    "Erstellungsdatum": "2021-08-17T13:57:28Z"
+  },
+  {
+    "Station": "Gesamtklink",
+    "ErregerID": null,
+    "Erreger": "SARS-CoV-2",
+    "Zeitraum": "11",
+    "Retro": true,
+    "Erstellungsdatum": "2021-08-17T14:22:45Z"
   }
 ]

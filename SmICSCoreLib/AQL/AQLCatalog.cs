@@ -545,6 +545,24 @@ namespace SmICSCoreLib.AQL
                                 CONTAINS CLUSTER b[openEHR-EHR-CLUSTER.location.v1]");
         }
 
+        public static AQLQuery GetErregernameFromViro(string name)
+        {
+            return new AQLQuery("RKIConfig", $@"SELECT DISTINCT n/items[at0024,'Virusnachweistest']/value/defining_code/code_string AS KeimID
+                                FROM EHR e
+                                CONTAINS COMPOSITION c
+                                CONTAINS CLUSTER n[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]
+                                WHERE n/items[at0024,'Virusnachweistest']/value/value LIKE '{name}*'");
+        }
+
+        public static AQLQuery GetErregernameFromMikro(string name)
+        {
+            return new AQLQuery("RKIConfig", $@"SELECT DISTINCT
+                                w/items[at0001,'Erregername']/value/encoding/code_string AS KeimID
+                                FROM EHR e
+                                CONTAINS COMPOSITION c
+                                CONTAINS CLUSTER w[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] 
+                                WHERE w/items[at0001,'Erregername']/value/value LIKE '*{name}*'");
+        }
     }
 }
  
