@@ -6,9 +6,7 @@
       "Aufnahme_Datum": "2020-11-26T12:13:00+01:00",
       "Entlastung_Datum": "2020-12-12T12:13:00+01:00",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
-      "Impfung": false,
-      "Impfstoff": null,
-      "Anzahl_Impfungen": null
+      "VaccinationModel": null
     }
   ],
   "1": [
@@ -18,9 +16,7 @@
       "Aufnahme_Datum": "2020-02-09T12:13:00+01:00",
       "Entlastung_Datum": "2020-03-04T12:13:00+01:00",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
-      "Impfung": false,
-      "Impfstoff": null,
-      "Anzahl_Impfungen": null
+      "VaccinationModel": null
     }
   ],
   "2": [
@@ -30,9 +26,7 @@
       "Aufnahme_Datum": "2020-03-08T12:13:00+01:00",
       "Entlastung_Datum": "2020-03-27T12:13:00+01:00",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
-      "Impfung": false,
-      "Impfstoff": null,
-      "Anzahl_Impfungen": null
+      "VaccinationModel": null
     }
   ],
   "3": [
@@ -42,9 +36,7 @@
       "Aufnahme_Datum": "2020-03-08T12:13:00+01:00",
       "Entlastung_Datum": "2020-03-27T12:13:00+01:00",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
-      "Impfung": false,
-      "Impfstoff": null,
-      "Anzahl_Impfungen": null
+      "VaccinationModel": null
     }
   ],
   "4": [
@@ -54,12 +46,16 @@
       "Aufnahme_Datum": "2020-03-05T12:13:00+01:00",
       "Entlastung_Datum": "2020-03-20T12:13:00+01:00",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
-      "Impfung": true,
-      "Impfstoff": [
-        "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)"
-      ],
-      "Anzahl_Impfungen": [
-        "1"
+      "VaccinationModel": [
+        {
+          "PatientenID": "ac8a6002-d728-4b4e-a629-bfa66ebeace7",
+          "DokumentationsID": "2020-03-05T13:13:00+01:00",
+          "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
+          "Dosierungsreihnfolge": "1",
+          "Dosiermenge": "1",
+          "Impfung gegen": "Infectious disease (disorder)",
+          "Aussage wegen Abwesenheit": null
+        }
       ]
     }
   ],
@@ -70,9 +66,7 @@
       "Aufnahme_Datum": "2020-11-27T12:13:00+01:00",
       "Entlastung_Datum": "2020-12-12T12:13:00+01:00",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
-      "Impfung": false,
-      "Impfstoff": null,
-      "Anzahl_Impfungen": null
+      "VaccinationModel": null
     }
   ],
   "6": [
@@ -82,12 +76,16 @@
       "Aufnahme_Datum": "2020-02-05T12:13:00+01:00",
       "Entlastung_Datum": "2020-02-23T12:13:00+01:00",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
-      "Impfung": true,
-      "Impfstoff": [
-        "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)"
-      ],
-      "Anzahl_Impfungen": [
-        "1"
+      "VaccinationModel": [
+        {
+          "PatientenID": "7a347dcf-209f-46cf-ad4e-5f242b73d5cd",
+          "DokumentationsID": "2020-02-10T21:47:45+01:00",
+          "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
+          "Dosierungsreihnfolge": "1",
+          "Dosiermenge": "1",
+          "Impfung gegen": "Infectious disease (disorder)",
+          "Aussage wegen Abwesenheit": null
+        }
       ]
     }
   ],
@@ -98,9 +96,7 @@
       "Aufnahme_Datum": "2020-11-28T12:13:00+01:00",
       "Entlastung_Datum": "2020-12-12T12:13:00+01:00",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
-      "Impfung": false,
-      "Impfstoff": null,
-      "Anzahl_Impfungen": null
+      "VaccinationModel": null
     }
   ],
   "8": [
@@ -110,9 +106,7 @@
       "Aufnahme_Datum": "2020-02-10T12:13:00+01:00",
       "Entlastung_Datum": "2020-03-03T12:13:00+01:00",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
-      "Impfung": false,
-      "Impfstoff": null,
-      "Anzahl_Impfungen": null
+      "VaccinationModel": null
     }
   ]
 }

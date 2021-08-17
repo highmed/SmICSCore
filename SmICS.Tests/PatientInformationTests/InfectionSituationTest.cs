@@ -46,9 +46,19 @@ namespace SmICSFactory.Tests.PatientInformationTests
                 Assert.Equal(expected[i].Probenentnahme, actual[i].Probenentnahme);
                 Assert.Equal(expected[i].Aufnahme, actual[i].Aufnahme);
                 Assert.Equal(expected[i].Entlastung, actual[i].Entlastung);
-                Assert.Equal(expected[i].Impfung, actual[i].Impfung);
-                Assert.Equal(expected[i].Impfstoff, actual[i].Impfstoff);
-                Assert.Equal(expected[i].Anzahl_Impfungen, actual[i].Anzahl_Impfungen);
+                if ( actual[i].VaccinationModel != null)
+                {
+                    for (int j = 0; j < actual[i].VaccinationModel.Count; j++)
+                    {
+                        Assert.Equal(expected[i].VaccinationModel[j].PatientenID, actual[i].VaccinationModel[j].PatientenID);
+                        Assert.Equal(expected[i].VaccinationModel[j].DokumentationsID, actual[i].VaccinationModel[j].DokumentationsID);
+                        Assert.Equal(expected[i].VaccinationModel[j].Impfstoff, actual[i].VaccinationModel[j].Impfstoff);
+                        Assert.Equal(expected[i].VaccinationModel[j].Dosierungsreihenfolge, actual[i].VaccinationModel[j].Dosierungsreihenfolge);
+                        Assert.Equal(expected[i].VaccinationModel[j].Dosiermenge, actual[i].VaccinationModel[j].Dosiermenge);
+                        Assert.Equal(expected[i].VaccinationModel[j].ImpfungGegen, actual[i].VaccinationModel[j].ImpfungGegen);
+                        Assert.Equal(expected[i].VaccinationModel[j].Abwesendheit, actual[i].VaccinationModel[j].Abwesendheit);
+                    }
+                }
             }
         }
 
