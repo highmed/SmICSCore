@@ -553,7 +553,7 @@ namespace SmICSCoreLib.AQL
                                 CONTAINS CLUSTER n[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]
                                 WHERE n/items[at0024,'Virusnachweistest']/value/value LIKE '{name}*'");
         }
-
+        //to-do: muss auf akt. Template angepasst werden
         public static AQLQuery GetErregernameFromMikro(string name)
         {
             return new AQLQuery("RKIConfig", $@"SELECT DISTINCT

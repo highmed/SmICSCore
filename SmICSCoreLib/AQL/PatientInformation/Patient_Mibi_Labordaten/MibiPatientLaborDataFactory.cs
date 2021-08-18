@@ -92,16 +92,5 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten
                 mibiLabDatas.Add(mibiLabData);
             }
         }
-
-        public List<MibiLabDataKeimReceiveModel> ProcessGetErreger(string name)
-        {
-            List<MibiLabDataKeimReceiveModel> erregerList = _restData.AQLQuery<MibiLabDataKeimReceiveModel>(AQLCatalog.GetErregernameFromMikro(name));
-            if (erregerList is null)
-            {
-                return new List<MibiLabDataKeimReceiveModel>();
-            }
-
-            return erregerList;
-        }
     }
 }

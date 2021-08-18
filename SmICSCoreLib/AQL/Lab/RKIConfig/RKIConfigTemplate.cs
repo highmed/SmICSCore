@@ -2,10 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten.ReceiveModel;
 
 
-namespace SmICSCoreLib.AQL.RKIConfig
+namespace SmICSCoreLib.AQL.Lab.RKIConfig
 {
     public class RKIConfigTemplate
     {

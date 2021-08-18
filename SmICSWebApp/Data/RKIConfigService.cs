@@ -2,13 +2,12 @@
 using System;
 using System.Collections.Generic;
 using SmICSCoreLib.REST;
-using SmICSCoreLib.AQL.RKIConfig;
+using SmICSCoreLib.AQL.Lab.RKIConfig;
+using SmICSCoreLib.AQL.Lab;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation;
 using System.IO;
 using System.Linq;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten.ReceiveModel;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten.ReceiveModel;
 
 namespace SmICSWebApp.Data
 {
@@ -16,11 +15,14 @@ namespace SmICSWebApp.Data
     {
         private IRestDataAccess _restData;
         private readonly IPatientInformation _patientInformation;
+        private readonly ILabData _labData;
         private readonly string path = @"./Resources/RKIConfig/RKIConfig.json";
+        private readonly string path_time = @"./Resources/RKIConfig/RKIConfigTime.json";
 
-        public RKIConfigService(IPatientInformation patientInformation, IRestDataAccess restData)
+        public RKIConfigService(IPatientInformation patientInformation, IRestDataAccess restData, ILabData labData)
         {
             _patientInformation = patientInformation;
+            _labData = labData;
             _restData = restData;
         }
 
@@ -37,12 +39,12 @@ namespace SmICSWebApp.Data
             }
         }
 
-        public void StoreRules(List<RKIConfigTemplate> storedValues)
+        public void StoreRules(List<RKIConfigTemplate> storedValues, LabDataTimeModel zeitpunkt)
         {
             try
             {
-                storedValues.Where(w => w.Erreger == "SARS-CoV-2").ToList().ForEach(s => s.ErregerID = GetErregerListViro(s.Erreger));
-                //storedValues.Where(w => w.Erreger != "SARS-CoV-2").ToList().ForEach(s => s.ErregerID = GetErregerListMikro(s.Erreger));
+                StoreTimeSet(zeitpunkt);
+                storedValues.Where(w => w.Erreger != null).ToList().ForEach(s => s.ErregerID = GetErregerList(s.Erreger));
                 if (File.Exists(path) == false)
                 {
                     string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
@@ -81,22 +83,27 @@ namespace SmICSWebApp.Data
             }
         }
 
-        public void DeleteRuleInJson(int ID)
-        {
-            string json = File.ReadAllText(path);
-
-            List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
-            newList.RemoveAt(ID);
-
-            string storeJson = JsonConvert.SerializeObject(newList.ToArray(), Formatting.Indented);
-            File.WriteAllText(path, storeJson);
-        }
-
-        public List<LabDataKeimReceiveModel> GetErregerListViro(string name)
+        public void RestoreRules(List<RKIConfigTemplate> storedValues)
         {
             try
             {
-                List<LabDataKeimReceiveModel> erregerListe = _patientInformation.ViroErreger(name);
+                storedValues.Where(w => w.Erreger != null).ToList().ForEach(s => s.ErregerID = GetErregerList(s.Erreger));
+
+                string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
+                File.WriteAllText(path, json);
+
+            }
+            catch (Exception)
+            {
+                throw new Exception($"Failed to update data");
+            }
+        }
+
+        public List<LabDataKeimReceiveModel> GetErregerList(string name)
+        {
+            try
+            {
+                List<LabDataKeimReceiveModel> erregerListe = _labData.ProcessGetErreger(name);
                 return erregerListe;
             }
             catch (Exception)
@@ -105,17 +112,39 @@ namespace SmICSWebApp.Data
             }
         }
 
-        public List<MibiLabDataKeimReceiveModel> GetErregerListMikro(string name)
+        public void StoreTimeSet(LabDataTimeModel time)
         {
             try
             {
-                List<MibiLabDataKeimReceiveModel> erregerList = _patientInformation.MikroErreger(name);
-                return erregerList;
+                string json = JsonConvert.SerializeObject(time, Formatting.Indented);
+                File.WriteAllText(path_time, json);
             }
             catch (Exception)
             {
-                return null;
+                throw new Exception($"Failed to store timedata");
             }
+        }
+
+        public LabDataTimeModel GetTimeSet()
+        {
+            if(File.Exists(path_time) == true)
+            {
+                string json_time = File.ReadAllText(path_time);
+                LabDataTimeModel timefromjson = JsonConvert.DeserializeObject<LabDataTimeModel>(json_time);
+                if (timefromjson != null)
+                {
+                    return timefromjson;
+                }
+                else
+                {
+                    return new LabDataTimeModel(); ;
+                }
+            }
+            else
+            {
+                return new LabDataTimeModel();
+            }
+            
         }
     }
 }

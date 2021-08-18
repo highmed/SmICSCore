@@ -2,9 +2,7 @@
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten.ReceiveModel;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten.ReceiveModel;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
 using SmICSCoreLib.AQL.PatientInformation.Vaccination;
@@ -81,16 +79,6 @@ namespace SmICSCoreLib.AQL.PatientInformation
         public List<PatientMovementModel> All_Stations()
         {
             return _patMoveFac.ProcessGetStations();
-        }
-
-        public List<LabDataKeimReceiveModel> ViroErreger(string name)
-        {
-            return _patLabFac.ProcessGetErreger(name);
-        }
-
-        public List<MibiLabDataKeimReceiveModel> MikroErreger(string name)
-        {
-            return _mibiLabFac.ProcessGetErreger(name);
         }
 
     }

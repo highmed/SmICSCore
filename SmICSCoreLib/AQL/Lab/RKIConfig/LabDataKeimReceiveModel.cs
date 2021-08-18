@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 
-namespace SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten.ReceiveModel
+
+
+namespace SmICSCoreLib.AQL.Lab.RKIConfig
 {
-    public class MibiLabDataKeimReceiveModel
+    public class LabDataKeimReceiveModel
     {
         [JsonProperty(PropertyName = "KeimID")]
         public string KeimID { get; set; }

@@ -2,7 +2,7 @@
 
 @using System.IO
 @using Microsoft.Extensions.Logging
-@using SmICSCoreLib.AQL.RKIConfig
+@using SmICSCoreLib.AQL.Lab.RKIConfig
 @using Newtonsoft.Json.Linq
 @using SmICSWebApp.Data
 
@@ -67,7 +67,7 @@
                                 <label for="Zeitpunkt" class="tb_bez">Tgl. Ausführuhrzeit d. Regeln</label>
                             </div>
                             <div>
-                                <InputText type="time" @bind-Value="@Zeitpunkt" class="input-field" />
+                                <InputText type="time" @bind-Value="ZeitpunktList.Zeitpunkt" class="input-field" />
                             </div>
                         </div>
 
@@ -108,7 +108,7 @@
                                 @item.Erstellungsdatum
                             </div>
                             <div class="space-2" style="padding-left: 1%; padding: 0.25%;">
-                                <button id="btn" type="button" @onclick="()=>DeleteReadyRules(ID)"><i class="oi oi-minus"></i></button>
+                                <button id="btn" type="button" @onclick="()=>DeleteReadyRules(item)"><i class="oi oi-minus"></i></button>
                             </div>
                         </div>
                     }
@@ -129,11 +129,12 @@
 
     private List<RKIConfigTemplate> RKIConfigForm = new List<RKIConfigTemplate>();
     private List<RKIConfigTemplate> ConfigList = new List<RKIConfigTemplate>();
-    private string Zeitpunkt;
+    private LabDataTimeModel ZeitpunktList = new LabDataTimeModel();
 
     protected override async Task OnInitializedAsync()
     {
         await Task.Run(GetConfigs);
+        await Task.Run(GetConfigsTime);
     }
 
     public void GetConfigs()
@@ -148,6 +149,18 @@
         }
     }
 
+    public void GetConfigsTime()
+    {
+        try
+        {
+            ZeitpunktList = RKIConfigService.GetTimeSet();
+        }
+        catch
+        {
+            throw new Exception($"Failed to GET Config data");
+        }
+    }
+
     private async Task HandleValidSubmit()
     {
         try
@@ -155,9 +168,9 @@
 
             if (RKIConfigForm.Count > 0)
             {
-                if (Zeitpunkt is null)
+                if (ZeitpunktList is null)
                 {
-                    Zeitpunkt = DateTime.Now.ToString("h:mm:ss tt");
+                    ZeitpunktList.Zeitpunkt = DateTime.Now.ToString("h:mm:ss tt");
                 }
                 List<int> indices = RKIConfigForm.Where(x => x.Station == "").Select(x => RKIConfigForm.IndexOf(x)).ToList();
                 foreach (int index in indices)
@@ -166,7 +179,7 @@
                 }
             }
 
-            RKIConfigService.StoreRules(RKIConfigForm);
+            RKIConfigService.StoreRules(RKIConfigForm, ZeitpunktList);
             await Task.Run(GetConfigs);
             DynamicFragment.RemoveRange(0, DynamicFragment.Count());
             RKIConfigForm.RemoveRange(0, RKIConfigForm.Count());
@@ -200,9 +213,10 @@
         builder.CloseComponent();
     };
 
-    private async Task DeleteReadyRules(int ID)
+    private async Task DeleteReadyRules(RKIConfigTemplate item)
     {
-        RKIConfigService.DeleteRuleInJson(ID);
+        ConfigList.Remove(item);
+        RKIConfigService.RestoreRules(ConfigList);
         await Task.Run(GetConfigs);
     }
 

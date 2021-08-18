@@ -47,16 +47,5 @@ namespace SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten
             }
             return labDataModels;
         }
-
-        public List<LabDataKeimReceiveModel> ProcessGetErreger(string name)
-        {
-            List<LabDataKeimReceiveModel> erregerList = _restData.AQLQuery<LabDataKeimReceiveModel>(AQLCatalog.GetErregernameFromViro(name));
-            if (erregerList is null)
-            {
-                return new List<LabDataKeimReceiveModel>();
-            }
-
-            return erregerList;
-        }
     }
 }
