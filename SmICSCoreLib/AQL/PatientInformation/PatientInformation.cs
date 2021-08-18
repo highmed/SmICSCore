@@ -75,6 +75,10 @@ namespace SmICSCoreLib.AQL.PatientInformation
         {
             return _vaccFac.Process(parameter);
         }
+        public List<PatientMovementModel> All_Stations()
+        {
+            return _patMoveFac.ProcessGetStations();
+        }
 
     }
 

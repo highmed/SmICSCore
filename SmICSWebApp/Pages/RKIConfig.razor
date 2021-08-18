@@ -1,0 +1,223 @@
+﻿@page "/rkiconfig"
+
+@using System.IO
+@using Microsoft.Extensions.Logging
+@using SmICSCoreLib.AQL.Lab.RKIConfig
+@using Newtonsoft.Json.Linq
+@using SmICSWebApp.Data
+
+
+@inject ILogger<RKIConfig> Logger
+@inject RKIConfigService RKIConfigService
+
+
+<div class="">
+    <div class="welcome_header_config">
+        <h1>Konfigurationen zur Erkennung von Erregerhäufungen</h1>
+    </div>
+    <div class="welcome_text_config">
+        <div class="index_config">
+            <div class="index-text_config">
+                <span class="oi oi-info" aria-hidden="true">&nbsp;&nbsp;</span> Basierend auf den vorliegenden, vergangenen Erregerbefunden im Klinikum ist das SmICS in der Lage, Ihnen einen Hinweis darauf zu geben,
+                ob zu einem bestimmten Zeitpunkt mehr positive Erregerbefunde als üblich vorliegen ("Erregerhäufung"). <br />
+                In diesem Konfigurationsbereich haben Sie die Möglichkeit, verschiedene Regeln zu definieren, nach denen der statistische Algorithmus arbeiten soll.<br /><br />
+
+                Eine Regel besteht immer aus (1) der Wahl einer Station (oder aller Stationen), (2) der Wahl eines Erregers (zur Auswahl stehen Ihnen aktuell 6 Erreger),
+                (3) der Wahl eines "Look Back"-Zeitraumes (diese Variable bestimmt, welcher Umfang an vergangenen Daten mit in die Berechnung einbezogen werden soll, z.B. die letzten 1-12 Wochen),
+                und (4) der Wahl, ob diese Regel zusätzlich einmalig retrospektiv - d.h. auf den gesamten Datenbestand - ausgeführt werden soll (die Standardeinstellung ist hier "Nein",
+                d. h. die Regel wird nur auf die aktuellen Datenbestände bis zum in (3) definierten Zeitraum angewendet).<br />
+                Die von Ihnen angelegten Regeln werden täglich durchlaufen und die Ergebnisse neu berechnet. Dazu müssen Sie unter "Tgl. Ausführzeit der Regeln" eine Uhrzeit angeben, zu der die Berechnung stattfinden soll.
+                <br /><br />
+                Alle Regeln stehen Ihnen in der Visualisierung zur "Epidemiologischen Kurve" zur Auswahl zur Verfügung. Je nach Auswahl wird Ihnen dann dort die vom Algorithmus berechnete Entwicklung
+                und Einschätzung dargestellt.
+                <br /><br />
+                Bitte beachten Sie: Die retrospektive Auswertung (4) ist ein sehr zeit- und rechenintensiver Prozess, der nur im Ausnahmefall oder zu Analysenzwecken gewählt werden sollte.
+            </div>
+            <div id="div_card_1" class="">
+                <EditForm Model="@RKIConfigForm" OnValidSubmit="@HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div id="div_card_2">
+
+                        <div id="div_card_3_a">
+                            <span class="span-tr">Regeln</span>
+                            @foreach (var frag in DynamicFragment)
+                            {
+                                <div class="sort_card">
+                                    <div id="div_card_4" class="space-1">
+                                        @frag
+                                    </div>
+                                    <div id="div_card_4" class="space-2">
+                                        <button id="btn" type="button" @onclick="()=>DeleteRules(frag)"><i class="oi oi-minus"></i></button>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+
+                        <div id="div_card_3_b">
+                            <div>
+                                <button id="btn" type="button" @onclick="@AddRules"><i class="oi oi-plus"></i></button>
+                            </div>
+                        </div>
+
+                        <div id="div_card_3_c">
+                            <div>
+                                <label for="Zeitpunkt" class="tb_bez">Tgl. Ausführuhrzeit d. Regeln</label>
+                            </div>
+                            <div>
+                                <InputText type="time" @bind-Value="ZeitpunktList.Zeitpunkt" class="input-field" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="div_card_2" style="display: flex; justify-content: flex-end; padding:0%;">
+                        <input id="button" type="submit" value="Ausführen" />
+                    </div>
+                </EditForm>
+                <div class="span_hr">
+                    <span>&nbsp;</span>
+                </div>
+                <span class="span-tr-config">Gespeicherte Regeln</span>
+                <div class="tb-config">
+                    <div class="tb-header-config">
+                        <div class="tb-cell-config-2">Station</div>
+                        <div class="tb-cell-config-2">Erreger</div>
+                        <div class="tb-cell-config-2">Zeitraum</div>
+                        <div class="tb-cell-config-2">Retrospektiv</div>
+                        <div class="tb-cell-config-2">Erstellungsdatum</div>
+                        <div class="space-2">&nbsp;</div>
+                    </div>
+                    @foreach (var item in ConfigList)
+                    {
+                        <div class="tb-colunm-config" id="@ID">
+                            <div class="tb-cell-config-1">
+                                @item.Station
+                            </div>
+                            <div class="tb-cell-config-1">
+                                @item.Erreger
+                            </div>
+                            <div class="tb-cell-config-1">
+                                @item.Zeitraum
+                            </div>
+                            <div class="tb-cell-config-1">
+                                @item.Retro
+                            </div>
+                            <div class="tb-cell-config-1">
+                                @item.Erstellungsdatum
+                            </div>
+                            <div class="space-2" style="padding-left: 1%; padding: 0.25%;">
+                                <button id="btn" type="button" @onclick="()=>DeleteReadyRules(item)"><i class="oi oi-minus"></i></button>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int ID { get; set; }
+    private List<RenderFragment> DynamicFragment = new List<RenderFragment>();
+
+    private List<RKIConfigTemplate> RKIConfigForm = new List<RKIConfigTemplate>();
+    private List<RKIConfigTemplate> ConfigList = new List<RKIConfigTemplate>();
+    private LabDataTimeModel ZeitpunktList = new LabDataTimeModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Run(GetConfigs);
+        await Task.Run(GetConfigsTime);
+    }
+
+    public void GetConfigs()
+    {
+        try
+        {
+            ConfigList = RKIConfigService.ShowValues();
+        }
+        catch
+        {
+            throw new Exception($"Failed to GET Config data");
+        }
+    }
+
+    public void GetConfigsTime()
+    {
+        try
+        {
+            ZeitpunktList = RKIConfigService.GetTimeSet();
+        }
+        catch
+        {
+            throw new Exception($"Failed to GET Config data");
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+
+            if (RKIConfigForm.Count > 0)
+            {
+                if (ZeitpunktList is null)
+                {
+                    ZeitpunktList.Zeitpunkt = DateTime.Now.ToString("h:mm:ss tt");
+                }
+                List<int> indices = RKIConfigForm.Where(x => x.Station == "").Select(x => RKIConfigForm.IndexOf(x)).ToList();
+                foreach (int index in indices)
+                {
+                    RKIConfigForm.RemoveAt(index);
+                }
+            }
+
+            RKIConfigService.StoreRules(RKIConfigForm, ZeitpunktList);
+            await Task.Run(GetConfigs);
+            DynamicFragment.RemoveRange(0, DynamicFragment.Count());
+            RKIConfigForm.RemoveRange(0, RKIConfigForm.Count());
+
+        }
+        catch (Exception e)
+        {
+            Logger.LogError("Übermittlungsproblem: {Message}", e.Message);
+        }
+
+    }
+
+    private void DeleteRules(RenderFragment frag)
+    {
+        DynamicFragment.Remove(frag);
+    }
+
+    private void AddRules()
+    {
+        RKIConfigTemplate RKIConfigFormAdds = new RKIConfigTemplate { Station = "" };
+        RKIConfigForm.Add(RKIConfigFormAdds);
+
+        DynamicFragment.Add(CreateComponent(RKIConfigFormAdds, DynamicFragment.Count));
+    }
+
+    private RenderFragment CreateComponent(RKIConfigTemplate RKIConfigFormAdds, int ID) => builder =>
+    {
+        builder.OpenComponent<RKIConfigRules>(0);
+        builder.AddAttribute(0, "ID", ID);
+        builder.AddAttribute(0, "RKIConfigForm", RKIConfigFormAdds);
+        builder.CloseComponent();
+    };
+
+    private async Task DeleteReadyRules(RKIConfigTemplate item)
+    {
+        ConfigList.Remove(item);
+        RKIConfigService.RestoreRules(ConfigList);
+        await Task.Run(GetConfigs);
+    }
+
+}
