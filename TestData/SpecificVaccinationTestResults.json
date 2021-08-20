@@ -1,42 +1,6 @@
 {
   "0": [
     {
-      "DokumentationsID": "2021-01-09T09:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 antigen (medicinal product)",
-      "Dosierungsreihenfolge": 1,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    },
-    {
-      "DokumentationsID": "2021-03-23T09:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-      "Dosierungsreihenfolge": 2,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    }
-  ],
-  "1": [
-    {
-      "DokumentationsID": "2021-01-08T16:35:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-      "Dosierungsreihenfolge": 1,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    },
-    {
-      "DokumentationsID": "2021-02-08T16:35:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-      "Dosierungsreihenfolge": 2,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    }
-  ],
-  "2": [
-    {
       "DokumentationsID": "2020-02-10T20:47:45Z",
       "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
       "Dosierungsreihenfolge": 1,
@@ -45,35 +9,7 @@
       "Abwesendheit": null
     }
   ],
-  "3": [
-    {
-      "DokumentationsID": "2021-01-21T09:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 antigen (medicinal product)",
-      "Dosierungsreihenfolge": 1,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    },
-    {
-      "DokumentationsID": "2021-04-05T09:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 antigen (medicinal product)",
-      "Dosierungsreihenfolge": 2,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    }
-  ],
-  "4": [
-    {
-      "DokumentationsID": "2021-01-14T09:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-      "Dosierungsreihenfolge": 1,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    }
-  ],
-  "5": [
+  "1": [
     {
       "DokumentationsID": "2021-01-07T12:30:00Z",
       "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 antigen (medicinal product)",
@@ -83,35 +19,7 @@
       "Abwesendheit": null
     }
   ],
-  "6": [
-    {
-      "DokumentationsID": "2021-01-08T09:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-      "Dosierungsreihenfolge": 1,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    },
-    {
-      "DokumentationsID": "2021-02-08T11:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-      "Dosierungsreihenfolge": 2,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    }
-  ],
-  "7": [
-    {
-      "DokumentationsID": "2021-01-09T10:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 antigen (medicinal product)",
-      "Dosierungsreihenfolge": 1,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    }
-  ],
-  "8": [
+  "2": [
     {
       "DokumentationsID": "2020-02-14T18:47:45Z",
       "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
@@ -121,35 +29,7 @@
       "Abwesendheit": null
     }
   ],
-  "9": [
-    {
-      "DokumentationsID": "2021-03-25T11:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-      "Dosierungsreihenfolge": 2,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    },
-    {
-      "DokumentationsID": "2021-01-11T09:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 antigen (medicinal product)",
-      "Dosierungsreihenfolge": 1,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    }
-  ],
-  "10": [
-    {
-      "DokumentationsID": "2021-01-07T12:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 antigen (medicinal product)",
-      "Dosierungsreihenfolge": 1,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    }
-  ],
-  "11": [
+  "3": [
     {
       "DokumentationsID": "2020-03-05T12:13:00Z",
       "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
@@ -159,39 +39,9 @@
       "Abwesendheit": null
     }
   ],
-  "12": [
+  "4": [
     {
-      "DokumentationsID": "2021-01-19T09:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-      "Dosierungsreihenfolge": 1,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    }
-  ],
-  "13": [
-    {
-      "DokumentationsID": "2021-01-05T11:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 antigen (medicinal product)",
-      "Dosierungsreihenfolge": 1,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    }
-  ],
-  "14": [
-    {
-      "DokumentationsID": "2021-01-09T12:30:00Z",
-      "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-      "Dosierungsreihenfolge": 1,
-      "Dosiermenge": 1,
-      "ImpfungGegen": "Infectious disease (disorder)",
-      "Abwesendheit": null
-    }
-  ],
-  "15": [
-    {
-      "DokumentationsID": "2021-01-16T09:30:00Z",
+      "DokumentationsID": "2020-11-27T12:13:00Z",
       "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
       "Dosierungsreihenfolge": 1,
       "Dosiermenge": 1,

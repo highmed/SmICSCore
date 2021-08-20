@@ -45,22 +45,11 @@ namespace SmICSFactory.Tests.PatientInformationTests
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                yield return new object[] { 24, 0 };
-                yield return new object[] { 20, 1 };
-                yield return new object[] { 4, 2 };
-                yield return new object[] { 29, 3 };
-                yield return new object[] { 23, 4 };
-                yield return new object[] { 34, 5 };
-                yield return new object[] { 21, 6 };
-                yield return new object[] { 18, 7 };
-                yield return new object[] {  6, 8 };
-                yield return new object[] { 22, 9 };
-                yield return new object[] { 17, 10 };
-                yield return new object[] { 9, 11 };
-                yield return new object[] { 28, 12 };
-                yield return new object[] { 16, 13 };
-                yield return new object[] { 19, 14 };
-                yield return new object[] { 30, 15 };
+                yield return new object[] { 4 , 0 };
+                yield return new object[] { 34, 1 };
+                yield return new object[] { 6 , 2 };
+                yield return new object[] { 9 , 3 };
+                yield return new object[] { 2 , 4 };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
