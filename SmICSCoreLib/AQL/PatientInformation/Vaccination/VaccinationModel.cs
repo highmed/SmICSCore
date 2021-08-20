@@ -13,11 +13,11 @@ namespace SmICSCoreLib.AQL.PatientInformation.Vaccination
         public DateTime DokumentationsID { get; set; }
         [JsonProperty(PropertyName = "Impfstoff")]
         public string Impfstoff { get; set; }
-        [JsonProperty(PropertyName = "Dosierungsreihnfolge")]
+        [JsonProperty(PropertyName = "Dosierungsreihenfolge")]
         public string Dosierungsreihenfolge { get; set; }
         [JsonProperty(PropertyName = "Dosiermenge")]
         public string Dosiermenge { get; set; }
-        [JsonProperty(PropertyName = "Impfung gegen")]
+        [JsonProperty(PropertyName = "ImpfungGegen")]
         public string ImpfungGegen { get; set; }
         [JsonProperty(PropertyName = "Aussage wegen Abwesenheit")]
         public string Abwesendheit { get; set; }
