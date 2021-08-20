@@ -10,7 +10,7 @@
     </div>
     <div>
         <InputSelect @bind-Value="RKIConfigForm.Station" id="@ID">
-            <option selected disabled>Bitte wählen Sie aus</option>
+            <option selected="true" disabled="disabled" value="">Bitte wählen Sie aus</option>
             <option value="Gesamtklink">Gesamtklink</option>
             @if (StationList != null)
             {
