@@ -13,6 +13,7 @@ using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
 using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.Patient_Stay.Count;
 using SmICSCoreLib.AQL.PatientInformation.Vaccination;
+using SmICSCoreLib.AQL.PatientInformation.Infection_situation;
 
 namespace WebApp.Test.DataServiceTest
 {
@@ -50,8 +51,11 @@ namespace WebApp.Test.DataServiceTest
             ISymptomFactory symptomFac = new SymptomFactory(rest, NullLogger<SymptomFactory>.Instance);
             IMibiPatientLaborDataFactory mibiLabFac = new MibiPatientLaborDataFactory(rest);
             IVaccinationFactory vaccFac = new VaccinationFactory(rest, NullLogger<VaccinationFactory>.Instance);
+            ICountFactory countFactory = new CountFactory(rest);
+            IStationaryFactory stationaryFactory = new StationaryFactory(rest); ;
+            IInfectionSituationFactory infecFac = new InfectionSituationFactory(countFactory, stationaryFactory, symptomFac, patMoveFac, vaccFac, NullLogger<InfectionSituationFactory>.Instance);
 
-            return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac);
+            return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac, infecFac);
         }
 
     }

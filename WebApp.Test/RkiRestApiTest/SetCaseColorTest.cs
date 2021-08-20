@@ -37,7 +37,7 @@ namespace WebApp.Test
         {
             string color = rkiRestApi.SetCaseColor("", "");
 
-            Assert.Equal("#8CA2AE", color);
+            Assert.Equal("#b0bec5", color);
         }
 
     }
