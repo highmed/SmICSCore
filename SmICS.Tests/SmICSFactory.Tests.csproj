@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="StatistikServicesTests\**" />
+    <EmbeddedResource Remove="StatistikServicesTests\**" />
+    <None Remove="StatistikServicesTests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac.Extras.Moq" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="Moq" Version="4.15.2" />
@@ -16,10 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SmICSCoreLib\SmICSCoreLib.csproj" />
     <ProjectReference Include="..\SmICSWebApp\SmICSWebApp.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="StatistikServicesTests\" />
   </ItemGroup>
 
 </Project>
