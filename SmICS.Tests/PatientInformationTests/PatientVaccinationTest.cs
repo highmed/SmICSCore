@@ -52,12 +52,6 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                 yield return new object[] { 14, 2 };
                 yield return new object[] { 3, 3 };
                 yield return new object[] { 13, 4 };
-                yield return new object[] { 15, 5 };
-                yield return new object[] { 16, 6 };
-                yield return new object[] { 17, 7 };
-                yield return new object[] { 18, 8 };
-                yield return new object[] { 19, 9 };
-                yield return new object[] { 20, 10 };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

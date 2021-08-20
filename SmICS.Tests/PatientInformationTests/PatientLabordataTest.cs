@@ -52,15 +52,13 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                yield return new object[] { 4, 0 };
-                yield return new object[] { 5, 1 };
-                yield return new object[] { 6, 2 };
-                yield return new object[] { 7, 3 };
-                yield return new object[] { 8, 4 };
-                yield return new object[] { 10, 5 };
-                yield return new object[] { 13, 6 };
-                yield return new object[] { 14, 7 };
-                yield return new object[] { 15, 8 };
+                for (int i = 0; i <= 10; i++)
+                {
+                    yield return new object[] { i, i };
+                }
+                yield return new object[] { 13, 11 };
+                yield return new object[] { 14, 12 };
+                yield return new object[] { 15, 13 };
                 for (int i = 16; i <= 37; i++)
                 {
                     yield return new object[] { i, i };

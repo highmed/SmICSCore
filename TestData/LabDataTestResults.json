@@ -1,6 +1,105 @@
 {
   "0": [
     {
+      "FallID": "00000019",
+      "Befund": false,
+      "Befunddatum": "2020-11-28T12:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2020-11-28T13:13:00Z",
+      "Eingangsdatum": "2020-11-28T12:13:00Z"
+    },
+    {
+      "FallID": "00000019",
+      "Befund": true,
+      "Befunddatum": "2020-12-02T10:13:33Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2020-12-02T12:13:33Z",
+      "Eingangsdatum": "2020-12-02T10:13:33Z"
+    }
+  ],
+  "1": [
+    {
+      "FallID": "00000020",
+      "Befund": false,
+      "Befunddatum": "2020-11-28T12:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2020-11-28T13:13:00Z",
+      "Eingangsdatum": "2020-11-28T12:13:00Z"
+    },
+    {
+      "FallID": "00000020",
+      "Befund": true,
+      "Befunddatum": "2020-12-02T10:22:33Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2020-12-02T12:40:33Z",
+      "Eingangsdatum": "2020-12-02T10:22:33Z"
+    }
+  ],
+  "2": [
+    {
+      "FallID": "00000021",
+      "Befund": false,
+      "Befunddatum": "2020-11-27T12:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2020-11-27T13:13:00Z",
+      "Eingangsdatum": "2020-11-27T12:13:00Z"
+    },
+    {
+      "FallID": "00000021",
+      "Befund": true,
+      "Befunddatum": "2020-12-01T08:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2020-12-01T09:13:09Z",
+      "Eingangsdatum": "2020-12-01T08:13:00Z"
+    }
+  ],
+  "3": [
+    {
+      "FallID": "00000022",
+      "Befund": false,
+      "Befunddatum": "2020-12-01T12:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2020-12-01T13:24:00Z",
+      "Eingangsdatum": "2020-12-01T12:13:00Z"
+    }
+  ],
+  "4": [
+    {
       "FallID": "00000023",
       "Befund": false,
       "Befunddatum": "2020-02-10T21:47:45",
@@ -12,9 +111,22 @@
       "ProbeID": "01",
       "Eingangsdatum": "2020-02-10T20:47:45",
       "ZeitpunktProbeneingang": "2020-02-10T21:47:45"
+    },
+    {
+      "FallID": "00000023",
+      "Befund": true,
+      "Befunddatum": "2020-02-17T20:47:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "Eingangsdatum": "2020-02-17T20:47:45Z",
+      "ZeitpunktProbeneingang": "2020-02-17T21:47:45Z"
     }
   ],
-  "1": [
+  "5": [
     {
       "FallID": "00000024",
       "Befund": true,
@@ -27,9 +139,22 @@
       "ProbeID": "01",
       "Eingangsdatum": "2020-02-08T11:03:00",
       "ZeitpunktProbeneingang": "2020-02-08T10:13:00"
+    },
+    {
+      "FallID": "00000024",
+      "Befund": true,
+      "Befunddatum": "2020-02-16T11:03:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "Eingangsdatum": "2020-02-16T11:03:00Z",
+      "ZeitpunktProbeneingang": "2020-02-16T12:03:00Z"
     }
   ],
-  "2": [
+  "6": [
     {
       "FallID": "00000025",
       "Befund": false,
@@ -42,9 +167,22 @@
       "ProbeID": "01",
       "Eingangsdatum": "2020-02-14T18:47:45",
       "ZeitpunktProbeneingang": "2020-02-14T20:47:45"
+    },
+    {
+      "FallID": "00000025",
+      "Befund": false,
+      "Befunddatum": "2020-02-28T18:47:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "Eingangsdatum": "2020-02-28T18:47:45Z",
+      "ZeitpunktProbeneingang": "2020-02-28T19:47:45Z"
     }
   ],
-  "3": [
+  "7": [
     {
       "FallID": "00000026",
       "Befund": false,
@@ -57,9 +195,22 @@
       "ProbeID": "01",
       "Eingangsdatum": "2020-02-14T16:47:45",
       "ZeitpunktProbeneingang": "2020-02-14T15:47:45"
+    },
+    {
+      "FallID": "00000026",
+      "Befund": true,
+      "Befunddatum": "2020-02-28T16:47:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "Eingangsdatum": "2020-02-28T16:47:45Z",
+      "ZeitpunktProbeneingang": "2020-02-28T17:47:45Z"
     }
   ],
-  "4": [
+  "8": [
     {
       "FallID": "00000027",
       "Befund": true,
@@ -72,9 +223,50 @@
       "ProbeID": "01",
       "Eingangsdatum": "2020-02-15T16:47:45",
       "ZeitpunktProbeneingang": "2020-02-16T09:47:45"
+    },
+    {
+      "FallID": "00000027",
+      "Befund": false,
+      "Befunddatum": "2020-02-25T16:47:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "Eingangsdatum": "2020-02-25T16:47:45Z",
+      "ZeitpunktProbeneingang": "2020-02-25T17:47:45Z"
     }
   ],
-  "5": [
+  "9": [
+    {
+      "FallID": "00000028",
+      "Befund": false,
+      "Befunddatum": "2020-03-05T12:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2020-03-05T13:13:00Z",
+      "Eingangsdatum": "2020-03-05T12:13:00Z"
+    },
+    {
+      "FallID": "00000028",
+      "Befund": true,
+      "Befunddatum": "2020-03-10T12:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2020-03-10T13:13:00Z",
+      "Eingangsdatum": "2020-03-10T12:13:00Z"
+    }
+  ],
+  "10": [
     {
       "FallID": "00000029",
       "Befund": true,
@@ -87,9 +279,22 @@
       "ProbeID": "01",
       "Eingangsdatum": "2020-03-13T16:47:45",
       "ZeitpunktProbeneingang": "2020-03-14T09:47:45"
+    },
+    {
+      "FallID": "00000029",
+      "Befund": true,
+      "Befunddatum": "2020-03-20T16:47:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "Eingangsdatum": "2020-03-20T16:47:45Z",
+      "ZeitpunktProbeneingang": "2020-03-20T17:47:45Z"
     }
   ],
-  "6": [
+  "11": [
     {
       "FallID": "00000032",
       "Befund": false,
@@ -104,7 +309,7 @@
       "ZeitpunktProbeneingang": "2020-02-14T09:47:45"
     }
   ],
-  "7": [
+  "12": [
     {
       "FallID": "00000033",
       "Befund": false,
@@ -119,7 +324,7 @@
       "ZeitpunktProbeneingang": "2020-03-17T09:47:45"
     }
   ],
-  "8": [
+  "13": [
     {
       "FallID": "00000034",
       "Befund": false,
