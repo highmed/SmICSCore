@@ -75,8 +75,8 @@ namespace SmICSWebApp.Controllers
         /// </remarks>
         /// <param name="parameter"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [Route("Patient_Labordaten_Ps")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public ActionResult<List<LabDataModel>> Patient_Labordaten_Ps([FromBody] PatientListParameter parameter)
         {
@@ -100,8 +100,8 @@ namespace SmICSWebApp.Controllers
         /// </remarks>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        [Route("Patient_Bewegung_Ps")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Route("Patient_Bewegung_Ps")]
         [HttpPost]
         public ActionResult<List<PatientMovementModel>> Patient_Bewegung_Ps([FromBody] PatientListParameter parameter)
         {
