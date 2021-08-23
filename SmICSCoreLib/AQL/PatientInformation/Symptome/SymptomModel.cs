@@ -23,11 +23,11 @@ namespace SmICSCoreLib.AQL.PatientInformation.Symptome
         [JsonProperty(PropertyName = "Lokalisation")]
         public string Lokalisation { get; set; }
         [JsonProperty(PropertyName = "Beginn")]
-        public DateTime Beginn { get; set; }
+        public Nullable<DateTime> Beginn { get; set; } = null;
         [JsonProperty(PropertyName = "Schweregrad")]
         public string Schweregrad { get; set; }
         [JsonProperty(PropertyName = "Rueckgang")]
-        public DateTime Rueckgang { get; set; }
+        public Nullable<DateTime> Rueckgang { get; set; } = null;
         [JsonProperty(PropertyName = "AusschlussAussage")]
         public string AusschlussAussage { get; set; }
         [JsonProperty(PropertyName = "Diagnose")]

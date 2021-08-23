@@ -46,7 +46,7 @@ namespace SmICSFactory.Tests.PatientInformationTests
             public IEnumerator<object[]> GetEnumerator()
             {
                 yield return new object[] { 4 , 0 };
-                yield return new object[] { 34, 1 };
+                yield return new object[] { 37, 1 };
                 yield return new object[] { 6 , 2 };
                 yield return new object[] { 9 , 3 };
                 yield return new object[] { 2 , 4 };

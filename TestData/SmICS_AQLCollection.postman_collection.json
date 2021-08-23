@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bbb89462-c572-404d-bcbb-888177f286c1",
+		"_postman_id": "64f73999-0e82-48b2-b9ad-e9c306e0738c",
 		"name": "SmICS_AQLCollection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -125,7 +125,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"q\": \"SELECT p/data[at0001]/items[at0071]/value/value as Beginn FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] CONTAINS ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.admission.v0] WHERE c/name/value = 'Stationärer Versorgungsfall' and e/ehr_id/value = '<ehrID>' and c/context/other_context[at0001]/items[at0003]/value/value = '<FallID>'\"\r\n}",
+							"raw": "{\r\n  \"q\": \"SELECT p/data[at0001]/items[at0071]/value/value as Beginn FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] CONTAINS ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.admission.v0] WHERE c/name/value = 'Stationärer Versorgungsfall' and e/ehr_id/value = '<ehrID>' and c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value = '<FallID>'\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -158,7 +158,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"q\": \"SELECT b/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Ende FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] CONTAINS ADMIN_ENTRY b[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0] WHERE c/name/value = 'Stationärer Versorgungsfall' and e/ehr_id/value = '<ehrID>' and c/context/other_context[at0001]/items[at0003]/value/value = '<FallID>'\"\r\n}",
+							"raw": "{\r\n  \"q\": \"SELECT b/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value as Ende FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] CONTAINS ADMIN_ENTRY b[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0] WHERE c/name/value = 'Stationärer Versorgungsfall' and e/ehr_id/value = '<ehrID>' and c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value = '<FallID>'\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -184,7 +184,7 @@
 			"name": "EpiCurve",
 			"item": [
 				{
-					"name": "EpiCurve Copy",
+					"name": "PatientLocation",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -196,7 +196,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"q\": \"SELECT e/ehr_id/value as PatientID, i/items[at0001]/value/value as FallID, d/items[at0001]/value/defining_code/code_string as Flag, d/items[at0024]/value/defining_code/code_string as VirusCode, d/items[at0024]/value/value as Virus, m/items[at0015]/value/value as Datum FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1] CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] and OBSERVATION v[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] CONTAINS (CLUSTER m[openEHR-EHR-CLUSTER.specimen.v1] and CLUSTER s[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] CONTAINS (CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]))) WHERE c/name/value='Virologischer Befund' and d/items[at0001]/name/value='Nachweis' and d/items[at0024]/value/defining_code/code_string MATCHES {'<PathogenLoincCode>'} and m/items[at0015]/value/value>='<Datum>' and m/items[at0015]/value/value<'<Datum (nächster Tag)>'\"\r\n}",
+							"raw": "{\r\n  \"q\": \"SELECT a/items[at0027]/value/value as Ward, o/items[at0024]/value/defining_code/code_string as Departement FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] CONTAINS ADMIN_ENTRY u[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] CONTAINS (CLUSTER a[openEHR-EHR-CLUSTER.location.v1] and CLUSTER o[openEHR-EHR-CLUSTER.organization.v0]) WHERE c/name/value = 'Patientenaufenthalt' and e/ehr_id/value = '<ehrID>' and u/data[at0001]/items[at0004]/value/value <= '<Datum>' and (u/data[at0001]/items[at0005]/value/value >= '<Datum>' or NOT EXISTS u/data[at0001]/items[at0005]/value/value) ORDER BY u/data[at0001]/items[at0004]/value/value ASC\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -217,7 +217,7 @@
 					"response": []
 				},
 				{
-					"name": "PatientLocation",
+					"name": "EpiCurve Copy",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -229,7 +229,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"q\": \"SELECT a/items[at0027]/value/value as Ward, o/items[at0024]/value/defining_code/code_string as Departement FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] CONTAINS ADMIN_ENTRY u[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] CONTAINS (CLUSTER a[openEHR-EHR-CLUSTER.location.v1] and CLUSTER o[openEHR-EHR-CLUSTER.organization.v0]) WHERE c/name/value = 'Patientenaufenthalt' and e/ehr_id/value = '<ehrID>' and u/data[at0001]/items[at0004]/value/value <= '<Datum>' and (u/data[at0001]/items[at0005]/value/value >= '<Datum>' or NOT EXISTS u/data[at0001]/items[at0005]/value/value) ORDER BY u/data[at0001]/items[at0004]/value/value ASC\"\r\n}",
+							"raw": "{\r\n  \"q\": \"SELECT e/ehr_id/value as PatientID, i/items[at0001]/value/value as FallID, d/items[at0001]/value/defining_code/code_string as Flag, d/items[at0024]/value/defining_code/code_string as VirusCode, d/items[at0024]/value/value as Virus, m/items[at0015]/value/value as Datum FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1] CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] and OBSERVATION v[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] CONTAINS (CLUSTER m[openEHR-EHR-CLUSTER.specimen.v1] and CLUSTER s[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] CONTAINS (CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]))) WHERE c/name/value='Virologischer Befund' and d/items[at0001]/name/value='Nachweis' and d/items[at0024]/value/defining_code/code_string MATCHES {'<PathogenLoincCode>'} and m/items[at0015]/value/value>='<Datum>' and m/items[at0015]/value/value<'<Datum (nächster Tag)>'\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
