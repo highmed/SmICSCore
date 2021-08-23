@@ -25,7 +25,7 @@ namespace WebApp.Test.DataServiceTest
             {
                 Assert.Equal(expected[i].PatientID, actual[i].PatientID);
                 Assert.Equal(expected[i].FallID, actual[i].FallID);
-                //Assert.Equal(expected[i].Datum_Uhrzeit_der_Aufnahme, actual[i].Datum_Uhrzeit_der_Aufnahme);
+                Assert.Equal(expected[i].Datum_Uhrzeit_der_Aufnahme, actual[i].Datum_Uhrzeit_der_Aufnahme);
                 Assert.Equal(expected[i].Datum_Uhrzeit_der_Entlassung, actual[i].Datum_Uhrzeit_der_Entlassung);
                 Assert.Equal(expected[i].Aufnahmeanlass, actual[i].Aufnahmeanlass);
                 Assert.Equal(expected[i].Versorgungsfallgrund, actual[i].Versorgungsfallgrund);

@@ -155,7 +155,8 @@ namespace SmICSFactory.Tests
                 {
                     obj.Add(new JProperty("PatientID", info.EHR_ID));
                     obj.Add(new JProperty("FallID", info.FallID));
-                    obj.Add(new JProperty("Datum_Uhrzeit_der_Aufnahme", info.Datum_Uhrzeit_der_Aufnahme));
+                    //obj.Add(new JProperty("Datum_Uhrzeit_der_Aufnahme", info.Datum_Uhrzeit_der_Aufnahme));
+                    obj.Property("Datum_Uhrzeit_der_Aufnahme").Value = DateTime.Parse(obj.Property("Datum_Uhrzeit_der_Aufnahme").Value.ToString());
                 }
                 else
                 {
