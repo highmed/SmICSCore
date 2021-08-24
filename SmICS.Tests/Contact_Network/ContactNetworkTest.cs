@@ -42,44 +42,44 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 			ContactModel expected = getExpectedContactModels(expectedResultSet, ehrNo);
 
 			Assert.Equal(expected.PatientMovements.Count, actual.PatientMovements.Count);
-			Assert.Equal(expected.LaborData.Count, actual.LaborData.Count);
+            Assert.Equal(expected.LaborData.Count, actual.LaborData.Count);
 
-			for (int i = 0; i < actual.PatientMovements.Count; i++)
-			{
-				Assert.Equal(expected.PatientMovements[i].PatientID, actual.PatientMovements[i].PatientID);
-				Assert.Equal(expected.PatientMovements[i].FallID, actual.PatientMovements[i].FallID);
-				Assert.Equal(expected.PatientMovements[i].Bewegungsart_l, actual.PatientMovements[i].Bewegungsart_l);
-				Assert.Equal(expected.PatientMovements[i].Bewegungstyp, actual.PatientMovements[i].Bewegungstyp);
-				Assert.Equal(expected.PatientMovements[i].BewegungstypID, actual.PatientMovements[i].BewegungstypID);
-				Assert.Equal(expected.PatientMovements[i].Beginn.ToString("s"), actual.PatientMovements[i].Beginn.ToString("s"));
-				Assert.Equal(expected.PatientMovements[i].Ende.ToString("g"), actual.PatientMovements[i].Ende.ToString("g"));
-				Assert.Equal(expected.PatientMovements[i].StationID, actual.PatientMovements[i].StationID);
-				Assert.Equal(expected.PatientMovements[i].Raum, actual.PatientMovements[i].Raum);
-			}
+            for (int i = 0; i < actual.PatientMovements.Count; i++)
+            {
+                Assert.Equal(expected.PatientMovements[i].PatientID, actual.PatientMovements[i].PatientID);
+                Assert.Equal(expected.PatientMovements[i].FallID, actual.PatientMovements[i].FallID);
+                Assert.Equal(expected.PatientMovements[i].Bewegungsart_l, actual.PatientMovements[i].Bewegungsart_l);
+                Assert.Equal(expected.PatientMovements[i].Bewegungstyp, actual.PatientMovements[i].Bewegungstyp);
+                Assert.Equal(expected.PatientMovements[i].BewegungstypID, actual.PatientMovements[i].BewegungstypID);
+                Assert.Equal(expected.PatientMovements[i].Beginn.ToString("s"), actual.PatientMovements[i].Beginn.ToString("s"));
+                Assert.Equal(expected.PatientMovements[i].Ende.ToString("g"), actual.PatientMovements[i].Ende.ToString("g"));
+                Assert.Equal(expected.PatientMovements[i].StationID, actual.PatientMovements[i].StationID);
+                Assert.Equal(expected.PatientMovements[i].Raum, actual.PatientMovements[i].Raum);
+            }
 
-			for (int i = 0; i < actual.LaborData.Count; i++)
-			{
-				Assert.Equal(expected.LaborData[i].PatientID, actual.LaborData[i].PatientID);
-				Assert.Equal(expected.LaborData[i].FallID, actual.LaborData[i].FallID);
-				Assert.Equal(expected.LaborData[i].Befund, actual.LaborData[i].Befund);
-				Assert.Equal(expected.LaborData[i].Befunddatum.ToString("s"), actual.LaborData[i].Befunddatum.ToUniversalTime().ToString("s"));
-				Assert.Equal(expected.LaborData[i].Befundkommentar, actual.LaborData[i].Befundkommentar);
-				Assert.Equal(expected.LaborData[i].KeimID, actual.LaborData[i].KeimID);
-				Assert.Equal(expected.LaborData[i].LabordatenID, actual.LaborData[i].LabordatenID);
-				Assert.Equal(expected.LaborData[i].MaterialID, actual.LaborData[i].MaterialID);
-				Assert.Equal(expected.LaborData[i].Material_l, actual.LaborData[i].Material_l);
-				Assert.Equal(expected.LaborData[i].ProbeID, actual.LaborData[i].ProbeID);
-				Assert.Equal(expected.LaborData[i].ZeitpunktProbeneingang.Value.ToString("s"), actual.LaborData[i].ZeitpunktProbeneingang.Value.ToUniversalTime().ToString("s"));
-				Assert.Equal(expected.LaborData[i].ZeitpunktProbenentnahme.ToString("s"), actual.LaborData[i].ZeitpunktProbenentnahme.ToUniversalTime().ToString("s"));
-			}
-		}
+            for (int i = 0; i < actual.LaborData.Count; i++)
+            {
+                Assert.Equal(expected.LaborData[i].PatientID, actual.LaborData[i].PatientID);
+                Assert.Equal(expected.LaborData[i].FallID, actual.LaborData[i].FallID);
+                Assert.Equal(expected.LaborData[i].Befund, actual.LaborData[i].Befund);
+                Assert.Equal(expected.LaborData[i].Befunddatum.ToString("s"), actual.LaborData[i].Befunddatum.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected.LaborData[i].Befundkommentar, actual.LaborData[i].Befundkommentar);
+                Assert.Equal(expected.LaborData[i].KeimID, actual.LaborData[i].KeimID);
+                Assert.Equal(expected.LaborData[i].LabordatenID, actual.LaborData[i].LabordatenID);
+                Assert.Equal(expected.LaborData[i].MaterialID, actual.LaborData[i].MaterialID);
+                Assert.Equal(expected.LaborData[i].Material_l, actual.LaborData[i].Material_l);
+                Assert.Equal(expected.LaborData[i].ProbeID, actual.LaborData[i].ProbeID);
+                Assert.Equal(expected.LaborData[i].ZeitpunktProbeneingang.Value.ToString("s"), actual.LaborData[i].ZeitpunktProbeneingang.Value.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected.LaborData[i].ZeitpunktProbenentnahme.ToString("s"), actual.LaborData[i].ZeitpunktProbenentnahme.ToUniversalTime().ToString("s"));
+            }
+        }
 
 		private class ContactNetworkTestData : IEnumerable<object[]>
 		{
 			public IEnumerator<object[]> GetEnumerator()
 			{
-				yield return new object[] { 1, 0, 2021, 1, 1, 2021, 1, 10, 0 };
-				yield return new object[] { 1, 1, 2021, 1, 1, 2021, 1, 10, 1 };
+				yield return new object[] { 1, 0, 2020, 11, 25, 2020, 12, 25, 0 };
+				yield return new object[] { 1, 1, 2020, 11, 25, 2020, 12, 25, 1 };
 			}
 
 			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -91,11 +91,11 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 			{
 				{
 					0,
-					new List<int> { 0, 1, 3, 2, 5, 4, 6 }
+					new List<int> { 1, 2, 0, 3 }
 				},
 				{
 					1,
-					new List<int> { 0, 1, 3, 2, 5, 4, 6, 8, 7, 9, 11, 12, 13 }
+					new List<int> { 1, 2, 0 , 3 }
 				}
 			};
 
@@ -122,11 +122,11 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 			string labPath = "../../../../TestData/LabDataTestResults.json";
 			string parameterPath = "../../../../TestData/GeneratedEHRIDs.json";
 
-
 			List<PatientMovementModel> moveResults = new List<PatientMovementModel>();
 			List<LabDataModel> labDataResults = new List<LabDataModel>();
 			foreach (int i in contactOrder)
 			{
+				ehrNo = i;
 				List<PatientMovementModel> movementResult = ExpectedResultJsonReader.ReadResults<PatientMovementModel, PatientIDs>(movementPath, parameterPath, i, ehrNo, ExpectedType.PATIENT_MOVEMENT);
 				List<LabDataModel> labResult = ExpectedResultJsonReader.ReadResults<LabDataModel, PatientIDs>(labPath, parameterPath, i, ehrNo, ExpectedType.LAB_DATA);
 
