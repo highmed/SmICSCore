@@ -1,9 +1,5 @@
-﻿//using Autofac.Extras.Moq;
-using Microsoft.Extensions.Logging.Abstractions;
-using SmICSCoreLib.AQL;
-using SmICSCoreLib.AQL.General;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using SmICSCoreLib.AQL.Lab.EpiKurve;
-using SmICSCoreLib.AQL.Lab.EpiKurve.ReceiveModel;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;

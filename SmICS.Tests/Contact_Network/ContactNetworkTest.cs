@@ -81,7 +81,6 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				yield return new object[] { 1, 0, 2020, 11, 25, 2020, 12, 25, 0 };
 				yield return new object[] { 1, 1, 2020, 11, 25, 2020, 12, 25, 1 };
 			}
-
 			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 		}
 
