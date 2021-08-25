@@ -279,6 +279,15 @@
         Dictionary<string, int> rkiDatenLk = new();
 
         string filePath = @"../SmICSWebApp/Resources/Rkidata/LKReport.json";
+
+        if (!File.Exists(filePath))
+        {
+            string path = @"../SmICSWebApp/Resources/Rkidata/";
+            Directory.CreateDirectory(path);
+            LKReportJson lKReport = rkiService.GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 3, 228);
+            string filename = ("LKReport");
+            JSONWriter.Write(lKReport, path, filename);
+        }
         LKReportJson lKReportJson = rkiService.LKReportDeserialize(filePath);
 
         foreach (var item in lKReportJson.LKReport)
@@ -306,6 +315,14 @@
         Dictionary<string, int> rkiDatenBl = new();
 
         string filePath = @"../SmICSWebApp/Resources/Rkidata/BLReport.json";
+        if (!File.Exists(filePath))
+        {
+            string path = @"../SmICSWebApp/Resources/Rkidata/";
+            Directory.CreateDirectory(path);
+            Report report = rkiService.GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 1, 422);
+            string filename = ("BLReport");
+            JSONWriter.Write(report, path, filename);
+        }
         Report blReportJson = rkiService.BLReportDeserialize(filePath);
 
         foreach (var item in blReportJson.BLReport)
