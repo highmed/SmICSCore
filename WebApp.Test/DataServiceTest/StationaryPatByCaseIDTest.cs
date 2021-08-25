@@ -36,9 +36,10 @@ namespace WebApp.Test.DataServiceTest
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                List<PatientInfos> patientInfos = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/EHRID_StayFromCase.json");
-              
-                yield return new object[] { patientInfos[0].EHR_ID, patientInfos[0].FallID, 0, 0 };
+                List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
+
+                string fallkennung = "00000020";
+                yield return new object[] { patient[1].EHR_ID, fallkennung, 0, 1 };
             }
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
@@ -48,9 +49,9 @@ namespace WebApp.Test.DataServiceTest
         private List<StationaryDataModel> GetExpectedStayFromCase(int ResultSetID, int ehrNo)
         {
             string testResultPath = "../../../../WebApp.Test/Resources/StationaryPatTestResults.json";
-            string parameterPath = "../../../../WebApp.Test/Resources/EHRID_StayFromCase.json";
+            string parameterPath = "../../../../TestData/GeneratedEHRIDs.json";
 
-            List<StationaryDataModel> result = ExpectedResultJsonReader.ReadResults<StationaryDataModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ehrNo, ExpectedType.STATIONARY);
+            List<StationaryDataModel> result = ExpectedResultJsonReader.ReadResults<StationaryDataModel, PatientIDs>(testResultPath, parameterPath, ResultSetID, ehrNo, ExpectedType.STATIONARY);
             return result;
         }
 

@@ -30,7 +30,7 @@ namespace WebApp.Test.DataServiceTest
                 Assert.Equal(expected[i].PatientID, actual[i].PatientID);
                 Assert.Equal(expected[i].FallID, actual[i].FallID);
                 Assert.Equal(expected[i].Datum_Uhrzeit_der_Aufnahme.ToUniversalTime().ToString("s"), actual[i].Datum_Uhrzeit_der_Aufnahme.ToUniversalTime().ToString("s"));
-                Assert.Equal(expected[i].Datum_Uhrzeit_der_Entlassung, actual[i].Datum_Uhrzeit_der_Entlassung);
+                Assert.Equal(expected[i].Datum_Uhrzeit_der_Entlassung.ToUniversalTime().ToString("s"), actual[i].Datum_Uhrzeit_der_Entlassung.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].Versorgungsfallgrund, actual[i].Versorgungsfallgrund);
                 Assert.Equal(expected[i].Aufnahmeanlass, actual[i].Aufnahmeanlass);
                 Assert.Equal(expected[i].Art_der_Entlassung, actual[i].Art_der_Entlassung);
@@ -41,9 +41,11 @@ namespace WebApp.Test.DataServiceTest
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                List<PatientInfos> patientInfos = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/EHRID_Stationary.json");              
-                int i = 0;
-                yield return new object[] { patientInfos[i].Datum_Uhrzeit_der_Aufnahme, i, i };
+                //List<PatientInfos> patientInfos = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/EHRID_Stationary.json");              
+                //int i = 0;
+
+                DateTime beginn = Convert.ToDateTime("2021-01-02T09:00:00");
+                yield return new object[] { beginn, 0, 0 };
             }
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
@@ -53,7 +55,7 @@ namespace WebApp.Test.DataServiceTest
         private List<StationaryDataModel> GetExpectedStationaryDataModels(int ResultSetID, int ehrNo)
         {
             string testResultPath = "../../../../WebApp.Test/Resources/StationaryPatByDateTestResults.json";
-            string parameterPath = "../../../../WebApp.Test/Resources/EHRID_Stationary.json";
+            string parameterPath = "../../../../TestData/GeneratedEHRIDs.json";
 
             List<StationaryDataModel> result = ExpectedResultJsonReader.ReadResults<StationaryDataModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ehrNo, ExpectedType.STATIONARY);
             return result;

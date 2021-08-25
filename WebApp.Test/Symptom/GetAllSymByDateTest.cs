@@ -31,24 +31,24 @@ namespace WebApp.Test.Symptom
                 Assert.Equal(expected[i].Rueckgang == null ? null : expected[i].Rueckgang.Value.ToString("yyyy.MM.dd"), actual[i].Rueckgang == null ? null : actual[i].Rueckgang.Value.ToUniversalTime().ToString("yyyy.MM.dd"));
                 Assert.Equal(expected[i].NameDesSymptoms, actual[i].NameDesSymptoms);
             }
-
         }
 
         private class SymptomTestData : IEnumerable<object[]>
         {
-            List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/EHRID_Symptome.json");
             public IEnumerator<object[]> GetEnumerator()
             {
-                 yield return new object[] { patient[0].EHR_ID, patient[0].Beginn, 0, 0 };
-            }
+                List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
 
+                DateTime beginn = Convert.ToDateTime("2020-02-13");
+                yield return new object[] { patient[5].EHR_ID, beginn, 0, 5 };
+            }
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
         private List<SymptomModel> GetSymptom(int ResultSetID, int ehrNo)
         {
             string testResultPath = "../../../../WebApp.Test/Resources/SymptomTestResults.json";
-            string parameterPath = "../../../../WebApp.Test/Resources/EHRID_Symptome.json";
+            string parameterPath = "../../../../TestData/GeneratedEHRIDs.json";
 
             List<SymptomModel> result = ExpectedResultJsonReader.ReadResults<SymptomModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ehrNo, ExpectedType.SYMPTOM_MODEL);
             return result;

@@ -31,7 +31,7 @@ namespace WebApp.Test.DataServiceTest
         private List<CountDataModel> GetCovidPat(int ResultSetID, int ehrNo)
         {
             string testResultPath = "../../../../WebApp.Test/Resources/CovidPatTestResults.json";
-            string parameterPath = "../../../../WebApp.Test/Resources/EHRID_CovidPat.json";
+            string parameterPath = "../../../../TestData/GeneratedEHRIDs.json";
 
             List<CountDataModel> result = ExpectedResultJsonReader.ReadResults<CountDataModel, PatientInfos>(testResultPath, parameterPath, ResultSetID, ehrNo, ExpectedType.COUNT_DATA_MODEL);
             return result;

@@ -1,13 +1,49 @@
 {
   "0": [
     {
+      "PatientID": "ec515acd-c3d4-4468-8dae-b80787fece14",
+      "FallID": "99999907",
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-28T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-09T16:00:00Z"
+    },
+    {
+      "PatientID": "9cb138d4-7b1e-43de-bb07-46269fd9e408",
+      "FallID": "99999904",
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-26T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-09T16:00:00Z"
+    },
+    {
+      "PatientID": "c62ca4b6-3973-49e3-b434-919b4c0a26f5",
+      "FallID": "99999908",
+      "Datum_Uhrzeit_der_Aufnahme": "2021-06-01T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-08T16:00:00Z"
+    },
+    {
+      "PatientID": "6e07d8de-2de3-4d23-a14f-ec36ad33ed35",
+      "FallID": "99999905",
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-16T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-08T16:00:00Z"
+    },
+    {
       "PatientID": "875a0bc9-cab4-499d-84ec-4cf12ff6bff1",
       "FallID": "99999902",
       "Datum_Uhrzeit_der_Aufnahme": "2021-05-31T08:00:00Z",
       "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
       "Aufnahmeanlass": "Einweisung durch einen Arzt",
       "Art_der_Entlassung": "Behandlung regulär beendet",
-      "Datum_Uhrzeit_der_Entlassung": "2021-06-09T18:00:00Z"
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-09T16:00:00Z"
     },
     {
       "PatientID": "05fed599-81f2-4e23-8f4f-4f868273980a",
@@ -16,7 +52,7 @@
       "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
       "Aufnahmeanlass": "Einweisung durch einen Arzt",
       "Art_der_Entlassung": "Behandlung regulär beendet",
-      "Datum_Uhrzeit_der_Entlassung": "2021-05-14T18:00:00Z"
+      "Datum_Uhrzeit_der_Entlassung": "2021-05-14T16:00:00Z"
     },
     {
       "PatientID": "05fed599-81f2-4e23-8f4f-4f868273980a",
@@ -25,7 +61,25 @@
       "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
       "Aufnahmeanlass": "Einweisung durch einen Arzt",
       "Art_der_Entlassung": "Behandlung regulär beendet",
-      "Datum_Uhrzeit_der_Entlassung": "2021-06-04T18:00:00Z"
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-04T16:00:00Z"
+    },
+    {
+      "PatientID": "c6b03908-fec7-47bd-a9ba-878837c31094",
+      "FallID": "99999906",
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-20T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-10T16:00:00Z"
+    },
+    {
+      "PatientID": "c63989e5-062c-4d06-8eac-b5fd65af8be4",
+      "FallID": "99999909",
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-30T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-05T16:00:00Z"
     },
     {
       "PatientID": "86167e76-dc85-4877-932a-a56cfd51ce7c",
@@ -34,7 +88,7 @@
       "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
       "Aufnahmeanlass": "Einweisung durch einen Arzt",
       "Art_der_Entlassung": "Behandlung regulär beendet",
-      "Datum_Uhrzeit_der_Entlassung": "2021-06-05T18:00:00Z"
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-05T16:00:00Z"
     },
     {
       "PatientID": "7dab2503-06f1-4c42-b4a4-76ddaae08794",
@@ -44,6 +98,15 @@
       "Aufnahmeanlass": "Einweisung durch einen Arzt",
       "Art_der_Entlassung": "Behandlung regulär beendet",
       "Datum_Uhrzeit_der_Entlassung": "2021-01-09T15:00:00"
+    },
+    {
+      "PatientID": "ee2b0bc1-7334-46b7-99ad-38c4c6e8faaf",
+      "FallID": "99999910",
+      "Datum_Uhrzeit_der_Aufnahme": "2021-05-31T08:00:00Z",
+      "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär",
+      "Aufnahmeanlass": "Einweisung durch einen Arzt",
+      "Art_der_Entlassung": "Behandlung regulär beendet",
+      "Datum_Uhrzeit_der_Entlassung": "2021-06-14T16:00:00Z"
     }
   ]
 }

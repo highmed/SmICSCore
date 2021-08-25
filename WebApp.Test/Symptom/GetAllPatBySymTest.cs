@@ -36,11 +36,10 @@ namespace WebApp.Test.Symptom
 
         private class SymptomTestData : IEnumerable<object[]>
         {
-            List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/Symptome_Group.json");
-
             public IEnumerator<object[]> GetEnumerator()
             {
-                 yield return new object[] { patient[0].NameDesSymptoms, 0, 0 };
+                string nameDesSymptoms = "Cough (finding)";
+                yield return new object[] { nameDesSymptoms, 0, 0 };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

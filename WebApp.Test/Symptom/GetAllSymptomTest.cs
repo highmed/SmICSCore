@@ -27,7 +27,6 @@ namespace WebApp.Test.Symptom
                 Assert.Equal(expected[i].NameDesSymptoms, actual[i].NameDesSymptoms);
                 Assert.Equal(expected[i].Anzahl_Patienten, actual[i].Anzahl_Patienten);
             }
-
         }
 
         private List<SymptomModel> GetSymptomList()
