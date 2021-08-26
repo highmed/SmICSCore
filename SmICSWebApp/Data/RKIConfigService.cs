@@ -45,22 +45,30 @@ namespace SmICSWebApp.Data
             {
                 StoreTimeSet(zeitpunkt);
                 storedValues.Where(w => w.Erreger != null).ToList().ForEach(s => s.ErregerID = GetErregerList(s.Erreger));
-                if (File.Exists(path) == false)
-                {
-                    string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
-                    File.WriteAllText(path, json);
-                }
-                else
-                {
-                    string json = File.ReadAllText(path);
 
-                    List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
-                    newList.AddRange(storedValues);
+                RestMongoDB db = new RestMongoDB("SmICS");
 
-                    string storeJson = JsonConvert.SerializeObject(newList.ToArray(), Formatting.Indented);
-                    File.WriteAllText(path, storeJson);
-                }
+                //foreach(var item in storedValues)
+                //{
+                //    db.InsertDocument("RKIConfig", item);
+                //}
                 
+                //if (File.Exists(path) == false)
+                //{
+                //    string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
+                //    File.WriteAllText(path, json);
+                //}
+                //else
+                //{
+                //    string json = File.ReadAllText(path);
+
+                //    List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
+                //    newList.AddRange(storedValues);
+
+                //    string storeJson = JsonConvert.SerializeObject(newList.ToArray(), Formatting.Indented);
+                //    File.WriteAllText(path, storeJson);
+                //}
+
             }
             catch(Exception)
             {
