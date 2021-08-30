@@ -153,7 +153,9 @@
                                                     {
                                                         <tr>
                                                             <th scope="row" style="color:red">@patient.PatientID </th>
-                                                            <td> </td>
+                                                            <td> 
+                                                              <button class="btn btn-info" onclick="copyToClipboard('@patient.PatientID')">Copy</button> 
+                                                            </td>
                                                         </tr>
                                                     }
                                                 }
@@ -202,7 +204,9 @@
                                                     {
                                                         <tr>
                                                             <th scope="row" style="color:red">@noskPatient.PatientID </th>
-                                                            <td> </td>
+                                                            <td>
+                                                                <button class="btn btn-info" onclick="copyToClipboard('@noskPatient.PatientID')">Copy</button>
+                                                            </td>
                                                         </tr>
                                                     }
                                                 }
@@ -339,8 +343,8 @@
             allNegativTest = ehrDataService.GetAllNegativTest();
             allNegativPat = ehrDataService.GetAllPatByTest(allNegativTest);
 
-            allNoskumalPat = ehrDataService.GetAllNoskumalPat(allPositivTest);
-            noskumalPatByContact = ehrDataService.GetNoskumalByContact(allNoskumalPat, allPositivPat);
+            allNoskumalPat = ehrDataService.GetAllNoskumalPat(allPositivPat);
+            noskumalPatByContact = ehrDataService.GetNoskumalByContact(allNoskumalPat, allPositivTest);
             anzahlFaelle = allPositivPat.Count() - allNoskumalPat.Count();
             anzahlPatTage = ehrDataService.PatStay(allPositivPat);
 

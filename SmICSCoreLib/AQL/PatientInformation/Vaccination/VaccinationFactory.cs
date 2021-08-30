@@ -30,5 +30,17 @@ namespace SmICSCoreLib.AQL.PatientInformation.Vaccination
 
             return vaccList;
         }
+
+        public List<VaccinationModel> ProcessSpecificVaccination(PatientListParameter parameter, string vaccination)
+        {
+            List<VaccinationModel> vaccList = _restData.AQLQuery<VaccinationModel>(AQLCatalog.SpecificVaccination(parameter, vaccination ));
+
+            if (vaccList is null)
+            {
+                return new List<VaccinationModel>();
+            }
+
+            return vaccList;
+        }
     }
 }

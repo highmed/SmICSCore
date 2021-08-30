@@ -48,7 +48,7 @@
         "_type": "EVENT_CONTEXT",
         "start_time": {
             "_type": "DV_DATE_TIME",
-            "value": "2021-01-08T16:35:00Z"
+            "value": "2020-02-10T20:47:45Z"
         },
         "setting":{
             "_type": "DV_CODED_TEXT",
@@ -104,7 +104,7 @@
         },
         "time": {
             "_type": "DV_DATE_TIME",
-            "value": "2021-01-08T16:35:00Z"
+            "value": "2020-02-10T20:47:45Z"
         },
         "description": {
             "_type": "ITEM_TREE",

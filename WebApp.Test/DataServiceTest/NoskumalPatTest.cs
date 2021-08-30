@@ -17,6 +17,7 @@ using SmICSCoreLib.AQL.Patient_Stay.Count;
 using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 using SmICSCoreLib.StatistikDataModels;
 using System;
+using SmICSCoreLib.AQL.PatientInformation.Infection_situation;
 
 namespace WebApp.Test.DataServiceTest
 {
@@ -61,21 +62,26 @@ namespace WebApp.Test.DataServiceTest
             ISymptomFactory symptomFac = new SymptomFactory(rest, NullLogger<SymptomFactory>.Instance);
             IMibiPatientLaborDataFactory mibiLabFac = new MibiPatientLaborDataFactory(rest);
             IVaccinationFactory vaccFac = new VaccinationFactory(rest, NullLogger<VaccinationFactory>.Instance);
+            ICountFactory countFactory = new CountFactory(rest);
+            IStationaryFactory stationaryFactory = new StationaryFactory(rest); ;
+            IInfectionSituationFactory infecFac = new InfectionSituationFactory(countFactory, stationaryFactory, symptomFac, patMoveFac, vaccFac, NullLogger<InfectionSituationFactory>.Instance);
 
-            return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac);
+            return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac, infecFac);
         }
 
         private List<Patient> GetPatientList()
         {
             List<Patient> patientList = new();
-            patientList.Add(new Patient("52afa449-07a2-4d57-bb7a-86e7960124ac", DateTime.Parse("08.02.2020 11:13:00"), DateTime.Parse("08.02.2020 12:13:00"), DateTime.Parse("20.02.2020 12:13:00")));
-            patientList.Add(new Patient("52afa449-07a2-4d57-bb7a-86e7960124ac", DateTime.Parse("08.02.2020 11:13:00"), DateTime.Parse("08.02.2020 12:13:00"), DateTime.Parse("20.02.2020 12:13:00")));
-            patientList.Add(new Patient("959c26c9-de4a-40b8-bf76-a315574d3da7", DateTime.Parse("01.12.2020 09:13:09"), DateTime.Parse("27.11.2020 12:13:00"), DateTime.Parse("12.12.2020 12:13:00")));
-            patientList.Add(new Patient("386ff697-7fe4-4fe0-942c-eb389b81704f", DateTime.Parse("02.12.2020 12:13:33"), DateTime.Parse("28.11.2020 12:13:00"), DateTime.Parse("12.12.2020 12:13:00")));
-            patientList.Add(new Patient("c74f6215-4fc2-42a5-a3ad-f92536ca64dc", DateTime.Parse("01.01.2021 11:00:00"), DateTime.Parse("01.01.2021 09:00:00"), DateTime.Parse("05.01.2021 15:00:00")));
-            patientList.Add(new Patient("96cdcae3-6c08-4eb7-8e41-45b012bf61d4", DateTime.Parse("02.01.2021 11:00:00"), DateTime.Parse("02.01.2021 09:00:00"), DateTime.Parse("07.01.2021 15:00:00")));
-            patientList.Add(new Patient("059d9e68-c096-4ee7-8551-c088a5488813", DateTime.Parse("03.01.2021 11:00:00"), DateTime.Parse("02.01.2021 09:00:00"), DateTime.Parse("09.01.2021 15:00:00")));
-            patientList.Add(new Patient("7dab2503-06f1-4c42-b4a4-76ddaae08794", DateTime.Parse("03.01.2021 11:00:00"), DateTime.Parse("03.01.2021 09:00:00"), DateTime.Parse("09.01.2021 15:00:00")));
+            patientList.Add(new Patient("eae9b822-6015-430c-a694-123249e977eb", DateTime.Parse("16.02.2020 10:47:45"), DateTime.Parse("09.02.2020 12:13:00"), DateTime.Parse("04.03.2020 12:13:00")));
+            patientList.Add(new Patient("52afa449-07a2-4d57-bb7a-86e7960124ac", DateTime.Parse("16.02.2020 13:03:00"), DateTime.Parse("08.02.2020 12:13:00"), DateTime.Parse("20.02.2020 12:13:00")));
+            patientList.Add(new Patient("7a347dcf-209f-46cf-ad4e-5f242b73d5cd", DateTime.Parse("17.02.2020 21:47:45Z"), DateTime.Parse("05.02.2020 12:13:00"), DateTime.Parse("23.02.2020 12:13:00")));
+            patientList.Add(new Patient("11fcaa10-d510-4eb7-a4a4-c96add98bae2", DateTime.Parse("28.02.2020 17:47:45Z"), DateTime.Parse("10.02.2020 12:13:00"), DateTime.Parse("03.03.2020 12:13:00")));
+            patientList.Add(new Patient("ac8a6002-d728-4b4e-a629-bfa66ebeace7", DateTime.Parse("10.03.2020 13:13:00Z"), DateTime.Parse("05.03.2020 12:13:00"), DateTime.Parse("20.03.2020 12:13:00")));
+            patientList.Add(new Patient("db7be72a-db86-4dc6-b55b-dcf510b0f23e", DateTime.Parse("14.03.2020 09:47:45Z"), DateTime.Parse("08.03.2020 12:13:00"), DateTime.Parse("27.03.2020 12:13:00")));
+            patientList.Add(new Patient("db7be72a-db86-4dc6-b55b-dcf510b0f23e", DateTime.Parse("20.03.2020 17:47:45Z"), DateTime.Parse("08.03.2020 12:13:00"), DateTime.Parse("27.03.2020 12:13:00")));
+            patientList.Add(new Patient("959c26c9-de4a-40b8-bf76-a315574d3da7", DateTime.Parse("01.12.2020 09:13:09Z"), DateTime.Parse("27.11.2020 12:13:00"), DateTime.Parse("12.12.2020 12:13:00")));
+            patientList.Add(new Patient("386ff697-7fe4-4fe0-942c-eb389b81704f", DateTime.Parse("02.12.2020 12:13:33Z"), DateTime.Parse("28.11.2020 12:13:00"), DateTime.Parse("12.12.2020 12:13:00")));
+            patientList.Add(new Patient("f7f106b1-3aef-481e-aa76-af9092dc63dc", DateTime.Parse("02.12.2020 12:40:33Z"), DateTime.Parse("26.11.2020 12:13:00"), DateTime.Parse("12.12.2020 12:13:00")));
             return patientList;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
+using SmICSCoreLib.AQL.PatientInformation.Vaccination;
 using System;
-
+using System.Collections.Generic;
 
 namespace SmICSCoreLib.StatistikDataModels
 {
@@ -15,8 +16,15 @@ namespace SmICSCoreLib.StatistikDataModels
         [JsonProperty(PropertyName = "Aufnahme_Datum")]
         public DateTime Aufnahme { get; set; }
 
-        [JsonProperty(PropertyName = "Entlastung_cDatum")]
+        [JsonProperty(PropertyName = "Entlastung_Datum")]
         public DateTime Entlastung { get; set; }
+
+        [JsonProperty(PropertyName = "Infektion")]
+        public string Infektion { get; set; }
+
+        [JsonProperty(PropertyName = "VaccinationModel")]
+        public List<VaccinationModel> VaccinationModel { get; set; }
+
 
         public Patient() { }
         public Patient(string patientID, DateTime probenentnahme, DateTime aufnahme, DateTime entlastung)
@@ -25,6 +33,25 @@ namespace SmICSCoreLib.StatistikDataModels
             Probenentnahme = probenentnahme;
             Aufnahme = aufnahme;
             Entlastung = entlastung;
+        }
+
+        public Patient(string patientID, string infektion)
+        {
+            PatientID = patientID;
+            Infektion = infektion;
+        }
+
+        public Patient(string patientID, DateTime probenentnahme, DateTime aufnahme, DateTime entlastung, string infektion, List<VaccinationModel> vaccinationModel) 
+            : this(patientID, probenentnahme, aufnahme, entlastung)
+        {
+            Infektion = infektion;
+            VaccinationModel = vaccinationModel;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Patient patient &&
+                   PatientID == patient.PatientID;
         }
     }
 }

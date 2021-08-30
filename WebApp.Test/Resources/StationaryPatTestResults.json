@@ -1,12 +1,16 @@
 {
   "0": [
     {
+      "FallID": "00000020",
+      "Datum_Uhrzeit_der_Aufnahme": "2020-11-26T12:13:00",
       "Datum_Uhrzeit_der_Entlassung": "2020-12-12T12:13:00",
       "Aufnahmeanlass": "Einweisung durch einen Arzt",
       "Art_der_Entlassung": "Behandlung regulär beendet",
       "Versorgungsfallgrund": "Krankenhausbehandlung, vollstationär"
     },
     {
+      "FallID": "00000020",
+      "Datum_Uhrzeit_der_Aufnahme": "2020-11-26T12:13:00",
       "Datum_Uhrzeit_der_Entlassung": "2020-12-12T12:13:00",
       "Aufnahmeanlass": "Einweisung durch einen Arzt",
       "Art_der_Entlassung": "Behandlung regulär beendet",

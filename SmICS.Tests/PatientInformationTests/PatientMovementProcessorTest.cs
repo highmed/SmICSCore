@@ -1,15 +1,11 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SmICSCoreLib.AQL.General;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.REST;
 using SmICSFactory.Tests;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using Xunit;
 
 
@@ -54,8 +50,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
-                for (int i = 0; i <= 34; i++)
+                for (int i = 0; i <= 37; i++)
                 {
                     yield return new object[] { i, i };
                 }

@@ -16,6 +16,7 @@ using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.Patient_Stay.Count;
 using System;
 using SmICSCoreLib.AQL.PatientInformation.Vaccination;
+using SmICSCoreLib.AQL.PatientInformation.Infection_situation;
 
 namespace WebApp.Test.Symptom
 {
@@ -55,17 +56,19 @@ namespace WebApp.Test.Symptom
             ISymptomFactory symptomFac = new SymptomFactory(rest, NullLogger<SymptomFactory>.Instance);
             IMibiPatientLaborDataFactory mibiLabFac = new MibiPatientLaborDataFactory(rest);
             IVaccinationFactory vaccFac = new VaccinationFactory(rest, NullLogger<VaccinationFactory>.Instance);
+            ICountFactory countFactory = new CountFactory(rest);
+            IStationaryFactory stationaryFactory = new StationaryFactory(rest); ;
+            IInfectionSituationFactory infecFac = new InfectionSituationFactory(countFactory, stationaryFactory, symptomFac, patMoveFac, vaccFac, NullLogger<InfectionSituationFactory>.Instance);
 
-            return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac);
+            return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac, infecFac);
         }
 
         private class SymptomTestData : IEnumerable<object[]>
         {
-            List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../WebApp.Test/Resources/Symptome_Group.json");
-
             public IEnumerator<object[]> GetEnumerator()
             {
-                yield return new object[] {patient[0].Beginn, 3 };
+                DateTime beginn = Convert.ToDateTime("2020-02-13");
+                yield return new object[] { beginn, 3 };
             }
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }

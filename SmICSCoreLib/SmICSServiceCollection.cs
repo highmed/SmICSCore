@@ -20,6 +20,7 @@ using SmICSCoreLib.AQL.Employees;
 using SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl;
 using SmICSCoreLib.AQL.Employees.ContactTracing;
 using SmICSCoreLib.AQL.Employees.PersonData;
+using SmICSCoreLib.AQL.PatientInformation.Infection_situation;
 
 namespace SmICS
 {
@@ -54,6 +55,8 @@ namespace SmICS
             services.AddTransient<ICountFactory, CountFactory>();
             services.AddTransient<ICaseFactory, CaseFactory>();
             services.AddTransient<IWeekCaseFactory, WeekCaseFactory>();
+
+            services.AddTransient<IInfectionSituationFactory, InfectionSituationFactory>();
 
             services.AddTransient<IEmployeeInformation, EmployeeInformation>();
             services.AddTransient<IContactTracingFactory, ContactTracingFactory>();

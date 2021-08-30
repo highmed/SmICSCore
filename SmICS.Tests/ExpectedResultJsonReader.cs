@@ -36,9 +36,9 @@ namespace SmICSFactory.Tests
                         }
                         break;
                     case ExpectedType.STATIONARY:
-                        if (patients[ehrNo].GetType() == typeof(PatientInfos))
+                        if (patients[ehrNo].GetType() == typeof(PatientIDs))
                         {
-                            ParseStationaryPatData(arr, patients[ehrNo] as PatientInfos);
+                            ParseStationaryPatData(arr, patients[ehrNo] as PatientIDs);
                         }
                         break;
                     case ExpectedType.PATIENT_SYMPTOM:
@@ -55,9 +55,9 @@ namespace SmICSFactory.Tests
                         break;
 
                     case ExpectedType.PATIENT_MOVEMENT_FROM_STATION:
-                        if (patients[ehrNo].GetType() == typeof(PatientInfos))
+                        if (patients[ehrNo].GetType() == typeof(PatientIDs))
                         {
-                            ParsePatMovementFromStation(arr, patients[resultNo] as PatientInfos);
+                            ParsePatMovementFromStation(arr, patients[ehrNo] as PatientIDs);
                         }
                         break;
                     case ExpectedType.COUNT_DATA_MODEL:
@@ -120,16 +120,6 @@ namespace SmICSFactory.Tests
             {
                 obj.Add(new JProperty("PatientenID", id.EHR_ID));
                 obj.Property("BefundDatum").Value = DateTime.Parse(obj.Property("BefundDatum").Value.ToString());
-                obj.Property("Beginn").Value = DateTime.Parse(obj.Property("Beginn").Value.ToString());
-
-                if (obj.Property("Rueckgang").Value.Type == JTokenType.Null)
-                {
-                    obj.Property("Rueckgang").Value = DateTime.Now;
-                }
-                else
-                {
-                    obj.Property("Rueckgang").Value = DateTime.Parse(obj.Property("Rueckgang").Value.ToString());
-                }
             }
         }
 
@@ -139,18 +129,23 @@ namespace SmICSFactory.Tests
             {
                 obj.Add(new JProperty("PatientenID", id.EHR_ID));
                 obj.Property("DokumentationsID").Value = DateTime.Parse(obj.Property("DokumentationsID").Value.ToString());
+                obj.Property("Impfstoff").Value = obj.Property("Impfstoff").Value;
+                obj.Property("Dosierungsreihenfolge").Value = obj.Property("Dosierungsreihenfolge").Value;
+                obj.Property("Dosiermenge").Value = obj.Property("Dosiermenge").Value;
+                obj.Property("ImpfungGegen").Value = obj.Property("ImpfungGegen").Value;
+                obj.Property("Abwesendheit").Value = obj.Property("Abwesendheit").Value;
             }
         }
 
-        private static void ParseStationaryPatData(JArray array, PatientInfos info)
+        private static void ParseStationaryPatData(JArray array, PatientIDs id)
         {
             foreach (JObject obj in array)
             {
-                if (info.EHR_ID != null)
+                if (id.EHR_ID != null)
                 {
-                    obj.Add(new JProperty("PatientID", info.EHR_ID));
-                    obj.Add(new JProperty("FallID", info.FallID));
-                    obj.Add(new JProperty("Datum_Uhrzeit_der_Aufnahme", info.Datum_Uhrzeit_der_Aufnahme));
+                    obj.Add(new JProperty("PatientID", id.EHR_ID));
+                    obj.Property("FallID").Value = obj.Property("FallID").Value;
+                    obj.Property("Datum_Uhrzeit_der_Aufnahme").Value = DateTime.Parse(obj.Property("Datum_Uhrzeit_der_Aufnahme").Value.ToString());
                 }
                 else
                 {
@@ -184,13 +179,13 @@ namespace SmICSFactory.Tests
             }
         }
 
-        private static void ParsePatMovementFromStation(JArray array, PatientInfos info)
+        private static void ParsePatMovementFromStation(JArray array, PatientIDs id)
         {
             foreach (JObject obj in array)
             {
-                obj.Add(new JProperty("PatientID", info.EHR_ID));
-                obj.Add(new JProperty("StationID", info.StationID));
-                obj.Add(new JProperty("Beginn", info.Beginn));
+                obj.Add(new JProperty("PatientID", id.EHR_ID));
+                obj.Property("StationID").Value = obj.Property("StationID").Value;
+                obj.Property("Beginn").Value = DateTime.Parse(obj.Property("Beginn").Value.ToString());
                 obj.Property("Ende").Value = DateTime.Parse(obj.Property("Ende").Value.ToString());
                 obj.Property("FallID").Value = obj.Property("FallID").Value;
                 obj.Property("Bewegungsart_l").Value = obj.Property("Bewegungsart_l").Value;
@@ -223,7 +218,7 @@ namespace SmICSFactory.Tests
                 else if (info.EHR_ID != null)
                 {
                     obj.Add(new JProperty("PatientID", info.EHR_ID));
-                    obj.Add(new JProperty("Beginn", info.Beginn));
+                    obj.Property("Beginn").Value = DateTime.Parse(obj.Property("Beginn").Value.ToString());
                     obj.Property("Rueckgang").Value = DateTime.Parse(obj.Property("Rueckgang").Value.ToString());
                     obj.Property("NameDesSymptoms").Value = obj.Property("NameDesSymptoms").Value;
                 }
