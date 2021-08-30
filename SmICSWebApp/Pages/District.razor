@@ -6,7 +6,6 @@
 
 @inject RkiService rkiService
 @inject IJSRuntime JS
-
 @*<h3>Statistik (Prototyp)</h3>*@
 
 <div class="card">
@@ -197,10 +196,16 @@
     [Parameter]
     public string lb { get; set; }
 
+    private string ResourcesPath = "../Resources/";
+    private string StatistikPath;
+
     protected override async Task OnInitializedAsync()
     {
         status = false;
         standAktuell = true;
+
+        StatistikPath = @"" + ResourcesPath + "statistik/json";
+
         await Task.Run(GetRKIData);
 
         if (status == false && standAktuell == true)
@@ -214,7 +219,7 @@
     {
         try
         {
-            path = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            path = @"" + StatistikPath + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
             dailyReport = rkiService.DeserializeRkiData(path);
             stand = dailyReport.Bericht.Stand;
             rWert7Tage = dailyReport.Bericht.RWert7Tage;
@@ -239,7 +244,7 @@
                 farbe.Add(bundesland.BlAttribute.Farbe);
             }
 
-            pathLastDay = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
+            pathLastDay = @""+ StatistikPath + "/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
             lastReport = rkiService.DeserializeRkiData(pathLastDay);
             if (lastReport != null)
             {
@@ -277,7 +282,7 @@
     {
         try
         {
-            pathLastDay = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
+            pathLastDay = @"" + StatistikPath + "/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
             lastReport = rkiService.DeserializeRkiData(pathLastDay);
             if (lastReport != null)
             {
