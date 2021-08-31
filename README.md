@@ -64,8 +64,6 @@ docker run --name smics_core --network smics-net -e OPENEHR_DB="http://localhost
 ```http://localhost:8080/ehrbase/rest/openehr/v1``` must be exchanged for the valid link to the openEHR REST API from the openEHR repository.
 ```$USERNAME``` and ```$PASSWORD``` must be exchanged for valid user credentials from the openEHR repository.
 
-**Run Process - Docker**
-
 Before building the container for the SmICS Visualization you need to change a variable within the ```src/server/config.ts```. In **line 76** you need to change the variable **hostname: "localhost"** to the DNS adress of you server where the SmICS shall run. 
 
 ```
