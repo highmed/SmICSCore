@@ -52,6 +52,7 @@ git clone https://github.com/highmed/SmICSVisualisierung.git
 ```
 
 **Build & Run Process - Docker**
+
 Within each local git repository following commands need to be executed. **You need to start with the SmICSCore Repository**
 
 ```
@@ -64,6 +65,7 @@ docker run --name smics_core --network smics-net -e OPENEHR_DB="http://localhost
 ```$USERNAME``` and ```$PASSWORD``` must be exchanged for valid user credentials from the openEHR repository.
 
 **Run Process - Docker**
+
 Before building the container for the SmICS Visualization you need to change a variable within the ```src/server/config.ts```. In **line 76** you need to change the variable **hostname: "localhost"** to the DNS adress of you server where the SmICS shall run. 
 
 ```
