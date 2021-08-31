@@ -1,4 +1,5 @@
-﻿using SmICSCoreLib.StatistikServices;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using SmICSCoreLib.StatistikServices;
 using System.Data;
 using Xunit;
 
@@ -6,7 +7,7 @@ namespace WebApp.Test
 {
     public class DataSetTest
     {
-        RkiService rkiRestApi = new();
+        RkiService rkiRestApi = new(NullLogger<RkiService>.Instance);
 
         [Fact]
         public void CkeckRespone()

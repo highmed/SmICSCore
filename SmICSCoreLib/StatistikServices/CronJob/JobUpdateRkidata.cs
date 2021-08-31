@@ -1,11 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Quartz;
-using SmICSCoreLib.StatistikDataModels;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SmICSCoreLib.StatistikServices.CronJob
@@ -22,7 +18,7 @@ namespace SmICSCoreLib.StatistikServices.CronJob
 
         public Task Execute(IJobExecutionContext context)
         {
-            RkiService rkiRestApi = new();
+            RkiService rkiRestApi = new(NullLogger<RkiService>.Instance);
             string dailyReportPath = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
             string blReportPath = @"../SmICSWebApp/Resources/Rkidata/BLReport.json";
             string lkReportPath = @"../SmICSWebApp/Resources/Rkidata/LKReport.json";

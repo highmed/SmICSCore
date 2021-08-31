@@ -3,11 +3,10 @@
 @using System.Collections;
 @using SmICSCoreLib.StatistikDataModels
 @using SmICSCoreLib.StatistikServices
-
+@using Microsoft.Extensions.Logging
+@inject ILogger<District> Logger
 @inject RkiService rkiService
 @inject IJSRuntime JS
-
-@*<h3>Statistik (Prototyp)</h3>*@
 
 <div class="card">
     <div class="row">
@@ -205,6 +204,7 @@
 
         if (status == false && standAktuell == true)
         {
+            Logger.LogWarning("RKI-Daten stehen nicht zur Verfügung!");
             status = false;
             standAktuell = false;
         }
@@ -264,10 +264,12 @@
 
             inzidenzColor = rkiService.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
             rWertColor = rkiService.SetCaseColor(rWert7Tage, rWert7TageVortag);
+            Logger.LogInformation("DailyReport wurde erfolgreich heruntergeladen");
             status = true;
         }
         catch (Exception)
         {
+            Logger.LogWarning("DailyReport koennte nicht heruntergeladen werden!");
             status = true;
             standAktuell = false;
         }
@@ -302,11 +304,14 @@
                 lkArray = lkArrayLast;
                 inzidenzColor = rkiService.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
                 rWertColor = rkiService.SetCaseColor(rWert7Tage, rWert7TageVortag);
+
+                Logger.LogInformation("LastDailyReport wurde erfolgreich heruntergeladen");
                 status = true;
             }
         }
         catch (Exception)
         {
+            Logger.LogWarning("LastDailyReport koennte nicht heruntergeladen werden!");
             status = false;
             standAktuell = false;
         }

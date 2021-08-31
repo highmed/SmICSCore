@@ -1,11 +1,12 @@
-﻿using SmICSCoreLib.StatistikServices;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using SmICSCoreLib.StatistikServices;
 using Xunit;
 
 namespace WebApp.Test
 {
     public class SetMapColorTest
     {
-        RkiService rkiRestApi = new();
+        RkiService rkiRestApi = new(NullLogger<RkiService>.Instance);
 
         [Fact]
         public void CkeckSetMapColor()

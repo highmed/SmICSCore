@@ -4,14 +4,13 @@
 @using SmICSCoreLib.StatistikServices
 @using System.ComponentModel.DataAnnotations
 @using System
-@using System.Collections;
 @using System.IO;
 @using ChartJs.Blazor.LineChart
 @using SmICSCoreLib.JSONFileStream;
-
+@using Microsoft.Extensions.Logging
+@inject ILogger<Region> Logger
 @inject RkiService rkiService
 
-@*<h3>Statistik (Prototyp)</h3>*@
 
 <div class="card">
     <div class="row">
@@ -176,6 +175,7 @@
 
         if (lkArray == null && status == true)
         {
+            Logger.LogWarning("RKI-Daten stehen nicht zur Verfügung!");
             lkArray = null;
             status = false;
         }
@@ -224,9 +224,11 @@
                     }
                 }
             }
+            Logger.LogInformation("DailyReport wurde erfolgreich heruntergeladen");
         }
         catch (Exception)
         {
+            Logger.LogWarning("DailyReport koennte nicht heruntergeladen werden!");
             bundeslaender = null;
             bundesland = null;
             lkArray = null;
@@ -356,7 +358,6 @@
 
     private void GetChart()
     {
-
         if (chartStatus == false)
         {
             Dictionary<string, int> rkiDatenLk = GetLKDataForChart(landkreis.LandkreisName);
@@ -401,7 +402,7 @@
                         Scales = new Scales
                         {
                             XAxes = new List<CartesianAxis>
-    {
+{
                             new CategoryAxis
                             {
                                  ScaleLabel = new ScaleLabel
@@ -411,7 +412,7 @@
                             }
                         },
                             YAxes = new List<CartesianAxis>
-     {
+ {
                             new LinearCartesianAxis
                             {
                                 Ticks = new LinearCartesianTicks

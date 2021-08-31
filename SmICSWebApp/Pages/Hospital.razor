@@ -6,11 +6,10 @@
 @using SmICSCoreLib.AQL.Patient_Stay.Stationary
 @using ChartJs.Blazor.LineChart
 @using ChartJs.Blazor.PieChart
-
+@using Microsoft.Extensions.Logging
+@inject ILogger<Hospital> Logger
 @inject SmICSCoreLib.StatistikServices.EhrDataService ehrDataService
 @inject IJSRuntime JSRuntime
-
-@*<h3>Statistik (Prototyp)</h3>*@
 
 <div class="card">
     <div class="row">
@@ -153,8 +152,8 @@
                                                     {
                                                         <tr>
                                                             <th scope="row" style="color:red">@patient.PatientID </th>
-                                                            <td> 
-                                                              <button class="btn btn-info" onclick="copyToClipboard('@patient.PatientID')">Copy</button> 
+                                                            <td>
+                                                                <button class="btn btn-info" onclick="copyToClipboard('@patient.PatientID')">Copy</button>
                                                             </td>
                                                         </tr>
                                                     }
@@ -329,6 +328,7 @@
 
         if (allPositivTest == null && status == true)
         {
+            Logger.LogWarning("Ehr-Datan stehen nicht zur Verfügung!");
             allPositivTest = null;
             status = false;
         }
@@ -338,9 +338,9 @@
     {
         try
         {
-            allPositivTest = ehrDataService.GetAllPositivTest();
+            allPositivTest = ehrDataService.GetAllPositivTest("260373001");
             allPositivPat = ehrDataService.GetAllPatByTest(allPositivTest);
-            allNegativTest = ehrDataService.GetAllNegativTest();
+            allNegativTest = ehrDataService.GetAllNegativTest("260415000");
             allNegativPat = ehrDataService.GetAllPatByTest(allNegativTest);
 
             allNoskumalPat = ehrDataService.GetAllNoskumalPat(allPositivPat);
@@ -355,9 +355,11 @@
                 LineChart(sortDictPositiv, sortDictNegativ);
             }
             DailyCases();
+            Logger.LogInformation("Ehr-Datan wurden erfolgreich heruntergeladen");
         }
         catch (Exception)
         {
+            Logger.LogWarning("Ehr-Datan stehen nicht zur Verfügung!");
             status = false;
         }
     }
