@@ -51,6 +51,7 @@ namespace SmICSWebApp.Controllers
         /// </remarks>
         /// <param name="parameter"></param>
         /// <returns></returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("Contact_NthDegree_TTKP_Degree")]
         [HttpPost]
         public ActionResult<ContactModel> Contact_NthDegree_TTP_Degree([FromBody] ContactParameter parameter)
@@ -75,7 +76,7 @@ namespace SmICSWebApp.Controllers
         /// </remarks>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        [AllowAnonymous]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("Patient_Labordaten_Ps")]
         [HttpPost]
         public ActionResult<List<LabDataModel>> Patient_Labordaten_Ps([FromBody] PatientListParameter parameter)
@@ -126,6 +127,7 @@ namespace SmICSWebApp.Controllers
         /// </remarks>
         /// <param name="parameter"></param>
         /// <returns></returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("Labor_ErregerProTag_TTEsKSs")]
         [HttpPost]
         public ActionResult<List<EpiCurveModel>> Labor_ErregerProTag_TTEsKSs([FromBody] TimespanParameter parameter)

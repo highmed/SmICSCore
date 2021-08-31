@@ -200,6 +200,11 @@ namespace SmICSWebApp
             OpenehrConfig.openehrUser = "etltestuser";
             OpenehrConfig.openehrPassword = "etltestuser#01";
 
+
+            //OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
+            //OpenehrConfig.openehrUser = "smics";
+            //OpenehrConfig.openehrPassword = "b+KzsSFD?cgdW2UA";
+
             /*OpenehrConfig.openehrEndpoint = "https://172.0.0.1:8080/ehrbase/rest/openehr/v1";
             OpenehrConfig.openehrUser = "test";
             OpenehrConfig.openehrPassword = "test";
