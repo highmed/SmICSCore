@@ -1,10 +1,13 @@
 ﻿using Newtonsoft.Json.Linq;
 using SmICSCoreLib.AQL.General;
+using SmICSCoreLib.AQL.PatientInformation.Infection_situation;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.AQL.PatientInformation.Vaccination;
+using SmICSCoreLib.StatistikDataModels;
 using SmICSCoreLib.Util;
 using System;
 using System.Collections;
@@ -19,14 +22,18 @@ namespace SmICSCoreLib.AQL.PatientInformation
         private IPatientLabordataFactory _patLabFac;
         private IMibiPatientLaborDataFactory _mibiLabFac;
         private ISymptomFactory _symptomFac;
+        private IVaccinationFactory _vaccFac;
+        private IInfectionSituationFactory _infecFac;
 
-        public PatientInformation(IPatientMovementFactory patMoveFac, IPatientLabordataFactory patLabFac, 
-                                    ISymptomFactory symptomFac, IMibiPatientLaborDataFactory mibiLabFac) 
+        public PatientInformation(IPatientMovementFactory patMoveFac, IPatientLabordataFactory patLabFac, ISymptomFactory symptomFac, 
+            IMibiPatientLaborDataFactory mibiLabFac, IVaccinationFactory vaccFac, IInfectionSituationFactory infecFac) 
         {
             _patMoveFac = patMoveFac;
             _patLabFac = patLabFac;
             _mibiLabFac = mibiLabFac;
             _symptomFac = symptomFac;
+            _vaccFac = vaccFac;
+            _infecFac = infecFac;
         }
        
         public List<PatientMovementModel> Patient_Bewegung_Ps(PatientListParameter parameter)
@@ -49,7 +56,7 @@ namespace SmICSCoreLib.AQL.PatientInformation
             return _mibiLabFac.Process(parameter);
         }
         
-        public List<SymptomModel> Patient_Symptom_TTPs(PatientListParameter parameter)
+        public List<SymptomModel> Patient_Symptom(PatientListParameter parameter)
         {
             return _symptomFac.Process(parameter);
         }
@@ -69,6 +76,14 @@ namespace SmICSCoreLib.AQL.PatientInformation
             return _symptomFac.SymptomByPatient(patientId, datum);
         }
 
-    }
+        public List<VaccinationModel> Patient_Vaccination(PatientListParameter parameter)
+        {
+            return _vaccFac.Process(parameter);
+        }
 
+        public List<Patient> Infection_Situation(PatientListParameter parameter)
+        {
+            return _infecFac.Process(parameter);
+        }
+    }
 }

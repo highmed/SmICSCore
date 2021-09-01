@@ -1,9 +1,5 @@
-﻿using Autofac.Extras.Moq;
-using Microsoft.Extensions.Logging.Abstractions;
-using SmICSCoreLib.AQL;
-using SmICSCoreLib.AQL.General;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using SmICSCoreLib.AQL.Lab.EpiKurve;
-using SmICSCoreLib.AQL.Lab.EpiKurve.ReceiveModel;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
@@ -121,6 +117,23 @@ namespace SmICSDataGenerator.Tests.LabTests
                         ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
                         ErregerBEZK = null,
                         ErregerID = "94500-6",
+                        StationID = "ohne Stationsangabe"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 0,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 1),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
                         StationID = "Radiologie"
                     },
                     new EpiCurveModel
@@ -189,13 +202,31 @@ namespace SmICSDataGenerator.Tests.LabTests
                         ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
                         ErregerBEZK = null,
                         ErregerID = "94500-6",
-                        StationID = "Radiologie"
+                        StationID = "ohne Stationsangabe"
                     },
                     new EpiCurveModel
                     {
-                        Anzahl = 2,
+                        Anzahl = 0,
                         Anzahl_cs = 0,
-                        anzahl_gesamt = 4,
+                        anzahl_gesamt = 0,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 2),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "Radiologie"
+                    },
+                    
+                    new EpiCurveModel
+                    {
+                        Anzahl = 3,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 5,
                         anzahl_gesamt_av28 = 0,
                         anzahl_gesamt_av7 = 0,
                         MAVG28 = 0,
@@ -244,6 +275,23 @@ namespace SmICSDataGenerator.Tests.LabTests
                     },
                     new EpiCurveModel
                     {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 1,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 3),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "ohne Stationsangabe"
+                    },
+                    new EpiCurveModel
+                    {
                         Anzahl = 0,
                         Anzahl_cs = 0,
                         anzahl_gesamt = 0,
@@ -261,9 +309,9 @@ namespace SmICSDataGenerator.Tests.LabTests
                     },
                     new EpiCurveModel
                     {
-                        Anzahl = 2,
+                        Anzahl = 3,
                         Anzahl_cs = 0,
-                        anzahl_gesamt = 6,
+                        anzahl_gesamt = 8,
                         anzahl_gesamt_av28 = 0,
                         anzahl_gesamt_av7 = 0,
                         MAVG28 = 0,
@@ -309,6 +357,23 @@ namespace SmICSDataGenerator.Tests.LabTests
                         ErregerBEZK = null,
                         ErregerID = "94500-6",
                         StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 2,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 4),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "ohne Stationsangabe"
                     },
                     new EpiCurveModel
                     {
@@ -327,11 +392,12 @@ namespace SmICSDataGenerator.Tests.LabTests
                         ErregerID = "94500-6",
                         StationID = "Radiologie"
                     },
+                    
                     new EpiCurveModel
                     {
-                        Anzahl = 1,
+                        Anzahl = 2,
                         Anzahl_cs = 0,
-                        anzahl_gesamt = 6,
+                        anzahl_gesamt = 9,
                         anzahl_gesamt_av28 = 0,
                         anzahl_gesamt_av7 = 0,
                         MAVG28 = 0,
@@ -377,6 +443,23 @@ namespace SmICSDataGenerator.Tests.LabTests
                         ErregerBEZK = null,
                         ErregerID = "94500-6",
                         StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 1,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 3,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 5),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "ohne Stationsangabe"
                     },
                     new EpiCurveModel
                     {
@@ -399,7 +482,7 @@ namespace SmICSDataGenerator.Tests.LabTests
                     {
                         Anzahl = 3,
                         Anzahl_cs = 0,
-                        anzahl_gesamt = 9,
+                        anzahl_gesamt = 12,
                         anzahl_gesamt_av28 = 0,
                         anzahl_gesamt_av7 = 0,
                         MAVG28 = 0,
@@ -450,6 +533,23 @@ namespace SmICSDataGenerator.Tests.LabTests
                     {
                         Anzahl = 0,
                         Anzahl_cs = 0,
+                        anzahl_gesamt = 3,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 6),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "ohne Stationsangabe"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
                         anzahl_gesamt = 0,
                         anzahl_gesamt_av28 = 0,
                         anzahl_gesamt_av7 = 0,
@@ -463,16 +563,17 @@ namespace SmICSDataGenerator.Tests.LabTests
                         ErregerID = "94500-6",
                         StationID = "Radiologie"
                     },
+                    
                     new EpiCurveModel
                     {
                         Anzahl = 4,
                         Anzahl_cs = 0,
-                        anzahl_gesamt = 12,
+                        anzahl_gesamt = 15,
                         anzahl_gesamt_av28 = 0,
                         anzahl_gesamt_av7 = 0,
                         MAVG28 = 0,
                         MAVG28_cs = 0,
-                        MAVG7 = 2,
+                        MAVG7 = 3,
                         MAVG7_cs = 0,
                         Datum = new DateTime(2021, 1, 7),
                         ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
@@ -513,6 +614,23 @@ namespace SmICSDataGenerator.Tests.LabTests
                         ErregerBEZK = null,
                         ErregerID = "94500-6",
                         StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 3,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 7),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "ohne Stationsangabe"
                     },
                     new EpiCurveModel
                     {
@@ -535,12 +653,12 @@ namespace SmICSDataGenerator.Tests.LabTests
                     {
                         Anzahl = 1,
                         Anzahl_cs = 0,
-                        anzahl_gesamt = 13,
+                        anzahl_gesamt = 16,
                         anzahl_gesamt_av28 = 0,
                         anzahl_gesamt_av7 = 0,
                         MAVG28 = 0,
                         MAVG28_cs = 0,
-                        MAVG7 = 2,
+                        MAVG7 = 3,
                         MAVG7_cs = 0,
                         Datum = new DateTime(2021, 1, 8),
                         ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
@@ -564,7 +682,7 @@ namespace SmICSDataGenerator.Tests.LabTests
                         ErregerBEZK = null,
                         ErregerID = "94500-6",
                         StationID = "Coronastation"
-                    },
+                    }, 
                     new EpiCurveModel
                     {
                         Anzahl = 0,
@@ -584,6 +702,23 @@ namespace SmICSDataGenerator.Tests.LabTests
                     },
                     new EpiCurveModel
                     {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 3,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 0,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 8),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "ohne Stationsangabe"
+                    },
+                    new EpiCurveModel
+                    {
                         Anzahl = 1,
                         Anzahl_cs = 0,
                         anzahl_gesamt = 2,
@@ -599,11 +734,12 @@ namespace SmICSDataGenerator.Tests.LabTests
                         ErregerID = "94500-6",
                         StationID = "Radiologie"
                     },
+
                     new EpiCurveModel
                     {
                         Anzahl = 2,
                         Anzahl_cs = 0,
-                        anzahl_gesamt = 13,
+                        anzahl_gesamt = 16,
                         anzahl_gesamt_av28 = 0,
                         anzahl_gesamt_av7 = 0,
                         MAVG28 = 0,
@@ -652,6 +788,23 @@ namespace SmICSDataGenerator.Tests.LabTests
                     },
                     new EpiCurveModel
                     {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 3,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 1,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 9),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "ohne Stationsangabe"
+                    },
+                    new EpiCurveModel
+                    {
                         Anzahl = 1,
                         Anzahl_cs = 0,
                         anzahl_gesamt = 3,
@@ -671,12 +824,12 @@ namespace SmICSDataGenerator.Tests.LabTests
                     {
                         Anzahl = 1,
                         Anzahl_cs = 0,
-                        anzahl_gesamt = 14,
+                        anzahl_gesamt = 17,
                         anzahl_gesamt_av28 = 0,
                         anzahl_gesamt_av7 = 0,
                         MAVG28 = 0,
                         MAVG28_cs = 0,
-                        MAVG7 = 2,
+                        MAVG7 = 3,
                         MAVG7_cs = 0,
                         Datum = new DateTime(2021, 1, 10),
                         ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
@@ -717,6 +870,23 @@ namespace SmICSDataGenerator.Tests.LabTests
                         ErregerBEZK = null,
                         ErregerID = "94500-6",
                         StationID = "Stationskennung X"
+                    },
+                    new EpiCurveModel
+                    {
+                        Anzahl = 0,
+                        Anzahl_cs = 0,
+                        anzahl_gesamt = 3,
+                        anzahl_gesamt_av28 = 0,
+                        anzahl_gesamt_av7 = 0,
+                        MAVG28 = 0,
+                        MAVG28_cs = 0,
+                        MAVG7 = 1,
+                        MAVG7_cs = 0,
+                        Datum = new DateTime(2021, 1, 10),
+                        ErregerBEZL = "SARS-CoV-2 (COVID-19) RNA [Presence] in Respiratory specimen by NAA with probe detection",
+                        ErregerBEZK = null,
+                        ErregerID = "94500-6",
+                        StationID = "ohne Stationsangabe"
                     },
                     new EpiCurveModel
                     {

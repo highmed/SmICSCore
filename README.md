@@ -52,27 +52,19 @@ git clone https://github.com/highmed/SmICSVisualisierung.git
 ```
 
 **Build & Run Process - Docker**
+
 Within each local git repository following commands need to be executed. **You need to start with the SmICSCore Repository**
 
 ```
 docker network create smics-net
-docker build --build-arg repo="http://localhost:8080/ehrbase/rest/openehr/v1" --build-arg user="$USERNAME" --build-arg passwd="$PASSWORD"  -t smics .
+docker build -t smics .
 docker run --name smics_core --network smics-net -e OPENEHR_DB="http://localhost:8080/ehrbase/rest/openehr/v1" -e OPENEHR_USER="$USERNAME" -e OPENEHR_PASSWD="$PASSWORD" -d -p 9787:9787 smics
 ```
 
 ```http://localhost:8080/ehrbase/rest/openehr/v1``` must be exchanged for the valid link to the openEHR REST API from the openEHR repository.
 ```$USERNAME``` and ```$PASSWORD``` must be exchanged for valid user credentials from the openEHR repository.
 
-If the SmICSCore container stops building because of failing test (especially if the openEHR Repository is ehrbase), the following lines needs to be commented in the <ins>Dockerfile</ins> to build the container without the tests.
-
-
-```
-RUN dotnet test "SmICSConnection.Test" --logger:trx -c Release
-RUN dotnet test "SmICSDataGenerator.Test" --logger:trx -c Release
-RUN dotnet test "SmICS.Tests" --logger:trx -c Release
-```
-
-**Run Process - Docker**
+Before building the container for the SmICS Visualization you need to change a variable within the ```src/server/config.ts```. In **line 76** you need to change the variable **hostname: "localhost"** to the DNS adress of you server where the SmICS shall run. 
 
 ```
 docker build -t smicsvisualisierung .

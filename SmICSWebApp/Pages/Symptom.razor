@@ -5,39 +5,38 @@
 @using SmICSCoreLib.AQL.PatientInformation.PatientMovement
 @using SmICSCoreLib.AQL.Patient_Stay.Stationary
 
-@inject SmICSWebApp.Data.Symptom symptom
+@inject SmICSCoreLib.StatistikServices.SymptomService symptomService
+@inject SmICSCoreLib.StatistikServices.EhrDataService ehrDataService
 
-<h3>Statistik (Prototyp)</h3>
+@*<h3>Statistik (Prototyp)</h3>*@
 
 <div class="card">
-    <StatistikNav>
-    </StatistikNav>
+    <div class="row">
+        <StatistikNav>
+        </StatistikNav>
 
-    <div class="card-body">
-        <div>
+        <div class="card-body col-10">
             <div style="padding: 30px 0px 100px 0px;">
-                <h3>Symptome</h3>
-
                 @if (allSymGroup == null)
                 {
-                    @if (status == true)
-                    {
-                        <p><em>Daten werden geladen...</em></p>
-                        <div class="spinner"></div> }
-                    else
+                    @if (status == false)
                     {
                         <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
                         <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+                    }
+                    else
+                    {
+                        <p><em>Daten werden geladen...</em></p>
+                        <div class="spinner"></div>
                     }
                 }
                 else
                 {
                     <div class="row">
-                        <br>
-                        <div class="col-6 d-flex">
+                        <div class="col-10 d-flex">
                             <div class="card flex-fill">
                                 <div class="card-header">
-                                    <h5 class="card-title">Symptome Tabelle </h5>
+                                    <h5 class="card-title">Symptome</h5>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-bordered table-hover mb-0">
@@ -84,11 +83,14 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <br>
 
-                        <div class="col-6 d-flex">
+                    <div class="row">
+                        <div class="col-10 d-flex">
                             <div class="card flex-fill">
                                 <div class="card-header">
-                                    <h5 class="card-title">Patienten Tabelle </h5>
+                                    <h5 class="card-title">Patienten</h5>
                                 </div>
                                 <div class="card-body">
                                     @if (@patListBySym != null)
@@ -125,14 +127,14 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
+                    <br>
 
                     <div class="row">
-                        <div class="col-8 d-flex">
+                        <div class="col-10 d-flex">
                             <div class="card flex-fill">
                                 <div class="card-header">
-                                    <h5 class="card-title">Patient Ansicht</h5>
+                                    <h5 class="card-title">Patientenansicht</h5>
                                 </div>
 
                                 <div class="card-body">
@@ -140,8 +142,8 @@
                                     @if (firstMovementList != null && firstMovementList.Count() != 0)
                                     {
                                         <div class="row">
-                                            <div class="col-8 d-flex">
-                                                <div class="row">
+                                            <div class="col-6 d-flex">
+                                                <div>
                                                     <table class="table table-bordered table-hover mb-0">
                                                         <thead style="background-color: #7FBDD2;">
                                                             <tr>
@@ -158,7 +160,8 @@
                                                             <tr>
                                                                 <th scope="row">FallID</th>
                                                                 <td>
-                                                                    <a href="" @onclick="() => GetPatStationary(patientMovement.PatientID, patientMovement.FallID)" @onclick:preventDefault>
+                                                                    <a href="" @onclick="() => GetPatStationary(patientMovement.PatientID, patientMovement.FallID,
+                                                                                         secMovement.PatientID,secMovement.FallID)" @onclick:preventDefault>
                                                                         @patientMovement.FallID
                                                                     </a>
                                                                 </td>
@@ -213,11 +216,12 @@
                                             </div>
 
 
-                                            <div class="col-4 d-flex">
-                                                <div class="row">
+                                            <div class="col-6 d-flex">
+                                                <div>
                                                     <table class="table table-bordered table-hover mb-0">
                                                         <thead style="background-color: #7FBDD2;">
                                                             <tr>
+                                                                <th scope="col">Daten</th>
                                                                 <th scope="col">
                                                                     <EditForm Model="@symptomData">
                                                                         <label>Patient </label>
@@ -225,9 +229,9 @@
                                                                                      @onclick="() => GetNextPatMov(symptomData.station)">
 
                                                                             @foreach (var item in patListBySym)
-                                                                             {
+                                                                                    {
                                                                                 <option value="@item.PatientenID">@item.PatientenID</option>
-                                                                             }
+                                                                                    }
                                                                         </InputSelect>
                                                                     </EditForm>
                                                                 </th>
@@ -236,31 +240,40 @@
 
                                                         <tbody>
                                                             <tr>
+                                                                <th scope="row">PatientID</th>
                                                                 <td>@secMovement.PatientID</td>
                                                             </tr>
                                                             <tr>
+                                                                <th scope="row">FallID</th>
                                                                 <td>
-                                                                    <a href="" @onclick="() => GetPatStationary(secMovement.PatientID,secMovement.FallID)" @onclick:preventDefault>
+                                                                    <a href="" @onclick="() => GetPatStationary(patientMovement.PatientID, patientMovement.FallID,
+                                                                                         secMovement.PatientID,secMovement.FallID)" @onclick:preventDefault>
                                                                         @secMovement.FallID
                                                                     </a>
                                                                 </td>
                                                             </tr>
                                                             <tr>
+                                                                <th scope="row">Fachabteilung</th>
                                                                 <td>@patientMovement.Fachabteilung</td>
                                                             </tr>
                                                             <tr>
+                                                                <th scope="row">StationID</th>
                                                                 <td>@secMovement.StationID</td>
                                                             </tr>
                                                             <tr>
+                                                                <th scope="row">Bewegungstyp</th>
                                                                 <td>@secMovement.Bewegungstyp</td>
                                                             </tr>
                                                             <tr>
+                                                                <th scope="row">Raum</th>
                                                                 <td>@secMovement.Raum</td>
                                                             </tr>
                                                             <tr>
+                                                                <th scope="row">Beginn</th>
                                                                 <td>@secMovement.Beginn</td>
                                                             </tr>
                                                             <tr>
+                                                                <th scope="row">Ende</th>
                                                                 <td>@secMovement.Ende</td>
                                                             </tr>
                                                         </tbody>
@@ -297,72 +310,117 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <br>
 
-                        <div class="col-4 d-flex">
+                    <div class="row">
+                        <div class="col-10 d-flex">
                             <div class="card flex-fill">
                                 <div class="card-header">
-                                    <h5 class="card-title">Stationärer Versorgungsfall Ansicht</h5>
+                                    <h5 class="card-title">Stationärer Versorgungsfall</h5>
                                 </div>
 
                                 <div class="card-body">
 
                                     @if (patStationary != null && patStationary.Count() != 0)
                                     {
+                                        <div class="row">
+                                            <div class="col-6 d-flex">
+                                                <table class="table table-bordered table-hover mb-0">
+                                                    <thead style="background-color: #7FBDD2;">
+                                                        <tr>
+                                                            <th scope="col">Daten</th>
+                                                            <th scope="col">Patient</th>
+                                                        </tr>
+                                                    </thead>
 
-                                        <table class="table table-bordered table-hover mb-0">
-                                            <thead style="background-color: #7FBDD2;">
-                                                <tr>
-                                                    <th scope="col">Daten</th>
-                                                    <th scope="col">Patient</th>
-                                                </tr>
-                                            </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">PatientID</th>
+                                                            <td>@patStationary.First().PatientID</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">FallID</th>
+                                                            <td>@patStationary.First().FallID</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Datum der Aufnahme</th>
+                                                            <td>@patStationary.First().Datum_Uhrzeit_der_Aufnahme</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Aufnahmeanlass</th>
+                                                            <td>@patStationary.First().Aufnahmeanlass</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Versorgungsfallgrund</th>
+                                                            <td>@patStationary.First().Versorgungsfallgrund</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Datum der Entlassung</th>
+                                                            <td>@patStationary.First().Datum_Uhrzeit_der_Entlassung</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Art der Entlassung</th>
+                                                            <td>@patStationary.First().Art_der_Entlassung</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
 
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">PatientID</th>
-                                                    <td>@patStationary.First().PatientID</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">FallID</th>
-                                                    <td>@patStationary.First().FallID</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Datum der Aufnahme</th>
-                                                    <td>@patStationary.First().Datum_Uhrzeit_der_Aufnahme</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Aufnahmeanlass</th>
-                                                    <td>@patStationary.First().Aufnahmeanlass</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Versorgungsfallgrund</th>
-                                                    <td>@patStationary.First().Versorgungsfallgrund</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Datum der Entlassung</th>
-                                                    <td>@patStationary.First().Datum_Uhrzeit_der_Entlassung</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Art der Entlassung</th>
-                                                    <td>@patStationary.First().Art_der_Entlassung</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                            <div class="col-6 d-flex">
+                                                <table class="table table-bordered table-hover mb-0">
+                                                    <thead style="background-color: #7FBDD2;">
+                                                        <tr>
+                                                            <th scope="col">Daten</th>
+                                                            <th scope="col">Patient</th>
+                                                        </tr>
+                                                    </thead>
 
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">PatientID</th>
+                                                            <td>@secPatStationary.First().PatientID</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">FallID</th>
+                                                            <td>@secPatStationary.First().FallID</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Datum der Aufnahme</th>
+                                                            <td>@secPatStationary.First().Datum_Uhrzeit_der_Aufnahme</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Aufnahmeanlass</th>
+                                                            <td>@secPatStationary.First().Aufnahmeanlass</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Versorgungsfallgrund</th>
+                                                            <td>@secPatStationary.First().Versorgungsfallgrund</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Datum der Entlassung</th>
+                                                            <td>@secPatStationary.First().Datum_Uhrzeit_der_Entlassung</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Art der Entlassung</th>
+                                                            <td>@secPatStationary.First().Art_der_Entlassung</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     }
                                     else
                                     {
-                                        <p>Kein Stationärer Versorgungsfall aus der Patient Ansicht rechts ausgewählt!</p>
+                                        <p>Kein Stationärer Versorgungsfall aus der Patientenansicht rechts ausgewählt!</p>
                                     }
 
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 }
             </div>
-
         </div>
     </div>
 </div>
@@ -384,17 +442,32 @@
     PatientMovementModel secMovement;
     SymptomData symptomData = new SymptomData();
     List<StationaryDataModel> patStationary;
+    List<StationaryDataModel> secPatStationary;
 
     protected override async Task OnInitializedAsync()
     {
         status = true;
         await Task.Run(GetAllSym);
+
+        if (allSymGroup == null && status == true)
+        {
+            allSymGroup = null;
+            status = false;
+        }
     }
 
     private void GetAllSym()
     {
-        allSymGroup = symptom.GetAllSymGroup(symptomData.datum);
-        if (allSymGroup == null)
+        try
+        {
+            //Symptom min. 3mal in einer Station aufgetreten ist.
+            allSymGroup = symptomService.GetAllSymGroup(symptomData.datum, 3);
+            if (allSymGroup == null)
+            {
+                status = false;
+            }
+        }
+        catch (Exception)
         {
             status = false;
         }
@@ -402,7 +475,7 @@
 
     private void GetPatListBySta(string symptomName, string station)
     {
-        patListBySym = symptom.GetAllPatBySta(symptomName, symptomData.datum, station);
+        patListBySym = symptomService.GetAllPatBySta(symptomName, symptomData.datum, station);
     }
 
     private void NextFirst()
@@ -447,7 +520,7 @@
 
     private void GetPatMovement(string patientId)
     {
-        firstMovementList = symptom.GetPatMovement(patientId);
+        firstMovementList = ehrDataService.GetPatMovement(patientId);
         moveCount = firstMovementList.Count();
 
         if (moveCount != 0)
@@ -464,7 +537,7 @@
 
     private void GetNextPatMov(string patientId)
     {
-        secondMovementList = symptom.GetPatMovement(patientId);
+        secondMovementList = ehrDataService.GetPatMovement(patientId);
         secMoveCount = secondMovementList.Count();
         if (secMoveCount != 0)
         {
@@ -472,9 +545,10 @@
         }
     }
 
-    private void GetPatStationary(string patientId, string fallId)
+    private void GetPatStationary(string patientId, string fallId, string secPatientId, string secFallId)
     {
-        patStationary = symptom.GetPatStationary(patientId, fallId);
+        patStationary = ehrDataService.StationaryPatByCaseID(patientId, fallId);
+        secPatStationary = ehrDataService.StationaryPatByCaseID(secPatientId, secFallId);
     }
 
     public class SymptomData

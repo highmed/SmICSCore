@@ -11,6 +11,11 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using SmICSWebApp.Data;
 using Serilog;
+using Quartz.Spi;
+using Quartz;
+using Quartz.Impl;
+using SmICSCoreLib.StatistikServices.CronJob;
+using SmICSCoreLib.StatistikServices;
 using Microsoft.AspNetCore.Authorization;
 using SmICSWebApp.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -119,8 +124,26 @@ namespace SmICSWebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSmICSLibrary();
-            services.AddSingleton<DataService>();
-            services.AddSingleton<Symptom>();
+            services.AddSingleton<RkiService>();            
+            services.AddSingleton<SymptomService>();
+            services.AddSingleton<EhrDataService>();
+
+            //CronJob GetReport
+            services.AddSingleton<IJobFactory, QuartzJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            services.AddSingleton<JobGetReport>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 00 10 ? * *"));
+            services.AddHostedService<QuartzHostedService>();
+
+            services.AddSingleton<ContactTracingService>();
+            services.AddSingleton<PersonInformationService>();
+            services.AddSingleton<PersInfoInfectCtrlService>();
+
+            //CronJob UpdateRkidata
+            services.AddSingleton<JobUpdateRkidata>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
+
+            
 
             services.AddMvcCore(options =>
             {

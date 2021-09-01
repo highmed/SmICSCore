@@ -67,16 +67,16 @@ footer.page-footer a {
     background: rgba(0, 0, 0, 0.2);
 }
 
-    .main .top-row {
-        background-color: #f7f7f7;
-        border-bottom: 1px solid #d6d5d5;
-        justify-content: flex-end;
-    }
+.main .top-row {
+     background-color: #f7f7f7;
+     border-bottom: 1px solid #d6d5d5;
+     justify-content: flex-end;
+}
 
-        .main .top-row > a, .main .top-row .btn-link {
-            white-space: nowrap;
-            margin-left: 1.5rem;
-        }
+.main .top-row > a, .main .top-row .btn-link {
+    white-space: nowrap;
+    margin-left: 1.5rem;
+}
 
 .main .top-row a:first-child {
     overflow: hidden;
@@ -173,6 +173,14 @@ footer.page-footer a {
     top: 0.5rem;
 }
 
+.gef_von {
+    font-size: 9pt;
+    text-align: right end;
+    margin-top: 0.25%;
+    margin-right: 5%;
+    color: #637492;
+}
+
 @media (max-width: 899px) {
     .main .top-row:not(.auth) {
         display: none;
@@ -265,7 +273,7 @@ footer.page-footer a {
         width: 80px;
         height: 80px;
         animation: spin 1300ms linear infinite;
-        top: 100%;
+        top: 50%;
         left: 40%;
         position: absolute;
     }

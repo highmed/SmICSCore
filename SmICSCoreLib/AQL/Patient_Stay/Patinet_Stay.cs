@@ -12,38 +12,42 @@ namespace SmICSCoreLib.AQL.Patient_Stay
     {
         private IStationaryFactory _stationaryFactory;
         private ICountFactory _countFactory;
-        private ICaseFactory _caseFactory;
-        private IWeekCaseFactory _weekCaseFactory;
+        //private ICaseFactory _caseFactory;
+        //private IWeekCaseFactory _weekCaseFactory;
 
-        public Patinet_Stay(IStationaryFactory stationaryFactory, ICountFactory countFactory, 
-            ICaseFactory caseFactory, IWeekCaseFactory weekCaseFactory)
+        public Patinet_Stay(IStationaryFactory stationaryFactory, ICountFactory countFactory)
         {
             _stationaryFactory = stationaryFactory;
             _countFactory = countFactory;
-            _caseFactory = caseFactory;
-            _weekCaseFactory = weekCaseFactory;
         }
+        //public Patinet_Stay(IStationaryFactory stationaryFactory, ICountFactory countFactory, 
+        //    ICaseFactory caseFactory, IWeekCaseFactory weekCaseFactory)
+        //{
+        //    _stationaryFactory = stationaryFactory;
+        //    _countFactory = countFactory;
+        //    _caseFactory = caseFactory;
+        //    _weekCaseFactory = weekCaseFactory;
+        //}
 
-        public List<CaseDataModel> Case(DateTime date)
-        {
-            return _caseFactory.Process(date);
-        }
+        //public List<CaseDataModel> Case(DateTime date)
+        //{
+        //    return _caseFactory.Process(date);
+        //}
 
         public List<CountDataModel> CovidPat(string nachweis)
         {
             return _countFactory.Process(nachweis);
         }
 
+        //public List<WeekCaseDataModel> WeekCase(DateTime startDate, DateTime endDate)
+        //{
+        //    return _weekCaseFactory.Process(startDate, endDate);
+        //}
+
         public List<StationaryDataModel> Stationary_Stay(string patientId, string fallkennung, DateTime datum)
         {
             return _stationaryFactory.Process(patientId, fallkennung, datum);
         }
-
-        public List<WeekCaseDataModel> WeekCase(DateTime startDate, DateTime endDate)
-        {
-            return _weekCaseFactory.Process(startDate, endDate);
-        }
-
         public List<StationaryDataModel> StayFromCase(string patientId, string fallId)
         {
             return _stationaryFactory.ProcessFromCase(patientId, fallId);

@@ -27,9 +27,9 @@
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
+    <link href="SmICSWebApp.styles.css" rel="stylesheet" />
     <link href="~/css/rki-dashboard.css" rel="stylesheet" />
     <link href="css/form.css" rel="stylesheet" />
-    <link href="~/css/bootstrap/jquery.simple-dtpicker.css" rel="stylesheet" />
 
 </head>
 <body>
@@ -50,14 +50,15 @@
 
     <script src="_framework/blazor.server.js"></script>
 
-    @*<script src="/path/to/jquery.min.js"></script>*@
-    @*<script src="~/css/bootstrap/jquery.simple-dtpicker.js"></script>*@
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
     <script src="~/js/saveAsFile.js"></script>
     <script src="~/js/site.js"></script>
+    <script src="~/js/copyToClipoard.js"></script>
 
+    @*Chart*@
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="_content/ChartJs.Blazor.Fork/ChartJsBlazorInterop.js"></script>
 
 </body>
 </html>
