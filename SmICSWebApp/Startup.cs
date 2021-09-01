@@ -41,53 +41,6 @@ namespace SmICSWebApp
         {
             services.AddScoped<TokenProvider>();
 
-            /*services.AddAuthentication(
-               CertificateAuthenticationDefaults.AuthenticationScheme)
-           .AddCertificate(options =>
-           {
-               options.AllowedCertificateTypes = CertificateTypes.All;
-           });*/
-
-            /*services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = "oidc";
-            })
-            .AddCookie("Cookies")
-            .AddOpenIdConnect("oidc", options =>
-            {
-                options.Authority = Configuration["oidc:Authority"];
-                options.ClientId = Configuration["oidc:ClientId"];
-                options.ClientSecret = Configuration["oidc:ClientSecret"];
-
-                options.ResponseType = "code";
-                options.Scope.Clear();
-                options.Scope.Add("openid");
-
-                options.ClaimsIssuer = "User";
-                options.RequireHttpsMetadata = false;
-
-                options.SaveTokens = true;
-                options.GetClaimsFromUserInfoEndpoint = true;
-
-                options.Events = new OpenIdConnectEvents
-                {
-
-                    //OnRedirectToIdentityProviderForSignOut = (context) =>
-                    //{
-
-                    //};
-
-                    OnAccessDenied = context =>
-                    {
-                        context.HandleResponse();
-                        context.Response.Redirect("/");
-                        return Task.CompletedTask;
-                    }
-                };
-            });*/
-
-
             services.AddAuthentication(
                   CertificateAuthenticationDefaults.AuthenticationScheme)
               .AddCertificate(options =>
