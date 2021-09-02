@@ -18,7 +18,7 @@ namespace SmICSCoreLib.StatistikServices.CronJob
 
         public Task Execute(IJobExecutionContext context)
         {
-            RkiService rkiRestApi = new();
+            RkiService rkiRestApi = new(NullLogger<RkiService>.Instance);
             string dailyReportPath = @"Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
             string blReportPath = @"Resources/Rkidata/BLReport.json";
             string lkReportPath = @"Resources/Rkidata/LKReport.json";
