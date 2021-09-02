@@ -212,8 +212,10 @@ namespace SmICSCoreLib.StatistikServices
                 {
                     List<StationaryDataModel> statPatList = StationaryPatForNosku(positivPat.PatientID, positivPat.Fallkennung, positivPat.Zeitpunkt_des_Probeneingangs);
 
-                    if (statPatList != null || statPatList.Count != 0)
-                    {
+                if (statPatList != null)
+                {
+                    if (statPatList.Count != 0)
+                    { 
                         foreach (StationaryDataModel statPatient in statPatList)
                         {
                             List<SymptomModel> symptoms = symptom.GetAllSymByPatID(statPatient.PatientID, statPatient.Datum_Uhrzeit_der_Aufnahme);

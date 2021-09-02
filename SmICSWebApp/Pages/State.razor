@@ -445,12 +445,17 @@
 
     private Bundesland[] bundeslaender = new Bundesland[16];
     private List<string> farbe = new List<string>();
+    private string ResourcesPath = "Resources/";
+    private string StatistikPath;
 
     protected override async Task OnInitializedAsync()
     {
         status = false;
         standAktuell = true;
         datum = DateTime.Now;
+
+        StatistikPath = @"" + ResourcesPath + "statistik/json";
+
         await Task.Run(SetRKIData);
         await Task.Run(GetRKIData);
 
@@ -464,8 +469,7 @@
 
     private void SetRKIData()
     {
-        string path = @"../SmICSWebApp/Resources/statistik/json";
-        bool check = rkiService.SerializeRkiData(path);
+        bool check = rkiService.SerializeRkiData(StatistikPath);
         if (check == false)
         {
             Logger.LogWarning("RKI-Daten stehen nicht zur Verfügung!");
@@ -477,7 +481,7 @@
     {
         try
         {
-            path = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            path = @""+ StatistikPath + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
             dailyReport = rkiService.DeserializeRkiData(path);
             stand = dailyReport.Bericht.Stand;
             standAktuell = dailyReport.Bericht.StandAktuell;
@@ -505,7 +509,7 @@
 
             try
             {
-                pathLastDay = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
+                pathLastDay = @"" + StatistikPath + "/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
                 lastReport = rkiService.DeserializeRkiData(pathLastDay);
                 if (lastReport != null)
                 {
@@ -535,7 +539,7 @@
     {
         try
         {
-            pathLastDay = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
+            pathLastDay = @"" + StatistikPath + "/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
             lastReport = rkiService.DeserializeRkiData(pathLastDay);
             bundeslaender = lastReport.Bericht.Bundesland;
             blStandAktuell = lastReport.Bericht.BlStandAktuell;

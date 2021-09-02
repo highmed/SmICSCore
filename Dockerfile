@@ -25,9 +25,6 @@ ENV OPENEHR_PASSWD=$passwd
 
 FROM build AS publish
 COPY . ./
-RUN dotnet test "SmICSConnection.Test" --logger:trx -c Release
-RUN dotnet test "SmICSDataGenerator.Test" --logger:trx -c Release
-RUN dotnet test "SmICS.Tests" --logger:trx -c Release
 RUN dotnet publish "SmICSWebApp/SmICSWebApp.csproj" -c Release -o /app/out
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS final

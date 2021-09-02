@@ -18,11 +18,11 @@ namespace SmICSCoreLib.StatistikServices.CronJob
 
         public Task Execute(IJobExecutionContext context)
         {
-            RkiService rkiRestApi = new(NullLogger<RkiService>.Instance);
-            string dailyReportPath = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
-            string blReportPath = @"../SmICSWebApp/Resources/Rkidata/BLReport.json";
-            string lkReportPath = @"../SmICSWebApp/Resources/Rkidata/LKReport.json";
-            string targetPath = @"../SmICSWebApp/Resources/Rkidata";
+            RkiService rkiRestApi = new();
+            string dailyReportPath = @"Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            string blReportPath = @"Resources/Rkidata/BLReport.json";
+            string lkReportPath = @"Resources/Rkidata/LKReport.json";
+            string targetPath = @"Resources/Rkidata";
             string blFilename = ("BLReport");
             string lkFilename = ("LKReport");
 

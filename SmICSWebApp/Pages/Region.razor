@@ -163,6 +163,9 @@
 
     private Chart _chart;
     private LineConfig config;
+    private string ResourcesPath = "Resources/";
+    private string StatistikPath;
+    private string RKIDataPath;
 
     protected override async Task OnInitializedAsync()
     {
@@ -170,6 +173,10 @@
         chartStatus = false;
         data.bl = "Baden-Württemberg";
         data.gen = "Stuttgart";
+
+        StatistikPath = @"" + ResourcesPath + "statistik/json";
+        RKIDataPath = @"" + ResourcesPath + "/Rkidata/";
+
         await Task.Run(LoadRkiData);
         GetChart();
 
@@ -185,8 +192,7 @@
     {
         try
         {
-            path = @"../SmICSWebApp/Resources/statistik/json/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
-            rkipPath = @"../SmICSWebApp/Resources/statistik/json";
+            path = @""+ StatistikPath + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
 
             dailyReport = rkiService.DeserializeRkiData(path);
             if (dailyReport != null)
@@ -206,7 +212,7 @@
             }
             else
             {
-                rkiService.SerializeRkiData(rkipPath);
+                rkiService.SerializeRkiData(StatistikPath);
                 dailyReport = rkiService.DeserializeRkiData(path);
                 if (dailyReport != null)
                 {
@@ -280,15 +286,14 @@
     {
         Dictionary<string, int> rkiDatenLk = new();
 
-        string filePath = @"../SmICSWebApp/Resources/Rkidata/LKReport.json";
+        string filePath = @""+RKIDataPath+"LKReport.json";
 
         if (!File.Exists(filePath))
         {
-            string path = @"../SmICSWebApp/Resources/Rkidata/";
             Directory.CreateDirectory(path);
             LKReportJson lKReport = rkiService.GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 3, 228);
             string filename = ("LKReport");
-            JSONWriter.Write(lKReport, path, filename);
+            JSONWriter.Write(lKReport, RKIDataPath, filename);
         }
         LKReportJson lKReportJson = rkiService.LKReportDeserialize(filePath);
 
@@ -316,14 +321,13 @@
     {
         Dictionary<string, int> rkiDatenBl = new();
 
-        string filePath = @"../SmICSWebApp/Resources/Rkidata/BLReport.json";
+        string filePath = @"" + RKIDataPath + "BLReport.json";
         if (!File.Exists(filePath))
         {
-            string path = @"../SmICSWebApp/Resources/Rkidata/";
             Directory.CreateDirectory(path);
             Report report = rkiService.GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 1, 422);
             string filename = ("BLReport");
-            JSONWriter.Write(report, path, filename);
+            JSONWriter.Write(report, RKIDataPath, filename);
         }
         Report blReportJson = rkiService.BLReportDeserialize(filePath);
 

@@ -96,6 +96,10 @@ namespace SmICSCoreLib.AQL.Lab.EpiKurve
                 {
                     patientLocation = patientLocations[0];
                 }
+                if(patientLocation.Ward == null)
+                {
+                    patientLocation.Ward = "Fachabteilung: " + patientLocation.Departement;
+                }
                 SetBasicDailyEpiCurveEntries(flag, patientLocation, date);
                 AggregateFlagInformation(flag, patientLocation);
 
