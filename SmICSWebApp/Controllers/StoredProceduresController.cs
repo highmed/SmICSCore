@@ -19,8 +19,6 @@ using SmICSCoreLib.AQL.Algorithm.NEC;
 using SmICSCoreLib.AQL.Patient_Stay;
 using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.Patient_Stay.Count;
-using SmICSCoreLib.AQL.Patient_Stay.Cases;
-using SmICSCoreLib.AQL.Patient_Stay.WeekCase;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using SmICSCoreLib.StatistikDataModels;
