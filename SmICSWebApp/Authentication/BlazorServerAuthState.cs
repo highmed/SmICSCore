@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.Extensions.Logging;
+using SmICSCoreLib.Authentication;
 
-namespace SmICSWebApp.Authentication
+namespace SmICSCWebApp.Authentication
 {
     public class BlazorServerAuthState
          : RevalidatingServerAuthenticationStateProvider

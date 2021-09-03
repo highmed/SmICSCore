@@ -1,4 +1,4 @@
-﻿namespace SmICSWebApp.Authentication
+﻿namespace SmICSCoreLib.Authentication
 {
     public class TokenProvider
     {

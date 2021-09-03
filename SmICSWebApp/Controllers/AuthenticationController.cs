@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using SmICSWebApp.Authentication;
+using SmICSCoreLib.Authentication;
 
 namespace SmICSWebApp.Controllers
 {

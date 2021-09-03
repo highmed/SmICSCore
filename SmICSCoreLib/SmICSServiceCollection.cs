@@ -28,8 +28,8 @@ namespace SmICS
     {
         public static IServiceCollection AddSmICSLibrary(this IServiceCollection services)
         {
-            services.AddSingleton<RestClientConnector>();
-            services.AddSingleton<IRestDataAccess, RestDataAccess>();
+            services.AddScoped<RestClientConnector>();
+            services.AddScoped<IRestDataAccess, RestDataAccess>();
             
             services.AddTransient<IPatientMovementFactory, PatientMovementFactory>();
             services.AddTransient<IPatientLabordataFactory, PatientLabordataFactory>();
@@ -48,7 +48,7 @@ namespace SmICS
             services.AddTransient<INECResultFileFactory, NECResultFileFactory>();
 
             services.AddTransient<ILabData, LabData>();
-            services.AddSingleton<IAlgorithmData, AlgortihmData>();
+            services.AddScoped<IAlgorithmData, AlgortihmData>();
 
             services.AddTransient<IStationaryFactory, StationaryFactory>();
             services.AddTransient<IPatinet_Stay, Patinet_Stay>();

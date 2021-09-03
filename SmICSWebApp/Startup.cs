@@ -17,7 +17,6 @@ using Quartz.Impl;
 using SmICSCoreLib.StatistikServices.CronJob;
 using SmICSCoreLib.StatistikServices;
 using Microsoft.AspNetCore.Authorization;
-using SmICSWebApp.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -28,6 +27,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication.Certificate;
+using SmICSCoreLib.Authentication;
+using SmICSCWebApp.Authentication;
 
 namespace SmICSWebApp
 {
@@ -45,7 +46,6 @@ namespace SmICSWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<TokenProvider>();
-
             services.AddAuthentication(
                   CertificateAuthenticationDefaults.AuthenticationScheme)
               .AddCertificate(options =>
@@ -61,9 +61,9 @@ namespace SmICSWebApp
             .AddCookie("Cookies")
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
-                options.Authority = Configuration["oidc:Authority"];
-                options.ClientId = Configuration["oidc:ClientId"];
-                options.ClientSecret = Configuration["oidc:ClientSecret"];
+                options.Authority = "https://keycloak.mh-hannover.local:8443/auth/realms/Better";//Environment.GetEnvironmentVariable("AUTHORITY");
+                options.ClientId = "medic-c-t";//Environment.GetEnvironmentVariable("CLIENT_ID");
+                options.ClientSecret = null;// Environment.GetEnvironmentVariable("CLIENT_SECRET");
 
                 options.ResponseType = "code";
                 options.Scope.Clear();
@@ -91,24 +91,20 @@ namespace SmICSWebApp
                     }
                 };
             });
-
-
             services.AddAuthentication()
             .AddJwtBearer(options =>
             {
-                options.Authority = Configuration["oidc:Authority"];
+                options.Authority = "https://keycloak.mh-hannover.local:8443/auth/realms/Better";
                 options.RequireHttpsMetadata = true;
                 // name of the API resource
                 options.Audience = "account";
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidIssuer = Configuration["oidc:Authority"],
+                    ValidIssuer = "https://keycloak.mh-hannover.local:8443/auth/realms/Better",
                     ValidAudience = "account"
                     //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])) 
                 };
             });
-
-
             services.AddAuthorization(options =>
             {
                 var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
@@ -123,10 +119,10 @@ namespace SmICSWebApp
             services.AddControllers().AddNewtonsoftJson();
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSmICSLibrary();
-            services.AddSingleton<RkiService>();            
-            services.AddSingleton<SymptomService>();
-            services.AddSingleton<EhrDataService>();
+           
+            services.AddScoped<RkiService>();            
+            services.AddScoped<SymptomService>();
+            services.AddScoped<EhrDataService>();
 
             //CronJob GetReport
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
@@ -135,15 +131,13 @@ namespace SmICSWebApp
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 00 10 ? * *"));
             services.AddHostedService<QuartzHostedService>();
 
-            services.AddSingleton<ContactTracingService>();
-            services.AddSingleton<PersonInformationService>();
-            services.AddSingleton<PersInfoInfectCtrlService>();
+            services.AddScoped<ContactTracingService>();
+            services.AddScoped<PersonInformationService>();
+            services.AddScoped<PersInfoInfectCtrlService>();
 
             //CronJob UpdateRkidata
             services.AddSingleton<JobUpdateRkidata>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
-
-            
 
             services.AddMvcCore(options =>
             {
@@ -163,33 +157,13 @@ namespace SmICSWebApp
 
             services.AddSingleton<BlazorServerAuthStateCache>();
             services.AddScoped<AuthenticationStateProvider, BlazorServerAuthState>();
+
+            services.AddSmICSLibrary();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            //OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
-            //OpenehrConfig.openehrUser = "smics";
-            //OpenehrConfig.openehrPassword = "b+KzsSFD?cgdW2UA";
-
-            OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
-            OpenehrConfig.openehrUser = "etltestuser";
-            OpenehrConfig.openehrPassword = "etltestuser#01";
-
-
-            //OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
-            //OpenehrConfig.openehrUser = "smics";
-            //OpenehrConfig.openehrPassword = "b+KzsSFD?cgdW2UA";
-
-            /*OpenehrConfig.openehrEndpoint = "https://172.0.0.1:8080/ehrbase/rest/openehr/v1";
-            OpenehrConfig.openehrUser = "test";
-            OpenehrConfig.openehrPassword = "test";
-            OpenehrConfig.openehrAdaptor = "STANDARD";*/
-
-            //OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
-            //OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
-            //OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
-
+        { 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -200,6 +174,8 @@ namespace SmICSWebApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
 
             app.UseSwagger();
 

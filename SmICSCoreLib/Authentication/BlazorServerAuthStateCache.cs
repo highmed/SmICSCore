@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 
 
-namespace SmICSWebApp.Authentication
+namespace SmICSCoreLib.Authentication
 {
     public class BlazorServerAuthStateCache
     {

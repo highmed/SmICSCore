@@ -29,6 +29,7 @@ using SmICSCoreLib.StatistikDataModels;
 
 namespace SmICSWebApp.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
@@ -60,7 +61,7 @@ namespace SmICSWebApp.Controllers
         /// </remarks>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        
         [Route("Contact_NthDegree_TTKP_Degree")]
         [HttpPost]
         public ActionResult<ContactModel> Contact_NthDegree_TTP_Degree([FromBody] ContactParameter parameter)
@@ -85,7 +86,7 @@ namespace SmICSWebApp.Controllers
         /// </remarks>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        
         [Route("Patient_Labordaten_Ps")]
         [HttpPost]
         public ActionResult<List<LabDataModel>> Patient_Labordaten_Ps([FromBody] PatientListParameter parameter)
@@ -110,7 +111,7 @@ namespace SmICSWebApp.Controllers
         /// </remarks>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        
         [Route("Patient_Bewegung_Ps")]
         [HttpPost]
         public ActionResult<List<PatientMovementModel>> Patient_Bewegung_Ps([FromBody] PatientListParameter parameter)
@@ -136,7 +137,7 @@ namespace SmICSWebApp.Controllers
         /// </remarks>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+       
         [Route("Labor_ErregerProTag_TTEsKSs")]
         [HttpPost]
         public ActionResult<List<EpiCurveModel>> Labor_ErregerProTag_TTEsKSs([FromBody] TimespanParameter parameter)
@@ -162,6 +163,7 @@ namespace SmICSWebApp.Controllers
         /// Positive PCR von SARS-CoV-2 ab Tag 4 nach stationärer Aufnahme.
         /// </remarks>
         /// <returns></returns>
+        
         [Route("Infection_Situation")]
         [HttpPost]
         public ActionResult<List<Patient>> Infection_Situation([FromBody] PatientListParameter parameter)
@@ -179,122 +181,6 @@ namespace SmICSWebApp.Controllers
             }
         }
 
-        //[Route("Patient_Stay_Stationary")]
-        //[HttpPost]
-        //public ActionResult<List<StationaryDataModel>> Patient_Stay_Stationary(string patientId)
-        //{
-        //    try
-        //    {
-        //        return _patinet_Stay.Stationary_Stay(patientId);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return ErrorHandling(e);
-        //    }
-        //}
-
-
-        //[Route("Patient_Count")]
-        //[HttpPost]
-        //public ActionResult<List<CountDataModel>> Patient_Count(string nachweis)
-        //{
-        //    try
-        //    {
-        //        return _patinet_Stay.CovidPat(nachweis);
-        //    }
-        //    catch (Exception e)
-        //    {
-
-        //        return ErrorHandling(e);
-        //    }
-        //}
-
-        //[Route("Patient_Case")]
-        //[HttpPost]
-        //public ActionResult<List<CaseDataModel>> Patient_Case(DateTime date)
-        //{
-        //    try
-        //    {
-        //        return _patinet_Stay.Case(date);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return ErrorHandling(e);
-        //    }
-        //} 
-
-        //[Route("Patient_WeekCase")]
-        //[HttpPost]
-        //public ActionResult<List<WeekCaseDataModel>> Patient_WeekCase(DateTime startDate, DateTime endDate)
-        //{
-        //    try
-        //    {
-        //        return _patinet_Stay.WeekCase(startDate, endDate);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return ErrorHandling(e);
-        //    }
-        //}
-
-        //[Route("NECAlgorithm")]
-        //[HttpPost]
-        //public ActionResult NECAlgorithm([FromBody] List<NECResultDataModel> parameter)
-        //{
-        //    try
-        //    {
-        //        _algorithm.NECResultFile(parameter);
-        //        return NoContent();  
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return ErrorHandling(e);
-        //    }
-        //}
-
-        //[Route("NECAlgorithmResult")]
-        //[HttpPost]
-        //public ActionResult<List<NECResultDataModel>> NECAlgorithmResult([FromBody] TimespanParameter parameter)
-        //{
-        //    try
-        //    {
-        //        return _algorithm.NECAlgorithmResult(parameter);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return ErrorHandling(e);
-        //    }
-        //}
-
-        //[Route("NEC_Dataset")]
-        //[HttpGet]
-        //public ActionResult<NECCombinedDataModel> NEC_Dataset([FromQuery] DateTime parameter)
-        //{
-        //    try
-        //    {
-        //        return _algorithm.NEC_Dataset(parameter);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return ErrorHandling(e);
-        //    }
-        //}
-
-        /*[Route("RKI_Dataset")]
-        [HttpPost]
-        public ActionResult<JArray> RKI_Dataset([FromBody] JObject parameter)
-        {
-            try
-            {
-                Dictionary<string, object> param = JsonConvert.DeserializeObject<Dictionary<string, object>>(parameter.ToString());
-                return _algorithm.RKI_Dataset(param);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }*/
-
         private ActionResult ErrorHandling(Exception e) 
         {
             if (e is ArgumentNullException) { return new StatusCodeResult(412); }
@@ -302,6 +188,7 @@ namespace SmICSWebApp.Controllers
             else { return new StatusCodeResult(500); }
         }
 
+        
         [Route("Patient_Symptom")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
@@ -318,6 +205,7 @@ namespace SmICSWebApp.Controllers
             }
         }
 
+        
         [Route("Patient_Vaccination")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
@@ -334,6 +222,7 @@ namespace SmICSWebApp.Controllers
             }
         }
 
+        
         [Route("Employee_ContactTracing")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
@@ -350,6 +239,7 @@ namespace SmICSWebApp.Controllers
             }
         }
 
+        
         [Route("Employee_PersonData")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
@@ -366,6 +256,7 @@ namespace SmICSWebApp.Controllers
             }
         }
 
+        
         [Route("Employee_PersInfoInfecCtrl")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]

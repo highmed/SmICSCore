@@ -22,6 +22,10 @@ ARG passwd=default_value
 ENV OPENEHR_DB=$repo
 ENV OPENEHR_USER=$user
 ENV OPENEHR_PASSWD=$passwd
+ENV AUTH=GENERIC
+ENV AUTHORITY=authority
+ENV CLIENT_ID=clientID
+ENV CLIENT_SECRET=clientSecret
 
 FROM build AS publish
 COPY . ./

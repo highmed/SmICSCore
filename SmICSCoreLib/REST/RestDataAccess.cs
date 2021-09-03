@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -26,7 +27,8 @@ namespace SmICSCoreLib.REST
         {
             _logger.LogInformation("Posted Query: {Query}", query.Name);
             string restPath = "/query/aql";
-            HttpResponseMessage response = _client.Client.PostAsync(OpenehrConfig.openehrEndpoint + restPath, GetHttpContentQuery(query.ToString())).Result;
+            Console.WriteLine(_client.Client.DefaultRequestHeaders);
+         //   HttpResponseMessage response = _client.Client.PostAsync(OpenehrConfig.openehrEndpoint + restPath, GetHttpContentQuery(query.ToString())).Result;
             //System.Diagnostics.Debug.Print(response.RequestMessage.ToString());
             if (response.IsSuccessStatusCode)
             {
@@ -105,7 +107,6 @@ namespace SmICSCoreLib.REST
             obj.Add("q", query);
             string json = JsonConvert.SerializeObject(obj, Formatting.Indented);
             HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
-
             return content;
         }
 

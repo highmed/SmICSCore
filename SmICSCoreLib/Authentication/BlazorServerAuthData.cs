@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SmICSWebApp.Authentication
+namespace SmICSCoreLib.Authentication
 {
     public class BlazorServerAuthData
     {
