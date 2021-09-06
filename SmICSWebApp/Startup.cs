@@ -30,6 +30,7 @@ using Microsoft.AspNetCore.Authentication.Certificate;
 using SmICSCoreLib.Authentication;
 using SmICSCWebApp.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Logging;
 
 namespace SmICSWebApp
 {
@@ -46,13 +47,15 @@ namespace SmICSWebApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
+
             services.AddScoped<TokenProvider>();
-            /*services.AddAuthentication(
+            services.AddAuthentication(
                   CertificateAuthenticationDefaults.AuthenticationScheme)
               .AddCertificate(options =>
               {
                   options.AllowedCertificateTypes = CertificateTypes.All;
-              });*/
+              });
 
             services.AddAuthentication(options =>
             {
@@ -67,7 +70,7 @@ namespace SmICSWebApp
                 options.ClientId = Environment.GetEnvironmentVariable("CLIENT_ID"); 
                 options.ClientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET");
 
-                //options.Authority = "https://keycloak.mh-hannover.local:8443/auth/realms/Better";
+                options.Authority = "https://keycloak.mh-hannover.local:8443/auth/realms/Better";
                 options.ClientId = "medic-c-t";
                 options.ClientSecret = null;
 
