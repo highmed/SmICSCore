@@ -25,7 +25,7 @@ ENV OPENEHR_PASSWD=$passwd
 ENV AUTH=GENERIC
 ENV AUTHORITY=authority
 ENV CLIENT_ID=clientID
-ENV CLIENT_SECRET=clientSecret
+ENV CLIENT_SECRET=null
 
 FROM build AS publish
 COPY . ./

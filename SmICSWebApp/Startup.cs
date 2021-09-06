@@ -61,9 +61,9 @@ namespace SmICSWebApp
             .AddCookie("Cookies")
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
-                options.Authority = "https://keycloak.mh-hannover.local:8443/auth/realms/Better";//Environment.GetEnvironmentVariable("AUTHORITY");
-                options.ClientId = "medic-c-t";//Environment.GetEnvironmentVariable("CLIENT_ID");
-                options.ClientSecret = null;// Environment.GetEnvironmentVariable("CLIENT_SECRET");
+                options.Authority = Environment.GetEnvironmentVariable("AUTHORITY"); //"https://keycloak.mh-hannover.local:8443/auth/realms/Better";
+                options.ClientId = Environment.GetEnvironmentVariable("CLIENT_ID"); //"medic-c-t";
+                options.ClientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET"); //null;
 
                 options.ResponseType = "code";
                 options.Scope.Clear();
@@ -94,13 +94,13 @@ namespace SmICSWebApp
             services.AddAuthentication()
             .AddJwtBearer(options =>
             {
-                options.Authority = "https://keycloak.mh-hannover.local:8443/auth/realms/Better";
+                options.Authority = Environment.GetEnvironmentVariable("AUTHORITY");//"https://keycloak.mh-hannover.local:8443/auth/realms/Better";
                 options.RequireHttpsMetadata = true;
                 // name of the API resource
                 options.Audience = "account";
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidIssuer = "https://keycloak.mh-hannover.local:8443/auth/realms/Better",
+                    ValidIssuer = Environment.GetEnvironmentVariable("AUTHORITY"),//"https://keycloak.mh-hannover.local:8443/auth/realms/Better",
                     ValidAudience = "account"
                     //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])) 
                 };
