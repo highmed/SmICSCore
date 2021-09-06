@@ -29,6 +29,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authentication.Certificate;
 using SmICSCoreLib.Authentication;
 using SmICSCWebApp.Authentication;
+using Microsoft.AspNetCore.Http;
 
 namespace SmICSWebApp
 {
@@ -46,12 +47,12 @@ namespace SmICSWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<TokenProvider>();
-            services.AddAuthentication(
+            /*services.AddAuthentication(
                   CertificateAuthenticationDefaults.AuthenticationScheme)
               .AddCertificate(options =>
               {
                   options.AllowedCertificateTypes = CertificateTypes.All;
-              });
+              });*/
 
             services.AddAuthentication(options =>
             {
@@ -61,9 +62,14 @@ namespace SmICSWebApp
             .AddCookie("Cookies")
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
-                options.Authority = Environment.GetEnvironmentVariable("AUTHORITY"); //"https://keycloak.mh-hannover.local:8443/auth/realms/Better";
-                options.ClientId = Environment.GetEnvironmentVariable("CLIENT_ID"); //"medic-c-t";
-                options.ClientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET"); //null;
+
+                options.Authority = Environment.GetEnvironmentVariable("AUTHORITY"); 
+                options.ClientId = Environment.GetEnvironmentVariable("CLIENT_ID"); 
+                options.ClientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET");
+
+                //options.Authority = "https://keycloak.mh-hannover.local:8443/auth/realms/Better";
+                options.ClientId = "medic-c-t";
+                options.ClientSecret = null;
 
                 options.ResponseType = "code";
                 options.Scope.Clear();
@@ -74,6 +80,9 @@ namespace SmICSWebApp
 
                 options.SaveTokens = true;
                 options.GetClaimsFromUserInfoEndpoint = true;
+
+                options.NonceCookie.SameSite = SameSiteMode.Unspecified;
+                options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
 
                 options.Events = new OpenIdConnectEvents
                 {
@@ -94,13 +103,15 @@ namespace SmICSWebApp
             services.AddAuthentication()
             .AddJwtBearer(options =>
             {
-                options.Authority = Environment.GetEnvironmentVariable("AUTHORITY");//"https://keycloak.mh-hannover.local:8443/auth/realms/Better";
+                options.Authority = Environment.GetEnvironmentVariable("AUTHORITY");
+                //options.Authority = "https://keycloak.mh-hannover.local:8443/auth/realms/Better";
                 options.RequireHttpsMetadata = true;
                 // name of the API resource
                 options.Audience = "account";
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidIssuer = Environment.GetEnvironmentVariable("AUTHORITY"),//"https://keycloak.mh-hannover.local:8443/auth/realms/Better",
+                    ValidIssuer = Environment.GetEnvironmentVariable("AUTHORITY"),
+                    //ValidIssuer = "https://keycloak.mh-hannover.local:8443/auth/realms/Better",
                     ValidAudience = "account"
                     //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])) 
                 };
@@ -175,7 +186,8 @@ namespace SmICSWebApp
                 app.UseHsts();
             }
 
-            OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
+            //OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
+            OpenehrConfig.openehrEndpoint = "https://medic-c-t.mh-hannover.local:8083/rest/openehr/v1";
 
             app.UseSwagger();
 
@@ -184,9 +196,8 @@ namespace SmICSWebApp
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "AQL API");
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
-
 
             app.UseAuthentication();
             app.Use(async (context, next) =>
