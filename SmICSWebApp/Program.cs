@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -24,6 +25,7 @@ namespace SmICSWebApp
                 .CreateLogger();
             try
             {
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
                 Log.Information("SmICS Application Starting up");
                 CreateHostBuilder(args).Build().Run();
             }

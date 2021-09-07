@@ -91,7 +91,7 @@ namespace SmICSWebApp
                 //Need to implement Certificates
                 options.NonceCookie.SameSite = SameSiteMode.Unspecified;
                 options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
-                options.BackchannelHttpHandler = new HttpClientHandler { ServerCertificateCustomValidationCallback = delegate { return true; } };
+                //options.BackchannelHttpHandler = new HttpClientHandler { ServerCertificateCustomValidationCallback = delegate { return true; } };
                 //UNSAFE - END
                 options.Events = new OpenIdConnectEvents
                 {
