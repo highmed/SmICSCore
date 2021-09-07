@@ -31,6 +31,7 @@ using SmICSCoreLib.Authentication;
 using SmICSCWebApp.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Logging;
+using System.Net;
 
 namespace SmICSWebApp
 {
@@ -47,14 +48,16 @@ namespace SmICSWebApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             IdentityModelEventSource.ShowPII = true;
 
             services.AddScoped<TokenProvider>();
             services.AddAuthentication(
                   CertificateAuthenticationDefaults.AuthenticationScheme)
               .AddCertificate(options =>
-              {
+              { 
                   options.AllowedCertificateTypes = CertificateTypes.All;
+                  options.ValidateCertificateUse = false;
               });
 
             services.AddAuthentication(options =>
