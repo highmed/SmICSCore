@@ -32,6 +32,7 @@ using SmICSCWebApp.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Logging;
 using System.Net;
+using System.Net.Http;
 
 namespace SmICSWebApp
 {
@@ -48,7 +49,6 @@ namespace SmICSWebApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             IdentityModelEventSource.ShowPII = true;
 
             services.AddScoped<TokenProvider>();
@@ -57,13 +57,13 @@ namespace SmICSWebApp
               .AddCertificate(options =>
               { 
                   options.AllowedCertificateTypes = CertificateTypes.All;
-                  options.ValidateCertificateUse = false;
+                  
               });
 
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme
             })
             .AddCookie("Cookies")
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
@@ -76,7 +76,7 @@ namespace SmICSWebApp
                 options.Authority = "https://keycloak.mh-hannover.local:8443/auth/realms/Better";
                 options.ClientId = "medic-c-t";
                 options.ClientSecret = null;
-
+                
                 options.ResponseType = "code";
                 options.Scope.Clear();
                 options.Scope.Add("openid");
@@ -87,9 +87,12 @@ namespace SmICSWebApp
                 options.SaveTokens = true;
                 options.GetClaimsFromUserInfoEndpoint = true;
 
+                //UNSAFE - BEGIN 
+                //Need to implement Certificates
                 options.NonceCookie.SameSite = SameSiteMode.Unspecified;
                 options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
-
+                options.BackchannelHttpHandler = new HttpClientHandler { ServerCertificateCustomValidationCallback = delegate { return true; } };
+                //UNSAFE - END
                 options.Events = new OpenIdConnectEvents
                 {
 
