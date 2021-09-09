@@ -11,7 +11,7 @@ namespace SmICSWebApp.Data.Contact
 {
     public class ContactService
     {
-        public List<Contact> GetContacts(ContactModel contactInformation, Case RootPatient)
+/*        public List<Contact> GetContacts(ContactModel contactInformation, Case RootPatient)
         {
             List<PatientMovementModel> RootPatientsLocations = contactInformation.PatientMovements.Where(move => move.PatientID == RootPatient.PatientID).ToList();
             List<string> wards = RootPatientsLocations.Select(location => location.StationID).ToList();
@@ -42,7 +42,7 @@ namespace SmICSWebApp.Data.Contact
                     }
                 }
             }
-        }
+        }*/
 
         private DateTime[] OverlappingDates(PatientMovementModel movement, List<PatientMovementModel> RootPatientsLocations)
         {

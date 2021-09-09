@@ -45,6 +45,7 @@
 </div>
 
 
+     
 @if (data != null)
 {
     <div class="row">
@@ -70,29 +71,27 @@
                         {
                             <tr>
                                 <td class="text-center">
-                                    @item.LabData.PatientID
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton@(item.LabData.PatientID)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton@(item.LabData.PatientID)">
-                                        <li><a class="dropdown-item" href="/Patient/@item.LabData.PatientID">Patienteninformationen</a></li>
-                                        <li><a class="dropdown-item" href="/Kontakt/@item.LabData.PatientID">Kontaktnachverfolgung</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                            @if (item.PatientData != null)
-                            {
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            }
-                            <td class="text-center">@item.LabData.OnWard</td>
-                            <td class="text-center">@item.LabData.Nosokomial</td>
-                            <td class="text-center">@item.LabData.TestDate</td>
-                        </tr>
-                    }
+                                    <ContextMenu Id="@item.LabData.PatientID">
+                                        <Item OnClick="@OnContextClick">Patientenansicht</Item>
+                                        <Item OnClick="@OnContextClick">Kontakte</Item>
+                                    </ContextMenu>
+
+                                    <ContextMenuTrigger MenuId="@item.LabData.PatientID">
+                                        @item.LabData.PatientID
+                                    </ContextMenuTrigger>
+                                </td>
+                                @if (item.PatientData != null)
+                                {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                }
+                                <td class="text-center">@item.LabData.OnWard</td>
+                                <td class="text-center">@item.LabData.Nosokomial</td>
+                                <td class="text-center">@item.LabData.TestDate</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
@@ -120,8 +119,10 @@
 
     private string[] XAxisLabels { get; set; }
 
+    private bool isLoading = false;
     private void Submit()
     {
+        isLoading = true;
         data = _service.GetData(parameter);
 
         _chart = new BarConfig
@@ -137,14 +138,14 @@
                 Scales = new BarScales
                 {
                     XAxes = new List<CartesianAxis>
-                    {
+                {
                         new BarCategoryAxis
                         {
                             Stacked = true
                         }
                     },
                     YAxes = new List<CartesianAxis>
-                    {
+                {
                         new BarLinearCartesianAxis
                         {
                             Stacked = true
@@ -182,6 +183,8 @@
         _chart.Data.Datasets.Add(NosokomialOnWard);
         _chart.Data.Datasets.Add(NosokomialOtherWard);
         _chart.Data.Datasets.Add(Known);
+
+        isLoading = false;
     }
 
     private void GetXAxisLabels()
@@ -248,5 +251,10 @@
             }
         }
         return false;
+    }
+
+    private void OnContextClick(ItemClickEventArgs e)
+    {
+        Console.WriteLine($"Item Clicked => Menu: {e.ContextMenuId}, MenuTarget: {e.ContextMenuTargetId}, IsCanceled: {e.IsCanceled}, MenuItem: {e.MenuItemElement}, MouseEvent: {e.MouseEvent}");
     }
 }

@@ -78,7 +78,7 @@ namespace SmICSCoreLib.AQL.Algorithm.NEC
                 NECPatientLabDataModel necPatientLabData = new NECPatientLabDataModel();
                 necPatientLabData.PatientID = patientLabData.PatientID;
                 necPatientLabData.Befund = patientLabData.Befund;
-                necPatientLabData.Befunddatum = patientLabData.Befunddatum;
+                necPatientLabData.Befunddatum = patientLabData.Befunddatum.Value;
                 necPatientLabData.KeimID = patientLabData.KeimID;
                 necPatientLabData.MaterialID = patientLabData.MaterialID;
                 necPatientLabData.ZeitpunktProbeentnahme = patientLabData.ZeitpunktProbenentnahme;

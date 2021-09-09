@@ -32,11 +32,11 @@ namespace SmICSWebApp
             services.AddControllers().AddNewtonsoftJson();
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddBlazorContextMenu();
             services.AddSmICSLibrary();
             services.AddSingleton<MibiViewService>();
             services.AddSingleton<DataService>();
             services.AddSingleton<Symptom>();
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AQL API", Version = "v1" });
