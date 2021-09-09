@@ -1,0 +1,48 @@
+﻿@page "/patient/{PatientID}"
+
+@using SmICSCoreLib.AQL.PatientInformation.PatientData;
+@using SmICSWebApp.Data;
+
+@inject IPatientDataFactory _patientData;
+@inject PatientViewService _service;
+ 
+@if (patient == null)
+{
+    <h3>Patient: @PatientID</h3>
+}
+else
+{
+    <h3>Patient: @patient.Name</h3>
+}
+
+@if(patientView != null)
+{
+    @foreach(string Case in Cases)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            @Case
+                        </button>
+                    </h5>
+                </div>
+                <div class="card-body">
+
+                </div>
+            </div>
+        }
+}
+@code {
+    [Parameter]
+    public string PatientID { get; set; }
+
+    private PatientData patient;
+    private PatientViewModel patientView;
+    protected override void OnInitialized()
+    {
+        //patient = _patientData.Process(PatientID);
+        patientView = _service.LoadData(PatientID);
+    }
+
+}
