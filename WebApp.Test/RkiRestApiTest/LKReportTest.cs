@@ -1,4 +1,5 @@
-﻿using SmICSCoreLib.StatistikDataModels;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using SmICSCoreLib.StatistikDataModels;
 using SmICSCoreLib.StatistikServices;
 using System;
 using Xunit;
@@ -7,7 +8,7 @@ namespace WebApp.Test
 {
     public class LKReportTest
     {
-        RkiService rkiRestApi = new();
+        RkiService rkiRestApi = new(NullLogger<RkiService>.Instance);
 
         [Fact]
         public void LKReportSerializeTest()

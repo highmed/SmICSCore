@@ -26,8 +26,8 @@ namespace WebApp.Test.DataServiceTest
 
             IPatientInformation patientInformation = CreatePatientInformation(_data);
             IPatinet_Stay patinet_Stay = CreatePatinetStay(_data); ;
-            EhrDataService dataService = new (patinet_Stay, patientInformation);
-            List<CountDataModel> positivTestList= dataService.GetAllPositivTest();
+            EhrDataService dataService = new (patinet_Stay, patientInformation, NullLogger<EhrDataService>.Instance);
+            List<CountDataModel> positivTestList= dataService.GetAllPositivTest("260373001");
             List<CountDataModel> positivPatList= dataService.GetAllPatByTest(positivTestList);
 
             int actual = dataService.PatStay(positivPatList);

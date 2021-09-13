@@ -1,4 +1,4 @@
-﻿using SmICSCoreLib.JSONFileStream;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using SmICSCoreLib.StatistikDataModels;
 using SmICSCoreLib.StatistikServices;
 using System;
@@ -8,7 +8,7 @@ namespace WebApp.Test
 {
     public class BLReportTest
     {
-        RkiService rkiRestApi = new();
+        RkiService rkiRestApi = new(NullLogger<RkiService>.Instance);
 
         [Fact]
         public void BLReportSerializeTest()

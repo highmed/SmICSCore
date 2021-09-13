@@ -4,11 +4,12 @@
 @using System.ComponentModel.DataAnnotations
 @using SmICSCoreLib.AQL.PatientInformation.PatientMovement
 @using SmICSCoreLib.AQL.Patient_Stay.Stationary
-
+@using SmICSCoreLib.StatistikDataModels;
+@using Microsoft.Extensions.Logging
+@inject ILogger<Symptom> Logger
 @inject SmICSCoreLib.StatistikServices.SymptomService symptomService
 @inject SmICSCoreLib.StatistikServices.EhrDataService ehrDataService
 
-@*<h3>Statistik (Prototyp)</h3>*@
 
 <div class="card">
     <div class="row">
@@ -451,6 +452,7 @@
 
         if (allSymGroup == null && status == true)
         {
+            Logger.LogWarning("Symptome.razor: EhrData stehen am " + DateTime.Now.ToString("yyyy-MM-dd") + " nicht zu Verfügung!");
             allSymGroup = null;
             status = false;
         }
@@ -465,10 +467,17 @@
             if (allSymGroup == null)
             {
                 status = false;
+                Logger.LogWarning("Ehr-Datan stehen nicht zur Verfügung!");
             }
+            else
+            {
+                Logger.LogInformation("Ehr-Datan wurden erfolgreich heruntergeladen");
+            }
+
         }
         catch (Exception)
         {
+            Logger.LogWarning("Ehr-Datan stehen nicht zur Verfügung!");
             status = false;
         }
     }
@@ -476,6 +485,7 @@
     private void GetPatListBySta(string symptomName, string station)
     {
         patListBySym = symptomService.GetAllPatBySta(symptomName, symptomData.datum, station);
+        Logger.LogInformation("Ehr-Datan wurden erfolgreich heruntergeladen");
     }
 
     private void NextFirst()

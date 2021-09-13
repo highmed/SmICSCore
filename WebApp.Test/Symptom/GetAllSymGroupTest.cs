@@ -30,7 +30,7 @@ namespace WebApp.Test.Symptom
 
             IPatientInformation patientInformation = CreatePatientInformation(_data);
             IPatinet_Stay patinet_Stay = CreatePatinetStay(_data); ;
-            EhrDataService dataService = new (patinet_Stay, patientInformation);
+            EhrDataService dataService = new (patinet_Stay, patientInformation, NullLogger<EhrDataService>.Instance);
             SymptomService symptomService = new (patientInformation, dataService);
 
             Dictionary<string, Dictionary<string, int>> actual = symptomService.GetAllSymGroup(datum, min);

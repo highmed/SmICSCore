@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using Newtonsoft.Json;
 using SmICSCoreLib.JSONFileStream;
 using SmICSCoreLib.StatistikDataModels;
 using SmICSCoreLib.StatistikServices;
@@ -9,7 +10,7 @@ namespace WebApp.Test
 {
     public class DistrictTest
     {
-        RkiService rkiRestApi = new();
+        RkiService rkiRestApi = new(NullLogger<RkiService>.Instance);
 
         [Fact]
         public void CkeckRespone()

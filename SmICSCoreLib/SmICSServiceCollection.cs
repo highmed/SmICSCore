@@ -14,8 +14,6 @@ using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
 using SmICSCoreLib.AQL.Patient_Stay;
 using SmICSCoreLib.AQL.Patient_Stay.Stationary;
 using SmICSCoreLib.AQL.Patient_Stay.Count;
-using SmICSCoreLib.AQL.Patient_Stay.Cases;
-using SmICSCoreLib.AQL.Patient_Stay.WeekCase;
 using SmICSCoreLib.AQL.Employees;
 using SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl;
 using SmICSCoreLib.AQL.Employees.ContactTracing;
@@ -53,8 +51,6 @@ namespace SmICS
             services.AddTransient<IStationaryFactory, StationaryFactory>();
             services.AddTransient<IPatinet_Stay, Patinet_Stay>();
             services.AddTransient<ICountFactory, CountFactory>();
-            services.AddTransient<ICaseFactory, CaseFactory>();
-            services.AddTransient<IWeekCaseFactory, WeekCaseFactory>();
 
             services.AddTransient<IInfectionSituationFactory, InfectionSituationFactory>();
 

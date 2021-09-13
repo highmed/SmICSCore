@@ -8,28 +8,36 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Microsoft.Extensions.Logging;
 
 namespace SmICSCoreLib.StatistikServices
 {
     public class RkiService
     {
-        private readonly RestClient client = new();
+        private readonly RestClient _client = new();
+        private readonly ILogger<RkiService> _logger;
+        public RkiService(ILogger<RkiService> logger)
+        {
+            _logger = logger;
+        }
+
 
         //Get Data From RKI REST API
-
         public StateData GetStateData(int blId)
         {
             try
             {
-                client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/rki_key_data_hubv/FeatureServer/0/query?where=AdmUnitId ='" + blId + "'&outFields=AnzFall,AnzTodesfall,AnzFallNeu,AnzTodesfallNeu,Inz7T&outSR=4326&f=json";
-
-                string response = client.GetResponse();
+                _client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/rki_key_data_hubv/FeatureServer/0/query?where=AdmUnitId ='" + blId +
+                "'&outFields=AnzFall,AnzTodesfall,AnzFallNeu,AnzTodesfallNeu,Inz7T&outSR=4326&f=json";
+                string response = _client.GetResponse();
                 var obj = JsonConvert.DeserializeObject<StateData>(response);
 
+                _logger.LogInformation("GetStateData");
                 return obj;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogWarning("GetStateData " + e.Message);
                 return null;
             }
         }
@@ -38,17 +46,17 @@ namespace SmICSCoreLib.StatistikServices
         {
             try
             {
-                client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/Coronaf%C3%A4lle_in_den_Bundesl%C3%A4ndern/FeatureServer/0/query?" +
-              "where=1=1&outFields=OBJECTID_1, LAN_ew_GEN, LAN_ew_BEZ, LAN_ew_EWZ, Fallzahl, faelle_100000_EW, Death, cases7_bl_per_100k, Aktualisierung&returnGeometry=false&outSR=4326&f=json";
-
-                string response = client.GetResponse();
+                _client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/Coronaf%C3%A4lle_in_den_Bundesl%C3%A4ndern/FeatureServer/0/query?" +
+                "where=1=1&outFields=OBJECTID_1, LAN_ew_GEN, LAN_ew_BEZ, LAN_ew_EWZ, Fallzahl, faelle_100000_EW, Death, cases7_bl_per_100k, Aktualisierung&returnGeometry=false&outSR=4326&f=json";
+                string response = _client.GetResponse();
                 var obj = JsonConvert.DeserializeObject<State>(response);
 
+                _logger.LogInformation("GetAllStates");
                 return obj;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                _logger.LogWarning("GetAllStates " + e.Message);
                 return null;
             }
         }
@@ -57,16 +65,17 @@ namespace SmICSCoreLib.StatistikServices
         {
             try
             {
-                client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/Coronaf%C3%A4lle_in_den_Bundesl%C3%A4ndern/FeatureServer/0/query?where=LAN_ew_GEN='" +
+                _client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/Coronaf%C3%A4lle_in_den_Bundesl%C3%A4ndern/FeatureServer/0/query?where=LAN_ew_GEN='" +
                 bl + "'&outFields=OBJECTID_1, LAN_ew_GEN, LAN_ew_BEZ, LAN_ew_EWZ, Fallzahl,cases7_bl, faelle_100000_EW, Death, death7_bl, cases7_bl_per_100k, Aktualisierung&returnGeometry=false&outSR=4326&f=json";
-
-                string response = client.GetResponse();
+                string response = _client.GetResponse();
                 var obj = JsonConvert.DeserializeObject<State>(response);
 
+                _logger.LogInformation("GetStateByName");
                 return obj;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogWarning("GetStateByName " + e.Message);
                 return null;
             }
         }
@@ -75,16 +84,17 @@ namespace SmICSCoreLib.StatistikServices
         {
             try
             {
-                client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=BL='" +
-                    bl + "'&outFields=*&outSR=4326&f=json&returnGeometry=false";
-
-                string response = client.GetResponse();
+                _client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=BL='" +
+                bl + "'&outFields=*&outSR=4326&f=json&returnGeometry=false";
+                string response = _client.GetResponse();
                 var obj = JsonConvert.DeserializeObject<District>(response);
 
+                _logger.LogInformation("GetDistrictsByStateName");
                 return obj;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogWarning("GetDistrictsByStateName " + e.Message);
                 return null;
             }
         }
@@ -93,17 +103,17 @@ namespace SmICSCoreLib.StatistikServices
         {
             try
             {
-                client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=GEN='" +
+                _client.EndPoint = "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=GEN='" +
                 gen + "'&outFields=*&outSR=4326&f=json&returnGeometry=false";
-
-                string response = client.GetResponse();
+                string response = _client.GetResponse();
                 var obj = JsonConvert.DeserializeObject<District>(response);
 
+                _logger.LogInformation("GetDcistrictByName");
                 return obj;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                _logger.LogWarning("GetDcistrictByName " + e.Message);
                 return null;
             }
         }
@@ -121,10 +131,12 @@ namespace SmICSCoreLib.StatistikServices
                 using var reader = ExcelReaderFactory.CreateReader(stream);
                 var result = reader.AsDataSet();
 
+                _logger.LogInformation("GetDataSetFromLink");
                 return result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogWarning("GetDataSetFromLink " + e.Message);
                 return null;
             }
         }
@@ -142,10 +154,12 @@ namespace SmICSCoreLib.StatistikServices
                 using var reader = ExcelReaderFactory.CreateCsvReader(stream);
                 var result = reader.AsDataSet();
 
+                _logger.LogInformation("GetCsvDataSet");
                 return result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogWarning("GetCsvDataSet " + e.Message);
                 return null;
             }
         }
@@ -157,7 +171,6 @@ namespace SmICSCoreLib.StatistikServices
             string rValu;
             try
             {
-                //String url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Projekte_RKI/Nowcasting_Zahlen.xlsx?__blob=publicationFile";
                 string url = "https://raw.githubusercontent.com/robert-koch-institut/SARS-CoV-2-Nowcasting_und_-R-Schaetzung/main/Nowcast_R_aktuell.csv";
                 var result = GetCsvDataSet(url);
                 var dataRows = result.Tables[0].Rows;
@@ -166,13 +179,15 @@ namespace SmICSCoreLib.StatistikServices
                 {
                     rValu = rValu.Insert(0, "0");
                 }
+
+                _logger.LogInformation("GetRValue");
                 return rValu;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogWarning("GetRValue " + e.Message);
                 return null;
             }
-
         }
 
         public Bericht GetBerichtFromUrl(string url)
@@ -284,98 +299,111 @@ namespace SmICSCoreLib.StatistikServices
                         }
                         catch (Exception)
                         {
+                            _logger.LogWarning("ImpfStatus is false");
                             bericht.ImpfStatus = false;
                         }
                     }
 
                     bericht.StandAktuell = true;
+                    _logger.LogInformation("GetBerichtFromUrl");
                     return bericht;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    _logger.LogWarning("GetBerichtFromUrl " + e.Message);
                     bericht.StandAktuell = false;
                     return null;
                 }
             }
             else
             {
-                //bericht.StandAktuell = false;
+                _logger.LogWarning("GetDataSetFromLink Result is null");
                 return null;
             }
         }
 
         public bool SerializeRkiData(string path)
         {
-            //string path = @"../SmICSWebApp/Resources/statistik/json";
-            if (!Directory.Exists(path))
+            try
             {
-                Directory.CreateDirectory(path);
-            }
-
-            string filename = DateTime.Now.ToString("yyyy-MM-dd");
-            string filePath = path + "/" + filename + ".json";
-            bool status = false;
-            string url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile";
-            if (!File.Exists(filePath))
-            {
-                DailyReport dailyReport = new();
-                Bericht bericht = GetBerichtFromUrl(url);
-
-                if (bericht != null)
+                if (!Directory.Exists(path))
                 {
-                    dailyReport.Bericht = bericht;
-                    JSONWriter.Write(dailyReport, path, filename);
-                    status = true;
+                    Directory.CreateDirectory(path);
                 }
-                else
-                {
-                    status = false;
-                }
-            }
-            else
-            {
-                try
-                { 
-                    DailyReport lastReport = DeserializeRkiData(filePath);
-                    bool standAktuell = lastReport.Bericht.StandAktuell;
-                    string stand = lastReport.Bericht.Stand.Substring(0, 10);
-                    string date = DateTime.Now.ToString("dd.MM.yyyy");
 
-                    if (standAktuell == false)
+                string filename = DateTime.Now.ToString("yyyy-MM-dd");
+                string filePath = path + "/" + filename + ".json";
+                bool status = false;
+                string url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile";
+                if (!File.Exists(filePath))
+                {
+                    DailyReport dailyReport = new();
+                    Bericht bericht = GetBerichtFromUrl(url);
+                    if (bericht != null)
                     {
-                        DailyReport dailyReport = new();
-                        Bericht bericht = GetBerichtFromUrl(url);
-                        if (bericht != null)
-                        {
-                            dailyReport.Bericht = bericht;
-                            JSONWriter.Write(dailyReport, path, filename);
-                            status = true;
-                        }
-                        else
-                        {
-                            status = false;
-                        }
-                    }
-                    else if (stand != date)
-                    {
-                        DailyReport dailyReport = new();
-                        Bericht bericht = GetBerichtFromUrl(url);
                         dailyReport.Bericht = bericht;
                         JSONWriter.Write(dailyReport, path, filename);
                         status = true;
                     }
                     else
                     {
-                        status = true;
+                        _logger.LogWarning("GetBerichtFromUrl Result is null");
+                        status = false;
                     }
                 }
-                catch (Exception)
+                else
                 {
-                    status = false;
-                }
-            }
+                    try
+                    {
+                        DailyReport lastReport = DeserializeRkiData(filePath);
+                        bool standAktuell = lastReport.Bericht.StandAktuell;
+                        string stand = lastReport.Bericht.Stand.Substring(0, 10);
+                        string date = DateTime.Now.ToString("dd.MM.yyyy");
 
-            return status;
+                        if (standAktuell == false)
+                        {
+                            DailyReport dailyReport = new();
+                            Bericht bericht = GetBerichtFromUrl(url);
+                            if (bericht != null)
+                            {
+                                dailyReport.Bericht = bericht;
+                                JSONWriter.Write(dailyReport, path, filename);
+                                status = true;
+                            }
+                            else
+                            {
+                                _logger.LogWarning("GetBerichtFromUrl Result is null");
+                                status = false;
+                            }
+                        }
+                        else if (stand != date)
+                        {
+                            DailyReport dailyReport = new();
+                            Bericht bericht = GetBerichtFromUrl(url);
+                            dailyReport.Bericht = bericht;
+                            JSONWriter.Write(dailyReport, path, filename);
+                            status = true;
+                        }
+                        else
+                        {
+                            status = true;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogWarning("SerializeRkiData " + e.Message);
+                        status = false;
+                    }
+                }
+
+                _logger.LogInformation("SerializeRkiData");
+                return status;
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("SerializeRkiData " + e.Message);
+                return false;
+            }
         }
 
         public DailyReport DeserializeRkiData(string path)
@@ -383,10 +411,12 @@ namespace SmICSCoreLib.StatistikServices
             try
             {
                 DailyReport dailyReport = JSONReader<DailyReport>.ReadObject(path);
+                _logger.LogInformation("DeserializeRkiData");
                 return dailyReport;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogWarning("DeserializeRkiData " + e.Message);
                 return null;
             }
         }
@@ -445,9 +475,11 @@ namespace SmICSCoreLib.StatistikServices
                     farbe = "#FFFFFF";
                     return farbe;
                 }
+                _logger.LogInformation("SetMapColor");
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogWarning("SetMapColor " + e.Message);
                 farbe = "#FFFFFF";
                 return farbe;
             }
@@ -486,108 +518,126 @@ namespace SmICSCoreLib.StatistikServices
                         return color;
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    //color = "#8CA2AE";
+                    _logger.LogWarning("SetCaseColor " + e.Message);
                     color = "#b0bec5";
                     return color;
                 }
             }
             else
             {
-                //color = "#8CA2AE";
                 color = "#b0bec5";
                 return color;
-            }     
+            }
         }
 
 
         //Get RKI Data from Excel to Json
         public Report GetBLReport(string url, int tabelle, int zeileDatum, int zeileFahlahl, int spalte, int laenge)
         {
-            Report report = new();
-
-            var result = GetDataSetFromLink(url);
-            if (result != null)
+            try
             {
-                ArrayList reportArrayList = new();
-
-                for (int i = zeileFahlahl; i < 19; i++)
+                Report report = new();
+                var result = GetDataSetFromLink(url);
+                if (result != null)
                 {
-                    BLReport blReportObj = new();
-                    blReportObj.BlName = result.Tables[tabelle].Rows[i][0].ToString();
-                    ArrayList blReportArrayList = new();
-                    for (int y = spalte; y < laenge; y++)
-                    {
-                        BLReportAttribute bLReportObj = new();
-                        bLReportObj.Datum = result.Tables[tabelle].Rows[zeileDatum][y].ToString().Substring(0, 10);
-                        try
-                        {
-                            bLReportObj.Fahlzahl = int.Parse(result.Tables[tabelle].Rows[i][y].ToString());
-                        }
-                        catch (Exception)
-                        {
-                            bLReportObj.Fahlzahl = 0;
-                        }
-                        blReportArrayList.Add(bLReportObj);
-                    }
-                    BLReportAttribute[] blReportAttributeArray = (BLReportAttribute[])blReportArrayList.ToArray(typeof(BLReportAttribute));
-                    blReportObj.BLReportAttribute = blReportAttributeArray;
-                    reportArrayList.Add(blReportObj);
-                }
-                BLReport[] blReportArray = (BLReport[])reportArrayList.ToArray(typeof(BLReport));
-                report.Datum = DateTime.Now.ToString("dd.MM.yyyy");
-                report.BLReport = blReportArray;
+                    ArrayList reportArrayList = new();
 
-                return report;
+                    for (int i = zeileFahlahl; i < 19; i++)
+                    {
+                        BLReport blReportObj = new();
+                        blReportObj.BlName = result.Tables[tabelle].Rows[i][0].ToString();
+                        ArrayList blReportArrayList = new();
+                        for (int y = spalte; y < laenge; y++)
+                        {
+                            BLReportAttribute bLReportObj = new();
+                            bLReportObj.Datum = result.Tables[tabelle].Rows[zeileDatum][y].ToString().Substring(0, 10);
+                            try
+                            {
+                                bLReportObj.Fahlzahl = int.Parse(result.Tables[tabelle].Rows[i][y].ToString());
+                            }
+                            catch (Exception)
+                            {
+                                bLReportObj.Fahlzahl = 0;
+                            }
+                            blReportArrayList.Add(bLReportObj);
+                        }
+                        BLReportAttribute[] blReportAttributeArray = (BLReportAttribute[])blReportArrayList.ToArray(typeof(BLReportAttribute));
+                        blReportObj.BLReportAttribute = blReportAttributeArray;
+                        reportArrayList.Add(blReportObj);
+                    }
+                    BLReport[] blReportArray = (BLReport[])reportArrayList.ToArray(typeof(BLReport));
+                    report.Datum = DateTime.Now.ToString("dd.MM.yyyy");
+                    report.BLReport = blReportArray;
+
+                    _logger.LogInformation("GetBLReport");
+                    return report;
+                }
+                else
+                {
+                    _logger.LogWarning("GetBLReport Result is null ");
+                    return null;
+                }
             }
-            else
+            catch (Exception e)
             {
+                _logger.LogWarning("GetBLReport " + e.Message);
                 return null;
-            }
+            }       
         }
 
         public LKReportJson GetLKReport(string url, int tabelle, int zeileDatum, int zeileFahlahl, int spalte, int laenge)
         {
-            LKReportJson lkReportJson = new();
-
-            var result = GetDataSetFromLink(url);
-            if (result != null)
+            try
             {
-                ArrayList reportArrayList = new();
+                LKReportJson lkReportJson = new();
 
-                for (int i = zeileFahlahl; i <= 416; i++)
+                var result = GetDataSetFromLink(url);
+                if (result != null)
                 {
-                    LKReport lkReportObj = new();
-                    lkReportObj.LKName = result.Tables[tabelle].Rows[i][1].ToString();
-                    lkReportObj.AdmUnitId = int.Parse(result.Tables[tabelle].Rows[i][2].ToString());
-                    ArrayList blReportArrayList = new();
-                    for (int y = spalte; y < laenge; y++)
-                    {
-                        LKReportAttribute reportAttribute = new();
-                        reportAttribute.Datum = result.Tables[tabelle].Rows[zeileDatum][y].ToString().Substring(0, 10);
-                        try
-                        {
-                            reportAttribute.Fahlzahl = int.Parse(result.Tables[tabelle].Rows[i][y].ToString());
-                        }
-                        catch (Exception)
-                        {
-                            reportAttribute.Fahlzahl = 0;
-                        }
-                        blReportArrayList.Add(reportAttribute);
-                    }
-                    LKReportAttribute[] lkReportAttributeArray = (LKReportAttribute[])blReportArrayList.ToArray(typeof(LKReportAttribute));
-                    lkReportObj.LKReportAttribute = lkReportAttributeArray;
-                    reportArrayList.Add(lkReportObj);
-                }
-                LKReport[] blReportArray = (LKReport[])reportArrayList.ToArray(typeof(LKReport));
-                lkReportJson.Datum = DateTime.Now.ToString("dd.MM.yyyy");
-                lkReportJson.LKReport = blReportArray;
+                    ArrayList reportArrayList = new();
 
-                return lkReportJson;
+                    for (int i = zeileFahlahl; i <= 416; i++)
+                    {
+                        LKReport lkReportObj = new();
+                        lkReportObj.LKName = result.Tables[tabelle].Rows[i][1].ToString();
+                        lkReportObj.AdmUnitId = int.Parse(result.Tables[tabelle].Rows[i][2].ToString());
+                        ArrayList blReportArrayList = new();
+                        for (int y = spalte; y < laenge; y++)
+                        {
+                            LKReportAttribute reportAttribute = new();
+                            reportAttribute.Datum = result.Tables[tabelle].Rows[zeileDatum][y].ToString().Substring(0, 10);
+                            try
+                            {
+                                reportAttribute.Fahlzahl = int.Parse(result.Tables[tabelle].Rows[i][y].ToString());
+                            }
+                            catch (Exception)
+                            {
+                                reportAttribute.Fahlzahl = 0;
+                            }
+                            blReportArrayList.Add(reportAttribute);
+                        }
+                        LKReportAttribute[] lkReportAttributeArray = (LKReportAttribute[])blReportArrayList.ToArray(typeof(LKReportAttribute));
+                        lkReportObj.LKReportAttribute = lkReportAttributeArray;
+                        reportArrayList.Add(lkReportObj);
+                    }
+                    LKReport[] blReportArray = (LKReport[])reportArrayList.ToArray(typeof(LKReport));
+                    lkReportJson.Datum = DateTime.Now.ToString("dd.MM.yyyy");
+                    lkReportJson.LKReport = blReportArray;
+
+                    _logger.LogInformation("GetLKReport");
+                    return lkReportJson;
+                }
+                else
+                {
+                    _logger.LogWarning("GetLKReport Result is null");
+                    return null;
+                }
             }
-            else
+            catch (Exception e)
             {
+                _logger.LogWarning("GetLKReport " + e.Message);
                 return null;
             }
         }
@@ -603,12 +653,15 @@ namespace SmICSCoreLib.StatistikServices
                 }
                 string filename = ("BLReport");
                 JSONWriter.Write(report, path, filename);
+
+                _logger.LogInformation("BLReportSerialize");
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogWarning("BLReportSerialize " + e.Message);
                 return false;
-            }  
+            }
         }
 
         public bool LKReportSerialize(string path)
@@ -622,26 +675,29 @@ namespace SmICSCoreLib.StatistikServices
                 }
                 string filename = ("LKReport");
                 JSONWriter.Write(lKReportJson, path, filename);
+
+                _logger.LogInformation("LKReportSerialize");
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogWarning("LKReportSerialize " + e.Message);
                 return false;
             }
-
-            
         }
 
         //Update RKI Data with a CronJob
         public Report BLReportDeserialize(string filePath)
         {
-           try
+            try
             {
                 Report blReportJson = JSONReader<Report>.ReadObject(filePath);
+                _logger.LogInformation("BLReportDeserialize");
                 return blReportJson;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogWarning("BLReportDeserialize " + e.Message);
                 return null;
             }
         }
@@ -651,16 +707,18 @@ namespace SmICSCoreLib.StatistikServices
             try
             {
                 LKReportJson lKReportJson = JSONReader<LKReportJson>.ReadObject(filePath);
+                _logger.LogInformation("LKReportDeserialize");
                 return lKReportJson;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogWarning("LKReportDeserialize " + e.Message);
                 return null;
             }
         }
 
         public bool UpdateBlRkidata(string dailyReportPath, string blReportPath, string targetPath, string filename)
-        {     
+        {
             try
             {
                 DailyReport dailyReport = DeserializeRkiData(dailyReportPath);
@@ -700,20 +758,25 @@ namespace SmICSCoreLib.StatistikServices
                         report.Datum = DateTime.Now.ToString("dd.MM.yyyy");
 
                         JSONWriter.Write(report, targetPath, filename);
+
+                        _logger.LogInformation("UpdateBlRkidata");
                         return true;
                     }
                     else
                     {
+                        _logger.LogWarning("UpdateBlRkidata Result is null ");
                         return false;
                     }
                 }
                 else
                 {
+                    _logger.LogWarning("UpdateBlRkidata Result is null");
                     return false;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogWarning("UpdateBlRkidata " + e.Message);
                 return false;
             }
         }
@@ -789,21 +852,25 @@ namespace SmICSCoreLib.StatistikServices
                         report.Datum = DateTime.Now.ToString("dd.MM.yyyy");
 
                         JSONWriter.Write(report, targetPath, filename);
+
+                        _logger.LogInformation("UpdateLklRkidata");
                         return true;
                     }
                     else
                     {
+                        _logger.LogWarning("UpdateLklRkidata Result is null");
                         return false;
                     }
                 }
                 else
                 {
+                    _logger.LogWarning("UpdateLklRkidata Result is null");
                     return false;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogWarning("UpdateLklRkidata " + e.Message);
                 return false;
             }
         }

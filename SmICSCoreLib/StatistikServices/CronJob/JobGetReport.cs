@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Quartz;
 using System;
-
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace SmICSCoreLib.StatistikServices.CronJob
 {
@@ -18,7 +18,7 @@ namespace SmICSCoreLib.StatistikServices.CronJob
         public Task Execute(IJobExecutionContext context)
         {
             string path = @"Resources/statistik/json";
-            RkiService rkiRestApi = new();
+            RkiService rkiRestApi = new(NullLogger<RkiService>.Instance);
             bool status = rkiRestApi.SerializeRkiData(path);
             if (status == true)
             {

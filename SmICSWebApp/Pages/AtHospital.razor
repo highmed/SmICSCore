@@ -4,11 +4,10 @@
 @using SmICSCoreLib.AQL.Patient_Stay.Stationary
 @using SmICSCoreLib.AQL.PatientInformation.PatientMovement
 @using System.ComponentModel.DataAnnotations
-
+@using Microsoft.Extensions.Logging
+@inject ILogger<AtHospital> Logger
 @inject SmICSCoreLib.StatistikServices.EhrDataService ehrDataService
 
-
-@*<h3>Statistik (Prototyp)</h3>*@
 
 <div class="card">
     <div class="row">
@@ -63,7 +62,7 @@
                                                     <th scope="row">@patient.Datum_Uhrzeit_der_Aufnahme</th>
                                                     <td>@patient.FallID</td>
                                                     <td>
-                                                        <a href="" @onclick="() => GetPatMovement(patient.PatientID)" @onclick:preventDefault>
+                                                        <a href="" @onclick="() => GetPatMovements(patient.PatientID)" @onclick:preventDefault>
                                                             @patient.PatientID
                                                         </a>
                                                     </td>
@@ -193,6 +192,7 @@
 
         if (patStationary == null && status == true)
         {
+            Logger.LogWarning("Ehr-Datan stehen nicht zur Verfügung!");
             patStationary = null;
             status = false;
         }
@@ -204,14 +204,16 @@
         {
             patStationary = ehrDataService.StationaryPatByDate(patData.datum);
             sortedPatStationary = patStationary.OrderBy(x => x.Datum_Uhrzeit_der_Aufnahme).ToList();
+            Logger.LogInformation("Ehr-Datan wurden erfolgreich heruntergeladen");
         }
         catch (Exception)
         {
+            Logger.LogWarning("Ehr-Datan stehen nicht zur Verfügung!");
             status = false;
         }
     }
 
-    private void GetPatMovement(string patientId)
+    private void GetPatMovements(string patientId)
     {
         try
         {
@@ -226,9 +228,11 @@
             second = 0;
             indexFirst = 1;
             indexSec = 1;
+            Logger.LogInformation("Ehr-Datan wurden erfolgreich heruntergeladen");
         }
         catch (Exception)
         {
+            Logger.LogWarning("Ehr-Datan stehen nicht zur Verfügung!");
             status = false;
         }
     }

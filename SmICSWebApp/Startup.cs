@@ -33,6 +33,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Logging;
 using System.Net;
 using System.Net.Http;
+using Microsoft.Extensions.Logging;
 
 namespace SmICSWebApp
 {
@@ -139,10 +140,11 @@ namespace SmICSWebApp
             services.AddControllers().AddNewtonsoftJson();
             services.AddRazorPages();
             services.AddServerSideBlazor();
-           
-            services.AddScoped<RkiService>();            
-            services.AddScoped<SymptomService>();
-            services.AddScoped<EhrDataService>();
+            services.AddSmICSLibrary();
+            services.AddLogging();
+            services.AddSingleton<RkiService>();            
+            services.AddSingleton<SymptomService>();
+            services.AddSingleton<EhrDataService>();
 
             //CronJob GetReport
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
@@ -157,7 +159,7 @@ namespace SmICSWebApp
 
             //CronJob UpdateRkidata
             services.AddSingleton<JobUpdateRkidata>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));            
 
             services.AddMvcCore(options =>
             {

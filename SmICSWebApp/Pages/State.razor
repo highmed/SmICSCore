@@ -3,10 +3,9 @@
 @using SmICSCoreLib.StatistikDataModels
 @using SmICSCoreLib.StatistikServices
 @using System;
-
+@using Microsoft.Extensions.Logging
+@inject ILogger<State> Logger
 @inject RkiService rkiService
-
-@*<h3>Statistik (Prototyp)</h3>*@
 
 <div class="card">
     <div class="row">
@@ -462,6 +461,7 @@
 
         if (status == false && standAktuell == true)
         {
+            Logger.LogWarning("RKI-Daten stehen nicht zur Verfügung!");
             status = false;
             standAktuell = false;
         }
@@ -472,6 +472,7 @@
         bool check = rkiService.SerializeRkiData(StatistikPath);
         if (check == false)
         {
+            Logger.LogWarning("RKI-Daten stehen nicht zur Verfügung!");
             status = false;
         }
     }
@@ -522,10 +523,13 @@
 
             inzidenzColor = rkiService.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
             rWertColor = rkiService.SetCaseColor(rWert7Tage, rWert7TageVortag);
+
+            Logger.LogInformation("DailyReport wurde erfolgreich heruntergeladen");
             status = true;
         }
         catch (Exception)
         {
+            Logger.LogWarning("DailyReport koennte nicht heruntergeladen werden!");
             status = true;
             standAktuell = false;
         }
@@ -557,10 +561,12 @@
             {
                 farbe.Add(bundesland.BlAttribute.Farbe);
             }
+            Logger.LogInformation("LastDailyReport wurde erfolgreich heruntergeladen");
             status = true;
         }
         catch (Exception)
         {
+            Logger.LogWarning("LastDailyReport koennte nicht heruntergeladen werden!");
             status = false;
             standAktuell = false;
         }
