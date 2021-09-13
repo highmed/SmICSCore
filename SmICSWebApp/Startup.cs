@@ -49,7 +49,7 @@ namespace SmICSWebApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            IdentityModelEventSource.ShowPII = true;
+            //IdentityModelEventSource.ShowPII = true;
 
             services.AddScoped<TokenProvider>();
             services.AddAuthentication(
@@ -89,8 +89,8 @@ namespace SmICSWebApp
 
                 //UNSAFE - BEGIN 
                 //Need to implement Certificates
-                options.NonceCookie.SameSite = SameSiteMode.Unspecified;
-                options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
+                //options.NonceCookie.SameSite = SameSiteMode.Unspecified;
+                //options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
                 //options.BackchannelHttpHandler = new HttpClientHandler { ServerCertificateCustomValidationCallback = delegate { return true; } };
                 //UNSAFE - END
                 options.Events = new OpenIdConnectEvents
@@ -205,7 +205,7 @@ namespace SmICSWebApp
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "AQL API");
             });
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseAuthentication();
