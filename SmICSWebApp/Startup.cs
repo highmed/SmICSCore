@@ -11,7 +11,6 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using SmICSWebApp.Data;
 using Serilog;
-using MudBlazor.Services;
 
 namespace SmICSWebApp
 {

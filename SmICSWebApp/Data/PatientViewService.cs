@@ -4,6 +4,7 @@ using SmICSCoreLib.AQL.General;
 using System.Collections.Generic;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using System.Linq;
+using System;
 
 namespace SmICSWebApp.Data
 {
@@ -18,28 +19,53 @@ namespace SmICSWebApp.Data
             _move = move;
             _mibi = mibi;
         }
-        public PatientViewModel LoadData(string PatientID)
+        public SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>> LoadData(string PatientID)
         {
             PatientListParameter param = new PatientListParameter { patientList = new List<string> { PatientID } };
-            List<PatientMovementModel> _movements = _move.Process(param);
-            SortedDictionary<string, dynamic> data = GetCasesDictionary(_movements);
-            PatientViewModel patView = new PatientViewModel();
-            patView.Movements = _move.Process(param);
-            patView.LabData = _mibi.Process(param);
+            List<PatientMovementModel> _movements = GetOrderedMovements(param);
+            SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>> data = GetCasesDictionary(_movements);
+            List<MibiLabDataModel> _labData = GetOrderedLabData(param);
+            GetLabDataToCaseID(_labData, data, _movements);
 
-
-            return patView;
+            return data;
         }
 
-        private SortedDictionary<string, dynamic> GetCasesDictionary(List<PatientMovementModel> _movements)
+        #region LoadData Functions
+        private SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>> GetCasesDictionary(List<PatientMovementModel> _movements)
         {
-            List<string> cases = _movements.Where(m => m.BewegungstypID == 1).OrderBy(m => m.Beginn).Select(m => m.FallID).ToList();
-            SortedDictionary<string, dynamic> casesDict = new SortedDictionary<string, dynamic>();
+            List<string> cases = _movements.Where(m => m.BewegungstypID == 1).Select(m => m.FallID).ToList();
+            SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>> casesDict = new SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>>();
             foreach(string _case in cases)
             {
-                casesDict.Add(_case, new { });
+                casesDict.Add(_case, new SortedDictionary<DateTime, PatientViewModel>());
             }
             return casesDict;
         }
+        private void GetLabDataToCaseID(List<MibiLabDataModel> _labData, SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>> data, List<PatientMovementModel> _movements)
+        { 
+            foreach(MibiLabDataModel ld in _labData)
+            {
+                PatientMovementModel associatedMovement = _movements.Where(m => m.Beginn >= ld.ZeitpunktProbenentnahme && m.Ende <= ld.ZeitpunktProbenentnahme).FirstOrDefault();
+                
+                PatientViewModel patView = ld as PatientViewModel;
+                patView.Ward = associatedMovement.StationID;
+                patView.Room = associatedMovement.Raum;
+                patView.Departement = associatedMovement.Fachabteilung;
+
+                data[patView.CaseID].Add(patView.ZeitpunktProbenentnahme, patView);
+
+            }
+        }
+
+        private List<PatientMovementModel> GetOrderedMovements(PatientListParameter param)
+        {
+            return _move.Process(param).OrderBy(m => m.FallID).ThenBy(m => m.BewegungstypID).ThenBy(m => m.Beginn).ToList();
+        }
+
+        private List<MibiLabDataModel> GetOrderedLabData(PatientListParameter param)
+        {
+            return _mibi.Process(param).OrderBy(l => l.CaseID).ThenBy(l => l.ZeitpunktProbenentnahme).ToList();
+        }
+        #endregion
     }
 }

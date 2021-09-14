@@ -1,6 +1,7 @@
 ﻿@page "/patient/{PatientID}"
 
 @using SmICSCoreLib.AQL.PatientInformation.PatientData;
+@using SmICSCoreLib.AQL.MiBi;
 @using SmICSWebApp.Data;
 
 @inject IPatientDataFactory _patientData;
@@ -15,9 +16,9 @@ else
     <h3>Patient: @patient.Name</h3>
 }
 
-@if(patientView != null)
+@if(patientViews != null)
 {
-    @foreach(string Case in Cases)
+    @foreach(string Case in patientViews.Keys)
         {
             <div class="card">
                 <div class="card-header">
@@ -28,7 +29,29 @@ else
                     </h5>
                 </div>
                 <div class="card-body">
-
+                    @foreach(KeyValuePair<DateTime, PatientViewModel> dictEntry in patientViews[Case])
+                    {
+                        <div class="card">
+                            <div class="card-header">
+                                @dictEntry.Key
+                            </div>
+                            <div class="card-body">
+                                <span>@dictEntry.Value.KeimID : @dictEntry.Value.Befund</span>
+                                @foreach (Antibiogram ab in dictEntry.Value.Antibiogram)
+                                {
+                                    <div class="card">
+                                        <div class="card-header">
+                                            @ab.Antibiotic
+                                        </div>
+                                        <div class="card-body">
+                                            @ab.Resistance<br />
+                                            @ab.MinInhibitorConcentration @ab.MICUnit
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         }
@@ -38,11 +61,12 @@ else
     public string PatientID { get; set; }
 
     private PatientData patient;
-    private PatientViewModel patientView;
+    private SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>> patientViews;
+
     protected override void OnInitialized()
     {
         //patient = _patientData.Process(PatientID);
-        patientView = _service.LoadData(PatientID);
+        patientViews = _service.LoadData(PatientID);
     }
 
 }
