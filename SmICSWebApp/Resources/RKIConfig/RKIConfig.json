@@ -1,66 +1,112 @@
 [
   {
+    "ID": "00000000-0000-0000-0000-000000000000",
     "Station": "Gesamtklink",
     "ErregerID": null,
     "Erreger": "SARS-CoV-2",
     "Zeitraum": "8",
     "Retro": true,
-    "Erstellungsdatum": "2021-08-17T09:56:57Z"
+    "Erstellungsdatum": "2021-08-17T09:56:57Z",
+    "Erregerstatus": null
   },
   {
+    "ID": "00000000-0000-0000-0000-000000000000",
     "Station": "Gesamtklink",
     "ErregerID": null,
     "Erreger": "MSSA",
     "Zeitraum": "1",
     "Retro": false,
-    "Erstellungsdatum": "2021-08-17T10:05:34Z"
+    "Erstellungsdatum": "2021-08-17T10:05:34Z",
+    "Erregerstatus": null
   },
   {
+    "ID": "00000000-0000-0000-0000-000000000000",
     "Station": "Gesamtklink",
     "ErregerID": null,
     "Erreger": "Acinetobacter baumannii",
     "Zeitraum": "7",
     "Retro": false,
-    "Erstellungsdatum": "2021-08-17T13:57:12Z"
+    "Erstellungsdatum": "2021-08-17T13:57:12Z",
+    "Erregerstatus": null
   },
   {
+    "ID": "00000000-0000-0000-0000-000000000000",
     "Station": "Gesamtklink",
     "ErregerID": null,
     "Erreger": "MRSA",
     "Zeitraum": "7",
     "Retro": true,
-    "Erstellungsdatum": "2021-08-17T13:57:28Z"
+    "Erstellungsdatum": "2021-08-17T13:57:28Z",
+    "Erregerstatus": null
   },
   {
+    "ID": "00000000-0000-0000-0000-000000000000",
     "Station": "Gesamtklink",
     "ErregerID": null,
     "Erreger": "SARS-CoV-2",
     "Zeitraum": "11",
     "Retro": true,
-    "Erstellungsdatum": "2021-08-17T14:22:45Z"
+    "Erstellungsdatum": "2021-08-17T14:22:45Z",
+    "Erregerstatus": null
   },
   {
+    "ID": "00000000-0000-0000-0000-000000000000",
     "Station": "Gesamtklink",
     "ErregerID": null,
     "Erreger": "Acinetobacter baumannii",
     "Zeitraum": "7",
     "Retro": true,
-    "Erstellungsdatum": "2021-08-18T14:28:30Z"
+    "Erstellungsdatum": "2021-08-18T14:28:30Z",
+    "Erregerstatus": null
   },
   {
+    "ID": "00000000-0000-0000-0000-000000000000",
     "Station": "Gesamtklink",
     "ErregerID": null,
     "Erreger": "Escherichia coli",
     "Zeitraum": "10",
     "Retro": true,
-    "Erstellungsdatum": "2021-08-18T15:05:27Z"
+    "Erstellungsdatum": "2021-08-18T15:05:27Z",
+    "Erregerstatus": null
   },
   {
+    "ID": "00000000-0000-0000-0000-000000000000",
     "Station": "Gesamtklink",
     "ErregerID": null,
     "Erreger": "MRSA",
     "Zeitraum": "6",
     "Retro": true,
-    "Erstellungsdatum": "2021-08-18T15:06:38Z"
+    "Erstellungsdatum": "2021-08-18T15:06:38Z",
+    "Erregerstatus": null
+  },
+  {
+    "ID": "00000000-0000-0000-0000-000000000000",
+    "Station": "Gesamtklink",
+    "ErregerID": null,
+    "Erreger": "SARS-CoV-2",
+    "Zeitraum": "1",
+    "Retro": true,
+    "Erstellungsdatum": "2021-09-15T12:08:13Z",
+    "Erregerstatus": null
+  },
+  {
+    "ID": "00000000-0000-0000-0000-000000000000",
+    "Station": "Gesamtklink",
+    "ErregerID": null,
+    "Erreger": "SARS-CoV-2",
+    "Zeitraum": "4",
+    "Retro": false,
+    "Erstellungsdatum": "2021-09-15T13:11:41Z",
+    "Erregerstatus": "virologisch"
+  },
+  {
+    "ID": "00000000-0000-0000-0000-000000000000",
+    "Station": "Gesamtklink",
+    "ErregerID": null,
+    "Erreger": "MSSA",
+    "Zeitraum": "1",
+    "Retro": true,
+    "Erstellungsdatum": "2021-09-15T13:11:47Z",
+    "Erregerstatus": "mikrologisch"
   }
 ]
