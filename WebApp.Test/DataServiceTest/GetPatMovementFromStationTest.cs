@@ -8,7 +8,6 @@ using SmICSCoreLib.REST;
 using System;
 using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.PatientMovement;
-using SmICSCoreLib.Factories.PatientMovement;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace WebApp.Test.DataServiceTest

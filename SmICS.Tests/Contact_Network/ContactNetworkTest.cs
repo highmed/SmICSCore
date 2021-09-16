@@ -7,7 +7,7 @@ using SmICSCoreLib.Factories.InfectionSituation;
 using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.Factories.Lab.ViroLabData;
 using SmICSCoreLib.Factories.Lab.MibiLabData;
-using SmICSCoreLib.Factories.PatientMovement;
+
 using SmICSCoreLib.Factories.Symptome;
 using SmICSCoreLib.Factories.Vaccination;
 using SmICSCoreLib.REST;

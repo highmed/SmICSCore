@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
 using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.PatientMovement;
-using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.REST;
 using SmICSFactory.Tests;
 using System.Collections;

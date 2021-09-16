@@ -2,7 +2,6 @@
 using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.Factories.Lab.ViroLabData;
-using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;

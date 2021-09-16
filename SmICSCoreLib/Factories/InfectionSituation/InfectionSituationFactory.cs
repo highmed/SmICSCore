@@ -6,7 +6,6 @@ using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.PatientStay.Count;
 using SmICSCoreLib.Factories.PatientStay.Stationary;
 using SmICSCoreLib.Factories.PatientMovement;
-using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.Factories.Symptome;
 using SmICSCoreLib.Factories.Vaccination;
 using SmICSCoreLib.StatistikDataModels;
