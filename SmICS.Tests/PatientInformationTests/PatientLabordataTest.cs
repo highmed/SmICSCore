@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
-using SmICSCoreLib.AQL.General;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
+using SmICSCoreLib.Factories.General;
+using SmICSCoreLib.Factories.Lab.ViroLabData;
 using SmICSCoreLib.REST;
 using SmICSFactory.Tests;
 using System.Collections;
@@ -24,7 +24,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                 patientList = new List<string>() { patient[ehrNo].EHR_ID }
             };
 
-            PatientLabordataFactory factory = new PatientLabordataFactory(_data, NullLogger<PatientLabordataFactory>.Instance);
+            ViroLabDataFactory factory = new ViroLabDataFactory(_data, NullLogger<ViroLabDataFactory>.Instance);
             List<LabDataModel> actual = factory.Process(patientParams);
             List<LabDataModel> expected = GetExpectedLabDataModels(expectedResultSet, ehrNo);
 

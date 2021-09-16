@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using SmICSCoreLib.AQL.PatientInformation.Vaccination;
+using SmICSCoreLib.Factories.Vaccination;
 using System;
 using System.Collections.Generic;
 

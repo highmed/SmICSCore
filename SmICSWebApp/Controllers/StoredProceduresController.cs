@@ -1,27 +1,22 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using SmICSCoreLib.AQL.PatientInformation;
-using SmICSCoreLib.AQL.Contact_Nth_Network;
-using SmICSCoreLib.AQL.Lab;
-using SmICSCoreLib.AQL.Algorithm;
-using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
-using SmICSCoreLib.AQL.PatientInformation.Symptome;
-using SmICSCoreLib.AQL.PatientInformation.Vaccination;
-using SmICSCoreLib.AQL.Employees.ContactTracing;
-using SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl;
-using SmICSCoreLib.AQL.Employees.PersonData;
-using SmICSCoreLib.AQL.Employees;
-using SmICSCoreLib.AQL.General;
-using SmICSCoreLib.AQL.Lab.EpiKurve;
-using SmICSCoreLib.AQL.Algorithm.NEC;
-using SmICSCoreLib.AQL.Patient_Stay;
-using SmICSCoreLib.AQL.Patient_Stay.Stationary;
-using SmICSCoreLib.AQL.Patient_Stay.Count;
+using SmICSCoreLib.Factories.Contact_Nth_Network;
+using SmICSCoreLib.Factories.PatientMovement;
+using SmICSCoreLib.Factories.Lab.ViroLabData;
+using SmICSCoreLib.Factories.Symptome;
+using SmICSCoreLib.Factories.Vaccination;
+using SmICSCoreLib.Factories.Employees.ContactTracing;
+using SmICSCoreLib.Factories.Employees.PersInfoInfecCtrl;
+using SmICSCoreLib.Factories.Employees.PersonData;
+using SmICSCoreLib.Factories.Employees;
+using SmICSCoreLib.Factories.General;
+using SmICSCoreLib.Factories.EpiCurve;
+using SmICSCoreLib.Factories.PatientStay;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using SmICSCoreLib.StatistikDataModels;
+using SmICSCoreLib.Factories.InfectionSituation;
 
 namespace SmICSWebApp.Controllers
 {
@@ -32,22 +27,28 @@ namespace SmICSWebApp.Controllers
     {
         private readonly ILogger<StoredProceduresController> _logger;
         
-        private readonly ILabData _labData;
-        private readonly IPatientInformation _patientInformation;
         private readonly IContactNetworkFactory _contact;
-        private readonly IAlgorithmData _algorithm;
-        private readonly IPatinet_Stay _patinet_Stay;
+        private readonly IPatientStay _patientStay;
         private readonly IEmployeeInformation _employeeinformation;
+        private readonly IViroLabDataFactory _viroLabDataFac;
+        private readonly IPatientMovementFactory _patientMoveFac;
+        private readonly IEpiCurveFactory _epiCurveFac;
+        private readonly IInfectionSituationFactory _infectionSituationFac;
+        private readonly ISymptomFactory _symptomFac;
+        private readonly IVaccinationFactory _vaccinationFac;
 
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, ILabData labData, IPatientInformation patientInformation, IContactNetworkFactory contact, IAlgorithmData algorithm, IPatinet_Stay patinet_Stay, IEmployeeInformation employeeInfo)
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac)
         {
             _logger = logger;
-            _labData = labData;
-            _patientInformation = patientInformation;
             _contact = contact;
-            _algorithm = algorithm;
-            _patinet_Stay = patinet_Stay;
+            _patientStay = patientStay;
             _employeeinformation = employeeInfo;
+            _viroLabDataFac = viroLabDataFac;
+            _patientMoveFac = patientMoveFac;
+            _epiCurveFac = epiCurveFac;
+            _infectionSituationFac = infectionSituationFac;
+            _symptomFac = symptomFac;
+            _vaccinationFac = vaccinationFac;
         }
 
         /// <summary></summary>
@@ -87,7 +88,7 @@ namespace SmICSWebApp.Controllers
             _logger.LogInformation("CALLED Patient_Labordaten_Ps with parameters: PatientIDs: {patList}", parameter.ToAQLMatchString());
             try
             {
-                return _patientInformation.Patient_Labordaten_Ps(parameter);
+                return _viroLabDataFac.Process(parameter);
             }
             catch (Exception e)
             {
@@ -112,7 +113,7 @@ namespace SmICSWebApp.Controllers
 
             try
             {
-                return _patientInformation.Patient_Bewegung_Ps(parameter);
+                return _patientMoveFac.Process(parameter);
             }
             catch (Exception e)
             {
@@ -138,7 +139,7 @@ namespace SmICSWebApp.Controllers
             try
             {
                 EpiCurveParameter epiParams = new EpiCurveParameter() { Endtime = parameter.Endtime, Starttime = parameter.Starttime, PathogenCodes = new List<string>() { "94500-6", "94745-7", "94558-4" } };
-                return _labData.Labor_Epikurve(epiParams);
+                return _epiCurveFac.Process(epiParams);
             }
             catch (Exception e)
             {
@@ -162,7 +163,7 @@ namespace SmICSWebApp.Controllers
 
             try
             {
-                return _patientInformation.Infection_Situation(parameter);
+                return _infectionSituationFac.Process(parameter);
             }
             catch (Exception e)
             {
@@ -302,7 +303,7 @@ namespace SmICSWebApp.Controllers
         {
             try
             {
-                return _patientInformation.Patient_Symptom(parameter);
+                return _symptomFac.Process(parameter);
             }
             catch (Exception e)
             {
@@ -318,7 +319,7 @@ namespace SmICSWebApp.Controllers
         {
             try
             {
-                return _patientInformation.Patient_Vaccination(parameter);
+                return _vaccinationFac.Process(parameter);
             }
             catch (Exception e)
             {

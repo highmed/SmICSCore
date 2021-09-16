@@ -1,4 +1,4 @@
-﻿using SmICSCoreLib.AQL.Patient_Stay.Stationary;
+﻿using SmICSCoreLib.Factories.PatientStay.Stationary;
 using System.Collections.Generic;
 using Xunit;
 using SmICSFactory.Tests;

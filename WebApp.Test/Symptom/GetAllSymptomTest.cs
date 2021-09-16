@@ -1,5 +1,5 @@
 ﻿
-using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.Factories.Symptome;
 using SmICSDataGenerator.Tests;
 using System.Collections.Generic;
 using SmICSFactory.Tests;

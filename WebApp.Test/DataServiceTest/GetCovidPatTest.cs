@@ -3,7 +3,7 @@ using Xunit;
 using SmICSFactory.Tests;
 using SmICSDataGenerator.Tests;
 using SmICSCoreLib.REST;
-using SmICSCoreLib.AQL.Patient_Stay.Count;
+using SmICSCoreLib.Factories.PatientStay.Count;
 
 namespace WebApp.Test.DataServiceTest
 {

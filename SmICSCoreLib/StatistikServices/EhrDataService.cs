@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System;
-using SmICSCoreLib.AQL.Patient_Stay;
-using SmICSCoreLib.AQL.Patient_Stay.Stationary;
-using SmICSCoreLib.AQL.Patient_Stay.Count;
-using SmICSCoreLib.AQL.PatientInformation;
-using SmICSCoreLib.AQL.PatientInformation.Symptome;
-using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
-using SmICSCoreLib.AQL.General;
+using SmICSCoreLib.Factories.PatientStay;
+using SmICSCoreLib.Factories.PatientStay.Stationary;
+using SmICSCoreLib.Factories.PatientStay.Count;
+using SmICSCoreLib.Factories.Symptome;
+using SmICSCoreLib.Factories.PatientMovement;
+using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.StatistikDataModels;
 using Microsoft.Extensions.Logging;
 
@@ -14,15 +13,17 @@ namespace SmICSCoreLib.StatistikServices
 {
     public class EhrDataService
     {
-        private readonly IPatinet_Stay _patinet_Stay;
-        private readonly IPatientInformation _patientInformation;
+        private readonly IPatientStay _patientStay;
+        private readonly IPatientMovementFactory _patientMoveFac;
         private readonly ILogger<EhrDataService> _logger;
+        private readonly ISymptomFactory _symptomFac;
 
-        public EhrDataService(IPatinet_Stay patinet_Stay, IPatientInformation patientInformation, ILogger<EhrDataService> logger)
+        public EhrDataService(IPatientStay patinet_Stay, IPatientMovementFactory patientMoveFac, ISymptomFactory symptomFac, ILogger<EhrDataService> logger)
         {
-            _patinet_Stay = patinet_Stay;
-            _patientInformation = patientInformation;
+            _patientStay = patinet_Stay;
+            _patientMoveFac = patientMoveFac;
             _logger = logger;
+            _symptomFac = symptomFac;
         }
 
         //Load EhrData
@@ -32,7 +33,7 @@ namespace SmICSCoreLib.StatistikServices
         {
             try
             {
-                List<StationaryDataModel> stationaryDatas = _patinet_Stay.Stationary_Stay(patientID, fallID, datum);
+                List<StationaryDataModel> stationaryDatas = _patientStay.Stationary_Stay(patientID, fallID, datum);
                 _logger.LogInformation("StationaryPatForNosku");
                 return stationaryDatas;
             }
@@ -48,7 +49,7 @@ namespace SmICSCoreLib.StatistikServices
         {
             try
             {
-                List<StationaryDataModel> patStationary = _patinet_Stay.StayFromCase(patientID, fallID);
+                List<StationaryDataModel> patStationary = _patientStay.StayFromCase(patientID, fallID);
                 _logger.LogInformation("StationaryPatByCaseID");
                 return patStationary;
             }
@@ -64,7 +65,7 @@ namespace SmICSCoreLib.StatistikServices
         {
             try
             {
-                List<StationaryDataModel> patStationary = _patinet_Stay.StayFromDate(datum);
+                List<StationaryDataModel> patStationary = _patientStay.StayFromDate(datum);
                 _logger.LogInformation("StationaryPatByDate");
                 return patStationary;
             }
@@ -84,7 +85,7 @@ namespace SmICSCoreLib.StatistikServices
                 patientList.Add(patientId);
                 PatientListParameter patListParameter = new();
                 patListParameter.patientList = patientList;
-                List<PatientMovementModel> patientMovement = _patientInformation.Patient_Bewegung_Ps(patListParameter);
+                List<PatientMovementModel> patientMovement = _patientMoveFac.Process(patListParameter);
 
                 _logger.LogInformation("GetPatMovement");
                 return patientMovement;
@@ -103,7 +104,7 @@ namespace SmICSCoreLib.StatistikServices
             {
                 PatientListParameter patListParameter = new();
                 patListParameter.patientList = patientList;
-                List<PatientMovementModel> patientMovement = _patientInformation.Patient_Bewegung_Station(patListParameter, station, starttime, endtime);
+                List<PatientMovementModel> patientMovement = _patientMoveFac.ProcessFromStation(patListParameter, station, starttime, endtime);
                 _logger.LogInformation("GetPatMovementFromStation");
                 return patientMovement;
             }
@@ -119,7 +120,7 @@ namespace SmICSCoreLib.StatistikServices
         {
             try
             {
-                List<CountDataModel> covidPat = _patinet_Stay.CovidPat(nachweis);
+                List<CountDataModel> covidPat = _patientStay.CovidPat(nachweis);
                 _logger.LogInformation("GetCovidPat");
                 return covidPat;
             }
@@ -201,7 +202,7 @@ namespace SmICSCoreLib.StatistikServices
         {
             try
             {
-                SymptomService symptom = new(_patientInformation, this);
+                SymptomService symptom = new(_symptomFac, this);
 
                 List<Patient> patNoskumalList = new();
                 List<string> symptomList = new List<string>(new string[] { "Chill (finding)", "Cough (finding)", "Dry cough (finding)",
