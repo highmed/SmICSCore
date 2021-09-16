@@ -74,7 +74,7 @@ namespace SmICSCoreLib.AQL.MiBi.WardOverview
 
         private bool IsResultFromParameterWard(MibiLabDataModel labDataWithinTime, WardOverviewParameters parameters, Patient patient)
         {
-            PatientLocation location = _rest.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(labDataWithinTime.ZeitpunktProbenentnahme, patient.EHRID)).FirstOrDefault() ?? null;
+            PatientLocation location = _rest.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(labDataWithinTime.ZeitpunktProbenentnahme, patient.PatientID)).FirstOrDefault() ?? null;
             if (location != null && parameters.Ward == location.Ward)
             {
                 return true;
@@ -84,7 +84,7 @@ namespace SmICSCoreLib.AQL.MiBi.WardOverview
 
         private EpisodeOfCareModel getCurrentAdmission(MibiLabDataModel labDataWithinTime, Patient patient)
         {
-            EpsiodeOfCareParameter episodeOfCare = new EpsiodeOfCareParameter() { PatientID = patient.EHRID, CaseID = labDataWithinTime.CaseID };
+            EpsiodeOfCareParameter episodeOfCare = new EpsiodeOfCareParameter() { PatientID = patient.PatientID, CaseID = labDataWithinTime.CaseID };
             EpisodeOfCareModel admission = _rest.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCare))[0];
             return admission;
         }
@@ -114,7 +114,7 @@ namespace SmICSCoreLib.AQL.MiBi.WardOverview
                 Dictionary<Patient, Dictionary<bool, List<MibiLabDataModel>>> labDataForPatients = new Dictionary<Patient, Dictionary<bool, List<MibiLabDataModel>>>();
                 foreach (Patient patient in patients)
                 {
-                    PatientListParameter patList = new PatientListParameter() { patientList = new List<string> { patient.EHRID } };
+                    PatientListParameter patList = new PatientListParameter() { patientList = new List<string> { patient.PatientID } };
                     List<MibiLabDataModel> labData = _mibiLab.Process(patList);
                     foreach (MibiLabDataModel data in labData)
                     {

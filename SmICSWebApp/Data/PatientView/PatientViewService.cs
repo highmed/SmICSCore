@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using System.Linq;
 using System;
+using SmICSWebApp.Data.PatientView.Models;
 
-namespace SmICSWebApp.Data
+namespace SmICSWebApp.Data.PatientView
 {
     public class PatientViewService
     {
@@ -19,40 +20,36 @@ namespace SmICSWebApp.Data
             _move = move;
             _mibi = mibi;
         }
-        public SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>> LoadData(string PatientID)
+        public PatientViewData LoadData(string PatientID)
         {
             PatientListParameter param = new PatientListParameter { patientList = new List<string> { PatientID } };
             List<PatientMovementModel> _movements = GetOrderedMovements(param);
-            SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>> data = GetCasesDictionary(_movements);
+            PatientViewData data = GetCasesDictionary(_movements);
             List<MibiLabDataModel> _labData = GetOrderedLabData(param);
-            GetLabDataToCaseID(_labData, data, _movements);
+            GetLabDataToCaseID(_labData, _movements, data);
 
             return data;
         }
 
         #region LoadData Functions
-        private SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>> GetCasesDictionary(List<PatientMovementModel> _movements)
+        private PatientViewData GetCasesDictionary(List<PatientMovementModel> _movements)
         {
             List<string> cases = _movements.Where(m => m.BewegungstypID == 1).Select(m => m.FallID).ToList();
-            SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>> casesDict = new SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>>();
+            PatientViewData casesDict = new PatientViewData();
             foreach(string _case in cases)
             {
-                casesDict.Add(_case, new SortedDictionary<DateTime, PatientViewModel>());
+                casesDict.Add(new Models.Case { ID = _case }, new LabDataCollection());
             }
             return casesDict;
         }
-        private void GetLabDataToCaseID(List<MibiLabDataModel> _labData, SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>> data, List<PatientMovementModel> _movements)
+        private void GetLabDataToCaseID(List<MibiLabDataModel> _labData, List<PatientMovementModel> _movements, PatientViewData data)
         { 
             foreach(MibiLabDataModel ld in _labData)
             {
-                PatientMovementModel associatedMovement = _movements.Where(m => m.Beginn >= ld.ZeitpunktProbenentnahme && m.Ende <= ld.ZeitpunktProbenentnahme).FirstOrDefault();
+                PatientMovementModel associatedMovement = _movements.Where(m => m.Beginn <= ld.ZeitpunktProbenentnahme && m.Ende >= ld.ZeitpunktProbenentnahme).FirstOrDefault();
                 
-                PatientViewModel patView = ld as PatientViewModel;
-                patView.Ward = associatedMovement.StationID;
-                patView.Room = associatedMovement.Raum;
-                patView.Departement = associatedMovement.Fachabteilung;
-
-                data[patView.CaseID].Add(patView.ZeitpunktProbenentnahme, patView);
+                Models.LabData patView = new Models.LabData(ld, associatedMovement);
+                data[patView.CaseID].Add(new LabMetaData { ReportDate = patView.ZeitpunktProbenentnahme }, patView);
 
             }
         }

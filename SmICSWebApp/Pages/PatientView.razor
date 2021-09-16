@@ -1,72 +1,110 @@
-﻿@page "/patient/{PatientID}"
+﻿@page "/patient"
+@page "/patient/{PatientID}"
 
-@using SmICSCoreLib.AQL.PatientInformation.PatientData;
-@using SmICSCoreLib.AQL.MiBi;
-@using SmICSWebApp.Data;
 
-@inject IPatientDataFactory _patientData;
-@inject PatientViewService _service;
- 
-@if (patient == null)
-{
-    <h3>Patient: @PatientID</h3>
-}
-else
-{
-    <h3>Patient: @patient.Name</h3>
-}
+    @using Blazorise; 
+    @using SmICSCoreLib.AQL.PatientInformation.PatientData;
+    @using SmICSCoreLib.AQL.MiBi;
+    @using SmICSWebApp.Data.PatientView;
+    @using SmICSWebApp.Data.PatientView.Models;
 
-@if(patientViews != null)
-{
-    @foreach(string Case in patientViews.Keys)
+    @inject IPatientDataFactory _patientData;
+    @inject PatientViewService _service;
+    
+<Card>
+    <CardBody>
+        <label>PatientID:</label>
+        <input type="text" @bind-value="@PatientID" />
+        <Button Clicked="@Submit">Submit</Button>
+    </CardBody>
+</Card>
+   
+
+    @if (patient == null)
+    {
+        <h3>Patient: @PatientID</h3>
+    }
+    else
+    {
+        <h3>Patient: @patient.Name</h3>
+    }
+
+    @if (patientViews != null)
+    {
+        @foreach (Case c in patientViews.Keys)
         {
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            @Case
-                        </button>
-                    </h5>
-                </div>
-                <div class="card-body">
-                    @foreach(KeyValuePair<DateTime, PatientViewModel> dictEntry in patientViews[Case])
+            <Collapse Visible="@c.Collapsed">
+                <CollapseHeader>
+                    <Heading Size="HeadingSize.Is5">
+                        <Button Clicked="@(()=>c.Collapsed = !c.Collapsed)">
+                            @c.ID
+                        </Button>
+                    </Heading>
+                </CollapseHeader>
+                <CollapseBody>
+                    @foreach (KeyValuePair<LabMetaData, LabData> dictEntry in patientViews[c])
                     {
-                        <div class="card">
-                            <div class="card-header">
-                                @dictEntry.Key
-                            </div>
-                            <div class="card-body">
+                        <Collapse Visible="@dictEntry.Key.Collapsed">
+                            <CollapseHeader>
+                                <Heading Size="HeadingSize.Is5">
+                                    <Button Clicked="@(()=>dictEntry.Key.Collapsed = !dictEntry.Key.Collapsed)">
+                                        @dictEntry.Key.ReportDate
+                                    </Button>
+                                </Heading>
+                            </CollapseHeader>
+                            <CollapseBody>
                                 <span>@dictEntry.Value.KeimID : @dictEntry.Value.Befund</span>
                                 @foreach (Antibiogram ab in dictEntry.Value.Antibiogram)
                                 {
-                                    <div class="card">
-                                        <div class="card-header">
-                                            @ab.Antibiotic
-                                        </div>
-                                        <div class="card-body">
+                                    <Collapse Visible="@ab.Collapsed">
+                                        <CollapseHeader>
+                                            <Heading Size="HeadingSize.Is5">
+                                                <Button Clicked="@(()=>ab.Collapsed = !ab.Collapsed)">
+                                                    @ab.Antibiotic
+                                                </Button>
+                                            </Heading>
+                                        </CollapseHeader>
+                                        <CollapseBody>
                                             @ab.Resistance<br />
                                             @ab.MinInhibitorConcentration @ab.MICUnit
-                                        </div>
-                                    </div>
+                                        </CollapseBody>
+                                    </Collapse>
                                 }
-                            </div>
-                        </div>
+                            </CollapseBody>
+                        </Collapse>
                     }
-                </div>
-            </div>
+                </CollapseBody>
+            </Collapse>
         }
-}
-@code {
-    [Parameter]
-    public string PatientID { get; set; }
-
-    private PatientData patient;
-    private SortedDictionary<string, SortedDictionary<DateTime, PatientViewModel>> patientViews;
-
-    protected override void OnInitialized()
-    {
-        //patient = _patientData.Process(PatientID);
-        patientViews = _service.LoadData(PatientID);
     }
 
-}
+    @code {
+        [Parameter]
+        public string PatientID { get; set; }
+
+        private PatientData patient;
+        private PatientViewData patientViews;
+
+        protected override void OnParametersSet()
+        {
+            if(PatientID == "" || PatientID == null)
+            {
+                PatientID = "";
+            }
+        }
+
+        protected override void OnInitialized()
+        {
+            if (PatientID != "" || PatientID != null)
+            {
+                //patient = _patientData.Process(PatientID);
+                patientViews = _service.LoadData(PatientID);
+            }
+        }
+
+        private void Submit()
+        {
+            //patient = _patientData.Process(PatientID);
+            patientViews = _service.LoadData(PatientID);
+        }
+    }

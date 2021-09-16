@@ -6,7 +6,6 @@
 @using ChartJs.Blazor.Common
 @using ChartJs.Blazor.Common.Enums
 @using ChartJs.Blazor.Util
-@using System.Drawing;
 
 
 @using SmICSCoreLib.AQL.MiBi.WardOverview
@@ -72,7 +71,7 @@
                             <tr>
                                 <td class="text-center">
                                     <ContextMenu Id="@item.LabData.PatientID">
-                                        <Item OnClick="@OnContextClick">Patientenansicht</Item>
+                                        <Item OnClick="@OnContextClick"><a href="/patient/@(item.LabData.PatientID)">Patientenansicht</a></Item>
                                         <Item OnClick="@OnContextClick">Kontakte</Item>
                                     </ContextMenu>
 
@@ -163,19 +162,19 @@
         IDataset<int> NosokomialOnWard = new BarDataset<int>()
         {
             Label = "Nosokomial",
-            BackgroundColor = ColorUtil.FromDrawingColor(Color.Red)
+            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Red)
         };
 
         IDataset<int> NosokomialOtherWard = new BarDataset<int>()
         {
             Label = "Auf anderer Station nosokomial nachgewiesen",
-            BackgroundColor = ColorUtil.FromDrawingColor(Color.Blue)
+            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue)
         };
 
         IDataset<int> Known = new BarDataset<int>()
         {
             Label = "Bekannter Träger",
-            BackgroundColor = ColorUtil.FromDrawingColor(Color.Green)
+            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Green)
         };
 
         GetXAxisLabels();

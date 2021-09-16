@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <PackageReference Include="Blazor.ContextMenu" Version="1.10.0" />
+    <PackageReference Include="Blazorise.Bootstrap" Version="0.9.4.4" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.9.4.4" />
     <PackageReference Include="ChartJs.Blazor.Fork" Version="2.0.2" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />

@@ -1,3 +1,6 @@
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using SmICSWebApp.Data;
 using Serilog;
+using SmICSWebApp.Data.PatientView;
 
 namespace SmICSWebApp
 {
@@ -27,6 +31,13 @@ namespace SmICSWebApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+             services.AddBlazorise(options =>
+              {
+                  options.ChangeTextOnKeyPress = true; // optional
+                })
+            .AddBootstrapProviders()
+            .AddFontAwesomeIcons();
+
             services.AddControllers();
             services.AddControllers().AddNewtonsoftJson();
             services.AddRazorPages();
@@ -36,6 +47,7 @@ namespace SmICSWebApp
             services.AddSingleton<MibiViewService>();
             services.AddSingleton<DataService>();
             services.AddSingleton<Symptom>();
+            services.AddScoped<PatientViewService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AQL API", Version = "v1" });
