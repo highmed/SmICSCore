@@ -179,6 +179,9 @@
                 }
             }
 
+            RKIConfigForm.Where(x => x.Erreger == "SARS-CoV-2").ToList().ForEach(s => s.Erregerstatus = "virologisch");
+            RKIConfigForm.Where(x => x.Erreger != "SARS-CoV-2").ToList().ForEach(s => s.Erregerstatus = "mikrobiologisch");
+
             RKIConfigService.StoreRules(RKIConfigForm, ZeitpunktList);
             await Task.Run(GetConfigs);
             DynamicFragment.RemoveRange(0, DynamicFragment.Count());

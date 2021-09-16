@@ -18,6 +18,6 @@ namespace SmICSCoreLib.AQL.Lab.RKIConfig
         public bool Retro { get; set; } = false;
         [Required]
         public string Erstellungsdatum { get; set; } = DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
-
+        public string Erregerstatus { get; set; }
     }
 }
