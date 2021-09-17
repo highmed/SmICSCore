@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
-using SmICSCoreLib.AQL.Lab.EpiKurve;
+using SmICSCoreLib.Factories.EpiCurve;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;

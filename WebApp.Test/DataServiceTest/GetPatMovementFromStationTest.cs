@@ -6,9 +6,8 @@ using SmICSDataGenerator.Tests;
 using System.Collections;
 using SmICSCoreLib.REST;
 using System;
-using SmICSCoreLib.AQL.General;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
-using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
+using SmICSCoreLib.Factories.General;
+using SmICSCoreLib.Factories.PatientMovement;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace WebApp.Test.DataServiceTest

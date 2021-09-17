@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.Factories.Symptome;
 using Xunit;
 using SmICSCoreLib.REST;
 using SmICSDataGenerator.Tests;

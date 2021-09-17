@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
-using SmICSCoreLib.AQL.General;
-using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.Factories.General;
+using SmICSCoreLib.Factories.Symptome;
 using SmICSCoreLib.REST;
 using SmICSFactory.Tests;
 using System.Collections;

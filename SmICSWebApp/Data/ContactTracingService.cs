@@ -4,9 +4,9 @@ using SmICSCoreLib.REST;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
-using SmICSCoreLib.AQL.Employees.ContactTracing;
+using SmICSCoreLib.Factories.Employees.ContactTracing;
 using System.Collections.Generic;
-using SmICSCoreLib.AQL;
+using SmICSCoreLib.Factories;
 
 namespace SmICSWebApp.Data
 {

@@ -1,29 +1,24 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using SmICSCoreLib.AQL.PatientInformation;
-using SmICSCoreLib.AQL.Contact_Nth_Network;
-using SmICSCoreLib.AQL.Lab;
-using SmICSCoreLib.AQL.Algorithm;
-using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
-using SmICSCoreLib.AQL.PatientInformation.Symptome;
-using SmICSCoreLib.AQL.PatientInformation.Vaccination;
-using SmICSCoreLib.AQL.Employees.ContactTracing;
-using SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl;
-using SmICSCoreLib.AQL.Employees.PersonData;
-using SmICSCoreLib.AQL.Employees;
-using SmICSCoreLib.AQL.General;
-using SmICSCoreLib.AQL.Lab.EpiKurve;
-using SmICSCoreLib.AQL.Algorithm.NEC;
-using SmICSCoreLib.AQL.Patient_Stay;
-using SmICSCoreLib.AQL.Patient_Stay.Stationary;
-using SmICSCoreLib.AQL.Patient_Stay.Count;
+using SmICSCoreLib.Factories.ContactNetwork;
+using SmICSCoreLib.Factories.PatientMovement;
+using SmICSCoreLib.Factories.Lab.ViroLabData;
+using SmICSCoreLib.Factories.Symptome;
+using SmICSCoreLib.Factories.Vaccination;
+using SmICSCoreLib.Factories.Employees.ContactTracing;
+using SmICSCoreLib.Factories.Employees.PersInfoInfecCtrl;
+using SmICSCoreLib.Factories.Employees.PersonData;
+using SmICSCoreLib.Factories.Employees;
+using SmICSCoreLib.Factories.General;
+using SmICSCoreLib.Factories.EpiCurve;
+using SmICSCoreLib.Factories.PatientStay;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using SmICSCoreLib.StatistikDataModels;
+using SmICSCoreLib.Factories.InfectionSituation;
 
 namespace SmICSWebApp.Controllers
 {
@@ -35,22 +30,28 @@ namespace SmICSWebApp.Controllers
     {
         private readonly ILogger<StoredProceduresController> _logger;
         
-        private readonly ILabData _labData;
-        private readonly IPatientInformation _patientInformation;
         private readonly IContactNetworkFactory _contact;
-        private readonly IAlgorithmData _algorithm;
-        private readonly IPatinet_Stay _patinet_Stay;
+        private readonly IPatientStay _patientStay;
         private readonly IEmployeeInformation _employeeinformation;
+        private readonly IViroLabDataFactory _viroLabDataFac;
+        private readonly IPatientMovementFactory _patientMoveFac;
+        private readonly IEpiCurveFactory _epiCurveFac;
+        private readonly IInfectionSituationFactory _infectionSituationFac;
+        private readonly ISymptomFactory _symptomFac;
+        private readonly IVaccinationFactory _vaccinationFac;
 
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, ILabData labData, IPatientInformation patientInformation, IContactNetworkFactory contact, IAlgorithmData algorithm, IPatinet_Stay patinet_Stay, IEmployeeInformation employeeInfo)
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac)
         {
             _logger = logger;
-            _labData = labData;
-            _patientInformation = patientInformation;
             _contact = contact;
-            _algorithm = algorithm;
-            _patinet_Stay = patinet_Stay;
+            _patientStay = patientStay;
             _employeeinformation = employeeInfo;
+            _viroLabDataFac = viroLabDataFac;
+            _patientMoveFac = patientMoveFac;
+            _epiCurveFac = epiCurveFac;
+            _infectionSituationFac = infectionSituationFac;
+            _symptomFac = symptomFac;
+            _vaccinationFac = vaccinationFac;
         }
 
         /// <summary></summary>
@@ -62,11 +63,12 @@ namespace SmICSWebApp.Controllers
         
         [Route("Contact_NthDegree_TTKP_Degree")]
         [HttpPost]
-        public ActionResult<ContactModel> Contact_NthDegree_TTP_Degree([FromBody] ContactParameter parameter)
+        public ActionResult<ContactModel> Contact_NthDegree_TTP_Degree([FromBody] ContactParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Contact_NthDegree_TTP_Degree with parameters: \n\r PatientID: {patID}\n\r Starttime: {start} \n\r Endtime: {end} \n\r Degree: {d} ", parameter.PatientID, parameter.Starttime, parameter.Endtime, parameter.Degree);
             try
             {
+                _contact.RestDataAccess.SetAuthenticationHeader(token);
                 System.Diagnostics.Debug.WriteLine("CALLED Contact_NthDegree_TTKP_Degree " + parameter.PatientID + " - " + parameter.Starttime + " - " + parameter.Endtime + " - " + parameter.Degree);
                 return _contact.Process(parameter);
             }
@@ -87,12 +89,13 @@ namespace SmICSWebApp.Controllers
         
         [Route("Patient_Labordaten_Ps")]
         [HttpPost]
-        public ActionResult<List<LabDataModel>> Patient_Labordaten_Ps([FromBody] PatientListParameter parameter)
+        public ActionResult<List<LabDataModel>> Patient_Labordaten_Ps([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Patient_Labordaten_Ps with parameters: PatientIDs: {patList}", parameter.ToAQLMatchString());
             try
             {
-                return _patientInformation.Patient_Labordaten_Ps(parameter);
+                _viroLabDataFac.RestDataAccess.SetAuthenticationHeader(token);
+                return _viroLabDataFac.Process(parameter);
             }
             catch (Exception e)
             {
@@ -112,13 +115,14 @@ namespace SmICSWebApp.Controllers
         
         [Route("Patient_Bewegung_Ps")]
         [HttpPost]
-        public ActionResult<List<PatientMovementModel>> Patient_Bewegung_Ps([FromBody] PatientListParameter parameter)
+        public ActionResult<List<PatientMovementModel>> Patient_Bewegung_Ps([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Patient_Bewegung_Ps with parameters: \n\r PatientIDs: {patList}", parameter.ToAQLMatchString());
 
             try
             {
-                return _patientInformation.Patient_Bewegung_Ps(parameter);
+                _patientMoveFac.RestDataAccess.SetAuthenticationHeader(token);
+                return _patientMoveFac.Process(parameter);
             }
             catch (Exception e)
             {
@@ -138,14 +142,15 @@ namespace SmICSWebApp.Controllers
        
         [Route("Labor_ErregerProTag_TTEsKSs")]
         [HttpPost]
-        public ActionResult<List<EpiCurveModel>> Labor_ErregerProTag_TTEsKSs([FromBody] TimespanParameter parameter)
+        public ActionResult<List<EpiCurveModel>> Labor_ErregerProTag_TTEsKSs([FromBody] TimespanParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Labor_ErregerProTag_TTEsKSs with parameters: \n\r Starttime: {start} \n\r Endtime: {end} \n\r internal PathogenList: 94500-6, 94745-7, 94558-4", parameter.Starttime, parameter.Endtime);
 
             try
             {
                 EpiCurveParameter epiParams = new EpiCurveParameter() { Endtime = parameter.Endtime, Starttime = parameter.Starttime, PathogenCodes = new List<string>() { "94500-6", "94745-7", "94558-4" } };
-                return _labData.Labor_Epikurve(epiParams);
+                _epiCurveFac.RestDataAccess.SetAuthenticationHeader(token);
+                return _epiCurveFac.Process(epiParams);
             }
             catch (Exception e)
             {
@@ -164,13 +169,13 @@ namespace SmICSWebApp.Controllers
         
         [Route("Infection_Situation")]
         [HttpPost]
-        public ActionResult<List<Patient>> Infection_Situation([FromBody] PatientListParameter parameter)
+        public ActionResult<List<Patient>> Infection_Situation([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Infection_Situation without any parameters");
 
             try
             {
-                return _patientInformation.Infection_Situation(parameter);
+                return _infectionSituationFac.Process(parameter);
             }
             catch (Exception e)
             {
@@ -191,11 +196,12 @@ namespace SmICSWebApp.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
         [HttpPost]
-        public ActionResult<List<SymptomModel>> Patient_Symptom([FromBody] PatientListParameter parameter)
+        public ActionResult<List<SymptomModel>> Patient_Symptom([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             try
             {
-                return _patientInformation.Patient_Symptom(parameter);
+                _symptomFac.RestDataAccess.SetAuthenticationHeader(token);
+                return _symptomFac.Process(parameter);
             }
             catch (Exception e)
             {
@@ -208,11 +214,12 @@ namespace SmICSWebApp.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
         [HttpPost]
-        public ActionResult<List<VaccinationModel>> Patient_Vaccination([FromBody] PatientListParameter parameter)
+        public ActionResult<List<VaccinationModel>> Patient_Vaccination([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             try
             {
-                return _patientInformation.Patient_Vaccination(parameter);
+                _vaccinationFac.RestDataAccess.SetAuthenticationHeader(token);
+                return _vaccinationFac.Process(parameter);
             }
             catch (Exception e)
             {

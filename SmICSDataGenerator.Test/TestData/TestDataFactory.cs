@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SmICSCoreLib.AQL;
+using SmICSCoreLib.Factories;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;

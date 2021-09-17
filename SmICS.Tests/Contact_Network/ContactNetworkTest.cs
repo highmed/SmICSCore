@@ -1,15 +1,7 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
-using SmICSCoreLib.AQL.Contact_Nth_Network;
-using SmICSCoreLib.AQL.Patient_Stay.Count;
-using SmICSCoreLib.AQL.Patient_Stay.Stationary;
-using SmICSCoreLib.AQL.PatientInformation;
-using SmICSCoreLib.AQL.PatientInformation.Infection_situation;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
-using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
-using SmICSCoreLib.AQL.PatientInformation.Symptome;
-using SmICSCoreLib.AQL.PatientInformation.Vaccination;
+using SmICSCoreLib.Factories.ContactNetwork;
+using SmICSCoreLib.Factories.PatientMovement;
+using SmICSCoreLib.Factories.Lab.ViroLabData;
 using SmICSCoreLib.REST;
 using SmICSFactory.Tests;
 using System;
@@ -36,8 +28,9 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 				Endtime = new DateTime(end_year, end_month, end_day)
 			};
 
-			IPatientInformation patientInformation = CreatePatientInformation(_data);
-			ContactNetworkFactory factory = new ContactNetworkFactory(_data, NullLogger<ContactNetworkFactory>.Instance, patientInformation);
+			IPatientMovementFactory patMoveFac = new PatientMovementFactory(_data, NullLogger<PatientMovementFactory>.Instance);
+			IViroLabDataFactory patLabFac = new ViroLabDataFactory(_data, NullLogger<ViroLabDataFactory>.Instance);
+			ContactNetworkFactory factory = new ContactNetworkFactory(_data, patMoveFac, patLabFac, NullLogger<ContactNetworkFactory>.Instance);
 			ContactModel actual = factory.Process(contactParams);
 			ContactModel expected = getExpectedContactModels(expectedResultSet, ehrNo);
 
@@ -99,20 +92,6 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 			};
 
 			return CreateExpactedContactModel(ResultSet[ResultSetID], ehrNo);
-		}
-
-		private PatientInformation CreatePatientInformation(IRestDataAccess rest)
-		{
-			IPatientMovementFactory patMoveFac = new PatientMovementFactory(rest, NullLogger<PatientMovementFactory>.Instance);
-			IPatientLabordataFactory patLabFac = new PatientLabordataFactory(rest, NullLogger<PatientLabordataFactory>.Instance);
-			ISymptomFactory symptomFac = new SymptomFactory(rest, NullLogger<SymptomFactory>.Instance);
-			IMibiPatientLaborDataFactory mibiLabFac = new MibiPatientLaborDataFactory(rest);
-			IVaccinationFactory vaccFac = new VaccinationFactory(rest, NullLogger<VaccinationFactory>.Instance);
-			ICountFactory countFactory = new CountFactory(rest);
-			IStationaryFactory stationaryFactory = new StationaryFactory(rest); ;
-			IInfectionSituationFactory infecFac = new InfectionSituationFactory(countFactory, stationaryFactory, symptomFac, patMoveFac, vaccFac, NullLogger<InfectionSituationFactory>.Instance);
-
-			return new PatientInformation(patMoveFac, patLabFac, symptomFac, mibiLabFac, vaccFac, infecFac);
 		}
 
 		private ContactModel CreateExpactedContactModel(List<int> contactOrder, int ehrNo)

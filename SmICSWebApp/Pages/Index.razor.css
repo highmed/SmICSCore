@@ -1,0 +1,90 @@
+.gef_von {
+    font-size: 9pt;
+    text-align: right end;
+    margin-top: 0.25%;
+    margin-right: 5%;
+    color: #637492;
+}
+
+@media (max-width: 899px) {
+    .welcome_text {
+        margin: 20%;
+        margin-left: 2%;
+        margin-right: 2%;
+        background-color: #15317E;
+        opacity: 0.8;
+        color: antiquewhite;
+        padding: 2%;
+        margin-bottom: 40%;
+        box-shadow: 0px 2px 5px rgb(0,0,0, 0.3);
+        font-size: 14px;
+    }
+
+    .welcome_header {
+        margin-left: 2%;
+        color: white;
+        font-size: 20px;
+        padding-top: 5%;
+    }
+
+    .logo_img {
+        margin-bottom: 10%;
+    }
+
+    #logobackground {
+        background-color: aliceblue;
+        text-align: center;
+        margin-bottom: 1%;
+    }
+
+    .containter_content {
+        display: flex;
+        flex-direction: column;
+        background-image: url("../resources/coronavirus.jpg");
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: top;
+        opacity: 1;
+    }
+}
+
+@media (min-width: 900px) {
+    .welcome_text {
+        margin: 2%;
+        margin-right: 40%;
+        background-color: #15317E;
+        opacity: 0.8;
+        color: antiquewhite;
+        padding: 2%;
+        margin-bottom: 15%;
+        box-shadow: 0px 3px 6px rgb(0,0,0, 0.3);
+    }
+
+    .welcome_header {
+        margin-left: 2%;
+        color: #637492;
+        text-shadow: 1px 1px 5px lightgrey;
+    }
+
+    .logo_img {
+        margin-bottom: 0%;
+        margin-left: 1%;
+    }
+
+    #logobackground {
+        background-color: aliceblue;
+        text-align: right;
+        padding-right: 2%;
+        margin-bottom: 0%;
+    }
+
+    .containter_content {
+        display: flex;
+        flex-direction: column;
+        background-image: url("../resources/coronavirus.jpg");
+        background-repeat: no-repeat;
+        background-size: 72% 90%;
+        background-position: right;
+        opacity: 1;
+    }
+}

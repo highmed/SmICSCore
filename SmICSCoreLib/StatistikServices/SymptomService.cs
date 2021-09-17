@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SmICSCoreLib.AQL.PatientInformation;
-using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
-using SmICSCoreLib.AQL.PatientInformation.Symptome;
+using SmICSCoreLib.Factories;
+using SmICSCoreLib.Factories.PatientMovement;
+using SmICSCoreLib.Factories.Symptome;
 
 namespace SmICSCoreLib.StatistikServices
 {
     public class SymptomService
     {
-        private readonly IPatientInformation _patientInformation;
+        private readonly ISymptomFactory _symptomFac;
         private readonly EhrDataService _dataService;
 
-        public SymptomService(IPatientInformation patientInformation, EhrDataService dataService)
+        public SymptomService(ISymptomFactory symptomFac, EhrDataService dataService)
         {
-            _patientInformation = patientInformation;
+            _symptomFac = symptomFac;
             _dataService = dataService;
         }
 
@@ -23,7 +23,7 @@ namespace SmICSCoreLib.StatistikServices
         {
             try
             {
-                List<SymptomModel> symptomListe = _patientInformation.Patient_Symptom();
+                List<SymptomModel> symptomListe = _symptomFac.ProcessNoParam();
                 return symptomListe;
             }
             catch (Exception)
@@ -37,7 +37,7 @@ namespace SmICSCoreLib.StatistikServices
         {
             try
             {
-                List<SymptomModel> symptomListe = _patientInformation.Symptoms_By_PatientId(patientId, datum);
+                List<SymptomModel> symptomListe = _symptomFac.SymptomByPatient(patientId, datum);
                 return symptomListe;
             }
             catch (Exception)
@@ -49,7 +49,7 @@ namespace SmICSCoreLib.StatistikServices
         //Alle Symptome, die in einem bestimmten Datum aufgetreten sind.
         public List<SymptomModel> GetAllPatBySym(string symptom, DateTime datum)
         {
-            List<SymptomModel> symptomListe = _patientInformation.Patient_By_Symptom(symptom);
+            List<SymptomModel> symptomListe = _symptomFac.PatientBySymptom(symptom);
 
             List<SymptomModel> symListe = new List<SymptomModel>();
             foreach (var item in symptomListe)
