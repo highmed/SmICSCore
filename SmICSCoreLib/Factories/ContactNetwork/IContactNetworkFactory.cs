@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using SmICSCoreLib.REST;
 
-namespace SmICSCoreLib.Factories.Contact_Nth_Network
+namespace SmICSCoreLib.Factories.ContactNetwork
 {
     public interface IContactNetworkFactory
     {
+        IRestDataAccess RestDataAccess { get; }
         ContactModel Process(ContactParameter parameter);
     }
 }

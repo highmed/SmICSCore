@@ -9,7 +9,7 @@ namespace SmICSCoreLib.Factories.PatientStay.Stationary
 {
     public class StationaryFactory : IStationaryFactory
     {
-        private IRestDataAccess _restData;
+        public IRestDataAccess _restData;
 
         public StationaryFactory(IRestDataAccess restData)
         {

@@ -22,12 +22,12 @@ namespace SmICSCoreLib.Factories.EpiCurve
         private Dictionary<string, List<int>> mavg7;
         private Dictionary<string, List<int>> mavg28;
         
-        private IRestDataAccess _restData;
+        public IRestDataAccess RestDataAccess { get; }
         private ILogger<EpiCurveFactory> _logger;
 
         public EpiCurveFactory(IRestDataAccess restData, ILogger<EpiCurveFactory> logger)
         {
-            _restData = restData;
+            RestDataAccess = restData;
             _logger = logger;
         }
         public List<EpiCurveModel> Process(EpiCurveParameter parameter)
@@ -60,7 +60,7 @@ namespace SmICSCoreLib.Factories.EpiCurve
         private void CreateDailyEntries(DateTime date, EpiCurveParameter parameter)
         {
             _logger.LogDebug("Flag - Query Paramters: Datum: {Date} \r PathogenList: {pathogens}", date.ToString(), parameter.PathogenCodesToAqlMatchString());
-            List<FlagTimeModel> flagTimes = _restData.AQLQuery<FlagTimeModel>(AQLCatalog.LaborEpiCurve(date, parameter));
+            List<FlagTimeModel> flagTimes = RestDataAccess.AQLQuery<FlagTimeModel>(AQLCatalog.LaborEpiCurve(date, parameter));
 
             if (flagTimes == null)
             {
@@ -84,7 +84,7 @@ namespace SmICSCoreLib.Factories.EpiCurve
             {
                 _logger.LogDebug("PatientLocation - Query Paramters: PatientID: {PatientID} \r Datum: {Date}", flag.PatientID, flag.Datum.ToString());
 
-                List<PatientLocation> patientLocations = _restData.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(flag.Datum, flag.PatientID));
+                List<PatientLocation> patientLocations = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(flag.Datum, flag.PatientID));
 
                 PatientLocation patientLocation = null;
                 if (patientLocations == null)

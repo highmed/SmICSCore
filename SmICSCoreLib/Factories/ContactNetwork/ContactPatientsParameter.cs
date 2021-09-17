@@ -1,9 +1,9 @@
-﻿using SmICSCoreLib.Factories.Contact_Nth_Network.ReceiveModels;
+﻿using SmICSCoreLib.Factories.ContactNetwork.ReceiveModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmICSCoreLib.Factories.Contact_Nth_Network
+namespace SmICSCoreLib.Factories.ContactNetwork
 {
     public class ContactPatientsParameter : ContactParameter
     {

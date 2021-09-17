@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmICSCoreLib.Factories.Contact_Nth_Network.ReceiveModels
+namespace SmICSCoreLib.Factories.ContactNetwork.ReceiveModels
 {
     public class PatientWardModel
     {

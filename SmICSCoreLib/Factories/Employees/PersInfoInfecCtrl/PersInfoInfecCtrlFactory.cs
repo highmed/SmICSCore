@@ -10,7 +10,7 @@ namespace SmICSCoreLib.Factories.Employees.PersInfoInfecCtrl
 {
     public class PersInfoInfecCtrlFactory : IPersInfoInfecCtrlFactory
     {
-        private IRestDataAccess _restData;
+        public IRestDataAccess _restData;
         public PersInfoInfecCtrlFactory(IRestDataAccess restData)
         {
             _restData = restData;

@@ -1,4 +1,4 @@
-﻿using SmICSCoreLib.Factories.Contact_Nth_Network;
+﻿using SmICSCoreLib.Factories.ContactNetwork;
 using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.EpiCurve;
 using SmICSCoreLib.Factories.LabData.MibiLabdata.ReceiveModel;

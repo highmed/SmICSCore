@@ -1,15 +1,7 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
-using SmICSCoreLib.Factories.Contact_Nth_Network;
-using SmICSCoreLib.Factories.PatientStay.Count;
-using SmICSCoreLib.Factories.PatientStay.Stationary;
-using SmICSCoreLib.Factories;
-using SmICSCoreLib.Factories.InfectionSituation;
+using SmICSCoreLib.Factories.ContactNetwork;
 using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.Factories.Lab.ViroLabData;
-using SmICSCoreLib.Factories.Lab.MibiLabData;
-
-using SmICSCoreLib.Factories.Symptome;
-using SmICSCoreLib.Factories.Vaccination;
 using SmICSCoreLib.REST;
 using SmICSFactory.Tests;
 using System;

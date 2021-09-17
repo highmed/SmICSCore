@@ -11,7 +11,7 @@ namespace SmICSCoreLib.Factories.NEC
 {
     public class NECCombinedFactory : INECCombinedFactory
     {
-        private IRestDataAccess _restData;
+        public IRestDataAccess _restData;
         private IViroLabDataFactory _labFac;
         private IPatientMovementFactory _movFac;
 

@@ -8,7 +8,7 @@ namespace SmICSCoreLib.Factories.Lab.MibiLabData
 {
     public class MibiPatientLaborDataFactory : IMibiPatientLaborDataFactory
     {
-        private IRestDataAccess _restData;
+        public IRestDataAccess _restData;
         List<MibiLabDataModel> mibiLabDatas;
         public MibiPatientLaborDataFactory(IRestDataAccess restData)
         {

@@ -3,7 +3,7 @@ using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.Factories.Lab.ViroLabData;
 using SmICSCoreLib.Factories.Symptome;
 using SmICSCoreLib.Factories.Vaccination;
-using SmICSCoreLib.Factories.Contact_Nth_Network;
+using SmICSCoreLib.Factories.ContactNetwork;
 using SmICSCoreLib.Factories.EpiCurve;
 using SmICSCoreLib.REST;
 using SmICSCoreLib.Factories.NEC;

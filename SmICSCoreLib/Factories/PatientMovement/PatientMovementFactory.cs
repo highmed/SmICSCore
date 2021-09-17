@@ -1,28 +1,25 @@
 ﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using SmICSCoreLib.Factories.General;
-using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.Factories.PatientMovement.ReceiveModels;
 using SmICSCoreLib.REST;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+
 
 namespace SmICSCoreLib.Factories.PatientMovement
 {
     public class PatientMovementFactory : IPatientMovementFactory
     {
-        protected IRestDataAccess _restData;
+        public IRestDataAccess RestDataAccess { get; }
         private ILogger<PatientMovementFactory> _logger;
         public PatientMovementFactory(IRestDataAccess restData, ILogger<PatientMovementFactory> logger)
         {
-            _restData = restData;
+            RestDataAccess = restData;
             _logger = logger;
         }
         public List<PatientMovementModel> Process(PatientListParameter parameter)
         {
-            List<PatientStayModel> patientStayList = _restData.AQLQuery<PatientStayModel>(AQLCatalog.PatientStay(parameter));
+            List<PatientStayModel> patientStayList = RestDataAccess.AQLQuery<PatientStayModel>(AQLCatalog.PatientStay(parameter));
             if (patientStayList is null)
             {
                 return new List<PatientMovementModel>();
@@ -33,7 +30,7 @@ namespace SmICSCoreLib.Factories.PatientMovement
 
         public List<PatientMovementModel> ProcessFromStation(PatientListParameter parameter, string station, DateTime starttime, DateTime endtime)
         {
-            List<PatientStayModel> patientStayList = _restData.AQLQuery<PatientStayModel>(AQLCatalog.PatientStayFromStation(parameter, station, starttime, endtime));
+            List<PatientStayModel> patientStayList = RestDataAccess.AQLQuery<PatientStayModel>(AQLCatalog.PatientStayFromStation(parameter, station, starttime, endtime));
             if (patientStayList is null)
             {
                 return new List<PatientMovementModel>();
@@ -57,8 +54,8 @@ namespace SmICSCoreLib.Factories.PatientMovement
                 if (!PatID_CaseId_Combination.Contains(patfallID))
                 {
 
-                    List<EpisodeOfCareModel> episodeOfCareList = _restData.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParam));
-                    List<EpisodeOfCareModel> discharges = _restData.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParam));
+                    List<EpisodeOfCareModel> episodeOfCareList = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParam));
+                    List<EpisodeOfCareModel> discharges = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParam));
                     if (!(episodeOfCareList is null))
                     {
                         //result.First because there can be just one admission/discharge timestamp for each case

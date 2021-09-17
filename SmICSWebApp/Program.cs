@@ -29,7 +29,7 @@ namespace SmICSWebApp
             }
             catch(Exception e)
             {
-                Log.Fatal(e, "The applaction failed to start correctly.");
+                Log.Fatal(e, "The application failed to start correctly.");
             }
             finally
             {

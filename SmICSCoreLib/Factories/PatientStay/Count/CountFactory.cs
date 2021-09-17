@@ -9,7 +9,7 @@ namespace SmICSCoreLib.Factories.PatientStay.Count
 {
     public class CountFactory : ICountFactory
     {
-        private IRestDataAccess _restData;
+        public IRestDataAccess _restData;
 
         public CountFactory(IRestDataAccess restData) 
         {

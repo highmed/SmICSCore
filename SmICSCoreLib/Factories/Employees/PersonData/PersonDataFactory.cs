@@ -10,7 +10,7 @@ namespace SmICSCoreLib.Factories.Employees.PersonData
 {
     public class PersonDataFactory : IPersonDataFactory
     {
-        private IRestDataAccess _restData;
+        public IRestDataAccess _restData;
         public PersonDataFactory(IRestDataAccess restData)
         {
             _restData = restData;

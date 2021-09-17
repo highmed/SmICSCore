@@ -7,7 +7,7 @@ namespace SmICSCoreLib.Factories.Employees.ContactTracing
 {
     public class ContactTracingFactory : IContactTracingFactory
     {
-        private IRestDataAccess _restData;
+        public IRestDataAccess _restData;
 
         public ContactTracingFactory(IRestDataAccess restData)
         {

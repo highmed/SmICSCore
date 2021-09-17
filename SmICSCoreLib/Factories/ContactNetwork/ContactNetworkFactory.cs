@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SmICSCoreLib.Factories.Contact_Nth_Network.ReceiveModels;
+using SmICSCoreLib.Factories.ContactNetwork.ReceiveModels;
 using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.Lab.ViroLabData;
 using SmICSCoreLib.Factories.PatientMovement;
@@ -9,7 +9,7 @@ using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
 
-namespace SmICSCoreLib.Factories.Contact_Nth_Network
+namespace SmICSCoreLib.Factories.ContactNetwork
 {
     public class ContactNetworkFactory : IContactNetworkFactory
     {
@@ -17,14 +17,16 @@ namespace SmICSCoreLib.Factories.Contact_Nth_Network
         private static ContactModel contacts;
         private static int currentDegree;
 
-        private readonly IRestDataAccess _restData;
         private readonly ILogger<ContactNetworkFactory> _logger;
         private readonly IPatientMovementFactory _patMoveFac;
         private readonly IViroLabDataFactory _patLabFac;
+
+        public IRestDataAccess RestDataAccess { get; }
+
         public ContactNetworkFactory(IRestDataAccess restData, IPatientMovementFactory patMoveFac, IViroLabDataFactory patLabFac, ILogger<ContactNetworkFactory> logger)
         {
             _logger = logger;
-            _restData = restData;
+            RestDataAccess = restData;
             _patLabFac = patLabFac;
             _patMoveFac = patMoveFac;
         }
@@ -62,7 +64,7 @@ namespace SmICSCoreLib.Factories.Contact_Nth_Network
         private void FindWardsQuery()
         {
             ContactParameter parameter = patientStack.Pop();
-            List<PatientWardModel> patientWardList = _restData.AQLQuery<PatientWardModel>(AQLCatalog.ContactPatientWards(parameter));
+            List<PatientWardModel> patientWardList = RestDataAccess.AQLQuery<PatientWardModel>(AQLCatalog.ContactPatientWards(parameter));
 
             if (patientWardList is null)
             {
@@ -84,11 +86,11 @@ namespace SmICSCoreLib.Factories.Contact_Nth_Network
                 {
                     _logger.LogInformation("ContactNetworkFactory.FindContactPatients(): No WardID From ContactNetworkFactory.FindWardsQuery(). Set DepartementID to WardID.");
                     secondQueryParameter.WardID = patientWard.Fachabteilung;
-                    contactPatientList = _restData.AQLQuery<ContactPatientModel>(AQLCatalog.ContactPatients_WithoutWardInformation(secondQueryParameter));
+                    contactPatientList = RestDataAccess.AQLQuery<ContactPatientModel>(AQLCatalog.ContactPatients_WithoutWardInformation(secondQueryParameter));
                 }
                 else
                 {
-                    contactPatientList = _restData.AQLQuery<ContactPatientModel>(AQLCatalog.ContactPatients(secondQueryParameter));
+                    contactPatientList = RestDataAccess.AQLQuery<ContactPatientModel>(AQLCatalog.ContactPatients(secondQueryParameter));
                 }
                 if (contactPatientList == null)
                 {

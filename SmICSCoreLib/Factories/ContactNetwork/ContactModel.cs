@@ -5,7 +5,7 @@ using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.Factories.Lab.ViroLabData;
 using Newtonsoft.Json;
 
-namespace SmICSCoreLib.Factories.Contact_Nth_Network
+namespace SmICSCoreLib.Factories.ContactNetwork
 {
     public class ContactModel
     {

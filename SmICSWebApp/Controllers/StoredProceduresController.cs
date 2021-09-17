@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using SmICSCoreLib.Factories.Contact_Nth_Network;
+using SmICSCoreLib.Factories.ContactNetwork;
 using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.Factories.Lab.ViroLabData;
 using SmICSCoreLib.Factories.Symptome;
@@ -59,11 +59,12 @@ namespace SmICSWebApp.Controllers
         /// <returns></returns>
         [Route("Contact_NthDegree_TTKP_Degree")]
         [HttpPost]
-        public ActionResult<ContactModel> Contact_NthDegree_TTP_Degree([FromBody] ContactParameter parameter)
+        public ActionResult<ContactModel> Contact_NthDegree_TTP_Degree([FromBody] ContactParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Contact_NthDegree_TTP_Degree with parameters: \n\r PatientID: {patID}\n\r Starttime: {start} \n\r Endtime: {end} \n\r Degree: {d} ", parameter.PatientID, parameter.Starttime, parameter.Endtime, parameter.Degree);
             try
             {
+                _contact.RestDataAccess.SetAuthenticationHeader(token);
                 System.Diagnostics.Debug.WriteLine("CALLED Contact_NthDegree_TTKP_Degree " + parameter.PatientID + " - " + parameter.Starttime + " - " + parameter.Endtime + " - " + parameter.Degree);
                 return _contact.Process(parameter);
             }

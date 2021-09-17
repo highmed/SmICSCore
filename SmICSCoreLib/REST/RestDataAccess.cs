@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,6 @@ namespace SmICSCoreLib.REST
     {
         private RestClientConnector _client;
         private ILogger<RestDataAccess> _logger;
-
         public RestDataAccess(ILogger<RestDataAccess> logger, RestClientConnector client)
         {
             _client = client;
@@ -82,6 +82,11 @@ namespace SmICSCoreLib.REST
         {
             string restPath = "/ehr";
             return  _client.Client.PostAsync(OpenehrConfig.openehrEndpoint + restPath, GetEHRStatus(Namespace, ID));
+        }
+
+        public void SetAuthenticationHeader(string token)
+        {
+            _client.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Split(" ")[1]);
         }
 
         #region private Methods
