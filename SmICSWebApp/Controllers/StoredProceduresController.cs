@@ -84,11 +84,12 @@ namespace SmICSWebApp.Controllers
         /// <returns></returns>
         [Route("Patient_Labordaten_Ps")]
         [HttpPost]
-        public ActionResult<List<LabDataModel>> Patient_Labordaten_Ps([FromBody] PatientListParameter parameter)
+        public ActionResult<List<LabDataModel>> Patient_Labordaten_Ps([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Patient_Labordaten_Ps with parameters: PatientIDs: {patList}", parameter.ToAQLMatchString());
             try
             {
+                _viroLabDataFac.RestDataAccess.SetAuthenticationHeader(token);
                 return _viroLabDataFac.Process(parameter);
             }
             catch (Exception e)
@@ -108,12 +109,13 @@ namespace SmICSWebApp.Controllers
         /// <returns></returns>
         [Route("Patient_Bewegung_Ps")]
         [HttpPost]
-        public ActionResult<List<PatientMovementModel>> Patient_Bewegung_Ps([FromBody] PatientListParameter parameter)
+        public ActionResult<List<PatientMovementModel>> Patient_Bewegung_Ps([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Patient_Bewegung_Ps with parameters: \n\r PatientIDs: {patList}", parameter.ToAQLMatchString());
 
             try
             {
+                _patientMoveFac.RestDataAccess.SetAuthenticationHeader(token);
                 return _patientMoveFac.Process(parameter);
             }
             catch (Exception e)
@@ -133,13 +135,14 @@ namespace SmICSWebApp.Controllers
         /// <returns></returns>
         [Route("Labor_ErregerProTag_TTEsKSs")]
         [HttpPost]
-        public ActionResult<List<EpiCurveModel>> Labor_ErregerProTag_TTEsKSs([FromBody] TimespanParameter parameter)
+        public ActionResult<List<EpiCurveModel>> Labor_ErregerProTag_TTEsKSs([FromBody] TimespanParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Labor_ErregerProTag_TTEsKSs with parameters: \n\r Starttime: {start} \n\r Endtime: {end} \n\r internal PathogenList: 94500-6, 94745-7, 94558-4", parameter.Starttime, parameter.Endtime);
 
             try
             {
                 EpiCurveParameter epiParams = new EpiCurveParameter() { Endtime = parameter.Endtime, Starttime = parameter.Starttime, PathogenCodes = new List<string>() { "94500-6", "94745-7", "94558-4" } };
+                _epiCurveFac.RestDataAccess.SetAuthenticationHeader(token);
                 return _epiCurveFac.Process(epiParams);
             }
             catch (Exception e)
@@ -158,7 +161,7 @@ namespace SmICSWebApp.Controllers
         /// <returns></returns>
         [Route("Infection_Situation")]
         [HttpPost]
-        public ActionResult<List<Patient>> Infection_Situation([FromBody] PatientListParameter parameter)
+        public ActionResult<List<Patient>> Infection_Situation([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Infection_Situation without any parameters");
 
@@ -300,10 +303,11 @@ namespace SmICSWebApp.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
         [HttpPost]
-        public ActionResult<List<SymptomModel>> Patient_Symptom([FromBody] PatientListParameter parameter)
+        public ActionResult<List<SymptomModel>> Patient_Symptom([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             try
             {
+                _symptomFac.RestDataAccess.SetAuthenticationHeader(token);
                 return _symptomFac.Process(parameter);
             }
             catch (Exception e)
@@ -316,10 +320,11 @@ namespace SmICSWebApp.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
         [HttpPost]
-        public ActionResult<List<VaccinationModel>> Patient_Vaccination([FromBody] PatientListParameter parameter)
+        public ActionResult<List<VaccinationModel>> Patient_Vaccination([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             try
             {
+                _vaccinationFac.RestDataAccess.SetAuthenticationHeader(token);
                 return _vaccinationFac.Process(parameter);
             }
             catch (Exception e)

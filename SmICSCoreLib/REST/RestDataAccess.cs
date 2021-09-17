@@ -86,9 +86,11 @@ namespace SmICSCoreLib.REST
 
         public void SetAuthenticationHeader(string token)
         {
-            _client.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Split(" ")[1]);
+            if (token != "NoToken")
+            {
+                _client.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Split(" ")[1]);
+            }
         }
-
         #region private Methods
         private HttpContent GetHttpContentADL(string xml)
         {
