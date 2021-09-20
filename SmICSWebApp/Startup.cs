@@ -142,9 +142,9 @@ namespace SmICSWebApp
             services.AddServerSideBlazor();
             services.AddSmICSLibrary();
             services.AddLogging();
-            services.AddSingleton<RkiService>();            
-            services.AddSingleton<SymptomService>();
-            services.AddSingleton<EhrDataService>();
+            services.AddScoped<RkiService>();            
+            services.AddScoped<SymptomService>();
+            services.AddScoped<EhrDataService>();
 
             //CronJob GetReport
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
