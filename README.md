@@ -14,10 +14,10 @@ The openEHR Repository needs to be prefilled with following templates and compos
 - [Stationärer Versorgungsfall](https://ckm.highmed.org/ckm/templates/1246.169.620)
 - [Patientenaufenthalt](https://ckm.highmed.org/ckm/templates/1246.169.590) *(Altough "Station" is no mandatory field in the template, it is necessary for the full functionality for the SmICS)*
 - [Virologischer Befund](https://ckm.highmed.org/ckm/templates/1246.169.636)
+- [Imfpstatus](https://ckm.highmed.org/ckm/templates/1246.169.1187)
+- [Symptome](https://ckm.highmed.org/ckm/templates/1246.169.1109)
 
 *Upcoming:*
-- *[Imfpstatus](https://ckm.highmed.org/ckm/templates/1246.169.1187)*
-- *[Symptome](https://ckm.highmed.org/ckm/templates/1246.169.1109)*
 - *[Mikrobiologischer Befund](https://ckm.highmed.org/ckm/templates/1246.169.69)*
 
 ### Hardware
@@ -52,13 +52,23 @@ Download the latest versions of the SmICSCore and the SmICS Visualization
 SmICSCore: https://github.com/highmed/SmICSCore/releases <br>
 SmICS Visualization: https://github.com/highmed/SmICSVisualisierung/releases
 
+**Certificates**
+
+Before you build and run the SmICSCore you need to copy your Root Certificates  of your local CA in the Certificates folder.
 
 **Build & Run Process - Docker**
 
 Within each local git repository following commands need to be executed. **You need to start with the SmICSCore Repository**
 
+If you didn't created an Docker network you need to do so. You just need to do this ones.
+
 ```
 docker network create smics-net
+```
+
+To build and run the containers run the following commands.
+
+```
 docker build -t smics .
 docker run --name smics_core --network smics-net -e OPENEHR_DB="$OPENEHR_REST_PATH" -e AUTHORITY=$AUTHORITY -e CLIENT_ID="$CLIENT_ID" -e CLIENT_SECRET=$CLIENT_SECRET -d -p 9787:9787 smics
 ```

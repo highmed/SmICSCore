@@ -33,8 +33,7 @@ RUN dotnet publish "SmICSWebApp/SmICSWebApp.csproj" -c Release -o /app/out
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS final
 
-COPY Certificates/mhhca20-root.crt /usr/local/share/ca-certificates/*.crt
-COPY Certificates/mhhca20-sub.crt /usr/local/share/ca-certificates/*.cer
+COPY Certificates/ /usr/local/share/ca-certificates/
 #RUN chmod -r 644 /usr/local/share/ca-certificates
 
 RUN find /usr/local/share/ca-certificates -type f -exec chmod 644 {} \;
