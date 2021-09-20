@@ -1,5 +1,6 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
@@ -18,3 +19,25 @@
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.spinner {
+    border: 16px solid silver;
+    border-top: 16px solid #337AB7;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 1300ms linear infinite;
+    top: 50%;
+    left: 40%;
+    position: absolute;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    100% {
+        transform: rotate(360deg)
+    }
+}
