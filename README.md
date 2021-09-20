@@ -45,11 +45,13 @@ Installation: https://docs.docker.com/engine/install/ and if necessary: https://
 ___
 ## Execution
 
-Clone these two repositories:
-```
-git clone https://github.com/highmed/SmICSCore.git
-git clone https://github.com/highmed/SmICSVisualisierung.git
-```
+**Get the Software**
+
+Download the latest versions of the SmICSCore and the SmICS Visualization
+
+SmICSCore: https://github.com/highmed/SmICSCore/releases <br>
+SmICS Visualization: https://github.com/highmed/SmICSVisualisierung/releases
+
 
 **Build & Run Process - Docker**
 
@@ -58,26 +60,35 @@ Within each local git repository following commands need to be executed. **You n
 ```
 docker network create smics-net
 docker build -t smics .
-docker run --name smics_core --network smics-net -e OPENEHR_DB="http://localhost:8080/ehrbase/rest/openehr/v1" -e OPENEHR_USER="$USERNAME" -e OPENEHR_PASSWD="$PASSWORD" -d -p 9787:9787 smics
+docker run --name smics_core --network smics-net -e OPENEHR_DB="$OPENEHR_REST_PATH" -e AUTHORITY=$AUTHORITY -e CLIENT_ID="$CLIENT_ID" -e CLIENT_SECRET=$CLIENT_SECRET -d -p 9787:9787 smics
 ```
 
-```http://localhost:8080/ehrbase/rest/openehr/v1``` must be exchanged for the valid link to the openEHR REST API from the openEHR repository.
-```$USERNAME``` and ```$PASSWORD``` must be exchanged for valid user credentials from the openEHR repository.
+**Environment Variablen - SmICSCore**
 
-Before building the container for the SmICS Visualization you need to change a variable within the ```src/server/config.ts```. In **line 76** you need to change the variable **hostname: "localhost"** to the DNS adress of you server where the SmICS shall run. 
+| Environment | Description |
+|-------------|-------------|
+| OPENEHR_DB | The path to the RESTful API from the OpenEHR Repository <br> e.g. for local Better: http://localhost:8081/rest/openehr/v1  |
+| AUTHORITY | The link to your oauth2 authority <br> e.g. for local keyclaok: http://localhost/auth/realms/realmName  |
+ |CLIENT_ID| Your ClientID of your oauth2 client |
+| CLIENT_SECRET| Your ClientSecret of your oauth2 client |
+
+
 
 ```
 docker build -t smicsvisualisierung .
-docker run --name smics_visualisierung --network smics-net -d -p 3231:3231 smicsvisualisierung
+docker run --name smics_visualisierung --network smics-net -d -p 3231:3231 smicsvisualisierung -e USE_AUTH=$bool -e SMICS_HOSTNAME=$SMICS_HOSTNAME -e AUTH_PROVIDER_URL=$AUTH_PROVIDER_URL -e AUTH_REALM=$AUTH_REALM -e AUTH_CLIENT_ID=$AUTH_CLIENT_ID -e AUTH_CLIENT_SECRET=$AUTH_CLIENT_SECRET
 ```
 
-If you want to change the ports through which the applications are accessible, you have to change the first port in ```-p 9787:9787``` and/or ```-p 3231:3231```.
-<!--
-**Build & Run Process - Docker Compose**
-Edit the ```args: repo:``` in the ```docker-compose.yml``` and enter your connection string to you openEHR REST API.
 
-```
-docker-compose up -d
-```
+**Environment Variablen - SmICS Visualization**
+| Environment | Description |
+|-------------|-------------|
+| USE_AUTH | Set ```true``` for enabling oauth2 authentication  |
+| SMICS_HOSTNAME | DNS of your server where the smics is running |
+| SMICS_PORT | The port which you use for the SmICS Core <br> Default: 9787 |
+| AUTH_PROVIDER_URL |The root link to you oauth2 server |
+| AUTH_REALM | Name of you oauth2 realm |
+| AUTH_CLIENT_ID | Your ClientID of you oauth2 client |
+| AUTH_CLIENT_SECRET | Your ClientSecret of your oauth2 client |
 
-The SmICS Core Componentes should know be reachable via ```http://localhost:9787``` and the SmICS Visualisierungs Componentents via ```http://localhost:3231`` on the machine where you installed the Docker Container. -->
+

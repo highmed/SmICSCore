@@ -73,10 +73,6 @@ namespace SmICSWebApp
                 options.Authority = Environment.GetEnvironmentVariable("AUTHORITY"); 
                 options.ClientId = Environment.GetEnvironmentVariable("CLIENT_ID"); 
                 options.ClientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET");
-
-                //options.Authority = "https://keycloak.mh-hannover.local:8443/auth/realms/Better";
-                //options.ClientId = "medic-c-t";
-                //options.ClientSecret = null;
                 
                 options.ResponseType = "code";
                 options.Scope.Clear();
@@ -115,14 +111,12 @@ namespace SmICSWebApp
             .AddJwtBearer(options =>
             {
                 options.Authority = Environment.GetEnvironmentVariable("AUTHORITY");
-                //options.Authority = "https://keycloak.mh-hannover.local:8443/auth/realms/Better";
                 options.RequireHttpsMetadata = true;
                 // name of the API resource
                 options.Audience = "account";
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidIssuer = Environment.GetEnvironmentVariable("AUTHORITY"),
-                    //ValidIssuer = "https://keycloak.mh-hannover.local:8443/auth/realms/Better",
                     ValidAudience = "account"
                     //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])) 
                 };
