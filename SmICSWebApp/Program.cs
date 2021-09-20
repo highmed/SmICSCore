@@ -46,7 +46,7 @@ namespace SmICSWebApp
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>()
-                    .UseUrls("https://*:9787");
+                    .UseUrls("http://*:9787");
                 });
     }
 }

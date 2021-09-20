@@ -90,8 +90,8 @@ namespace SmICSWebApp
 
                 //UNSAFE - BEGIN 
                 //Need to implement Certificates
-                //options.NonceCookie.SameSite = SameSiteMode.Unspecified;
-                //options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
+                options.NonceCookie.SameSite = SameSiteMode.Unspecified;
+                options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
                 //options.BackchannelHttpHandler = new HttpClientHandler { ServerCertificateCustomValidationCallback = delegate { return true; } };
                 //UNSAFE - END
                 options.Events = new OpenIdConnectEvents
@@ -207,7 +207,7 @@ namespace SmICSWebApp
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "AQL API");
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseAuthentication();
