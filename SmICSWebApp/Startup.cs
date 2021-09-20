@@ -17,6 +17,7 @@ using Quartz.Impl;
 using SmICSCoreLib.StatistikServices.CronJob;
 using SmICSCoreLib.StatistikServices;
 using Microsoft.Extensions.Logging;
+using SmICSCoreLib.Database;
 
 namespace SmICSWebApp
 {
@@ -84,6 +85,12 @@ namespace SmICSWebApp
             //OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
             //OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
             //OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
+
+            //DBConfig.DB_Url = Environment.GetEnvironmentVariable("DB_URL");
+            //DBConfig.DB_Keyspace = Environment.GetEnvironmentVariable("DB_KEYSPACE");
+
+            DBConfig.DB_Url = "192.168.178.133";
+            DBConfig.DB_Keyspace = "newkeyspace";
 
             if (env.IsDevelopment())
             {

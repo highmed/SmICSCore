@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Cassandra.Mapping.Attributes;
+using Newtonsoft.Json;
 
 namespace SmICSCoreLib.StatistikDataModels
 {
@@ -100,6 +101,10 @@ namespace SmICSCoreLib.StatistikDataModels
 
     public class BlAttribute
     {
+        //add int variable as ID just for testing 
+        [PartitionKey]
+        public int BlAttributeId { get; set; }
+
         [JsonProperty(PropertyName = "Bundesland")]
         public string Bundesland { get; set; }
 
