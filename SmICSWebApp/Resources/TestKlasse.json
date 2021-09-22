@@ -7,7 +7,12 @@
     {
       "Street": "Am Feldweg 3",
       "City": "Hannover",
-      "Zip": 30923
+      "Zip": 30923,
+      "Telefon": [
+        {
+          "Nummer":  "0176/31731021"
+        }
+      ]
     }
   ]
 }

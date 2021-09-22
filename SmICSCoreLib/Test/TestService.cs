@@ -32,9 +32,7 @@ namespace SmICSCoreLib.Test
 
             //IEnumerable<object> userAddress = GetValues((IEnumerable<Adresse>)findList, "Adresse");
             Console.WriteLine(string.Join(Environment.NewLine, findList.Select(user => JsonSerializer.Serialize(user))));
-
-
-            
+ 
         }
 
         //public static IEnumerable<object> GetValues<Testklasse>(IEnumerable<Testklasse> items, string propertyName)

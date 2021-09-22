@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Cassandra.Mapping;
+using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +21,7 @@ namespace SmICSCoreLib.Test
         public int Age { get; set; }
         [JsonProperty(PropertyName = "Adresse")]
         public Adresse[] Adresse { get; set; }
+        
     }
 
     public class Adresse
@@ -29,5 +32,14 @@ namespace SmICSCoreLib.Test
         public string City { get; set; }
         [JsonProperty(PropertyName = "Zip")]
         public int Zip { get; set; }
+        [JsonProperty(PropertyName = "Telefon")]
+        public Telefon[] Telefon { get; set; }
     }
+
+    public class Telefon
+    {
+        [JsonProperty(PropertyName = "Nummer")]
+        public string Nummer { get; set; }
+    }
+
 }

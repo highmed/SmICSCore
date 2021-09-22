@@ -26,19 +26,14 @@ namespace SmICSCoreLib.Database
             //create table BlAttribute just for testing 
             //Session.Execute(new SimpleStatement("create table BlAttribute (BlAttributeId int primary key, Bundesland varchar, FallzahlGesamt varchar, Faelle7BL varchar," +
             //" FaellePro100000Ew varchar, Todesfaelle varchar, Todesfaelle7BL varchar, Inzidenz7Tage varchar, Farbe varchar); "));
-            Session.Execute(new SimpleStatement("CREATE TYPE if not exists Adresse (street text, city text, zip int);"));
+            Session.Execute(new SimpleStatement("CREATE TYPE if not exists Telefon (nummer text);"));
+            Session.Execute(new SimpleStatement("CREATE TYPE if not exists Adresse (street text, city text, zip int, Telefon set<frozen<Telefon>>);"));
             Session.Execute(new SimpleStatement("CREATE TABLE if not exists TestKlasse (ID int primary key, Name text, Vorname text, Age int, Adresse set<frozen<Adresse>>);"));
-            
 
+            Session.UserDefinedTypes.Define(UdtMap.For<Telefon>());
             Session.UserDefinedTypes.Define(UdtMap.For<Adresse>());
             //create an instance of a Mapper from the session
             Mapper = new Mapper(Session);
-
-            //var results = Session.Execute("SELECT ID, Name, Adresse FROM TestKlasse where id = '12345B';");
-            //var row = results.First();
-            // You retrieve the field as a value of type Address
-            //var userAddress = row.GetValue<Adresse>("Adresse");
-            //Console.WriteLine("The user lives on {0} Street", userAddress.Street);
         }
 
         //checked 
