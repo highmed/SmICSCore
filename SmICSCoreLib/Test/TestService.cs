@@ -28,9 +28,21 @@ namespace SmICSCoreLib.Test
 
             test.testKlasse.Insert(newList);
 
-            Console.WriteLine(newList);
+            var findList = test.testKlasse.FindAll();
+
+            //IEnumerable<object> userAddress = GetValues((IEnumerable<Adresse>)findList, "Adresse");
+            Console.WriteLine(string.Join(Environment.NewLine, findList.Select(user => JsonSerializer.Serialize(user))));
+
 
             
         }
+
+        //public static IEnumerable<object> GetValues<Testklasse>(IEnumerable<Testklasse> items, string propertyName)
+        //{
+        //    Type type = typeof(Testklasse);
+        //    var prop = type.GetProperty(propertyName);
+        //    foreach (var item in items)
+        //        yield return prop.GetValue(item, null);
+        //}
     }
 }
