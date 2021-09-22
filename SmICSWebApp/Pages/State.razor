@@ -4,6 +4,9 @@
 @using SmICSCoreLib.StatistikServices
 @using System;
 @using Microsoft.Extensions.Logging
+@using SmICSCoreLib.Database 
+@using SmICSCoreLib.Test
+
 @inject ILogger<State> Logger
 @inject RkiService rkiService
 
@@ -448,6 +451,9 @@
     private string ResourcesPath = "Resources/";
     private string StatistikPath;
 
+
+    private TestService testService;
+
     protected override async Task OnInitializedAsync()
     {
         status = false;
@@ -465,6 +471,7 @@
             status = false;
             standAktuell = false;
         }
+        Test();
     }
 
     private void SetRKIData()
@@ -571,6 +578,13 @@
             standAktuell = false;
         }
 
+    }
+
+    public void Test()
+    {
+
+        testService = new TestService();
+        testService.ReadFile();
     }
 
 }

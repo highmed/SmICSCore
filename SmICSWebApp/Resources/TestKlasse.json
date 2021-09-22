@@ -1,0 +1,13 @@
+{
+  "ID": 12345,
+  "Name": "Volkers",
+  "Vorname": "Matthias",
+  "Age": 45,
+  "Adresse": [
+    {
+      "Street": "Am Feldweg 3",
+      "City": "Hannover",
+      "Zip": 30923
+    }
+  ]
+}

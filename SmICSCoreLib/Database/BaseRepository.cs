@@ -2,6 +2,8 @@
 using Cassandra.Mapping;
 using System;
 using System.Collections.Generic;
+using SmICSCoreLib.Test;
+using System.Linq;
 
 namespace SmICSCoreLib.Database
 {
@@ -18,15 +20,25 @@ namespace SmICSCoreLib.Database
             Session = Cluster.Connect();
 
             //prepare schema
-            Session.ExecuteAsync(new SimpleStatement("CREATE KEYSPACE IF NOT EXISTS " + keyspace + " WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' };"));
-            Session.ExecuteAsync(new SimpleStatement("USE " + keyspace + " ;"));
+            Session.Execute(new SimpleStatement("CREATE KEYSPACE IF NOT EXISTS " + keyspace + " WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' };"));
+            Session.Execute(new SimpleStatement("USE " + keyspace + " ;"));
 
             //create table BlAttribute just for testing 
-            Session.ExecuteAsync(new SimpleStatement("create table BlAttribute (BlAttributeId int primary key, Bundesland varchar, FallzahlGesamt varchar, Faelle7BL varchar," +
-                                                     " FaellePro100000Ew varchar, Todesfaelle varchar, Todesfaelle7BL varchar, Inzidenz7Tage varchar, Farbe varchar); "));
+            //Session.Execute(new SimpleStatement("create table BlAttribute (BlAttributeId int primary key, Bundesland varchar, FallzahlGesamt varchar, Faelle7BL varchar," +
+            //" FaellePro100000Ew varchar, Todesfaelle varchar, Todesfaelle7BL varchar, Inzidenz7Tage varchar, Farbe varchar); "));
+            Session.Execute(new SimpleStatement("CREATE TYPE if not exists Adresse (street text, city text, zip int);"));
+            Session.Execute(new SimpleStatement("CREATE TABLE if not exists TestKlasse (ID uuid primary key, Name text, Vorname text, Age int, Adresse Frozen<Adresse>);"));
+            
 
+            Session.UserDefinedTypes.Define(UdtMap.For<Adresse>());
             //create an instance of a Mapper from the session
             Mapper = new Mapper(Session);
+
+            //var results = Session.Execute("SELECT ID, Name, Adresse FROM TestKlasse where id = '12345B';");
+            //var row = results.First();
+            // You retrieve the field as a value of type Address
+            //var userAddress = row.GetValue<Adresse>("Adresse");
+            //Console.WriteLine("The user lives on {0} Street", userAddress.Street);
         }
 
         //checked 

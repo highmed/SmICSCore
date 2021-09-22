@@ -89,7 +89,7 @@ namespace SmICSWebApp
             //DBConfig.DB_Url = Environment.GetEnvironmentVariable("DB_URL");
             //DBConfig.DB_Keyspace = Environment.GetEnvironmentVariable("DB_KEYSPACE");
 
-            DBConfig.DB_Url = "192.168.178.133";
+            DBConfig.DB_Url = "192.168.0.7";
             DBConfig.DB_Keyspace = "newkeyspace";
 
             if (env.IsDevelopment())

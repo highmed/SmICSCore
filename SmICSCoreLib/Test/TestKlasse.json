@@ -1,0 +1,13 @@
+{
+  "ID": "756716f7-2e54-4715-9f00-91dcbea6cf50",
+  "Name": "Volkers",
+  "Vorname": "Matthias",
+  "Alter": 45,
+  "Adresse": [
+    {
+      "Street": "Am Feldweg 3",
+      "City": "Hannover",
+      "Zip":  "30923"
+    }
+  ]
+}
