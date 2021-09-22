@@ -27,7 +27,7 @@ namespace SmICSCoreLib.Database
             //Session.Execute(new SimpleStatement("create table BlAttribute (BlAttributeId int primary key, Bundesland varchar, FallzahlGesamt varchar, Faelle7BL varchar," +
             //" FaellePro100000Ew varchar, Todesfaelle varchar, Todesfaelle7BL varchar, Inzidenz7Tage varchar, Farbe varchar); "));
             Session.Execute(new SimpleStatement("CREATE TYPE if not exists Adresse (street text, city text, zip int);"));
-            Session.Execute(new SimpleStatement("CREATE TABLE if not exists TestKlasse (ID uuid primary key, Name text, Vorname text, Age int, Adresse Frozen<Adresse>);"));
+            Session.Execute(new SimpleStatement("CREATE TABLE if not exists TestKlasse (ID int primary key, Name text, Vorname text, Age int, Adresse set<frozen<Adresse>>);"));
             
 
             Session.UserDefinedTypes.Define(UdtMap.For<Adresse>());
