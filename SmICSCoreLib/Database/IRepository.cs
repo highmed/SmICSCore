@@ -4,14 +4,12 @@ namespace SmICSCoreLib.Database
 {
     public interface IRepository<T> where T : class
     {
-        //checked
         IEnumerable<T> FindAll();
+        T FindByID(string attribute, int id);
         void Insert(T item);
         void Delete(T item);
-
-        //not checked 
-        void DeleteByID(T item, string attribute, string id);
         void Update(T item);
-        T FindOne(int id);
+        void DeleteByID(string attribute, int id);
+        void UpdateByID(T item, string attribute, int id);   
     }
 }

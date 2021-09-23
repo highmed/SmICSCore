@@ -18,18 +18,17 @@ namespace SmICSCoreLib.Database
             Session = Cluster.Connect();
 
             //prepare schema
-            Session.ExecuteAsync(new SimpleStatement("CREATE KEYSPACE IF NOT EXISTS " + keyspace + " WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' };"));
-            Session.ExecuteAsync(new SimpleStatement("USE " + keyspace + " ;"));
+            Session.Execute(new SimpleStatement("CREATE KEYSPACE IF NOT EXISTS " + keyspace + " WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' };"));
+            Session.Execute(new SimpleStatement("USE " + keyspace + " ;"));
 
             //create table BlAttribute just for testing 
-            Session.ExecuteAsync(new SimpleStatement("create table BlAttribute (BlAttributeId int primary key, Bundesland varchar, FallzahlGesamt varchar, Faelle7BL varchar," +
+            Session.Execute(new SimpleStatement("create table BlAttribute (BlAttributeId int primary key, Bundesland varchar, FallzahlGesamt varchar, Faelle7BL varchar," +
                                                      " FaellePro100000Ew varchar, Todesfaelle varchar, Todesfaelle7BL varchar, Inzidenz7Tage varchar, Farbe varchar); "));
 
             //create an instance of a Mapper from the session
             Mapper = new Mapper(Session);
         }
 
-        //checked 
         public IEnumerable<T> FindAll()
         {
             try
@@ -63,27 +62,61 @@ namespace SmICSCoreLib.Database
                 Console.WriteLine(e.Message);
             }
         }
-
-        //not checked 
-        public void DeleteByID(T item, string attribute, string id)
+        public void Update(T item)
         {
             try
             {
-                Mapper.Delete<T>("WHERE " + attribute + " = " + id + " \" ");
+                Mapper.Update(item);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
-        public T FindOne(int id)
+        public T FindByID(string attribute, int id)
         {
-            throw new NotImplementedException();
-        }  
-        public void Update(T item)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                return Mapper.SingleOrDefault<T>("WHERE " + attribute + " = ?", id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
         }
+        public void DeleteByID(string attribute, int id)
+        {
+            try
+            {
+                var obj = FindByID(attribute, id);
 
+                if (obj != null)
+                {
+                    Delete(obj);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+        public void UpdateByID(T item, string attribute, int id)
+        {
+            try
+            {
+                var obj = FindByID(attribute, id);
+
+                if (obj != null)
+                {
+                    DeleteByID(attribute, id);
+                    Insert(item);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
     }
 }

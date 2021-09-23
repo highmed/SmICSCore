@@ -2,6 +2,7 @@
 
 @using SmICSCoreLib.StatistikDataModels
 @using SmICSCoreLib.StatistikServices
+@using SmICSCoreLib.Database
 @using System;
 @using Microsoft.Extensions.Logging
 @inject ILogger<State> Logger
@@ -441,6 +442,7 @@
     private bool impfStatus;
     private string path;
     private string pathLastDay;
+    private UnitOfWork unitOfWork;
 
 
     private Bundesland[] bundeslaender = new Bundesland[16];
@@ -458,6 +460,9 @@
 
         await Task.Run(SetRKIData);
         await Task.Run(GetRKIData);
+
+        //Database Testing
+        TestDB(dailyReport);
 
         if (status == false && standAktuell == true)
         {
@@ -571,6 +576,13 @@
             standAktuell = false;
         }
 
+    }
+
+    //Test Methode to Insert a BlAttribute into Database
+    private void TestDB(DailyReport dailyReport) {
+
+        unitOfWork = new();
+        unitOfWork.BlAttribute.Insert(dailyReport.Bericht.Bundesland[0].BlAttribute);
     }
 
 }
