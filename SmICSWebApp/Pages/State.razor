@@ -582,7 +582,8 @@
     private void TestDB(DailyReport dailyReport) {
 
         unitOfWork = new();
-        unitOfWork.BlAttribute.Insert(dailyReport.Bericht.Bundesland[0].BlAttribute);
+        unitOfWork.DailyReport.Insert(dailyReport);
+        //IEnumerable<DailyReport> report = unitOfWork.DailyReport.FindAll();
     }
 
 }

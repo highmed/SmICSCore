@@ -5,6 +5,8 @@ namespace SmICSCoreLib.StatistikDataModels
 {
     public class DailyReport
     {
+        public int Id { get; set; }
+
         [JsonProperty(PropertyName = "Bericht")]
         public Bericht Bericht { get; set; }
     }

@@ -341,6 +341,7 @@ namespace SmICSCoreLib.StatistikServices
                     Bericht bericht = GetBerichtFromUrl(url);
                     if (bericht != null)
                     {
+                        dailyReport.Id = 123456;
                         dailyReport.Bericht = bericht;
                         JSONWriter.Write(dailyReport, path, filename);
                         status = true;

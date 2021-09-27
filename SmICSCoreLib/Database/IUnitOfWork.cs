@@ -6,5 +6,7 @@ namespace SmICSCoreLib.Database
     {
         //BlAttribute as Test 
         IRepository<BlAttribute> BlAttribute { get; }
+
+        IRepository<DailyReport> DailyReport { get; }
     }
 }

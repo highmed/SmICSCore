@@ -1,5 +1,6 @@
 ﻿using Cassandra;
 using Cassandra.Mapping;
+using SmICSCoreLib.StatistikDataModels;
 using System;
 using System.Collections.Generic;
 
@@ -21,9 +22,27 @@ namespace SmICSCoreLib.Database
             Session.Execute(new SimpleStatement("CREATE KEYSPACE IF NOT EXISTS " + keyspace + " WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' };"));
             Session.Execute(new SimpleStatement("USE " + keyspace + " ;"));
 
-            //create table BlAttribute just for testing 
-            Session.Execute(new SimpleStatement("create table BlAttribute (BlAttributeId int primary key, Bundesland varchar, FallzahlGesamt varchar, Faelle7BL varchar," +
-                                                     " FaellePro100000Ew varchar, Todesfaelle varchar, Todesfaelle7BL varchar, Inzidenz7Tage varchar, Farbe varchar); "));
+            //create Types and a Table to inter a DailyReport 
+
+            Session.Execute(new SimpleStatement("CREATE type IF NOT EXISTS BlAttribute (Bundesland text, FallzahlGesamt text, Faelle7BL text,  FaellePro100000Ew text, Todesfaelle text," +
+                                                "Todesfaelle7BL text, Inzidenz7Tage text, Farbe text);"));
+
+            Session.Execute(new SimpleStatement("CREATE type IF NOT EXISTS Landkreis (Stadt text, LandkreisName text, FallzahlGesamt text, Faelle7Lk text, FaellePro100000Ew text," +
+                                                "Inzidenz7Tage text, Todesfaelle text, Todesfaelle7Lk text, AdmUnitId text);"));
+
+            Session.Execute(new SimpleStatement("CREATE type IF NOT EXISTS Bundesland (BlAttribute frozen<BlAttribute>, Landkreis set<frozen<Landkreis>> );"));
+
+            Session.Execute(new SimpleStatement("CREATE type IF NOT EXISTS Bericht (Stand text, StandAktuell boolean, Fallzahl text, FallzahlVortag text, Todesfaelle text," +
+                                                "TodesfaelleVortag text, RWert7Tage text, RWert7TageVortag text, Inzidenz7Tage text, Inzidenz7TageVortag text, GesamtImpfung text," +
+                                                "ImpfStatus boolean, ErstImpfung text, ZweitImpfung text, Bundesland set<frozen<Bundesland>>, BlStandAktuell boolean);"));
+
+            Session.Execute(new SimpleStatement("create table IF NOT EXISTS DailyReport (Id int primary key, Bericht frozen<Bericht>);"));
+
+            //add UserDefinedTypes 
+            Session.UserDefinedTypes.Define(UdtMap.For<BlAttribute>());
+            Session.UserDefinedTypes.Define(UdtMap.For<Landkreis>());
+            Session.UserDefinedTypes.Define(UdtMap.For<Bundesland>());
+            Session.UserDefinedTypes.Define(UdtMap.For<Bericht>());
 
             //create an instance of a Mapper from the session
             Mapper = new Mapper(Session);
