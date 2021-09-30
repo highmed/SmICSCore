@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using Microsoft.Extensions.Logging;
+using SmICSCoreLib.Database;
 
 namespace SmICSCoreLib.StatistikServices
 {
@@ -16,6 +17,7 @@ namespace SmICSCoreLib.StatistikServices
     {
         private readonly RestClient _client = new();
         private readonly ILogger<RkiService> _logger;
+        private UnitOfWork unitOfWork = new();
         public RkiService(ILogger<RkiService> logger)
         {
             _logger = logger;
@@ -476,7 +478,7 @@ namespace SmICSCoreLib.StatistikServices
                     farbe = "#FFFFFF";
                     return farbe;
                 }
-                _logger.LogInformation("SetMapColor");
+                //_logger.LogInformation("SetMapColor");
             }
             catch (Exception e)
             {
@@ -585,7 +587,7 @@ namespace SmICSCoreLib.StatistikServices
             {
                 _logger.LogWarning("GetBLReport " + e.Message);
                 return null;
-            }       
+            }
         }
 
         public LKReportJson GetLKReport(string url, int tabelle, int zeileDatum, int zeileFahlahl, int spalte, int laenge)
@@ -875,5 +877,95 @@ namespace SmICSCoreLib.StatistikServices
                 return false;
             }
         }
+
+        //Datenbank Services
+        public BundeslandNew[] GetBundeslaender(string url)
+        {
+            BundeslandNew[] bundeslandNew = new BundeslandNew[16];
+            try
+            {
+                ArrayList bundeslaender = new();
+                for (int i = 0; i < 16; i++)
+                {
+                    BundeslandNew bundesland = new();
+
+                    string[] bundes = new string[] { "Baden-Württemberg", "Bayern", "Berlin","Brandenburg", "Bremen", "Hamburg",
+                        "Hessen", "Mecklenburg-Vorpommern", "Niedersachsen", "Nordrhein-Westfalen", "Rheinland-Pfalz", "Saarland",
+                        "Sachsen", "Sachsen-Anhalt", "Schleswig-Holstein", "Thüringen"};
+
+                    try
+                    {
+                        State state = GetStateByName(bundes[i]);
+                        if (state.Features != null)
+                        {
+                            bundesland.ID = bundes[i] + "-" + DateTime.Now.Date.ToString("dd.MM.yyyy");
+                            bundesland.Bundesland = bundes[i];
+                            bundesland.FallzahlGesamt = state.Features[0].Attributes.Fallzahl.ToString("#,##");
+                            bundesland.Faelle7BL = state.Features[0].Attributes.Cases7_bl.ToString("#,##");
+                            bundesland.FaellePro100000Ew = state.Features[0].Attributes.FaellePro100000Ew.ToString("#,##");
+                            bundesland.Todesfaelle = state.Features[0].Attributes.Todesfaelle.ToString("#,##");
+                            bundesland.Todesfaelle7BL = state.Features[0].Attributes.Death7_bl.ToString("0.##");
+                            bundesland.Inzidenz7Tage = (state.Features[0].Attributes.Faelle7BlPro100K).ToString("0.##").Replace(",", ".");
+                            bundesland.Farbe = SetMapColor(bundesland.Inzidenz7Tage);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        return null;
+                    }
+                    bundeslaender.Add(bundesland);
+                }
+                BundeslandNew[] blArray = (BundeslandNew[])bundeslaender.ToArray(typeof(BundeslandNew));
+                bundeslandNew = blArray;
+                return bundeslandNew;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+        public void SaveBundeslandNew(BundeslandNew[] bundeslandNews)
+        {
+            foreach (var bundesland in bundeslandNews)
+            {
+                try
+                {
+                    unitOfWork.BundeslandNew.Insert(bundesland);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+        }
+        public BundeslandNew FindBundeslandNew(string attribute, string id)
+        {
+            try
+            {
+                return unitOfWork.BundeslandNew.FindByAttribute(attribute, id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+        //cannot Save Object as Table 
+        //public void Save(Object obj)
+        //{
+        //    try
+        //    {
+        //        unitOfWork.Repository.Insert(obj);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e.Message);
+        //    }
+        //}
+
     }
 }

@@ -4,12 +4,12 @@ namespace SmICSCoreLib.Database
 {
     public interface IRepository<T> where T : class
     {
-        IEnumerable<T> FindAll();
-        T FindByID(string attribute, int id);
-        void Insert(T item);
-        void Delete(T item);
-        void Update(T item);
-        void DeleteByID(string attribute, int id);
-        void UpdateByID(T item, string attribute, int id);   
+        IEnumerable<T> FindAll();  
+        void Insert(T Entity);
+        void Delete(T Entity);
+        void Update(T Entity);
+        T FindByAttribute(string attribute, string value);
+        void DeleteByAttribute(string attribute, string value);
+        void UpdateByAttribute(T Entity, string attribute, string value);   
     }
 }

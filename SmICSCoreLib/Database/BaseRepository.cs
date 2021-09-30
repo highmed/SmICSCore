@@ -22,27 +22,42 @@ namespace SmICSCoreLib.Database
             Session.Execute(new SimpleStatement("CREATE KEYSPACE IF NOT EXISTS " + keyspace + " WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' };"));
             Session.Execute(new SimpleStatement("USE " + keyspace + " ;"));
 
-            //create Types and a Table to inter a DailyReport 
+            //first implementation
+            ////create Types and a Table for Database
 
-            Session.Execute(new SimpleStatement("CREATE type IF NOT EXISTS BlAttribute (Bundesland text, FallzahlGesamt text, Faelle7BL text,  FaellePro100000Ew text, Todesfaelle text," +
-                                                "Todesfaelle7BL text, Inzidenz7Tage text, Farbe text);"));
+            //Session.Execute(new SimpleStatement("CREATE type IF NOT EXISTS BlAttribute (Bundesland text, FallzahlGesamt text, Faelle7BL text,  FaellePro100000Ew text, Todesfaelle text," +
+            //                                    "Todesfaelle7BL text, Inzidenz7Tage text, Farbe text);"));
 
-            Session.Execute(new SimpleStatement("CREATE type IF NOT EXISTS Landkreis (Stadt text, LandkreisName text, FallzahlGesamt text, Faelle7Lk text, FaellePro100000Ew text," +
+            //Session.Execute(new SimpleStatement("CREATE type IF NOT EXISTS Landkreis (Stadt text, LandkreisName text, FallzahlGesamt text, Faelle7Lk text, FaellePro100000Ew text," +
+            //                                    "Inzidenz7Tage text, Todesfaelle text, Todesfaelle7Lk text, AdmUnitId text);"));
+
+            //Session.Execute(new SimpleStatement("CREATE type IF NOT EXISTS Bundesland (BlAttribute frozen<BlAttribute>, Landkreis set<frozen<Landkreis>> );"));
+
+            //Session.Execute(new SimpleStatement("CREATE type IF NOT EXISTS Bericht (Stand text, StandAktuell boolean, Fallzahl text, FallzahlVortag text, Todesfaelle text," +
+            //                                    "TodesfaelleVortag text, RWert7Tage text, RWert7TageVortag text, Inzidenz7Tage text, Inzidenz7TageVortag text, GesamtImpfung text," +
+            //                                    "ImpfStatus boolean, ErstImpfung text, ZweitImpfung text, Bundesland set<frozen<Bundesland>>, BlStandAktuell boolean);"));
+
+            //Session.Execute(new SimpleStatement("create table IF NOT EXISTS DailyReport (Id int primary key, Bericht frozen<Bericht>);"));
+
+            ////add UserDefinedTypes 
+            //Session.UserDefinedTypes.Define(UdtMap.For<BlAttribute>());
+            //Session.UserDefinedTypes.Define(UdtMap.For<Landkreis>());
+            //Session.UserDefinedTypes.Define(UdtMap.For<Bundesland>());
+            //Session.UserDefinedTypes.Define(UdtMap.For<Bericht>());
+
+            //second implementation
+            //create Tables for Database 
+
+            Session.Execute(new SimpleStatement("CREATE table IF NOT EXISTS LandkreisNew (Id text primary key, Stadt text, LandkreisName text, FallzahlGesamt text, Faelle7Lk text, FaellePro100000Ew text," +
                                                 "Inzidenz7Tage text, Todesfaelle text, Todesfaelle7Lk text, AdmUnitId text);"));
 
-            Session.Execute(new SimpleStatement("CREATE type IF NOT EXISTS Bundesland (BlAttribute frozen<BlAttribute>, Landkreis set<frozen<Landkreis>> );"));
+            Session.Execute(new SimpleStatement("CREATE table IF NOT EXISTS BundeslandNew (Id text primary key, Bundesland text, FallzahlGesamt text, Faelle7BL text,  FaellePro100000Ew text, Todesfaelle text," +
+                                                "Todesfaelle7BL text, Inzidenz7Tage text, Farbe text);"));
 
-            Session.Execute(new SimpleStatement("CREATE type IF NOT EXISTS Bericht (Stand text, StandAktuell boolean, Fallzahl text, FallzahlVortag text, Todesfaelle text," +
-                                                "TodesfaelleVortag text, RWert7Tage text, RWert7TageVortag text, Inzidenz7Tage text, Inzidenz7TageVortag text, GesamtImpfung text," +
-                                                "ImpfStatus boolean, ErstImpfung text, ZweitImpfung text, Bundesland set<frozen<Bundesland>>, BlStandAktuell boolean);"));
+            Session.Execute(new SimpleStatement("CREATE table IF NOT EXISTS BerichtNew (Id text primary key, Stand text, StandAktuell boolean, Fallzahl text, FallzahlVortag text, Todesfaelle text," +
+                                               "TodesfaelleVortag text, RWert7Tage text, RWert7TageVortag text, Inzidenz7Tage text, Inzidenz7TageVortag text, GesamtImpfung text," +
+                                               "ImpfStatus boolean, ErstImpfung text, ZweitImpfung text, BlStandAktuell boolean);"));
 
-            Session.Execute(new SimpleStatement("create table IF NOT EXISTS DailyReport (Id int primary key, Bericht frozen<Bericht>);"));
-
-            //add UserDefinedTypes 
-            Session.UserDefinedTypes.Define(UdtMap.For<BlAttribute>());
-            Session.UserDefinedTypes.Define(UdtMap.For<Landkreis>());
-            Session.UserDefinedTypes.Define(UdtMap.For<Bundesland>());
-            Session.UserDefinedTypes.Define(UdtMap.For<Bericht>());
 
             //create an instance of a Mapper from the session
             Mapper = new Mapper(Session);
@@ -59,44 +74,44 @@ namespace SmICSCoreLib.Database
                 return null;
             }
         }
-        public void Insert(T item)
+        public void Insert(T Entity)
         {
             try
             {
-                Mapper.Insert(item);
+                Mapper.Insert(Entity);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
-        public void Delete(T item)
+        public void Delete(T Entity)
         {
             try
             {
-                Mapper.Delete(item);
+                Mapper.Delete(Entity);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
-        public void Update(T item)
+        public void Update(T Entity)
         {
             try
             {
-                Mapper.Update(item);
+                Mapper.Update(Entity);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
-        public T FindByID(string attribute, int id)
+        public T FindByAttribute(string attribute, string value)
         {
             try
             {
-                return Mapper.SingleOrDefault<T>("WHERE " + attribute + " = ?", id);
+                return Mapper.SingleOrDefault<T>("WHERE " + attribute + " = ?", value);
             }
             catch (Exception e)
             {
@@ -104,11 +119,11 @@ namespace SmICSCoreLib.Database
                 return null;
             }
         }
-        public void DeleteByID(string attribute, int id)
+        public void DeleteByAttribute(string attribute, string value)
         {
             try
             {
-                var obj = FindByID(attribute, id);
+                var obj = FindByAttribute(attribute, value);
 
                 if (obj != null)
                 {
@@ -120,16 +135,16 @@ namespace SmICSCoreLib.Database
                 Console.WriteLine(e.Message);
             }
         }
-        public void UpdateByID(T item, string attribute, int id)
+        public void UpdateByAttribute(T Entity, string attribute, string value)
         {
             try
             {
-                var obj = FindByID(attribute, id);
+                var obj = FindByAttribute(attribute, value);
 
                 if (obj != null)
                 {
-                    DeleteByID(attribute, id);
-                    Insert(item);
+                    DeleteByAttribute(attribute, value);
+                    Insert(Entity);
                 }
             }
             catch (Exception e)
