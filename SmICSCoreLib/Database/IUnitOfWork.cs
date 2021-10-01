@@ -2,10 +2,10 @@
 
 namespace SmICSCoreLib.Database
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork<T> where T : class
     {
-        //Types
-        //IRepository<object> Repository { get; }
+        //Generic
+        IRepository<T> Repository { get; }
 
         //Types
         IRepository<BlAttribute> BlAttribute { get; }

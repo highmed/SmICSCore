@@ -442,7 +442,8 @@
     private bool impfStatus;
     private string path;
     private string pathLastDay;
-    private UnitOfWork unitOfWork;
+    //private UnitOfWork unitOfWork;
+    private DBService dbService;
 
 
     private Bundesland[] bundeslaender = new Bundesland[16];
@@ -587,9 +588,16 @@
 
         string url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile";
         BundeslandNew[] bundeslands = rkiService.GetBundeslaender(url);
-        rkiService.SaveBundeslandNew(bundeslands);
-
+        //rkiService.SaveBundeslandNew(bundeslands);
         //BundeslandNew bl = rkiService.Find("id", "Sachsen-28.09.2021");
+
+
+        dbService = new();
+        dbService.Save(bundeslands.First(), RepositoryType.BUNDESLANDNEW);
+
+        //BundeslandNew bl = (BundeslandNew)dbService.Find("id", "Sachsen-28.09.2021", RepositoryType.BUNDESLANDNEW);
+
+
     }
 
 }

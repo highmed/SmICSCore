@@ -2,7 +2,7 @@
 
 namespace SmICSCoreLib.Database
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork<T> : IUnitOfWork<T> where T : class
     {
         public BaseRepository<BlAttribute> _blAttribute;
         public BaseRepository<DailyReport> _dailyReport;
@@ -10,7 +10,8 @@ namespace SmICSCoreLib.Database
         public BaseRepository<BerichtNew> _berichtNew;
         public BaseRepository<BundeslandNew> _bundeslandNew;
 
-        //public BaseRepository<object> _repository;
+        //Generic
+        public BaseRepository<T> _repository;
 
         public IRepository<BlAttribute> BlAttribute
         {
@@ -46,14 +47,15 @@ namespace SmICSCoreLib.Database
             }
         }
 
-        //public IRepository<object> Repository
-        //{
-        //    get
-        //    {
-        //        return _repository ??
-        //            (_repository = new BaseRepository<object>(DBConfig.DB_Url, DBConfig.DB_Keyspace));
-        //    }
-        //}
+        //Generic
+        public IRepository<T> Repository
+        {
+            get
+            {
+                return _repository ??
+                    (_repository = new BaseRepository<T>(DBConfig.DB_Url, DBConfig.DB_Keyspace));
+            }
+        }
 
     }
 }

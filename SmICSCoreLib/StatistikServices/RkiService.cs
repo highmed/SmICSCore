@@ -17,7 +17,7 @@ namespace SmICSCoreLib.StatistikServices
     {
         private readonly RestClient _client = new();
         private readonly ILogger<RkiService> _logger;
-        private UnitOfWork unitOfWork = new();
+        //private UnitOfWork unitOfWork = new();
         public RkiService(ILogger<RkiService> logger)
         {
             _logger = logger;
@@ -927,43 +927,30 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        public void SaveBundeslandNew(BundeslandNew[] bundeslandNews)
-        {
-            foreach (var bundesland in bundeslandNews)
-            {
-                try
-                {
-                    unitOfWork.BundeslandNew.Insert(bundesland);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            }
-        }
-        public BundeslandNew FindBundeslandNew(string attribute, string id)
-        {
-            try
-            {
-                return unitOfWork.BundeslandNew.FindByAttribute(attribute, id);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return null;
-            }
-        }
-
-        //cannot Save Object as Table 
-        //public void Save(Object obj)
+        //public void SaveBundeslandNew(BundeslandNew[] bundeslandNews)
+        //{
+        //    foreach (var bundesland in bundeslandNews)
+        //    {
+        //        try
+        //        {
+        //            unitOfWork.BundeslandNew.Insert(bundesland);
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Console.WriteLine(e.Message);
+        //        }
+        //    }
+        //}
+        //public BundeslandNew FindBundeslandNew(string attribute, string id)
         //{
         //    try
         //    {
-        //        unitOfWork.Repository.Insert(obj);
+        //        return unitOfWork.BundeslandNew.FindByAttribute(attribute, id);
         //    }
         //    catch (Exception e)
         //    {
         //        Console.WriteLine(e.Message);
+        //        return null;
         //    }
         //}
 
