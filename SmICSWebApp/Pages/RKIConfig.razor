@@ -66,9 +66,13 @@
                             <div>
                                 <label for="Zeitpunkt" class="tb_bez">Tgl. Ausführuhrzeit d. Regeln</label>
                             </div>
-                            <div>
-                                <InputText type="time" @bind-Value="ZeitpunktList.Zeitpunkt" class="input-field" />
-                            </div>
+                            @if (ZeitpunktList != null)
+                            {
+                                <div>
+                                    <InputText type="time" @bind-Value="ZeitpunktList.Zeitpunkt" class="input-field" />
+                                </div>
+                            }
+
                         </div>
 
                     </div>
@@ -129,7 +133,7 @@
 
     private List<RKIConfigTemplate> RKIConfigForm = new List<RKIConfigTemplate>();
     private List<RKIConfigTemplate> ConfigList = new List<RKIConfigTemplate>();
-    private LabDataTimeModel ZeitpunktList = new LabDataTimeModel();
+    private LabDataTimeModel ZeitpunktList;
 
     protected override async Task OnInitializedAsync()
     {

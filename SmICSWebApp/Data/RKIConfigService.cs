@@ -8,6 +8,7 @@ using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using SmICSCoreLib.AQL.PatientInformation;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace SmICSWebApp.Data
 {
@@ -17,13 +18,16 @@ namespace SmICSWebApp.Data
         private readonly IPatientInformation _patientInformation;
         private readonly ILabData _labData;
         private readonly string path = @"./Resources/RKIConfig/RKIConfig.json";
-        private readonly string path_time = @"./Resources/RKIConfig/RKIConfigTime.json";
+        //private readonly string path_time = @"./Resources/RKIConfig/RKIConfigTime.json";
+        private readonly IConfiguration Configuration;
 
-        public RKIConfigService(IPatientInformation patientInformation, IRestDataAccess restData, ILabData labData)
+
+        public RKIConfigService(IPatientInformation patientInformation, IRestDataAccess restData, ILabData labData, IConfiguration configuration)
         {
             _patientInformation = patientInformation;
             _labData = labData;
             _restData = restData;
+            Configuration = configuration;
         }
 
         public List<PatientMovementModel> GetAllStations()
@@ -116,8 +120,9 @@ namespace SmICSWebApp.Data
         {
             try
             {
-                string json = JsonConvert.SerializeObject(time, Formatting.Indented);
-                File.WriteAllText(path_time, json);
+                //string json = JsonConvert.SerializeObject(time, Formatting.Indented);
+                //File.WriteAllText(path_time, json);
+                Configuration["Zeitpunkt"] = time.Zeitpunkt;
             }
             catch (Exception)
             {
@@ -127,24 +132,25 @@ namespace SmICSWebApp.Data
 
         public LabDataTimeModel GetTimeSet()
         {
-            if(File.Exists(path_time) == true)
-            {
-                string json_time = File.ReadAllText(path_time);
-                LabDataTimeModel timefromjson = JsonConvert.DeserializeObject<LabDataTimeModel>(json_time);
-                if (timefromjson != null)
-                {
-                    return timefromjson;
-                }
-                else
-                {
-                    return new LabDataTimeModel(); ;
-                }
-            }
-            else
-            {
-                return new LabDataTimeModel();
-            }
-            
+            //if(File.Exists(path_time) == true)
+            //{
+            //    string json_time = File.ReadAllText(path_time);
+            //    LabDataTimeModel timefromjson = JsonConvert.DeserializeObject<LabDataTimeModel>(json_time);
+            //    if (timefromjson != null)
+            //    {
+            //        return timefromjson;
+            //    }
+            //    else
+            //    {
+            //        return new LabDataTimeModel(); ;
+            //    }
+            //}
+            //else
+            //{
+            //    return new LabDataTimeModel();
+            //}
+            LabDataTimeModel labdata = new LabDataTimeModel(Configuration["Zeitpunkt"]);
+            return labdata;
         }
     }
 }

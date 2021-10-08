@@ -462,3 +462,4 @@ dist
 .yarn/unplugged
 .yarn/build-state.yml
 .pnp.*
+/SmICSWebApp/Resources/statistik/json/2021-09-28.json
