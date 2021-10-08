@@ -593,7 +593,7 @@
 
 
         dbService = new();
-        dbService.Save(bundeslands.First(), RepositoryType.BUNDESLANDNEW);
+        dbService.Save<BundeslandNew>(bundeslands.First());
 
         //BundeslandNew bl = (BundeslandNew)dbService.Find("id", "Sachsen-28.09.2021", RepositoryType.BUNDESLANDNEW);
 

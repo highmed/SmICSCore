@@ -5,21 +5,35 @@ namespace SmICSCoreLib.Database
 {
     public class DBService : IDBService
     {
-        public void Save(Object obj, RepositoryType type)
+        public void Save<T>(T obj) where T : class
         {
-            if (type == RepositoryType.BUNDESLANDNEW)
+            UnitOfWork<T> unitOfWork = new();
+            try
             {
-                UnitOfWork<BundeslandNew> unitOfWork = new();
-                try
-                {
-                    unitOfWork.Repository.Insert((BundeslandNew)obj);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
+                unitOfWork.Repository.Insert(obj);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
+
+        //public void Save(Object obj, RepositoryType type)
+        //{
+        //    if (type == RepositoryType.BUNDESLANDNEW)
+        //    {
+        //        UnitOfWork<BundeslandNew> unitOfWork = new();
+        //        try
+        //        {
+        //            unitOfWork.Repository.Insert((BundeslandNew)obj);
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Console.WriteLine(e.Message);
+        //        }
+        //    }
+        //}
 
         public Object Find(string attribute, string id, RepositoryType type)
         {
