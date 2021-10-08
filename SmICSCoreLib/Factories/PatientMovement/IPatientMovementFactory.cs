@@ -10,5 +10,6 @@ namespace SmICSCoreLib.Factories.PatientMovement
         IRestDataAccess RestDataAccess { get; }
         List<PatientMovementModel> Process(PatientListParameter parameter);
         List<PatientMovementModel> ProcessFromStation(PatientListParameter parameter, string station, DateTime starttime, DateTime endtime);
+        List<PatientMovementModel> ProcessGetStations();
     }
 }

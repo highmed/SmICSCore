@@ -50,6 +50,8 @@ namespace SmICSWebApp
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 00 10 ? * *"));
             services.AddHostedService<QuartzHostedService>();
 
+            services.AddSingleton<RKIConfigService>();
+
             services.AddSingleton<ContactTracingService>();
             services.AddSingleton<PersonInformationService>();
             services.AddSingleton<PersInfoInfectCtrlService>();

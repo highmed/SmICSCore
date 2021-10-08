@@ -138,5 +138,16 @@ namespace SmICSCoreLib.Factories.PatientMovement
             EpsiodeOfCareParameter epsiodeOfCareParameter = new EpsiodeOfCareParameter(patientStay);
             return epsiodeOfCareParameter;
         }
+
+        public List<PatientMovementModel> ProcessGetStations()
+        {
+            List<PatientMovementModel> stationList = RestDataAccess.AQLQuery<PatientMovementModel>(AQLCatalog.GetAllStationsForConfig());
+            if (stationList is null)
+            {
+                return new List<PatientMovementModel>();
+            }
+
+            return stationList;
+        }
     }
 }

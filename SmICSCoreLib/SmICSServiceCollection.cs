@@ -16,6 +16,7 @@ using SmICSCoreLib.Factories.Employees.PersInfoInfecCtrl;
 using SmICSCoreLib.Factories.Employees.ContactTracing;
 using SmICSCoreLib.Factories.Employees.PersonData;
 using SmICSCoreLib.Factories.InfectionSituation;
+using SmICSCoreLib.Factories.RKIConfig;
 
 namespace SmICS
 {
@@ -50,6 +51,8 @@ namespace SmICS
             services.AddTransient<IContactTracingFactory, ContactTracingFactory>();
             services.AddTransient<IPersInfoInfecCtrlFactory, PersInfoInfecCtrlFactory>();
             services.AddTransient<IPersonDataFactory, PersonDataFactory>();
+
+            services.AddTransient<IRKILabDataFactory, RKILabDataFactory>();
 
             return services;
         }
