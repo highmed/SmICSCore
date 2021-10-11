@@ -21,7 +21,7 @@ namespace SmICSCoreLib.Factories.DetectionAlgorithmInterface
                                                           string kindOfInfection,
                                                           string stationID)
         {
-            InfectionSituationFactory infectionsStatusFactory = new InfectionsSituationFactory(_restData);
+            InfectionsStatusFactory infectionsStatusFactory = new InfectionsStatusFactory(_restData);
             Dictionary<string, SortedDictionary<DateTime, int>> infectionsStatus_Process = infectionsStatusFactory.Process(timespanParameter, kindOfInfection);
 
             int[] epochs = new int[infectionsStatus_Process[stationID].Count];

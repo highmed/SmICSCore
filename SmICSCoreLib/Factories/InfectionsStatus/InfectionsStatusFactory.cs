@@ -15,7 +15,7 @@ using SmICSCoreLib.Factories.InfectionsStatus;
 using SmICSCoreLib.Factories.PatientMovement;
 using Microsoft.Extensions.Logging;
 
-namespace SmICSCoreLib.AQL.InfectionsStatus
+namespace SmICSCoreLib.Factories.InfectionsStatus
 {
     public class InfectionsStatusFactory : IInfectionsStatusFactory
     {
