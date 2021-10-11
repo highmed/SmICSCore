@@ -17,6 +17,9 @@ using Quartz.Impl;
 using SmICSCoreLib.StatistikServices.CronJob;
 using SmICSCoreLib.StatistikServices;
 using Microsoft.Extensions.Logging;
+using static SmICSCoreLib.Factories.DetectionAlgorithmInterface.DetectionAlgorithmJob;
+using SmICSCoreLib.Factories.DetectionAlgorithmInterface;
+using Microsoft.Extensions.Options;
 
 namespace SmICSWebApp
 {
@@ -58,7 +61,38 @@ namespace SmICSWebApp
 
             //CronJob UpdateRkidata
             services.AddSingleton<JobUpdateRkidata>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));            
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
+
+            //CronJob DetectionAlgorithmJob
+            services.AddSingleton<myJob_00001_DetectionAlgorithmJob>();
+            //
+            DateTime startCronJob = new DateTime(2021, 9, 9, 17, 32, 0);
+            int myHour = startCronJob.Hour;
+            int myMinute = startCronJob.Minute;
+            string cronJobParams = "";
+            cronJobParams += "*";
+            cronJobParams += " ";
+            cronJobParams += myMinute.ToString();
+            cronJobParams += " ";
+            cronJobParams += myHour.ToString();
+            cronJobParams += " * * ?";
+            //
+            cronJobParams = "";
+            cronJobParams += "*"; // Sekunden
+            cronJobParams += " 0/4"; // Minuten
+            cronJobParams += " *"; // Stunden
+            cronJobParams += " *"; // Tag
+            cronJobParams += " *"; // Monat
+            cronJobParams += " ?"; // Wochentag
+            //
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(),
+                                  typeof(myJob_00001_DetectionAlgorithmJob),
+                                  "myJob_00001_DetectionAlgorithmJob",
+                                  cronJobParams));
+            /*services.AddSingleton(new JobMetadata(Guid.NewGuid(),
+                                  typeof(myJob_00001_DetectionAlgorithmJob),
+                                  "myJob_00001_DetectionAlgorithmJob",
+                                  "* 0/4 * * * ?"));*/
 
             services.AddSwaggerGen(c =>
             {

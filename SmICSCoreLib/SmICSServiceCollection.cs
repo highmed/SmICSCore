@@ -17,6 +17,7 @@ using SmICSCoreLib.Factories.Employees.ContactTracing;
 using SmICSCoreLib.Factories.Employees.PersonData;
 using SmICSCoreLib.Factories.InfectionSituation;
 using SmICSCoreLib.Factories.RKIConfig;
+using SmICSCoreLib.Factories.DetectionAlgorithmInterface;
 
 namespace SmICS
 {
@@ -40,6 +41,8 @@ namespace SmICS
 
             services.AddTransient<INECResultDataFactory, NECResultDataFactory>();
             services.AddTransient<INECResultFileFactory, NECResultFileFactory>();
+
+            services.AddTransient<BuildDetectionInput>();
 
             services.AddTransient<IStationaryFactory, StationaryFactory>();
             services.AddTransient<IPatientStay, PatientStay>();
