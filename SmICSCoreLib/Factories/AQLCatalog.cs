@@ -623,7 +623,7 @@ namespace SmICSCoreLib.Factories
 
         public static AQLQuery GetAllStationsForConfig()
         {
-            return new AQLQuery("RKIConfig", $@"SELECT Distinct b/items[at0027]/value/value as StationID
+            return new AQLQuery("RKIConfig", $@"SELECT DISTINCT b/items[at0027]/value/value as StationID
                                 FROM EHR e
                                 CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
                                 CONTAINS CLUSTER b[openEHR-EHR-CLUSTER.location.v1]");
