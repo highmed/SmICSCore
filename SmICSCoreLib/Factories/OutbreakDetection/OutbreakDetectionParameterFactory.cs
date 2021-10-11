@@ -27,7 +27,7 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
 
         private void ProcessViro(OutbreakDetectionParameter parameter)
         {
-            List<OutbreakDectectionPatient> patientList = _restData.AQLQuery<OutbreakDectectionPatient>(AQLCatalog.FooStation(parameter));
+            List<OutbreakDectectionPatient> patientList = _restData.AQLQuery<OutbreakDectectionPatient>(AQLCatalog.GetPatientCaseList(parameter));
             int[] PositivCounts = GetPatientLabResults(patientList, parameter);
         }
 
@@ -36,7 +36,7 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
             int[] FirstPositiveCounts = new int[(int)(parameter.Endtime - parameter.Starttime).TotalDays];
             foreach (OutbreakDectectionPatient pat in patientList)
             {
-                List<OutbreakDetectionLabResult> labResult = _restData.AQLQuery<OutbreakDetectionLabResult>(AQLCatalog.FooLabData(parameter));
+                List<OutbreakDetectionLabResult> labResult = _restData.AQLQuery<OutbreakDetectionLabResult>(AQLCatalog.GetPatientLabResultList(parameter, pat));
                 labResult = labResult.OrderBy(l => l.ResultDate).ToList();
                 OutbreakDetectionLabResult result = labResult.Where(l => l.ResultDate >= parameter.Starttime && l.Result == (int)SarsCovResult.POSITIVE).FirstOrDefault();
                 if(result != null)
