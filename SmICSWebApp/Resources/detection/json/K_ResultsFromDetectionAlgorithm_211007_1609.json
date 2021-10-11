@@ -1,0 +1,17 @@
+{
+  "Results from Detection Algorithm": [
+    {
+      "Datum": "2021-01-11T00:00:00",
+      "Ausbruchswahrscheinlichkeit": 0.002890834,
+      "p-Value": 1.0,
+      "Erregeranzahl": 0,
+      "Endemisches Niveau": 0.1178979,
+      "Epidemisches Niveau": 2.338249,
+      "Obergrenze": 2,
+      "Faelle unter der Obergrenze": 0,
+      "Faelle ueber der Obergrenze": 0,
+      "Klassifikation der Alarmfaelle": "0 cases",
+      "Algorithmusergebnis enthaelt keine null-Werte": true
+    }
+  ]
+}

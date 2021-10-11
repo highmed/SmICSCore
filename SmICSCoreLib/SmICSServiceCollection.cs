@@ -20,6 +20,7 @@ using SmICSCoreLib.AQL.Employees;
 using SmICSCoreLib.AQL.Employees.PersInfoInfecCtrl;
 using SmICSCoreLib.AQL.Employees.ContactTracing;
 using SmICSCoreLib.AQL.Employees.PersonData;
+using SmICSCoreLib.AQL.DetectionAlgorithmInterface;
 
 namespace SmICS
 {
@@ -49,6 +50,7 @@ namespace SmICS
             services.AddTransient<ILabData, LabData>();
             services.AddSingleton<IAlgorithmData, AlgortihmData>();
 
+            services.AddTransient<BuildDetectionInput>();
             services.AddTransient<IStationaryFactory, StationaryFactory>();
             services.AddTransient<IPatinet_Stay, Patinet_Stay>();
             services.AddTransient<ICountFactory, CountFactory>();

@@ -19,7 +19,7 @@ namespace SmICSDataGenerator.Tests.EmployeeInformationTests
         [ClassData(typeof(EmployeeContactTracingTestData))]
         public void ProcessorTest(string ehrID, int ResultSetID, int ehrNo) 
         {
-            RestDataAccess _data = TestConnection.Initialize();
+            /*RestDataAccess _data = TestConnection.Initialize();
 
             PatientListParameter patientParams = new PatientListParameter()
             {
@@ -53,7 +53,7 @@ namespace SmICSDataGenerator.Tests.EmployeeInformationTests
                 Assert.Equal(expected[i].schutzkleidung, actual[i].schutzkleidung);
                 Assert.Equal(expected[i].person, actual[i].person);
                 Assert.Equal(expected[i].kommentar, actual[i].kommentar);
-            }
+            }*/
         }
 
         private class EmployeeContactTracingTestData : IEnumerable<object[]>

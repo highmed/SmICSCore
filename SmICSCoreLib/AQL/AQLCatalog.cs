@@ -542,6 +542,21 @@ namespace SmICSCoreLib.AQL
                                 WHERE w/items[at0001,'Erregername']/value/value LIKE '*{name}*'");
         }
 
+        public static AQLQuery InfectionsStatus(TimespanParameter timespanParameter)
+        {
+            return new AQLQuery("InfectionsStatus", $@"SELECT e/ehr_id/value as PatientID,
+                                                              o/items[at0001]/value/id as SpecimenIdentifier,
+                                                              o/items[at0015]/value/value as Zeitpunkt,
+                                                              k/items[at0001, 'Nachweis']/value/value as VirologicalTestResult,
+                                                              k/items[at0001, 'Nachweis']/value/defining_code/code_string as CodeForTestResult,
+                                                              k/items[at0024, 'Virus']/value/value as DiseaseName
+                                                              FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+                                                                         CONTAINS OBSERVATION q[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]
+                                                                         CONTAINS (    CLUSTER o[openEHR-EHR-CLUSTER.specimen.v1]
+                                                                                   and CLUSTER k[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1])
+                                                              where c/name/value='Virologischer Befund' and o/items[at0015]/value/value>='2010-01-01' and o/items[at0015]/value/value<='2021-10-01'");
+        }
+
     }
 }
  
