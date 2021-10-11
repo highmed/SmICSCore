@@ -4,7 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.REST;
-using SmICSCoreLib.Factories.InfectionSituation;
+using SmICSCoreLib.Factories.InfectionsStatus;
 
 namespace SmICSCoreLib.Factories.DetectionAlgorithmInterface
 {

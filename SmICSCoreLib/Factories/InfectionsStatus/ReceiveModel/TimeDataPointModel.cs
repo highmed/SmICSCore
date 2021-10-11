@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace SmICSCoreLib.Factories.InfectionsSituation.ReceiveModel
+namespace SmICSCoreLib.Factories.InfectionsStatus.ReceiveModel
 {
     public class TimeDataPointModel
     {
