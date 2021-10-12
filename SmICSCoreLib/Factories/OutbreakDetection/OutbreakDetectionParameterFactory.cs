@@ -17,23 +17,28 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
         }
 
         //OutbreakDetectionParameter löschen für Config-Parameter
-        public void Process(OutbreakDetectionParameter parameter, SmICSVersion version)
+        public int[][] Process(OutbreakDetectionParameter parameter, SmICSVersion version)
         {
             if(version == SmICSVersion.VIROLOGY)
             {
-                ProcessViro(parameter);
+               return ProcessViro(parameter);
             }
+            return null;
         }
 
-        private void ProcessViro(OutbreakDetectionParameter parameter)
+        private int[][] ProcessViro(OutbreakDetectionParameter parameter)
         {
             List<OutbreakDectectionPatient> patientList = _restData.AQLQuery<OutbreakDectectionPatient>(AQLCatalog.GetPatientCaseList(parameter));
             int[] PositivCounts = GetPatientLabResults(patientList, parameter);
+            int[] Epochs = GenerateEpochsArray(parameter);
+            int[][] epochs_and_outbreaks = new int[][] { Epochs, PositivCounts };
+            return epochs_and_outbreaks;
         }
 
         private int[] GetPatientLabResults(List<OutbreakDectectionPatient> patientList, OutbreakDetectionParameter parameter)
         {
             int[] FirstPositiveCounts = new int[(int)(parameter.Endtime - parameter.Starttime).TotalDays];
+
             foreach (OutbreakDectectionPatient pat in patientList)
             {
                 List<OutbreakDetectionLabResult> labResult = _restData.AQLQuery<OutbreakDetectionLabResult>(AQLCatalog.GetPatientLabResultList(parameter, pat));
@@ -48,9 +53,17 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
             return FirstPositiveCounts;
         }
 
-        private void foo(Dictionary<OutbreakDectectionPatient, List<OutbreakDetectionLabResult>> labResults)
+        private int[] GenerateEpochsArray(OutbreakDetectionParameter parameter) 
         {
-            //Für jeden postiven Befund pro patient zu zeitpunkt x inkrementieren falls zu zeitpunkt x schon nicht negativ
+            int[] epochs = new int[(int)(parameter.Endtime - parameter.Starttime).TotalDays];
+            int i = 0;
+            DateTime referenceDate = new DateTime(1970, 1, 1);
+            for(DateTime date = parameter.Starttime; date <= parameter.Endtime; date = date.AddDays(1.0))
+            {
+                epochs[i] = (int)(referenceDate.Date - date.Date).TotalDays;
+                i += 1;
+            }
+            return epochs;
         }
     }
 }
