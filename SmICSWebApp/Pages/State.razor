@@ -442,7 +442,6 @@
     private bool impfStatus;
     private string path;
     private string pathLastDay;
-    //private UnitOfWork unitOfWork;
     private DBService dbService;
 
 
@@ -582,22 +581,17 @@
     //Test Methode to Insert a BlAttribute into Database
     private void TestDB(DailyReport dailyReport) {
 
-        //unitOfWork = new();
-        //unitOfWork.DailyReport.Insert(dailyReport);
-        //IEnumerable<DailyReport> report = unitOfWork.DailyReport.FindAll();
-
         string url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile";
         BundeslandNew[] bundeslands = rkiService.GetBundeslaender(url);
-        //rkiService.SaveBundeslandNew(bundeslands);
-        //BundeslandNew bl = rkiService.Find("id", "Sachsen-28.09.2021");
-
 
         dbService = new();
-        dbService.Save<BundeslandNew>(bundeslands.First());
+        dbService.Insert<BundeslandNew>(bundeslands.First());
 
-        //BundeslandNew bl = (BundeslandNew)dbService.Find("id", "Sachsen-28.09.2021", RepositoryType.BUNDESLANDNEW);
+        BundeslandNew bl = bundeslands.First();
+        bl.ID = "Baden-Württemberg-13.10.2021";
+        dbService.UpdateByAttribute(bl, "id", "Baden-Württemberg-13.10.2021");
 
-
+        IEnumerable<BundeslandNew> lbList = dbService.FindAllByAttribute<BundeslandNew>("bundesland", "Baden-Württemberg");
     }
 
 }

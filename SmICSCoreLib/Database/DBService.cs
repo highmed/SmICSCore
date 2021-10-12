@@ -1,17 +1,16 @@
-﻿using SmICSCoreLib.StatistikDataModels;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SmICSCoreLib.Database
 {
     public class DBService : IDBService
     {
-        public void Save<T>(T obj) where T : class
+        public void Insert<T>(T obj) where T : class
         {
             UnitOfWork<T> unitOfWork = new();
             try
             {
                 unitOfWork.Repository.Insert(obj);
-
             }
             catch (Exception e)
             {
@@ -19,42 +18,99 @@ namespace SmICSCoreLib.Database
             }
         }
 
-        //public void Save(Object obj, RepositoryType type)
-        //{
-        //    if (type == RepositoryType.BUNDESLANDNEW)
-        //    {
-        //        UnitOfWork<BundeslandNew> unitOfWork = new();
-        //        try
-        //        {
-        //            unitOfWork.Repository.Insert((BundeslandNew)obj);
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            Console.WriteLine(e.Message);
-        //        }
-        //    }
-        //}
-
-        public Object Find(string attribute, string id, RepositoryType type)
+        public void Delete<T>(T obj) where T : class
         {
-            if (type == RepositoryType.BUNDESLANDNEW)
+            UnitOfWork<T> unitOfWork = new();
+            try
             {
-                UnitOfWork<BundeslandNew> unitOfWork = new();
-                try
-                {
-                    return unitOfWork.Repository.FindByAttribute(attribute, id);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    return null;
-                }
+                unitOfWork.Repository.Delete(obj);
             }
-            else
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public void Update<T>(T obj) where T : class
+        {
+            UnitOfWork<T> unitOfWork = new();
+            try
+            {
+                unitOfWork.Repository.Update(obj);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public IEnumerable<T> FindAll<T>() where T : class
+        {
+            UnitOfWork<T> unitOfWork = new();
+            try
+            {
+                return unitOfWork.Repository.FindAll();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
                 return null;
             }
         }
 
+        public IEnumerable<T> FindAllByAttribute<T>(string attribute, string value) where T : class
+        {
+            UnitOfWork<T> unitOfWork = new();
+            try
+            {
+                return unitOfWork.Repository.FindAllByAttribute(attribute, value);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+        public T FindOneByAttribute<T>(string attribute, string value) where T : class
+         {
+            UnitOfWork<T> unitOfWork = new();
+            try
+            {
+                return unitOfWork.Repository.FindOneByAttribute(attribute, value);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return default(T);
+            }
+        }
+
+        public void DeleteByAttribute<T>(string attribute, string value) where T : class
+        {
+            UnitOfWork<T> unitOfWork = new();
+            try
+            {
+                unitOfWork.Repository.DeleteByAttribute(attribute, value);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public void UpdateByAttribute<T>(T newObj, string attribute, string value) where T : class
+        {
+            UnitOfWork<T> unitOfWork = new();
+            try
+            {
+                  unitOfWork.Repository.UpdateByAttribute(newObj, attribute, value);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+     
     }
 }

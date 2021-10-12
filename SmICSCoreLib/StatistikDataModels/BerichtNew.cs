@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using Cassandra.Mapping.Attributes;
+using Newtonsoft.Json;
 
 namespace SmICSCoreLib.StatistikDataModels
 {
     public class BerichtNew
     {
+        [PartitionKey]
         [JsonProperty(PropertyName = "ID")]
         public string ID { get; set; }
 
@@ -55,6 +57,7 @@ namespace SmICSCoreLib.StatistikDataModels
 
     public class BundeslandNew
     {
+        [PartitionKey]
         [JsonProperty(PropertyName = "ID")]
         public string ID { get; set; }
 
@@ -81,11 +84,11 @@ namespace SmICSCoreLib.StatistikDataModels
 
         [JsonProperty(PropertyName = "Farbe")]
         public string Farbe { get; set; }
-
     }
 
     public class LandkreisNew
     {
+        [PartitionKey]
         [JsonProperty(PropertyName = "ID")]
         public string ID { get; set; }
 

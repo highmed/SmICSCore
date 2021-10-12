@@ -10,5 +10,7 @@ namespace SmICSCoreLib.Database
     {
         public static string DB_Url;
         public static string DB_Keyspace;
+        public static string DB_User;
+        public static string DB_Password;
     }
 }
