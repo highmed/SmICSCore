@@ -690,8 +690,8 @@ namespace SmICSCoreLib.Factories
                                                         CONTAINS (OBSERVATION n[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]
                                                         CONTAINS (CLUSTER y[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] and CLUSTER j[openEHR-EHR-CLUSTER.specimen.v1]) 
                                                         AND CLUSTER q[openEHR-EHR-CLUSTER.case_identification.v0])
-                                                        WHERE PatientID matches {pat.PatientID} 
-                                                        AND y/items[at0024,'Virusnachweistest']/value/defining_code/code_string matches {parameter.PathogenIDs}
+                                                        WHERE PatientID = '{pat.PatientID}' 
+                                                        AND y/items[at0024,'Virusnachweistest']/value/defining_code/code_string matches {parameter.ToAQLMatchString()}
                                                         AND Result = '260373001'");
         }
 

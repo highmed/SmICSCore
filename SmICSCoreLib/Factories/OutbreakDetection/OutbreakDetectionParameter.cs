@@ -1,5 +1,6 @@
 ﻿using SmICSCoreLib.Factories.General;
 using System.Collections.Generic;
+using System;
 
 namespace SmICSCoreLib.Factories.OutbreakDetection
 {
@@ -7,5 +8,11 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
     {
         public List<string> PathogenIDs { get; set; }
         public string Ward { get; set; }
+
+        public string ToAQLMatchString()
+        {
+            string convertedPathogenIDs = String.Join("','", PathogenIDs);
+            return "{'" + convertedPathogenIDs + "'}";
+        }
     }
 }
