@@ -86,11 +86,16 @@ namespace SmICSWebApp
             //OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
             //OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
 
+            //DB Config
             //DBConfig.DB_Url = Environment.GetEnvironmentVariable("DB_URL");
             //DBConfig.DB_Keyspace = Environment.GetEnvironmentVariable("DB_KEYSPACE");
+            //DBConfig.DB_User = Environment.GetEnvironmentVariable("DB_User");
+            //DBConfig.DB_Password = Environment.GetEnvironmentVariable("DB_Password");
 
             DBConfig.DB_Url = "192.168.178.133";
             DBConfig.DB_Keyspace = "newkeyspace";
+            DBConfig.DB_User = "cassandra";
+            DBConfig.DB_Password = "cassandra";
 
             if (env.IsDevelopment())
             {
