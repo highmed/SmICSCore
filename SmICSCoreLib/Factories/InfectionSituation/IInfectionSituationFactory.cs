@@ -6,6 +6,6 @@ namespace SmICSCoreLib.Factories.InfectionSituation
 {
     public interface IInfectionSituationFactory
     {
-        List<Patient> Process(PatientListParameter parameter);
+        List<PatientModel> Process(PatientListParameter parameter);
     }
 }

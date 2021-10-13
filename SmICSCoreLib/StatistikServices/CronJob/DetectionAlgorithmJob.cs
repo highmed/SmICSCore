@@ -78,7 +78,7 @@ namespace SmICSCoreLib.Factories.DetectionAlgorithmInterface
                     string cur_path_of_r_script = pathForCSharp + "..\\SmICSCoreLib\\AQL\\DetectionAlgorithmInterface\\";
                     string cur_json_inp_name = "./variables_for_r_transfer_script.json"; //CAUTION: This parameter must be the same as in cur_r_transfer_file_name
                     string cur_r_transfer_file_name = "R_Script_00010.R";
-                    string cur_path_of_r_exec = "C:\\Program Files\\R\\R-4.0.4\\bin\\";
+                    string cur_path_of_r_exec = "C:\\Programme\\R\\R-4.0.3\\bin\\";
                     string cur_r_out_file_name = "./Variables_for_Visualization.json"; //CAUTION: This parameter must be the same as in cur_r_transfer_file_name
 
                     // Konfig-Parameter aus einer Json-Datei einlesen

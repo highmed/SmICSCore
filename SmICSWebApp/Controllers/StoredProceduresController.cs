@@ -161,7 +161,7 @@ namespace SmICSWebApp.Controllers
         /// <returns></returns>
         [Route("Infection_Situation")]
         [HttpPost]
-        public ActionResult<List<Patient>> Infection_Situation([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
+        public ActionResult<List<PatientModel>> Infection_Situation([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Infection_Situation without any parameters");
 
