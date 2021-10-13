@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SmICSCoreLib.Factories.OutbreakDetection
 {
-    public class OutbreakDetectionParameterFactory
+    public class OutbreakDetectionParameterFactory : IOutbreakDetectionParameterFactory
     {
         private IRestDataAccess _restData;
         public OutbreakDetectionParameterFactory(IRestDataAccess restData)
@@ -16,12 +16,11 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
             _restData = restData;
         }
 
-        //OutbreakDetectionParameter löschen für Config-Parameter
         public int[][] Process(OutbreakDetectionParameter parameter, SmICSVersion version)
         {
-            if(version == SmICSVersion.VIROLOGY)
+            if (version == SmICSVersion.VIROLOGY)
             {
-               return ProcessViro(parameter);
+                return ProcessViro(parameter);
             }
             return null;
         }
@@ -44,21 +43,21 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
                 List<OutbreakDetectionLabResult> labResult = _restData.AQLQuery<OutbreakDetectionLabResult>(AQLCatalog.GetPatientLabResultList(parameter, pat));
                 labResult = labResult.OrderBy(l => l.ResultDate).ToList();
                 OutbreakDetectionLabResult result = labResult.Where(l => l.ResultDate >= parameter.Starttime && l.Result == (int)SarsCovResult.POSITIVE).FirstOrDefault();
-                if(result != null)
+                if (result != null)
                 {
-                    FirstPositiveCounts[(int)(result.ResultDate - parameter.Starttime).TotalDays] += 1; 
+                    FirstPositiveCounts[(int)(result.ResultDate - parameter.Starttime).TotalDays] += 1;
                 }
             }
 
             return FirstPositiveCounts;
         }
 
-        private int[] GenerateEpochsArray(OutbreakDetectionParameter parameter) 
+        private int[] GenerateEpochsArray(OutbreakDetectionParameter parameter)
         {
             int[] epochs = new int[(int)(parameter.Endtime - parameter.Starttime).TotalDays];
             int i = 0;
             DateTime referenceDate = new DateTime(1970, 1, 1);
-            for(DateTime date = parameter.Starttime; date <= parameter.Endtime; date = date.AddDays(1.0))
+            for (DateTime date = parameter.Starttime; date <= parameter.Endtime; date = date.AddDays(1.0))
             {
                 epochs[i] = (int)(referenceDate.Date - date.Date).TotalDays;
                 i += 1;

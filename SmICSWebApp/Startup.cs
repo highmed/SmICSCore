@@ -20,6 +20,7 @@ using Microsoft.Extensions.Logging;
 using static SmICSCoreLib.Factories.DetectionAlgorithmInterface.DetectionAlgorithmJob;
 using SmICSCoreLib.Factories.DetectionAlgorithmInterface;
 using Microsoft.Extensions.Options;
+using SmICSCoreLib.Factories.RKIConfig;
 
 namespace SmICSWebApp
 {
@@ -40,12 +41,16 @@ namespace SmICSWebApp
             services.AddControllers().AddNewtonsoftJson();
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSmICSLibrary();
             services.AddLogging();
             services.AddSingleton<RkiService>();            
             services.AddSingleton<SymptomService>();
             services.AddSingleton<EhrDataService>();
+            
+            //AUTH - START 
 
+            //AUTH - ENDE
+            
+            services.AddSmICSLibrary();
             //CronJob GetReport
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
@@ -63,36 +68,43 @@ namespace SmICSWebApp
             services.AddSingleton<JobUpdateRkidata>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
 
-            //CronJob DetectionAlgorithmJob
-            services.AddSingleton<myJob_00001_DetectionAlgorithmJob>();
-            //
-            DateTime startCronJob = new DateTime(2021, 9, 9, 17, 32, 0);
-            int myHour = startCronJob.Hour;
-            int myMinute = startCronJob.Minute;
-            string cronJobParams = "";
-            cronJobParams += "*";
-            cronJobParams += " ";
-            cronJobParams += myMinute.ToString();
-            cronJobParams += " ";
-            cronJobParams += myHour.ToString();
-            cronJobParams += " * * ?";
-            //
-            cronJobParams = "";
-            cronJobParams += "*"; // Sekunden
-            cronJobParams += " 0/4"; // Minuten
-            cronJobParams += " *"; // Stunden
-            cronJobParams += " *"; // Tag
-            cronJobParams += " *"; // Monat
-            cronJobParams += " ?"; // Wochentag
-            //
+            services.AddSingleton<JobOutbreakDetection>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(),
-                                  typeof(myJob_00001_DetectionAlgorithmJob),
-                                  "myJob_00001_DetectionAlgorithmJob",
-                                  cronJobParams));
-            /*services.AddSingleton(new JobMetadata(Guid.NewGuid(),
-                                  typeof(myJob_00001_DetectionAlgorithmJob),
-                                  "myJob_00001_DetectionAlgorithmJob",
-                                  "* 0/4 * * * ?"));*/
+                                  typeof(JobOutbreakDetection),
+                                  "JobOutbreakDetection",
+                                  OpenehrConfig.OutbreakDetectionRuntime));
+            #region PaulsCronJob
+            ////CronJob DetectionAlgorithmJob
+            //services.AddSingleton<myJob_00001_DetectionAlgorithmJob>();
+            ////
+            //DateTime startCronJob = new DateTime(2021, 9, 9, 17, 32, 0);
+            //int myHour = startCronJob.Hour;
+            //int myMinute = startCronJob.Minute;
+            //string cronJobParams = "";
+            //cronJobParams += "*";
+            //cronJobParams += " ";
+            //cronJobParams += myMinute.ToString();
+            //cronJobParams += " ";
+            //cronJobParams += myHour.ToString();
+            //cronJobParams += " * * ?";
+            ////
+            //cronJobParams = "";
+            //cronJobParams += "*"; // Sekunden
+            //cronJobParams += " 0/4"; // Minuten
+            //cronJobParams += " *"; // Stunden
+            //cronJobParams += " *"; // Tag
+            //cronJobParams += " *"; // Monat
+            //cronJobParams += " ?"; // Wochentag
+            ////
+            //services.AddSingleton(new JobMetadata(Guid.NewGuid(),
+            //                      typeof(myJob_00001_DetectionAlgorithmJob),
+            //                      "myJob_00001_DetectionAlgorithmJob",
+            //                      cronJobParams));
+            ///*services.AddSingleton(new JobMetadata(Guid.NewGuid(),
+            //                      typeof(myJob_00001_DetectionAlgorithmJob),
+            //                      "myJob_00001_DetectionAlgorithmJob",
+            //                      "* 0/4 * * * ?"));*/
+            #endregion
 
             services.AddSwaggerGen(c =>
             {
@@ -120,6 +132,16 @@ namespace SmICSWebApp
             //OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
             //OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
             //OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
+
+            //Übernehmen in eine static Methode in anderer Klasse
+            if(File.Exists(@"./Resources/RKIConfig/RKIConfigTime.json"))
+            {
+                LabDataTimeModel runtimeString = SmICSCoreLib.JSONFileStream.JSONReader<LabDataTimeModel>.ReadObject(@"./Resources/RKIConfig/RKIConfigTime.json");
+                string[] runtimeArr = runtimeString.Zeitpunkt.Split(":");
+                OpenehrConfig.OutbreakDetectionRuntime = runtimeArr[2] + " " + runtimeArr[1] + " " + runtimeArr[0] + " * * ?";
+            }
+            OpenehrConfig.OutbreakDetectionRuntime = null;
+
 
             if (env.IsDevelopment())
             {
