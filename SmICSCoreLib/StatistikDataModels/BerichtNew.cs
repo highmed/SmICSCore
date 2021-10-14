@@ -51,8 +51,6 @@ namespace SmICSCoreLib.StatistikDataModels
         [JsonProperty(PropertyName = "ZweitImpfung")]
         public string ZweitImpfung { get; set; }
 
-        [JsonProperty(PropertyName = "BlStandAktuell")]
-        public bool BlStandAktuell { get; set; }
     }
 
     public class BundeslandNew
@@ -63,6 +61,9 @@ namespace SmICSCoreLib.StatistikDataModels
 
         [JsonProperty(PropertyName = "Bundesland")]
         public string Bundesland { get; set; }
+
+        [JsonProperty(PropertyName = "Stand")]
+        public string Stand { get; set; }
 
         [JsonProperty(PropertyName = "FallzahlGesamt")]
         public string FallzahlGesamt { get; set; }
@@ -91,6 +92,9 @@ namespace SmICSCoreLib.StatistikDataModels
         [PartitionKey]
         [JsonProperty(PropertyName = "ID")]
         public string ID { get; set; }
+
+        [JsonProperty(PropertyName = "Bundesland")]
+        public string Bundesland { get; set; }
 
         [JsonProperty(PropertyName = "Stadt")]
         public string Stadt { get; set; }

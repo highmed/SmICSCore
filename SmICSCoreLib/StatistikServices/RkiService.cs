@@ -166,7 +166,7 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-
+        #region read and write Data to JSON Files
         //Get Data From RKI Resources and write it as a DailyReport
         public string GetRValue(int vlaue)
         {
@@ -877,48 +877,74 @@ namespace SmICSCoreLib.StatistikServices
                 return false;
             }
         }
+        #endregion
 
         //Datenbank Services
-        public BundeslandNew[] GetBundeslaender(string url)
+        public BerichtNew BerichtNew(StateData stateData, DataSet resultImpfung)
         {
-            BundeslandNew[] bundeslandNew = new BundeslandNew[16];
-            try
+            BerichtNew bericht = new();
+            if (stateData != null)
             {
-                ArrayList bundeslaender = new();
-                for (int i = 0; i < 16; i++)
+                try
                 {
-                    BundeslandNew bundesland = new();
-
-                    string[] bundes = new string[] { "Baden-Württemberg", "Bayern", "Berlin","Brandenburg", "Bremen", "Hamburg",
-                        "Hessen", "Mecklenburg-Vorpommern", "Niedersachsen", "Nordrhein-Westfalen", "Rheinland-Pfalz", "Saarland",
-                        "Sachsen", "Sachsen-Anhalt", "Schleswig-Holstein", "Thüringen"};
-
-                    try
+                    bericht.ID = "Bericht-" + DateTime.Now.Date.ToString("dd.MM.yyyy");
+                    bericht.Fallzahl = stateData.DataFeature[0].DataAttributes.AnzFall.ToString("#,##");
+                    bericht.FallzahlVortag = stateData.DataFeature[0].DataAttributes.AnzFallNeu.ToString("#,##");
+                    bericht.Todesfaelle = stateData.DataFeature[0].DataAttributes.AnzTodesfall.ToString("#,##");
+                    bericht.TodesfaelleVortag = stateData.DataFeature[0].DataAttributes.AnzTodesfallNeu.ToString("#,##");
+                    bericht.Inzidenz7Tage = stateData.DataFeature[0].DataAttributes.Inz7T.ToString();
+                    bericht.Stand = DateTime.Now.Date.ToString("dd.MM.yyyy");
+                    string wert = GetRValue(2);
+                    if (wert == null)
                     {
-                        State state = GetStateByName(bundes[i]);
-                        if (state.Features != null)
+                        bericht.RWert7Tage = ("k.A.");
+                        bericht.RWert7TageVortag = ("k.A.");
+                    }
+                    else
+                    {
+                        bericht.RWert7Tage = GetRValue(2).Replace(",", ".");
+                        bericht.RWert7TageVortag = GetRValue(3).Replace(",", ".");
+                    }
+
+                    if (resultImpfung != null)
+                    {
+                        try
                         {
-                            bundesland.ID = bundes[i] + "-" + DateTime.Now.Date.ToString("dd.MM.yyyy");
-                            bundesland.Bundesland = bundes[i];
-                            bundesland.FallzahlGesamt = state.Features[0].Attributes.Fallzahl.ToString("#,##");
-                            bundesland.Faelle7BL = state.Features[0].Attributes.Cases7_bl.ToString("#,##");
-                            bundesland.FaellePro100000Ew = state.Features[0].Attributes.FaellePro100000Ew.ToString("#,##");
-                            bundesland.Todesfaelle = state.Features[0].Attributes.Todesfaelle.ToString("#,##");
-                            bundesland.Todesfaelle7BL = state.Features[0].Attributes.Death7_bl.ToString("0.##");
-                            bundesland.Inzidenz7Tage = (state.Features[0].Attributes.Faelle7BlPro100K).ToString("0.##").Replace(",", ".");
-                            bundesland.Farbe = SetMapColor(bundesland.Inzidenz7Tage);
+                            bericht.GesamtImpfung = Convert.ToDouble(resultImpfung.Tables[1].Rows[20][2]).ToString("#,##");
+                            bericht.ErstImpfung = resultImpfung.Tables[1].Rows[20][5].ToString();
+                            bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[20][9].ToString();
+                            bericht.ImpfStatus = true;
+                        }
+                        catch (Exception)
+                        {
+                            _logger.LogWarning("ImpfStatus is false");
+                            bericht.ImpfStatus = false;
                         }
                     }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                        return null;
-                    }
-                    bundeslaender.Add(bundesland);
+                    bericht.StandAktuell = true;
+                    return bericht;
                 }
-                BundeslandNew[] blArray = (BundeslandNew[])bundeslaender.ToArray(typeof(BundeslandNew));
-                bundeslandNew = blArray;
-                return bundeslandNew;
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    bericht.StandAktuell = false;
+                    return bericht;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public BerichtNew GetBerichtNew()
+        {
+            try
+            {
+                StateData stateData = GetStateData(0);
+                string urlImpfung = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Impfquotenmonitoring.xlsx?__blob=publicationFile";
+                DataSet impfungData = GetDataSetFromLink(urlImpfung);
+                BerichtNew bericht = BerichtNew(stateData, impfungData);
+                return bericht;
             }
             catch (Exception e)
             {
@@ -927,32 +953,133 @@ namespace SmICSCoreLib.StatistikServices
             }
         }
 
-        //public void SaveBundeslandNew(BundeslandNew[] bundeslandNews)
-        //{
-        //    foreach (var bundesland in bundeslandNews)
-        //    {
-        //        try
-        //        {
-        //            unitOfWork.BundeslandNew.Insert(bundesland);
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            Console.WriteLine(e.Message);
-        //        }
-        //    }
-        //}
-        //public BundeslandNew FindBundeslandNew(string attribute, string id)
-        //{
-        //    try
-        //    {
-        //        return unitOfWork.BundeslandNew.FindByAttribute(attribute, id);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e.Message);
-        //        return null;
-        //    }
-        //}
+        public BundeslandNew[] Bundeslaender(string url)
+        {
+            try
+            {
+                ArrayList bundeslaender = new();
+                for (int i = 0; i < 16; i++)
+                {
+                    BundeslandNew bundesland = new();
+                    string[] bundes = new string[] { "Baden-Württemberg", "Bayern", "Berlin","Brandenburg", "Bremen", "Hamburg",
+                        "Hessen", "Mecklenburg-Vorpommern", "Niedersachsen", "Nordrhein-Westfalen", "Rheinland-Pfalz", "Saarland",
+                        "Sachsen", "Sachsen-Anhalt", "Schleswig-Holstein", "Thüringen"};
+                    State state = GetStateByName(bundes[i]);
+                    if (state.Features != null)
+                    {
+                        bundesland.ID = bundes[i] + "-" + DateTime.Now.Date.ToString("dd.MM.yyyy");
+                        bundesland.Bundesland = bundes[i];
+                        bundesland.Stand = DateTime.Now.Date.ToString("dd.MM.yyyy");
+                        bundesland.FallzahlGesamt = state.Features[0].Attributes.Fallzahl.ToString("#,##");
+                        bundesland.Faelle7BL = state.Features[0].Attributes.Cases7_bl.ToString("#,##");
+                        bundesland.FaellePro100000Ew = state.Features[0].Attributes.FaellePro100000Ew.ToString("#,##");
+                        bundesland.Todesfaelle = state.Features[0].Attributes.Todesfaelle.ToString("#,##");
+                        bundesland.Todesfaelle7BL = state.Features[0].Attributes.Death7_bl.ToString("0.##");
+                        bundesland.Inzidenz7Tage = (state.Features[0].Attributes.Faelle7BlPro100K).ToString("0.##").Replace(",", ".");
+                        bundesland.Farbe = SetMapColor(bundesland.Inzidenz7Tage);
+                    }
+                    bundeslaender.Add(bundesland);
+                }
+                BundeslandNew[] blArray = (BundeslandNew[])bundeslaender.ToArray(typeof(BundeslandNew));
+                return blArray;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+        public BundeslandNew[] GetBundeslaender()
+        {
+            try
+            {
+                string url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile";
+                BundeslandNew[] bundeslander = Bundeslaender(url);
+                return bundeslander;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
 
+        public LandkreisNew[] GetLandkreise()
+        {
+            try
+            {
+                ArrayList landkreise = new ArrayList();
+                string[] bundes = new string[] { "Baden-Württemberg", "Bayern", "Berlin","Brandenburg", "Bremen", "Hamburg",
+                        "Hessen", "Mecklenburg-Vorpommern", "Niedersachsen", "Nordrhein-Westfalen", "Rheinland-Pfalz", "Saarland",
+                        "Sachsen", "Sachsen-Anhalt", "Schleswig-Holstein", "Thüringen"};
+                foreach (var bund in bundes)
+                {
+                    District district = GetDistrictsByStateName(bund);
+                    if (district.Features != null && district.Features.Length != 0)
+                    {
+                        ArrayList landkreiseList = new ArrayList();
+                        foreach (var lk in district.Features)
+                        {
+                            LandkreisNew landkreisObj = new();
+                            landkreisObj.Bundesland = bund;
+                            landkreisObj.ID = lk.DistrictAttributes.County + "-" + DateTime.Now.Date.ToString("dd.MM.yyyy");
+                            landkreisObj.LandkreisName = lk.DistrictAttributes.County;
+                            landkreisObj.Stadt = lk.DistrictAttributes.GEN;
+                            landkreisObj.FallzahlGesamt = lk.DistrictAttributes.Cases.ToString("#,##");
+                            landkreisObj.Faelle7Lk = lk.DistrictAttributes.Cases7_lk.ToString("#,##");
+                            landkreisObj.FaellePro100000Ew = lk.DistrictAttributes.Cases_per_100k.ToString("#,##");
+                            landkreisObj.Inzidenz7Tage = lk.DistrictAttributes.Cases7_per_100k.ToString("0.##").Replace(",", ".");
+                            landkreisObj.Todesfaelle = lk.DistrictAttributes.Deaths.ToString("#,##");
+                            landkreisObj.Todesfaelle7Lk = lk.DistrictAttributes.Death7_lk.ToString("0.##");
+                            landkreisObj.AdmUnitId = lk.DistrictAttributes.AdmUnitId;
+                            landkreise.Add(landkreisObj);
+                        }
+                    }
+                }
+                LandkreisNew[]  landkreisNews =((LandkreisNew[])landkreise.ToArray(typeof(LandkreisNew)));
+                return landkreisNews;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+        public LandkreisNew[] GetLkFromBl(string bundesland)
+        {
+            try
+            {
+                ArrayList landkreise = new ArrayList();
+                District district = GetDistrictsByStateName(bundesland);
+                if (district.Features != null && district.Features.Length != 0)
+                {
+                    ArrayList landkreiseList = new ArrayList();
+                    foreach (var lk in district.Features)
+                    {
+                        LandkreisNew landkreisObj = new();
+                        landkreisObj.Bundesland = bundesland;
+                        landkreisObj.ID = lk.DistrictAttributes.County + "-" + DateTime.Now.Date.ToString("dd.MM.yyyy");
+                        landkreisObj.LandkreisName = lk.DistrictAttributes.County;
+                        landkreisObj.Stadt = lk.DistrictAttributes.GEN;
+                        landkreisObj.FallzahlGesamt = lk.DistrictAttributes.Cases.ToString("#,##");
+                        landkreisObj.Faelle7Lk = lk.DistrictAttributes.Cases7_lk.ToString("#,##");
+                        landkreisObj.FaellePro100000Ew = lk.DistrictAttributes.Cases_per_100k.ToString("#,##");
+                        landkreisObj.Inzidenz7Tage = lk.DistrictAttributes.Cases7_per_100k.ToString("0.##").Replace(",", ".");
+                        landkreisObj.Todesfaelle = lk.DistrictAttributes.Deaths.ToString("#,##");
+                        landkreisObj.Todesfaelle7Lk = lk.DistrictAttributes.Death7_lk.ToString("0.##");
+                        landkreisObj.AdmUnitId = lk.DistrictAttributes.AdmUnitId;
+                        landkreise.Add(landkreisObj);
+                    }
+                }
+                LandkreisNew[] landkreisNews = ((LandkreisNew[])landkreise.ToArray(typeof(LandkreisNew)));
+                return landkreisNews;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+     
     }
 }

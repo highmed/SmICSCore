@@ -162,20 +162,20 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach (var state in @bundeslaender)
+                                                        @foreach (var state in @blList)
                                                         {
                                                             <tr>
                                                                 <td scope="row">
-                                                                    <a href="/district/@state.BlAttribute.Bundesland">
-                                                                        @state.BlAttribute.Bundesland
+                                                                    <a href="/district/@state.Bundesland">
+                                                                        @state.Bundesland
                                                                     </a>
                                                                 </td>
-                                                                <td>@state.BlAttribute.FallzahlGesamt</td>
-                                                                <td>@state.BlAttribute.Faelle7BL</td>
-                                                                <td>@state.BlAttribute.FaellePro100000Ew</td>
-                                                                <td>@state.BlAttribute.Inzidenz7Tage</td>
-                                                                <td>@state.BlAttribute.Todesfaelle</td>
-                                                                <td>@state.BlAttribute.Todesfaelle7BL</td>
+                                                                <td>@state.FallzahlGesamt</td>
+                                                                <td>@state.Faelle7BL</td>
+                                                                <td>@state.FaellePro100000Ew</td>
+                                                                <td>@state.Inzidenz7Tage</td>
+                                                                <td>@state.Todesfaelle</td>
+                                                                <td>@state.Todesfaelle7BL</td>
                                                             </tr>
                                                         }
                                                     </tbody>
@@ -419,8 +419,6 @@
 </div>
 
 @code {
-    private DailyReport dailyReport = new();
-    private DailyReport lastReport = new();
     private DateTime datum;
     private string stand;
     private string rWert7Tage;
@@ -437,32 +435,27 @@
     private string erstImpfung;
     private string zweittImpfung;
     private bool standAktuell;
-    private bool blStandAktuell;
     private bool status;
     private bool impfStatus;
-    private string path;
-    private string pathLastDay;
     private DBService dbService;
-
-
-    private Bundesland[] bundeslaender = new Bundesland[16];
+    private BerichtNew bericht;
+    private BerichtNew lastBericht;
+    private IEnumerable<BundeslandNew> blList;
     private List<string> farbe = new List<string>();
-    private string ResourcesPath = "Resources/";
-    private string StatistikPath;
+
 
     protected override async Task OnInitializedAsync()
     {
+        dbService = new();
         status = false;
         standAktuell = true;
         datum = DateTime.Now;
 
-        StatistikPath = @"" + ResourcesPath + "statistik/json";
-
-        await Task.Run(SetRKIData);
+        //await Task.Run(SetRKIData);
         await Task.Run(GetRKIData);
 
         //Database Testing
-        TestDB(dailyReport);
+        //TestDB();
 
         if (status == false && standAktuell == true)
         {
@@ -474,67 +467,75 @@
 
     private void SetRKIData()
     {
-        bool check = rkiService.SerializeRkiData(StatistikPath);
-        if (check == false)
+        BundeslandNew[] bundeslander = rkiService.GetBundeslaender();
+        if (bundeslander != null)
         {
-            Logger.LogWarning("RKI-Daten stehen nicht zur Verfügung!");
-            status = false;
+            foreach (var bundesland in bundeslander)
+            {
+                dbService.Insert<BundeslandNew>(bundesland);
+            }
         }
+
+        BerichtNew bericht = rkiService.GetBerichtNew();
+        if (bericht != null)
+        {
+            dbService.Insert<BerichtNew>(bericht);
+        }
+
+        //bool check = rkiService.SerializeRkiData(StatistikPath);
+        //if (check == false)
+        //{
+        //    Logger.LogWarning("RKI-Daten stehen nicht zur Verfügung!");
+        //    status = false;
+        //}
     }
 
     private void GetRKIData()
     {
         try
         {
-            path = @""+ StatistikPath + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
-            dailyReport = rkiService.DeserializeRkiData(path);
-            stand = dailyReport.Bericht.Stand;
-            standAktuell = dailyReport.Bericht.StandAktuell;
-            blStandAktuell = dailyReport.Bericht.BlStandAktuell;
-            fallzahl = dailyReport.Bericht.Fallzahl;
-            fallzahlVortag = dailyReport.Bericht.FallzahlVortag;
-            todesfaelle = dailyReport.Bericht.Todesfaelle;
-            todesfaelleVortag = dailyReport.Bericht.TodesfaelleVortag;
-            inzidenz7Tage = dailyReport.Bericht.Inzidenz7Tage;
-            rWert7Tage = dailyReport.Bericht.RWert7Tage;
-            rWert7TageVortag = dailyReport.Bericht.RWert7TageVortag;
-            impfStatus = dailyReport.Bericht.ImpfStatus;
-            gesamtImpfung = dailyReport.Bericht.GesamtImpfung;
-            erstImpfung = dailyReport.Bericht.ErstImpfung;
-            zweittImpfung = dailyReport.Bericht.ZweitImpfung;
-
-            bundeslaender = dailyReport.Bericht.Bundesland;
-            if (bundeslaender != null)
+            string value = "Bericht-" + DateTime.Now.Date.ToString("dd.MM.yyyy");
+            bericht = dbService.FindOneByAttribute<BerichtNew>("id", value);
+            if (bericht != null)
             {
-                foreach (var bundesland in bundeslaender)
+                stand = bericht.Stand;
+                standAktuell = bericht.StandAktuell;
+                fallzahl = bericht.Fallzahl;
+                fallzahlVortag = bericht.FallzahlVortag;
+                todesfaelle = bericht.Todesfaelle;
+                todesfaelleVortag = bericht.TodesfaelleVortag;
+                inzidenz7Tage = bericht.Inzidenz7Tage;
+                rWert7Tage = bericht.RWert7Tage;
+
+                //Datenbank Abfrage wegen inzidenz7TageVortag
+                rWert7TageVortag = bericht.RWert7Tage;
+                impfStatus = bericht.ImpfStatus;
+                gesamtImpfung = bericht.GesamtImpfung;
+                erstImpfung = bericht.ErstImpfung;
+                zweittImpfung = bericht.ZweitImpfung;
+
+                string valueBl = datum.ToString("dd.MM.yyyy");
+                blList = dbService.FindAllByAttribute<BundeslandNew>("Stand", valueBl);
+                if (blList != null)
                 {
-                    farbe.Add(bundesland.BlAttribute.Farbe);
+                    foreach (var bl in blList)
+                    {
+                        farbe.Add(bl.Farbe);
+                    }
                 }
+                inzidenzColor = rkiService.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
+                rWertColor = rkiService.SetCaseColor(rWert7Tage, rWert7TageVortag);
+                Logger.LogInformation("Bericht wurde erfolgreich heruntergeladen");
+                status = true;
             }
-
-            try
+            else
             {
-                pathLastDay = @"" + StatistikPath + "/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
-                lastReport = rkiService.DeserializeRkiData(pathLastDay);
-                if (lastReport != null)
-                {
-                    inzidenz7TageVortag = lastReport.Bericht.Inzidenz7Tage;
-                }
+                SetRKIData();
             }
-            catch (Exception)
-            {
-                inzidenz7TageVortag = inzidenz7Tage;
-            }
-
-            inzidenzColor = rkiService.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
-            rWertColor = rkiService.SetCaseColor(rWert7Tage, rWert7TageVortag);
-
-            Logger.LogInformation("DailyReport wurde erfolgreich heruntergeladen");
-            status = true;
         }
         catch (Exception)
         {
-            Logger.LogWarning("DailyReport koennte nicht heruntergeladen werden!");
+            Logger.LogWarning("Bericht koennte nicht heruntergeladen werden!");
             status = true;
             standAktuell = false;
         }
@@ -544,30 +545,40 @@
     {
         try
         {
-            pathLastDay = @"" + StatistikPath + "/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
-            lastReport = rkiService.DeserializeRkiData(pathLastDay);
-            bundeslaender = lastReport.Bericht.Bundesland;
-            blStandAktuell = lastReport.Bericht.BlStandAktuell;
-            stand = lastReport.Bericht.Stand;
-
-            rWert7Tage = lastReport.Bericht.RWert7Tage;
-            inzidenz7Tage = lastReport.Bericht.Inzidenz7Tage;
-            fallzahl = lastReport.Bericht.Fallzahl;
-            fallzahlVortag = lastReport.Bericht.FallzahlVortag;
-            todesfaelle = lastReport.Bericht.Todesfaelle;
-            todesfaelleVortag = lastReport.Bericht.TodesfaelleVortag;
-            standAktuell = lastReport.Bericht.StandAktuell;
-            blStandAktuell = lastReport.Bericht.BlStandAktuell;
-            gesamtImpfung = lastReport.Bericht.GesamtImpfung;
-            erstImpfung = lastReport.Bericht.ErstImpfung;
-            zweittImpfung = lastReport.Bericht.ZweitImpfung;
-
-            foreach (var bundesland in bundeslaender)
+            string value = "Bericht-" + DateTime.Now.Date.AddDays(-1).ToString("dd.MM.yyyy");
+            lastBericht = dbService.FindOneByAttribute<BerichtNew>("id", value);
+            if (bericht != null)
             {
-                farbe.Add(bundesland.BlAttribute.Farbe);
+                stand = lastBericht.Stand;
+                standAktuell = lastBericht.StandAktuell;
+                fallzahl = lastBericht.Fallzahl;
+                fallzahlVortag = lastBericht.FallzahlVortag;
+                todesfaelle = lastBericht.Todesfaelle;
+                todesfaelleVortag = lastBericht.TodesfaelleVortag;
+                inzidenz7Tage = lastBericht.Inzidenz7Tage;
+                rWert7Tage = lastBericht.RWert7Tage;
+                rWert7TageVortag = lastBericht.RWert7TageVortag;
+                impfStatus = lastBericht.ImpfStatus;
+                gesamtImpfung = lastBericht.GesamtImpfung;
+                erstImpfung = lastBericht.ErstImpfung;
+                zweittImpfung = lastBericht.ZweitImpfung;
+
+                blList = dbService.FindAllByAttribute<BundeslandNew>("id", value);
+                if (blList != null)
+                {
+                    foreach (var bl in blList)
+                    {
+                        farbe.Add(bl.Farbe);
+                    }
+                }
+
+                //Datenbank Abfrage wegen inzidenz7TageVortag
+
+                inzidenzColor = rkiService.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
+                rWertColor = rkiService.SetCaseColor(rWert7Tage, rWert7TageVortag);
+                Logger.LogInformation("LastBericht wurde erfolgreich heruntergeladen");
+                status = true;
             }
-            Logger.LogInformation("LastDailyReport wurde erfolgreich heruntergeladen");
-            status = true;
         }
         catch (Exception)
         {
@@ -579,12 +590,20 @@
     }
 
     //Test Methode to Insert a BlAttribute into Database
-    private void TestDB(DailyReport dailyReport) {
+    private void TestDB() {
+
+        LandkreisNew[] landkreise = rkiService.GetLkFromBl("Niedersachsen");
+        //LandkreisNew[] landkreise = rkiService.GetLandkreise();
+
+        //BerichtNew bericht = rkiService.GetBerichtNew();
+
 
         string url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile";
-        BundeslandNew[] bundeslands = rkiService.GetBundeslaender(url);
+        BundeslandNew[] bundeslands = rkiService.Bundeslaender(url);
 
-        dbService = new();
+        //BundeslandNew[] bundeslander = rkiService.GetBundeslaender();
+
+
         dbService.Insert<BundeslandNew>(bundeslands.First());
 
         BundeslandNew bl = bundeslands.First();
