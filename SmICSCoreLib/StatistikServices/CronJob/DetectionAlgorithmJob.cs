@@ -135,6 +135,8 @@ namespace SmICSCoreLib.Factories.DetectionAlgorithmInterface
                     cur_rParameter += " " + Convert.ToString(lookBack*7 + (fitRangeEndInt-fitRangeStartInt) + 1); // ''
                     cur_rParameter += " " + Convert.ToString(lookBack); // weeks_back
 
+                    //cmd: RScrript.exe Rscript0010 Pfad/SmICSCoreLib/AQL/Speicherpfadxyz/ 1 29 4
+
                     int[] epochs_01 = new int[lookBack*7 + 1];
                     int[] observed_01 = new int[lookBack*7 + 1];
                     for (int o = 0; o < epochs_01.Length; o++)

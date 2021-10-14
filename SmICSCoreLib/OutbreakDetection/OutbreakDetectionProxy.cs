@@ -12,16 +12,18 @@ namespace SmICSCoreLib.OutbreakDetection
         private readonly string RExecPath = @""; //EnviromentVariable 
         private readonly int FREQUENCY = 7;
 
-        public void Covid19Extension(int[][] epochs_and_observed)
+        public void Covid19Extension(ProxyParameterModel parameter)
         {
             string RScriptPath = "./R_Script_00010.R";
             string RResultPath = ""; //Speicherpfad für das Ergebnis
             string RResultFileName = "./Variables_for_Visualization.json";
 
-            GenerateTransferScript(epochs_and_observed);
+            string argumentString = "path" + parameter.FitRange[0] + " " + parameter.FitRange[1] + " " + parameter.LookbackWeeks;
+
+            GenerateTransferScript(parameter.EpochsObserved);
             ExternalProcess.Execute(RResultFileName, RExecPath, RResultPath);
             List<OutbreakDetectionResultModel> results = JSONReader<OutbreakDetectionResultModel>.Read(RResultFileName);
-            SaveResults(results);
+            SaveResults(results, parameter.SavingFolder);
         }
 
         private void GenerateTransferScript(int[][] epochs_and_observed)
@@ -30,12 +32,12 @@ namespace SmICSCoreLib.OutbreakDetection
             JSONWriter.Write(transfersScript, @"./", "variables_for_r_transfer_script.json");
         }
 
-        private void SaveResults(List<OutbreakDetectionResultModel> results)
+        private void SaveResults(List<OutbreakDetectionResultModel> results, string savingFolder)
         {
            foreach(OutbreakDetectionResultModel result in results)
            {
-                //Casten
-                JSONWriter.Write(results, @"", "filename");
+                //Speicherordner aus Parameter bestimmen
+                JSONWriter.Write(result, @"../Resources/OutbreakDetection/" + savingFolder, result.Date.ToString("yyyy-MM-dd") + ".json");
            }
         }
     }

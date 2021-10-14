@@ -17,6 +17,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using SmICSCoreLib.StatistikDataModels;
 using SmICSCoreLib.Factories.InfectionSituation;
+using SmICSWebApp.Data.OutbreakDetection;
+using SmICSCoreLib.OutbreakDetection;
 
 namespace SmICSWebApp.Controllers
 {
@@ -36,8 +38,8 @@ namespace SmICSWebApp.Controllers
         private readonly IInfectionSituationFactory _infectionSituationFac;
         private readonly ISymptomFactory _symptomFac;
         private readonly IVaccinationFactory _vaccinationFac;
-
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac)
+        private readonly OutbreakDetectionService _outbreakService;
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService)
         {
             _logger = logger;
             _contact = contact;
@@ -49,6 +51,7 @@ namespace SmICSWebApp.Controllers
             _infectionSituationFac = infectionSituationFac;
             _symptomFac = symptomFac;
             _vaccinationFac = vaccinationFac;
+            _outbreakService = outbreakService;
         }
 
         /// <summary></summary>
@@ -379,6 +382,48 @@ namespace SmICSWebApp.Controllers
             {
                 return ErrorHandling(e);
             }
-        } 
+        }
+
+        [Route("OutbreakDetectionConfigurations")]
+        [HttpPost]
+        public ActionResult<OutbreakDetectionConfigs> OutbreakDetectionConfigurations()
+        {
+            try
+            {
+                return _outbreakService.GetConfigurations();
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
+
+        [Route("LatestOutbreakDetectionResult")]
+        [HttpPost]
+        public ActionResult<OutbreakDetectionResultModel> LatestOutbreakDetectionResult([FromBody] OutbreakSaving outbreak)
+        {
+            try
+            {
+                return _outbreakService.GetLatestResult(outbreak);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
+
+        [Route("OutbreakDetectionResultSet")]
+        [HttpPost]
+        public ActionResult<List<OutbreakDetectionResultModel>> OutbreakDetectionResultSet([FromBody] OutbreakSavingInTimespan outbreak)
+        {
+            try
+            {
+                return _outbreakService.GetsResultsInTimespan(outbreak);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
     }
 }

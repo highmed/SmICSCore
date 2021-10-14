@@ -5,6 +5,7 @@ using SmICSCoreLib.JSONFileStream;
 using SmICSCoreLib.OutbreakDetection;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,10 +34,17 @@ namespace SmICSCoreLib.StatistikServices.CronJob
                     OutbreakDetectionParameter outbreakParam = ConfigToParam(config);
                     SmICSVersion version = config.Erregerstatus == "virologisch" ? SmICSVersion.VIROLOGY : SmICSVersion.MICROBIOLOGY;
 
+                    string savingFolder = GetSavingFolder(config);
 
-                    int[][] epochs_and_outbreakCount = _paramFac.Process(outbreakParam, version);
+                    ProxyParameterModel parameter = new ProxyParameterModel()
+                    {
+                        EpochsObserved = _paramFac.Process(outbreakParam, version),
+                        SavingFolder = savingFolder,
+                        FitRange = GetFitRange(config, savingFolder),
+                        LookbackWeeks = Convert.ToInt32(config.Zeitraum)
+                    };
 
-                    _proxy.Covid19Extension(epochs_and_outbreakCount);
+                    _proxy.Covid19Extension(parameter);
                 }
                 
             }
@@ -46,6 +54,28 @@ namespace SmICSCoreLib.StatistikServices.CronJob
                 //_logger.Warning("JobOutbreakDetection FAILED: " + e.Message);
             }
             
+        }
+
+        private string GetSavingFolder(RKIConfigTemplate config)
+        {
+            return config.Erreger + "_" + config.Station + "_" + config.Zeitraum + "_" + (config.Retro ? "Retro" : "") + "/";
+        }
+
+        private int[] GetFitRange(RKIConfigTemplate config, string savingFolder)
+        {
+            //irgendwas machen 
+            int[] fitrange = new int[2];
+            int dayCount = (Convert.ToInt32(config.Zeitraum) * 7) + 1;
+            if (config.Retro && !File.Exists(@"../SmICSWebApp/Resources/OutbreakDetection/" + savingFolder + DateTime.Now.AddDays(-1.0).ToString("yyyy-MM-dd")))
+            {
+                fitrange = new int[] { 1, dayCount };
+            }
+            else
+            {
+                fitrange = new int[] { dayCount, dayCount };
+            }
+
+            return fitrange;
         }
 
         private OutbreakDetectionParameter ConfigToParam(RKIConfigTemplate config)

@@ -146,12 +146,7 @@ namespace SmICSCoreLib.Factories.InfectionsStatus
 
                         if (!(curValueOfDictionary.Count == 0))
                         {
-                            DateTime curDate = new(curValueOfDictionary.Keys.Min().Year,
-                                                   curValueOfDictionary.Keys.Min().Month,
-                                                   curValueOfDictionary.Keys.Min().Day,
-                                                   curValueOfDictionary.Keys.Min().Hour,
-                                                   curValueOfDictionary.Keys.Min().Minute,
-                                                   curValueOfDictionary.Keys.Min().Second);
+                            DateTime curDate = curValueOfDictionary.Keys.Min();
                             int curIndex = (int)(curDate - parameter.Starttime).TotalDays;
                             curCounts[curIndex] += 1;
                         }

@@ -37,5 +37,8 @@ namespace SmICSCoreLib.OutbreakDetection
 
         [JsonProperty("Algorithmusergebnis enthaelt keine null-Werte")]
         public bool HasNullValues { get; set; }
+
+        [JsonProperty("Keine Warnungen zum Datenpunkt")]
+        public bool HasWarnings { get; set; }
     }
 }
