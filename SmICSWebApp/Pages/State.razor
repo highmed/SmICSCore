@@ -162,7 +162,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach (var state in @blList)
+                                                        @foreach (var state in @bundeslander)
                                                         {
                                                             <tr>
                                                                 <td scope="row">
@@ -440,7 +440,7 @@
     private DBService dbService;
     private BerichtNew bericht;
     private BerichtNew lastBericht;
-    private IEnumerable<BundeslandNew> blList;
+    private List<BundeslandNew> bundeslander;
     private List<string> farbe = new List<string>();
 
 
@@ -494,9 +494,12 @@
     {
         try
         {
-            string value = "Bericht-" + DateTime.Now.Date.ToString("dd.MM.yyyy");
+            string value = "Bericht-" + datum.ToString("dd.MM.yyyy");
             bericht = dbService.FindOneByAttribute<BerichtNew>("id", value);
-            if (bericht != null)
+            string valueBl = datum.ToString("dd.MM.yyyy");
+            IEnumerable<BundeslandNew> bls = dbService.FindAllByAttribute<BundeslandNew>("Stand", valueBl);
+            List<BundeslandNew> blList = bls.ToList();
+            if (bericht != null && blList.Count != 0)
             {
                 stand = bericht.Stand;
                 standAktuell = bericht.StandAktuell;
@@ -505,20 +508,19 @@
                 todesfaelle = bericht.Todesfaelle;
                 todesfaelleVortag = bericht.TodesfaelleVortag;
                 inzidenz7Tage = bericht.Inzidenz7Tage;
-                rWert7Tage = bericht.RWert7Tage;
 
                 //Datenbank Abfrage wegen inzidenz7TageVortag
-                rWert7TageVortag = bericht.RWert7Tage;
+                inzidenz7TageVortag = bericht.Inzidenz7TageVortag;
+                rWert7Tage = bericht.RWert7Tage;
+                rWert7TageVortag = bericht.RWert7TageVortag;
                 impfStatus = bericht.ImpfStatus;
                 gesamtImpfung = bericht.GesamtImpfung;
                 erstImpfung = bericht.ErstImpfung;
                 zweittImpfung = bericht.ZweitImpfung;
-
-                string valueBl = datum.ToString("dd.MM.yyyy");
-                blList = dbService.FindAllByAttribute<BundeslandNew>("Stand", valueBl);
-                if (blList != null)
+                bundeslander = blList.OrderBy(o => o.Bundesland).ToList();
+                if (bundeslander != null)
                 {
-                    foreach (var bl in blList)
+                    foreach (var bl in bundeslander)
                     {
                         farbe.Add(bl.Farbe);
                     }
@@ -545,9 +547,12 @@
     {
         try
         {
-            string value = "Bericht-" + DateTime.Now.Date.AddDays(-1).ToString("dd.MM.yyyy");
+            string value = "Bericht-" + datum.AddDays(-1).ToString("dd.MM.yyyy");
             lastBericht = dbService.FindOneByAttribute<BerichtNew>("id", value);
-            if (bericht != null)
+            string valueBl = datum.AddDays(-1).ToString("dd.MM.yyyy");
+            IEnumerable<BundeslandNew> bls = dbService.FindAllByAttribute<BundeslandNew>("Stand", valueBl);
+            List<BundeslandNew> blList = bls.ToList();
+            if (bericht != null && blList.Count != 0)
             {
                 stand = lastBericht.Stand;
                 standAktuell = lastBericht.StandAktuell;
@@ -556,17 +561,19 @@
                 todesfaelle = lastBericht.Todesfaelle;
                 todesfaelleVortag = lastBericht.TodesfaelleVortag;
                 inzidenz7Tage = lastBericht.Inzidenz7Tage;
+
+                //Datenbank Abfrage wegen inzidenz7TageVortag
+                inzidenz7TageVortag = lastBericht.Inzidenz7TageVortag;
                 rWert7Tage = lastBericht.RWert7Tage;
                 rWert7TageVortag = lastBericht.RWert7TageVortag;
                 impfStatus = lastBericht.ImpfStatus;
                 gesamtImpfung = lastBericht.GesamtImpfung;
                 erstImpfung = lastBericht.ErstImpfung;
                 zweittImpfung = lastBericht.ZweitImpfung;
-
-                blList = dbService.FindAllByAttribute<BundeslandNew>("id", value);
-                if (blList != null)
+                bundeslander = blList.OrderBy(o => o.Bundesland).ToList();
+                if (bundeslander != null)
                 {
-                    foreach (var bl in blList)
+                    foreach (var bl in bundeslander)
                     {
                         farbe.Add(bl.Farbe);
                     }

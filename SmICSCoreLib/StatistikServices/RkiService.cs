@@ -893,6 +893,7 @@ namespace SmICSCoreLib.StatistikServices
                     bericht.Todesfaelle = stateData.DataFeature[0].DataAttributes.AnzTodesfall.ToString("#,##");
                     bericht.TodesfaelleVortag = stateData.DataFeature[0].DataAttributes.AnzTodesfallNeu.ToString("#,##");
                     bericht.Inzidenz7Tage = stateData.DataFeature[0].DataAttributes.Inz7T.ToString();
+                    bericht.Inzidenz7TageVortag = stateData.DataFeature[0].DataAttributes.Inz7T.ToString();
                     bericht.Stand = DateTime.Now.Date.ToString("dd.MM.yyyy");
                     string wert = GetRValue(2);
                     if (wert == null)
@@ -911,8 +912,8 @@ namespace SmICSCoreLib.StatistikServices
                         try
                         {
                             bericht.GesamtImpfung = Convert.ToDouble(resultImpfung.Tables[1].Rows[20][2]).ToString("#,##");
-                            bericht.ErstImpfung = resultImpfung.Tables[1].Rows[20][5].ToString();
-                            bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[20][9].ToString();
+                            bericht.ErstImpfung = resultImpfung.Tables[1].Rows[20][6].ToString();
+                            bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[20][11].ToString();
                             bericht.ImpfStatus = true;
                         }
                         catch (Exception)
