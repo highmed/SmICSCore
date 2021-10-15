@@ -35,9 +35,9 @@ namespace SmICSCoreLib.Factories.InfectionSituation
             _logger = logger;
         }
 
-        public List<Patient> Process(PatientListParameter parameter)
+        public List<PatientModel> Process(PatientListParameter parameter)
         {
-            List<Patient> patienten = new();
+            List<PatientModel> patienten = new();
             //Liste positive Patienten
             List<CountDataModel> positivPatList = _countFactory.ProcessFromID(positiv, parameter);
             List<CountDataModel> sortPattList = new();
@@ -55,16 +55,16 @@ namespace SmICSCoreLib.Factories.InfectionSituation
             List<CountDataModel> allPositivPatList = _countFactory.Process(positiv);
 
             //Liste moegliche Nosokomiale Infektionen
-            List<Patient> posPatientenListe = PossibleNosocomialsList(sortPattList);
+            List<PatientModel> posPatientenListe = PossibleNosocomialsList(sortPattList);
             if (posPatientenListe != null && posPatientenListe.Count != 0)
             {
                 //Liste wahrscheinliche Nosokomiale Infektionen
-                List<Patient> proPatientenListe = ProbableNosocomialsList(posPatientenListe, allPositivPatList);
+                List<PatientModel> proPatientenListe = ProbableNosocomialsList(posPatientenListe, allPositivPatList);
                 foreach (var patientID in parameter.patientList)
                 {
-                    if (posPatientenListe.Contains(new Patient { PatientID = patientID }))
+                    if (posPatientenListe.Contains(new PatientModel { PatientID = patientID }))
                     {
-                        Patient patient = posPatientenListe.Find(x => x.PatientID == patientID);
+                        PatientModel patient = posPatientenListe.Find(x => x.PatientID == patientID);
                         PatientListParameter patListParameter = new();
                         List<string> patientList = new();
                         patientList.Add(patientID);
@@ -76,12 +76,12 @@ namespace SmICSCoreLib.Factories.InfectionSituation
                             patVaccination = patientVaccination;
                             if (proPatientenListe.Contains(patient))
                             {
-                                patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
+                                patienten.Add(new PatientModel(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
                                                          "Wahrscheinliche Nosokomiale Infektion", patVaccination));
                             }
                             else
                             {
-                                patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
+                                patienten.Add(new PatientModel(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
                                                           "Moegliche Nosokomiale Infektion", patVaccination));
                             }
                         }
@@ -89,12 +89,12 @@ namespace SmICSCoreLib.Factories.InfectionSituation
                         {
                             if (proPatientenListe.Contains(patient))
                             {
-                                patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
+                                patienten.Add(new PatientModel(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
                                                           "Wahrscheinliche Nosokomiale Infektion", null));
                             }
                             else
                             {
-                                patienten.Add(new Patient(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
+                                patienten.Add(new PatientModel(patient.PatientID, patient.Probenentnahme, patient.Aufnahme, patient.Entlastung,
                                                           "Moegliche Nosokomiale Infektion", null));
                             }
                         }
@@ -104,9 +104,9 @@ namespace SmICSCoreLib.Factories.InfectionSituation
             return patienten;
         }
 
-        public List<Patient> PossibleNosocomialsList(List<CountDataModel> positivPatList)
+        public List<PatientModel> PossibleNosocomialsList(List<CountDataModel> positivPatList)
         {
-            List<Patient> patNoskumalList = new();
+            List<PatientModel> patNoskumalList = new();
             List<string> symptomList = new List<string>(new string[] { "Chill (finding)", "Cough (finding)", "Dry cough (finding)",
             "Diarrhea (finding)", "Fever (finding)", "Fever greater than 100.4 Fahrenheit", "38° Celsius (finding)", "Nausea (finding)",
             "Pain in throat (finding)"});
@@ -123,7 +123,7 @@ namespace SmICSCoreLib.Factories.InfectionSituation
                         List<SymptomModel> symptoms = _symptomFactory.SymptomByPatient(statPatient.PatientID, statPatient.Datum_Uhrzeit_der_Aufnahme);
                         if (symptoms is null || symptoms.Count == 0)
                         {
-                            patNoskumalList.Add(new Patient(positivPat.PatientID,
+                            patNoskumalList.Add(new PatientModel(positivPat.PatientID,
                                                             positivPat.Zeitpunkt_des_Probeneingangs,
                                                             statPatient.Datum_Uhrzeit_der_Aufnahme,
                                                             statPatient.Datum_Uhrzeit_der_Entlassung));
@@ -133,9 +133,9 @@ namespace SmICSCoreLib.Factories.InfectionSituation
                             foreach (var symptom in symptoms)
                             {
                                 if (!symptomList.Contains(symptom.NameDesSymptoms) && 
-                                    !patNoskumalList.Contains(new Patient { PatientID = positivPat.PatientID }))
+                                    !patNoskumalList.Contains(new PatientModel { PatientID = positivPat.PatientID }))
                                 {
-                                    patNoskumalList.Add(new Patient(positivPat.PatientID,
+                                    patNoskumalList.Add(new PatientModel(positivPat.PatientID,
                                                                   positivPat.Zeitpunkt_des_Probeneingangs,
                                                                   statPatient.Datum_Uhrzeit_der_Aufnahme,
                                                                   statPatient.Datum_Uhrzeit_der_Entlassung));
@@ -149,9 +149,9 @@ namespace SmICSCoreLib.Factories.InfectionSituation
             return patNoskumalList;
         }
 
-        public List<Patient> ProbableNosocomialsList(List<Patient> allNoskumalPat, List<CountDataModel> allPositivPat)
+        public List<PatientModel> ProbableNosocomialsList(List<PatientModel> allNoskumalPat, List<CountDataModel> allPositivPat)
         {
-            List<Patient> patNoskumalList = new();
+            List<PatientModel> patNoskumalList = new();
             PatientListParameter patListParameter = new();
 
             foreach (var patient in allNoskumalPat)

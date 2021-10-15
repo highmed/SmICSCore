@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SmICSCoreLib.StatistikDataModels
 {
-    public class Patient
+    public class PatientModel
     {
         [JsonProperty(PropertyName = "PatientID")]
         public string PatientID { get; set; }
@@ -26,8 +26,8 @@ namespace SmICSCoreLib.StatistikDataModels
         public List<VaccinationModel> VaccinationModel { get; set; }
 
 
-        public Patient() { }
-        public Patient(string patientID, DateTime probenentnahme, DateTime aufnahme, DateTime entlastung)
+        public PatientModel() { }
+        public PatientModel(string patientID, DateTime probenentnahme, DateTime aufnahme, DateTime entlastung)
         {
             PatientID = patientID;
             Probenentnahme = probenentnahme;
@@ -35,13 +35,13 @@ namespace SmICSCoreLib.StatistikDataModels
             Entlastung = entlastung;
         }
 
-        public Patient(string patientID, string infektion)
+        public PatientModel(string patientID, string infektion)
         {
             PatientID = patientID;
             Infektion = infektion;
         }
 
-        public Patient(string patientID, DateTime probenentnahme, DateTime aufnahme, DateTime entlastung, string infektion, List<VaccinationModel> vaccinationModel) 
+        public PatientModel(string patientID, DateTime probenentnahme, DateTime aufnahme, DateTime entlastung, string infektion, List<VaccinationModel> vaccinationModel) 
             : this(patientID, probenentnahme, aufnahme, entlastung)
         {
             Infektion = infektion;
@@ -50,7 +50,7 @@ namespace SmICSCoreLib.StatistikDataModels
 
         public override bool Equals(object obj)
         {
-            return obj is Patient patient &&
+            return obj is PatientModel patient &&
                    PatientID == patient.PatientID;
         }
     }

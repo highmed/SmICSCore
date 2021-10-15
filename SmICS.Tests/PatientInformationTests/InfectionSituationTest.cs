@@ -36,8 +36,8 @@ namespace SmICSFactory.Tests.PatientInformationTests
             IStationaryFactory stationaryFactory = new StationaryFactory(_data);
             InfectionSituationFactory infecFac = new InfectionSituationFactory(countFactory, stationaryFactory, symptomFac, patMoveFac, vaccFac, NullLogger<InfectionSituationFactory>.Instance);
 
-            List<Patient> actual = infecFac.Process(patientParams);
-            List<Patient> expected = GetExpectedPatientModels(ehrNo, expectedResultSet);
+            List<PatientModel> actual = infecFac.Process(patientParams);
+            List<PatientModel> expected = GetExpectedPatientModels(ehrNo, expectedResultSet);
 
             Assert.Equal(expected.Count, actual.Count);
             for (int i = 0; i < actual.Count; i++)
@@ -81,12 +81,12 @@ namespace SmICSFactory.Tests.PatientInformationTests
         }
 
 
-        private List<Patient> GetExpectedPatientModels(int ehrNo, int ResultSetID)
+        private List<PatientModel> GetExpectedPatientModels(int ehrNo, int ResultSetID)
         {
             string path = "../../../../TestData/InfectionSituationTestResults.json";
             string parameterPath = "../../../../TestData/GeneratedEHRIDs.json";
 
-            List<Patient> result = ExpectedResultJsonReader.ReadResults<Patient, PatientIDs>(path, parameterPath, ResultSetID, ehrNo, ExpectedType.PATIENT);
+            List<PatientModel> result = ExpectedResultJsonReader.ReadResults<PatientModel, PatientIDs>(path, parameterPath, ResultSetID, ehrNo, ExpectedType.PATIENT);
             return result;
         }
     }

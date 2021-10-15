@@ -198,13 +198,13 @@ namespace SmICSCoreLib.StatistikServices
 
         //Noskumale Regeln
         //1.Regel Stationaer Behandlung, keine Symptome bei Aufnahme und positive Test ab Tag 4.
-        public List<Patient> GetAllNoskumalPat(List<CountDataModel> positivPatList)
+        public List<PatientModel> GetAllNoskumalPat(List<CountDataModel> positivPatList)
         {
             try
             {
                 SymptomService symptom = new(_symptomFac, this);
 
-                List<Patient> patNoskumalList = new();
+                List<PatientModel> patNoskumalList = new();
                 List<string> symptomList = new List<string>(new string[] { "Chill (finding)", "Cough (finding)", "Dry cough (finding)",
                 "Diarrhea (finding)", "Fever (finding)", "Fever greater than 100.4 Fahrenheit", "38° Celsius (finding)", "Nausea (finding)",
                 "Pain in throat (finding)"});
@@ -222,16 +222,16 @@ namespace SmICSCoreLib.StatistikServices
                                 List<SymptomModel> symptoms = symptom.GetAllSymByPatID(statPatient.PatientID, statPatient.Datum_Uhrzeit_der_Aufnahme);
                                 if (symptoms is null || symptoms.Count == 0)
                                 {
-                                    patNoskumalList.Add(new Patient(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
+                                    patNoskumalList.Add(new PatientModel(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
                                 }
                                 else
                                 {
                                     foreach (var symptomItem in symptoms)
                                     {
                                         if (!symptomList.Contains(symptomItem.NameDesSymptoms) &&
-                                            !patNoskumalList.Contains(new Patient { PatientID = positivPat.PatientID }))
+                                            !patNoskumalList.Contains(new PatientModel { PatientID = positivPat.PatientID }))
                                         {
-                                            patNoskumalList.Add(new Patient(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
+                                            patNoskumalList.Add(new PatientModel(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
                                         }
                                     }
                                 }
@@ -251,11 +251,11 @@ namespace SmICSCoreLib.StatistikServices
         }
 
         //2.Regel Kontakt mit einem positiven Patient 
-        public List<Patient> GetNoskumalByContact(List<Patient> allNoskumalPat, List<CountDataModel> allPositivPat)
+        public List<PatientModel> GetNoskumalByContact(List<PatientModel> allNoskumalPat, List<CountDataModel> allPositivPat)
         {
             try
             {
-                List<Patient> patNoskumalList = new();
+                List<PatientModel> patNoskumalList = new();
 
                 foreach (var patient in allNoskumalPat)
                 {
