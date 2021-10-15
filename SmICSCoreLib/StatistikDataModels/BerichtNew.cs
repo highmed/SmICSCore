@@ -3,16 +3,12 @@ using Newtonsoft.Json;
 
 namespace SmICSCoreLib.StatistikDataModels
 {
-    public class DailyReport
+    public class BerichtNew
     {
-        public int Id { get; set; }
+        [PartitionKey]
+        [JsonProperty(PropertyName = "ID")]
+        public string ID { get; set; }
 
-        [JsonProperty(PropertyName = "Bericht")]
-        public Bericht Bericht { get; set; }
-    }
-
-    public class Bericht
-    {
         [JsonProperty(PropertyName = "Stand")]
         public string Stand { get; set; }
 
@@ -55,24 +51,51 @@ namespace SmICSCoreLib.StatistikDataModels
         [JsonProperty(PropertyName = "ZweitImpfung")]
         public string ZweitImpfung { get; set; }
 
+    }
+
+    public class BundeslandNew
+    {
+        [PartitionKey]
+        [JsonProperty(PropertyName = "ID")]
+        public string ID { get; set; }
+
         [JsonProperty(PropertyName = "Bundesland")]
-        public Bundesland[] Bundesland { get; set; }
+        public string Bundesland { get; set; }
 
-        [JsonProperty(PropertyName = "BlStandAktuell")]
-        public bool BlStandAktuell { get; set; }
+        [JsonProperty(PropertyName = "Stand")]
+        public string Stand { get; set; }
+
+        [JsonProperty(PropertyName = "FallzahlGesamt")]
+        public string FallzahlGesamt { get; set; }
+
+        [JsonProperty(PropertyName = "Faelle7BL")]
+        public string Faelle7BL { get; set; }
+
+        [JsonProperty(PropertyName = "FaellePro100000Ew")]
+        public string FaellePro100000Ew { get; set; }
+
+        [JsonProperty(PropertyName = "Todesfaelle")]
+        public string Todesfaelle { get; set; }
+
+        [JsonProperty(PropertyName = "Todesfaelle7BL")]
+        public string Todesfaelle7BL { get; set; }
+
+        [JsonProperty(PropertyName = "Inzidenz7Tage")]
+        public string Inzidenz7Tage { get; set; }
+
+        [JsonProperty(PropertyName = "Farbe")]
+        public string Farbe { get; set; }
     }
 
-    public class Bundesland
+    public class LandkreisNew
     {
-        [JsonProperty(PropertyName = "BlAttribute")]
-        public BlAttribute BlAttribute { get; set; }
+        [PartitionKey]
+        [JsonProperty(PropertyName = "ID")]
+        public string ID { get; set; }
 
-        [JsonProperty(PropertyName = "Landkreise")]
-        public Landkreis[] Landkreise { get; set; }
-    }
+        [JsonProperty(PropertyName = "Bundesland")]
+        public string Bundesland { get; set; }
 
-    public class Landkreis
-    {
         [JsonProperty(PropertyName = "Stadt")]
         public string Stadt { get; set; }
 
@@ -101,34 +124,4 @@ namespace SmICSCoreLib.StatistikDataModels
         public int AdmUnitId { get; set; }
     }
 
-    public class BlAttribute
-    {
-        //add int variable as ID just for testing 
-        [PartitionKey]
-        public int BlAttributeId { get; set; }
-
-        [JsonProperty(PropertyName = "Bundesland")]
-        public string Bundesland { get; set; }
-
-        [JsonProperty(PropertyName = "FallzahlGesamt")]
-        public string FallzahlGesamt { get; set; }
-
-        [JsonProperty(PropertyName = "Faelle7BL")]
-        public string Faelle7BL { get; set; }
-
-        [JsonProperty(PropertyName = "FaellePro100000Ew")]
-        public string FaellePro100000Ew { get; set; }
-
-        [JsonProperty(PropertyName = "Todesfaelle")]
-        public string Todesfaelle { get; set; }
-
-        [JsonProperty(PropertyName = "Todesfaelle7BL")]
-        public string Todesfaelle7BL { get; set; }
-
-        [JsonProperty(PropertyName = "Inzidenz7Tage")]
-        public string Inzidenz7Tage { get; set; }
-
-        [JsonProperty(PropertyName = "Farbe")]
-        public string Farbe { get; set; }
-    }
 }

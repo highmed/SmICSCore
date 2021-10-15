@@ -1,0 +1,6 @@
+﻿To Testing local:
+1. firstly pull and run Cassandra in Docker as Docker Container
+	-	docker pull cassandra:latest
+	-	sudo mkdir /var/lib/container_data
+	-	sudo docker run -it --rm --name cassandra -d -p7000:7000 -p7001:7001 -p9042:9042 -p9160:9160 cassandra
+2. Change the IP Address in Startup.cs (  DBConfig.DB_Url = "xxx.xxx.xxx.xxx";) with the local IP Address of Cassandra 
