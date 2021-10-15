@@ -5,7 +5,8 @@
     "Erreger": "SARS-CoV-2",
     "Zeitraum": "8",
     "Retro": true,
-    "Erstellungsdatum": "2021-08-17T09:56:57Z"
+    "Erstellungsdatum": "2021-08-17T09:56:57Z",
+    "Erregerstatus": null
   },
   {
     "Station": "Gesamtklink",
@@ -13,7 +14,8 @@
     "Erreger": "MSSA",
     "Zeitraum": "1",
     "Retro": false,
-    "Erstellungsdatum": "2021-08-17T10:05:34Z"
+    "Erstellungsdatum": "2021-08-17T10:05:34Z",
+    "Erregerstatus": null
   },
   {
     "Station": "Gesamtklink",
@@ -21,7 +23,8 @@
     "Erreger": "Acinetobacter baumannii",
     "Zeitraum": "7",
     "Retro": false,
-    "Erstellungsdatum": "2021-08-17T13:57:12Z"
+    "Erstellungsdatum": "2021-08-17T13:57:12Z",
+    "Erregerstatus": null
   },
   {
     "Station": "Gesamtklink",
@@ -29,7 +32,8 @@
     "Erreger": "MRSA",
     "Zeitraum": "7",
     "Retro": true,
-    "Erstellungsdatum": "2021-08-17T13:57:28Z"
+    "Erstellungsdatum": "2021-08-17T13:57:28Z",
+    "Erregerstatus": null
   },
   {
     "Station": "Gesamtklink",
@@ -37,7 +41,8 @@
     "Erreger": "SARS-CoV-2",
     "Zeitraum": "11",
     "Retro": true,
-    "Erstellungsdatum": "2021-08-17T14:22:45Z"
+    "Erstellungsdatum": "2021-08-17T14:22:45Z",
+    "Erregerstatus": null
   },
   {
     "Station": "Gesamtklink",
@@ -45,7 +50,8 @@
     "Erreger": "Acinetobacter baumannii",
     "Zeitraum": "7",
     "Retro": true,
-    "Erstellungsdatum": "2021-08-18T14:28:30Z"
+    "Erstellungsdatum": "2021-08-18T14:28:30Z",
+    "Erregerstatus": null
   },
   {
     "Station": "Gesamtklink",
@@ -53,15 +59,8 @@
     "Erreger": "Escherichia coli",
     "Zeitraum": "10",
     "Retro": true,
-    "Erstellungsdatum": "2021-08-18T15:05:27Z"
-  },
-  {
-    "Station": "Gesamtklink",
-    "ErregerID": null,
-    "Erreger": "MRSA",
-    "Zeitraum": "6",
-    "Retro": true,
-    "Erstellungsdatum": "2021-08-18T15:06:38Z"
+    "Erstellungsdatum": "2021-08-18T15:05:27Z",
+    "Erregerstatus": null
   },
   {
     "Station": "Gesamtklink",
@@ -69,6 +68,7 @@
     "Erreger": "Acinetobacter baumannii",
     "Zeitraum": "10",
     "Retro": true,
-    "Erstellungsdatum": "2021-08-18T16:32:45Z"
+    "Erstellungsdatum": "2021-08-18T16:32:45Z",
+    "Erregerstatus": null
   }
 ]

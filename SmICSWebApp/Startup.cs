@@ -94,7 +94,7 @@ namespace SmICSWebApp
             //DBConfig.DB_User = Environment.GetEnvironmentVariable("DB_User");
             //DBConfig.DB_Password = Environment.GetEnvironmentVariable("DB_Password");
 
-            DBConfig.DB_Url = "192.168.178.133";
+            DBConfig.DB_Url = "192.168.0.14";
             DBConfig.DB_Keyspace = "newkeyspace";
             DBConfig.DB_User = "cassandra";
             DBConfig.DB_Password = "cassandra";
