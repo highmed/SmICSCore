@@ -27,7 +27,7 @@ namespace SmICSCoreLib.REST
         {
             _logger.LogInformation("Posted Query: {Query}", query.Name);
             string restPath = "/query/aql";
-            //Console.WriteLine(_client.Client.DefaultRequestHeaders);
+
             HttpResponseMessage response = _client.Client.PostAsync(OpenehrConfig.openehrEndpoint + restPath, GetHttpContentQuery(query.ToString())).Result;
             //System.Diagnostics.Debug.Print(response.RequestMessage.ToString());
             if (response.IsSuccessStatusCode)

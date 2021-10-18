@@ -50,7 +50,7 @@ namespace SmICSWebApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            //IdentityModelEventSource.ShowPII = true;
+            IdentityModelEventSource.ShowPII = true;
 
             services.AddScoped<TokenProvider>();
             services.AddAuthentication(
@@ -70,9 +70,11 @@ namespace SmICSWebApp
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
 
-                options.Authority = Environment.GetEnvironmentVariable("AUTHORITY"); 
-                options.ClientId = Environment.GetEnvironmentVariable("CLIENT_ID"); 
-                options.ClientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET");
+                //options.Authority = Environment.GetEnvironmentVariable("AUTHORITY"); 
+                options.Authority = "https://keycloak.mh-hannover.local:8443/auth/realms/Better";
+                options.ClientId = "medic-c-t"; 
+                //options.ClientId = Environment.GetEnvironmentVariable("CLIENT_ID"); 
+                //options.ClientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET");
                 
                 options.ResponseType = "code";
                 options.Scope.Clear();
@@ -110,13 +112,15 @@ namespace SmICSWebApp
             services.AddAuthentication()
             .AddJwtBearer(options =>
             {
-                options.Authority = Environment.GetEnvironmentVariable("AUTHORITY");
+                options.Authority = "https://keycloak.mh-hannover.local:8443/auth/realms/Better";
+                //options.Authority = Environment.GetEnvironmentVariable("AUTHORITY");
                 options.RequireHttpsMetadata = true;
                 // name of the API resource
                 options.Audience = "account";
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidIssuer = Environment.GetEnvironmentVariable("AUTHORITY"),
+                    ValidIssuer = "https://keycloak.mh-hannover.local:8443/auth/realms/Better",
+                    //ValidIssuer = Environment.GetEnvironmentVariable("AUTHORITY"),
                     ValidAudience = "account"
                     //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])) 
                 };

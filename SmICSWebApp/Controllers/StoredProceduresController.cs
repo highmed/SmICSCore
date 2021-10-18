@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using SmICSCoreLib.StatistikDataModels;
 using SmICSCoreLib.Factories.InfectionSituation;
+using System.Linq;
+using SmICSWebApp.Helper;
 
 namespace SmICSWebApp.Controllers
 {
@@ -95,6 +97,10 @@ namespace SmICSWebApp.Controllers
             try
             {
                 _viroLabDataFac.RestDataAccess.SetAuthenticationHeader(token);
+
+                //Console.WriteLine("Name:" + TokenTranslator.getPrincipal(token.Split(" ")[1]).Identity.Name);
+
+                
                 return _viroLabDataFac.Process(parameter);
             }
             catch (Exception e)
