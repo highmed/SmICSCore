@@ -17,7 +17,7 @@ namespace SmICSCoreLib.ScriptService
                 info.FileName = execPath;
                 info.WorkingDirectory = Path.GetDirectoryName(filePath);
                 info.Arguments = Path.GetFileName(filePath) + " " + args;
-
+                
                 info.RedirectStandardInput = false;
                 info.RedirectStandardOutput = true;
                 info.UseShellExecute = false;
@@ -34,6 +34,7 @@ namespace SmICSCoreLib.ScriptService
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw new Exception("Script failed: " + result, ex);
             }
         }

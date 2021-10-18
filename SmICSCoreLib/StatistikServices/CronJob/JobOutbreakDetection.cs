@@ -27,11 +27,40 @@ namespace SmICSCoreLib.StatistikServices.CronJob
             try
             {
                 string path = @"../SmICSWebApp/Resources/RKIConfig/RKIConfig.json"; //TODO: Für publish Version anpassen
-                List<RKIConfigTemplate> configs = JSONReader<RKIConfigTemplate>.Read(path);
+                //List<RKIConfigTemplate> configs = JSONReader<RKIConfigTemplate>.Read(path);
+                List<RKIConfigTemplate> configs = new List<RKIConfigTemplate>()
+                {
+                    new RKIConfigTemplate
+                    {
+                        Station = "Coronastation",
+                        Erreger = "Sars-Cov-2",
+                        ErregerID = new List<LabDataKeimReceiveModel>
+                        {
+                            new LabDataKeimReceiveModel()
+                            {
+                                KeimID = "94500-6"
+                            },
+                            new LabDataKeimReceiveModel()
+                            {
+                                KeimID = "94558-4"
+                            },
+                            new LabDataKeimReceiveModel()
+                            {
+                                KeimID = "94745-7"
+                            }
+                        },
+                        Retro = false,
+                        Erregerstatus = "virologisch",
+                        Zeitraum = "4"
+                    }
+                };
                 
+
                 foreach(RKIConfigTemplate config in configs)
                 {
                     OutbreakDetectionParameter outbreakParam = ConfigToParam(config);
+                    outbreakParam.Starttime = new DateTime(2020, 1, 1);
+                    outbreakParam.Endtime = new DateTime(2021, 5, 1);
                     SmICSVersion version = config.Erregerstatus == "virologisch" ? SmICSVersion.VIROLOGY : SmICSVersion.MICROBIOLOGY;
 
                     string savingFolder = GetSavingFolder(config);
@@ -66,14 +95,14 @@ namespace SmICSCoreLib.StatistikServices.CronJob
             //irgendwas machen 
             int[] fitrange = new int[2];
             int dayCount = (Convert.ToInt32(config.Zeitraum) * 7) + 1;
-            if (config.Retro && !File.Exists(@"../SmICSWebApp/Resources/OutbreakDetection/" + savingFolder + DateTime.Now.AddDays(-1.0).ToString("yyyy-MM-dd")))
-            {
-                fitrange = new int[] { 1, dayCount };
-            }
-            else
-            {
+            //if (config.Retro && !File.Exists(@"../SmICSWebApp/Resources/OutbreakDetection/" + savingFolder + DateTime.Now.AddDays(-1.0).ToString("yyyy-MM-dd")))
+            //{
+            //    fitrange = new int[] { 1, dayCount };
+            //}
+            //else
+            //{
                 fitrange = new int[] { dayCount, dayCount };
-            }
+            //}
 
             return fitrange;
         }

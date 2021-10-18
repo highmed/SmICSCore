@@ -17,7 +17,6 @@ using Quartz.Impl;
 using SmICSCoreLib.StatistikServices.CronJob;
 using SmICSCoreLib.StatistikServices;
 using Microsoft.Extensions.Logging;
-using static SmICSCoreLib.Factories.DetectionAlgorithmInterface.DetectionAlgorithmJob;
 using SmICSCoreLib.Factories.DetectionAlgorithmInterface;
 using Microsoft.Extensions.Options;
 using SmICSCoreLib.Factories.RKIConfig;
@@ -67,6 +66,17 @@ namespace SmICSWebApp
             //CronJob UpdateRkidata
             services.AddSingleton<JobUpdateRkidata>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
+
+            if (File.Exists(@"./Resources/RKIConfig/RKIConfigTime.json"))
+            {
+                LabDataTimeModel runtimeString = SmICSCoreLib.JSONFileStream.JSONReader<LabDataTimeModel>.ReadObject(@"./Resources/RKIConfig/RKIConfigTime.json");
+                string[] runtimeArr = runtimeString.Zeitpunkt.Split(":");
+                OpenehrConfig.OutbreakDetectionRuntime = runtimeArr[2] + " " + runtimeArr[1] + " " + runtimeArr[0] + " * * ?";
+            }
+            else
+            {
+                OpenehrConfig.OutbreakDetectionRuntime = null;
+            }
 
             services.AddSingleton<JobOutbreakDetection>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(),
@@ -134,13 +144,7 @@ namespace SmICSWebApp
             //OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
 
             //Übernehmen in eine static Methode in anderer Klasse
-            if(File.Exists(@"./Resources/RKIConfig/RKIConfigTime.json"))
-            {
-                LabDataTimeModel runtimeString = SmICSCoreLib.JSONFileStream.JSONReader<LabDataTimeModel>.ReadObject(@"./Resources/RKIConfig/RKIConfigTime.json");
-                string[] runtimeArr = runtimeString.Zeitpunkt.Split(":");
-                OpenehrConfig.OutbreakDetectionRuntime = runtimeArr[2] + " " + runtimeArr[1] + " " + runtimeArr[0] + " * * ?";
-            }
-            OpenehrConfig.OutbreakDetectionRuntime = null;
+            
 
 
             if (env.IsDevelopment())

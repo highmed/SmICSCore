@@ -44,7 +44,7 @@ namespace SmICS
             services.AddTransient<INECResultFileFactory, NECResultFileFactory>();
 
             services.AddTransient<IOutbreakDetectionParameterFactory, OutbreakDetectionParameterFactory>();
-            services.AddScoped<OutbreakDetectionProxy>();
+            services.AddSingleton<OutbreakDetectionProxy>();
 
             services.AddTransient<IStationaryFactory, StationaryFactory>();
             services.AddTransient<IPatientStay, PatientStay>();

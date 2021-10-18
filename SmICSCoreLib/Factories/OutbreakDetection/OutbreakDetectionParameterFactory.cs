@@ -57,9 +57,9 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
             int[] epochs = new int[(int)(parameter.Endtime - parameter.Starttime).TotalDays];
             int i = 0;
             DateTime referenceDate = new DateTime(1970, 1, 1);
-            for (DateTime date = parameter.Starttime; date <= parameter.Endtime; date = date.AddDays(1.0))
+            for (DateTime date = parameter.Starttime; date < parameter.Endtime; date = date.AddDays(1.0))
             {
-                epochs[i] = (int)(referenceDate.Date - date.Date).TotalDays;
+                epochs[i] = (int)(date.Date - referenceDate.Date).TotalDays;
                 i += 1;
             }
             return epochs;

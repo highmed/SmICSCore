@@ -671,12 +671,14 @@ namespace SmICSCoreLib.Factories
                                                         r/items[at0027]/value/value as Ward,
                                                         u/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value/value as CaseID
                                                         FROM EHR e
-                                                        CONTAINS COMPOSITION c
-                                                        CONTAINS (ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]
-                                                        CONTAINS CLUSTER r[openEHR-EHR-CLUSTER.location.v1] and CLUSTER u[openEHR-EHR-CLUSTER.case_identification.v0]) 
-                                                        WHERE Ward = '{parameter.Ward}' 
-                                                        AND h/data[at0001]/items[at0004]/value/value <= '{parameter.Endtime}' 
-                                                        AND (h/data[at0001]/items[at0005]/value/value >= '{parameter.Starttime}' OR NOT EXISTS u/data[at0001]/items[at0005]/value/value)");
+                                                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
+                                                        CONTAINS (CLUSTER u[openEHR-EHR-CLUSTER.case_identification.v0] AND ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]
+                                                        CONTAINS CLUSTER r[openEHR-EHR-CLUSTER.location.v1]) 
+                                                        WHERE c/name/value ='Patientenaufenthalt' 
+                                                        AND u/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)'
+                                                        AND Ward = '{parameter.Ward}' 
+                                                        AND h/data[at0001]/items[at0004]/value/value <= '{parameter.Endtime.ToString("yyyy-MM-dd")}' 
+                                                        AND (h/data[at0001]/items[at0005]/value/value >= '{parameter.Starttime.ToString("yyyy-MM-dd")}' OR NOT EXISTS u/data[at0001]/items[at0005]/value/value)");
         }
 
         public static AQLQuery GetPatientLabResultList(OutbreakDetectionParameter parameter, OutbreakDectectionPatient pat)
@@ -686,11 +688,11 @@ namespace SmICSCoreLib.Factories
                                                         j/items[at0015]/value/value AS ResultDate,
                                                         q/items[at0001]/value/value as CaseID
                                                         FROM EHR e
-                                                        CONTAINS COMPOSITION c
-                                                        CONTAINS (OBSERVATION n[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]
-                                                        CONTAINS (CLUSTER y[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] and CLUSTER j[openEHR-EHR-CLUSTER.specimen.v1]) 
-                                                        AND CLUSTER q[openEHR-EHR-CLUSTER.case_identification.v0])
-                                                        WHERE PatientID = '{pat.PatientID}' 
+                                                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+                                                        CONTAINS (CLUSTER q[openEHR-EHR-CLUSTER.case_identification.v0] AND OBSERVATION n[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]
+                                                        CONTAINS (CLUSTER j[openEHR-EHR-CLUSTER.specimen.v1] AND CLUSTER y[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]))
+                                                        WHERE c/name/value= 'Virologischer Befund' 
+                                                        AND PatientID = '{pat.PatientID}' 
                                                         AND y/items[at0024,'Virusnachweistest']/value/defining_code/code_string matches {parameter.ToAQLMatchString()}
                                                         AND Result = '260373001'");
         }
