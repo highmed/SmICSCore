@@ -15,13 +15,13 @@ namespace SmICSCoreLib.OutbreakDetection
         public void Covid19Extension(ProxyParameterModel parameter)
         {
             string RScriptPath = "./R_Script_00010.R";
-            string RResultPath = ""; //Speicherpfad für das Ergebnis
+            string RArgPath = "./"; 
             string RResultFileName = "./Variables_for_Visualization.json";
 
-            string argumentString = "path" + parameter.FitRange[0] + " " + parameter.FitRange[1] + " " + parameter.LookbackWeeks;
+            string argumentString = RArgPath + "" + parameter.FitRange[0] + " " + parameter.FitRange[1] + " " + parameter.LookbackWeeks;
 
             GenerateTransferScript(parameter.EpochsObserved);
-            ExternalProcess.Execute(RResultFileName, RExecPath, RResultPath);
+            ExternalProcess.Execute(RResultFileName, RExecPath, argumentString);
             List<OutbreakDetectionResultModel> results = JSONReader<OutbreakDetectionResultModel>.Read(RResultFileName);
             SaveResults(results, parameter.SavingFolder);
         }
