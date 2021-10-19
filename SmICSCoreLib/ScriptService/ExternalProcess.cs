@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.ScriptService
 {
@@ -15,9 +16,10 @@ namespace SmICSCoreLib.ScriptService
             {
                 var info = new ProcessStartInfo();
                 info.FileName = execPath;
+
                 info.WorkingDirectory = Path.GetDirectoryName(filePath);
                 info.Arguments = Path.GetFileName(filePath) + " " + args;
-                
+
                 info.RedirectStandardInput = false;
                 info.RedirectStandardOutput = true;
                 info.UseShellExecute = false;
@@ -27,15 +29,13 @@ namespace SmICSCoreLib.ScriptService
                 {
                     proc.StartInfo = info;
                     proc.Start();
-                    result = proc.StandardOutput.ReadToEnd();
+                    return proc.StandardOutput.ReadToEndAsync().Result;
                 }
-
-                return result;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                throw new Exception("Script failed: " + result, ex);
+                throw new Exception("Script failed!", ex);
             }
         }
        

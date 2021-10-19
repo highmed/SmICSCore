@@ -87,22 +87,21 @@ namespace SmICSCoreLib.StatistikServices.CronJob
 
         private string GetSavingFolder(RKIConfigTemplate config)
         {
-            return config.Erreger + "_" + config.Station + "_" + config.Zeitraum + "_" + (config.Retro ? "Retro" : "") + "/";
+            return config.Erreger + "_" + config.Station + "_" + config.Zeitraum + (config.Retro ? "_Retro" : "") + "/";
         }
 
         private int[] GetFitRange(RKIConfigTemplate config, string savingFolder)
         {
-            //irgendwas machen 
             int[] fitrange = new int[2];
             int dayCount = (Convert.ToInt32(config.Zeitraum) * 7) + 1;
-            //if (config.Retro && !File.Exists(@"../SmICSWebApp/Resources/OutbreakDetection/" + savingFolder + DateTime.Now.AddDays(-1.0).ToString("yyyy-MM-dd")))
-            //{
-            //    fitrange = new int[] { 1, dayCount };
-            //}
-            //else
-            //{
+            if (config.Retro && !File.Exists(@"../SmICSWebApp/Resources/OutbreakDetection/" + savingFolder + DateTime.Now.AddDays(-1.0).ToString("yyyy-MM-dd")))
+            {
+                fitrange = new int[] { 1, dayCount };
+            }
+            else
+            {
                 fitrange = new int[] { dayCount, dayCount };
-            //}
+            }
 
             return fitrange;
         }
