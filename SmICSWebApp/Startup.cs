@@ -16,9 +16,6 @@ using Quartz;
 using Quartz.Impl;
 using SmICSCoreLib.StatistikServices.CronJob;
 using SmICSCoreLib.StatistikServices;
-using Microsoft.Extensions.Logging;
-using SmICSCoreLib.Factories.DetectionAlgorithmInterface;
-using Microsoft.Extensions.Options;
 using SmICSCoreLib.Factories.RKIConfig;
 
 namespace SmICSWebApp
@@ -83,38 +80,6 @@ namespace SmICSWebApp
                                   typeof(JobOutbreakDetection),
                                   "JobOutbreakDetection",
                                   OpenehrConfig.OutbreakDetectionRuntime));
-            #region PaulsCronJob
-            ////CronJob DetectionAlgorithmJob
-            //services.AddSingleton<myJob_00001_DetectionAlgorithmJob>();
-            ////
-            //DateTime startCronJob = new DateTime(2021, 9, 9, 17, 32, 0);
-            //int myHour = startCronJob.Hour;
-            //int myMinute = startCronJob.Minute;
-            //string cronJobParams = "";
-            //cronJobParams += "*";
-            //cronJobParams += " ";
-            //cronJobParams += myMinute.ToString();
-            //cronJobParams += " ";
-            //cronJobParams += myHour.ToString();
-            //cronJobParams += " * * ?";
-            ////
-            //cronJobParams = "";
-            //cronJobParams += "*"; // Sekunden
-            //cronJobParams += " 0/4"; // Minuten
-            //cronJobParams += " *"; // Stunden
-            //cronJobParams += " *"; // Tag
-            //cronJobParams += " *"; // Monat
-            //cronJobParams += " ?"; // Wochentag
-            ////
-            //services.AddSingleton(new JobMetadata(Guid.NewGuid(),
-            //                      typeof(myJob_00001_DetectionAlgorithmJob),
-            //                      "myJob_00001_DetectionAlgorithmJob",
-            //                      cronJobParams));
-            ///*services.AddSingleton(new JobMetadata(Guid.NewGuid(),
-            //                      typeof(myJob_00001_DetectionAlgorithmJob),
-            //                      "myJob_00001_DetectionAlgorithmJob",
-            //                      "* 0/4 * * * ?"));*/
-            #endregion
 
             services.AddSwaggerGen(c =>
             {

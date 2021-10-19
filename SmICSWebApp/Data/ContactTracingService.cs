@@ -67,15 +67,25 @@ namespace SmICSWebApp.Data
                     var base_gesamtdauer = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Gesamtdauer\"},\"archetype_node_id\":\"at0003\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Gesamtdauer"] + "\"}}";
                     var base_abstand = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Abstand\"},\"archetype_node_id\":\"at0008\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Abstand"] + "\"}}";
                     var base_kleidung_cluster = ",{\"_type\":\"CLUSTER\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Schutzkleidung\"},\"archetype_details\":{\"archetype_id\":{\"value\":\"openEHR-EHR-CLUSTER.protective_clothing_.v0\"},\"rm_version\":\"1.0.4\"},\"archetype_node_id\":\"openEHR-EHR-CLUSTER.protective_clothing_.v0\",\"items\":[";
-                    var base_schutzkleidung = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Schutzkleidung\"},\"archetype_node_id\":\"at0001\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Schutzkleidung"] + "\"}}";
-                    var base_person = (string)JObject.Parse(createEntry.ToString())["Person"];
-                    if (base_person != "Indexperson")
+                    var base_schutzkleidung1 = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Schutzkleidung\"},\"archetype_node_id\":\"at0001\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Schutzkleidung1"] + "\"}}";
+                    var base_person1 = (string)JObject.Parse(createEntry.ToString())["Person1"];
+                    if (base_person1 != "Indexperson")
                     {
-                        base_person = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Person"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0004\"}}}]}";
+                        base_person1 = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Person1"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0004\"}}}]}";
                     }
                     else
                     {
-                        base_person = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Person"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0003\"}}}]}";
+                        base_person1 = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Person1"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0003\"}}}]}";
+                    }
+                    var base_schutzkleidung2 = "{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Schutzkleidung\"},\"archetype_node_id\":\"at0001\",\"value\":{\"_type\":\"DV_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Schutzkleidung2"] + "\"}}";
+                    var base_person2 = (string)JObject.Parse(createEntry.ToString())["Person2"];
+                    if (base_person2 != "Indexperson")
+                    {
+                        base_person2 = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Person2"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0004\"}}}]}";
+                    }
+                    else
+                    {
+                        base_person2 = ",{\"_type\":\"ELEMENT\",\"name\":{\"_type\":\"DV_TEXT\",\"value\":\"Person\"},\"archetype_node_id\":\"at0002\",\"value\":{\"_type\":\"DV_CODED_TEXT\",\"value\":\"" + JObject.Parse(createEntry.ToString())["Person2"] + "\",\"defining_code\":{\"terminology_id\":{\"value\":\"local\"},\"code_string\":\"at0003\"}}}]}";
                     }
                     var base_kommentar = (string)JObject.Parse(createEntry.ToString())["Kommentar"];
                     if (base_kommentar != null)
@@ -88,8 +98,8 @@ namespace SmICSWebApp.Data
                         base_category + base_composer + base_context + base_setting + base_other_context + base_bericht_id + base_event_cluster + base_event_kennung +
                         base_event_art + base_bet_person_cluster + base_art_d_person_1 + base_art_d_person_1_ID + base_bet_person_cluster + base_art_d_person_2 +
                         base_art_d_person_2_ID + base_event_kategorie + base_event_kommentar + base_close_other_context + base_content + base_beschreibung +
-                        base_beginn + base_ende + base_ort + base_gesamtdauer + base_abstand + base_kleidung_cluster + base_schutzkleidung + base_person +
-                        base_kommentar + base_composition_ende;
+                        base_beginn + base_ende + base_ort + base_gesamtdauer + base_abstand + base_kleidung_cluster + base_schutzkleidung1 + base_person1 +
+                        base_kleidung_cluster + base_schutzkleidung2 + base_person2 + base_kommentar + base_composition_ende;
 
                     var obj = JsonConvert.DeserializeObject(json_all);
                     var finishedJson = JsonConvert.SerializeObject(obj, Formatting.Indented);

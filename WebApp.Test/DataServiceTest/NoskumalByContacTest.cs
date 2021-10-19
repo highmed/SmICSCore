@@ -29,10 +29,10 @@ namespace WebApp.Test.DataServiceTest
             IPatientStay patientStay = CreatePatientStay(_data); ;
             EhrDataService dataService = new (patientStay, patientMoveFac, symptomFac, NullLogger<EhrDataService>.Instance);
             List<CountDataModel> positivPatList= dataService.GetAllPositivTest("260373001");
-            List<Patient> noskumalList = dataService.GetAllNoskumalPat(positivPatList);
+            List<PatientModel> noskumalList = dataService.GetAllNoskumalPat(positivPatList);
 
-            List<Patient> actual = dataService.GetNoskumalByContact(noskumalList, positivPatList);
-            List<Patient> expected = GetPatientList();
+            List<PatientModel> actual = dataService.GetNoskumalByContact(noskumalList, positivPatList);
+            List<PatientModel> expected = GetPatientList();
 
             Assert.Equal(expected.Count, actual.Count);
             
@@ -46,9 +46,9 @@ namespace WebApp.Test.DataServiceTest
             return new PatientStay(statFac, CountFac);
         }
 
-        private List<Patient> GetPatientList()
+        private List<PatientModel> GetPatientList()
         {
-            List<Patient> patientList = new();
+            List<PatientModel> patientList = new();
             return patientList;
         }
     }
