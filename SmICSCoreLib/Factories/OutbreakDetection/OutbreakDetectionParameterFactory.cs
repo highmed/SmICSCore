@@ -18,6 +18,11 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
 
         public int[][] Process(OutbreakDetectionParameter parameter, SmICSVersion version)
         {
+            if(parameter.Retro)
+            {
+                EarliestMovement firstMove = _restData.AQLQuery<EarliestMovement>(AQLCatalog.GetFirstMovementFromStation(parameter)).FirstOrDefault();
+                parameter.Starttime = firstMove.MinDate;
+            }
             if (version == SmICSVersion.VIROLOGY)
             {
                 return ProcessViro(parameter);

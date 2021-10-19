@@ -144,8 +144,6 @@ namespace SmICSWebApp
             //OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
 
             //Übernehmen in eine static Methode in anderer Klasse
-            
-
 
             if (env.IsDevelopment())
             {

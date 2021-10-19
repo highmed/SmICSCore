@@ -19,6 +19,7 @@ namespace SmICSCoreLib.Factories
                                 WHERE e/ehr_status/subject/external_ref/id/value='{subjectID}' 
                                 AND e/ehr_status/subject/external_ref/namespace='SmICSTests'");
         }
+
         public static AQLQuery ContactPatientWards(ContactParameter parameter)
         {
             return new AQLQuery("ContactPatientWards",$@"SELECT m/data[at0001]/items[at0004]/value/value as Beginn, 
@@ -667,7 +668,7 @@ namespace SmICSCoreLib.Factories
 
         public static AQLQuery GetPatientCaseList(OutbreakDetectionParameter parameter)
         {
-            return new AQLQuery("OutbreakDetection", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
+            return new AQLQuery("OutbreakDetectionPatientCaseList", $@"SELECT DISTINCT e/ehr_status/subject/external_ref/id/value as PatientID,
                                                         r/items[at0027]/value/value as Ward,
                                                         u/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value/value as CaseID
                                                         FROM EHR e
@@ -683,7 +684,7 @@ namespace SmICSCoreLib.Factories
 
         public static AQLQuery GetPatientLabResultList(OutbreakDetectionParameter parameter, OutbreakDectectionPatient pat)
         {
-            return new AQLQuery("OutbreakDetection", $@"SELECT e/ehr_status/subject/external_ref/id/value AS PatientID,
+            return new AQLQuery("OutbreakDetectionPatientLabResults", $@"SELECT e/ehr_status/subject/external_ref/id/value AS PatientID,
                                                         y/items[at0001,'Nachweis']/value/defining_code/code_string AS Result,
                                                         j/items[at0015]/value/value AS ResultDate,
                                                         q/items[at0001]/value/value as CaseID
@@ -695,6 +696,16 @@ namespace SmICSCoreLib.Factories
                                                         AND PatientID = '{pat.PatientID}' 
                                                         AND y/items[at0024,'Virusnachweistest']/value/defining_code/code_string matches {parameter.ToAQLMatchString()}
                                                         AND Result = '260373001'");
+        }
+
+        public static AQLQuery GetFirstMovementFromStation(OutbreakDetectionParameter parameter)
+        {
+            return new AQLQuery("FirstMovementFromStation", $@"SELECT min(h/data[at0001]/items[at0004]/value/value)
+                                                        FROM EHR e
+                                                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
+                                                        CONTAINS ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]
+                                                        CONTAINS CLUSTER r[openEHR-EHR-CLUSTER.location.v1]
+                                                        WHERE r/items[at0027]/value/value='{parameter.Ward}'");
         }
 
     }

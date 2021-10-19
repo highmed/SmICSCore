@@ -26,7 +26,7 @@ namespace SmICSCoreLib.StatistikServices.CronJob
         {
             try
             {
-                string path = @"../SmICSWebApp/Resources/RKIConfig/RKIConfig.json"; //TODO: Für publish Version anpassen
+                string path = @"./Resources/RKIConfig/RKIConfig.json"; //TODO: Für publish Version anpassen
                 //List<RKIConfigTemplate> configs = JSONReader<RKIConfigTemplate>.Read(path);
                 List<RKIConfigTemplate> configs = new List<RKIConfigTemplate>()
                 {
@@ -58,18 +58,18 @@ namespace SmICSCoreLib.StatistikServices.CronJob
 
                 foreach(RKIConfigTemplate config in configs)
                 {
-                    OutbreakDetectionParameter outbreakParam = ConfigToParam(config);
-                    outbreakParam.Starttime = new DateTime(2020, 1, 1);
-                    outbreakParam.Endtime = new DateTime(2021, 5, 1);
+                    string savingFolder = GetSavingFolder(config);
+
+                    OutbreakDetectionParameter outbreakParam = ConfigToParam(config, savingFolder);
                     SmICSVersion version = config.Erregerstatus == "virologisch" ? SmICSVersion.VIROLOGY : SmICSVersion.MICROBIOLOGY;
 
-                    string savingFolder = GetSavingFolder(config);
+
 
                     ProxyParameterModel parameter = new ProxyParameterModel()
                     {
                         EpochsObserved = _paramFac.Process(outbreakParam, version),
                         SavingFolder = savingFolder,
-                        FitRange = GetFitRange(config, savingFolder),
+                        FitRange = GetFitRange(outbreakParam, savingFolder, Convert.ToInt32(config.Zeitraum)),
                         LookbackWeeks = Convert.ToInt32(config.Zeitraum)
                     };
 
@@ -90,13 +90,14 @@ namespace SmICSCoreLib.StatistikServices.CronJob
             return config.Erreger + "_" + config.Station + "_" + config.Zeitraum + (config.Retro ? "_Retro" : "") + "/";
         }
 
-        private int[] GetFitRange(RKIConfigTemplate config, string savingFolder)
+        private int[] GetFitRange(OutbreakDetectionParameter outbreakParam, string savingFolder, int lookback)
         {
             int[] fitrange = new int[2];
-            int dayCount = (Convert.ToInt32(config.Zeitraum) * 7) + 1;
-            if (config.Retro && !File.Exists(@"../SmICSWebApp/Resources/OutbreakDetection/" + savingFolder + DateTime.Now.AddDays(-1.0).ToString("yyyy-MM-dd")))
+            int dayCount = (int)(outbreakParam.Endtime.Date - outbreakParam.Starttime.Date).TotalDays;
+            int minDayCount = (lookback * 7) + 1;
+            if (outbreakParam.Retro && !File.Exists(@"./Resources/OutbreakDetection/" + savingFolder + DateTime.Now.AddDays(-1.0).ToString("yyyy-MM-dd")))
             {
-                fitrange = new int[] { 1, dayCount };
+                fitrange = new int[] { minDayCount, dayCount };
             }
             else
             {
@@ -106,14 +107,23 @@ namespace SmICSCoreLib.StatistikServices.CronJob
             return fitrange;
         }
 
-        private OutbreakDetectionParameter ConfigToParam(RKIConfigTemplate config)
+        private OutbreakDetectionParameter ConfigToParam(RKIConfigTemplate config, string savingFolder)
         {
             OutbreakDetectionParameter outbreakParam = new OutbreakDetectionParameter();
+            if (config.Retro && !File.Exists(@"./Resources/OutbreakDetection/" + savingFolder + DateTime.Now.AddDays(-1.0).ToString("yyyy-MM-dd")))
+            {
+
+                outbreakParam.Retro = true; 
+            }
+            else
+            {
+                outbreakParam.Retro = false;
+            }
             outbreakParam.Starttime = DateTime.Now.AddDays(-(Convert.ToInt32(config.Zeitraum) * 7));
             outbreakParam.Endtime = DateTime.Now; //oder DateTime.Now.AddDays(-1);
             outbreakParam.PathogenIDs = config.ErregerID.Select(k => k.KeimID).ToList();
             outbreakParam.Ward = config.Station;
-
+            
             return outbreakParam;
         }
     }
