@@ -199,7 +199,7 @@ namespace SmICSWebApp
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "AQL API");
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseAuthentication();
