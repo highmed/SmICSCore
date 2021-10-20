@@ -24,7 +24,8 @@ services:
         - smics-net
 
   smics_visualisierung:
-    depends_on: smics_core
+    depends_on: 
+      - smics_core
     build: ./SmICSVisualisierung
     environment:
       - USE_AUTH=true
