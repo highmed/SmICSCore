@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.1'
 
 services:  
 
@@ -12,11 +12,11 @@ services:
       - OPENEHR_DB=https://medic-c-t.mh-hannover.local:8083/rest/openehr/v1
       - AUTHORITY=https://keycloak.mh-hannover.local:8443/auth/realms/Better
       - CLIENT_ID=medic-c-t
-      - CLIENT_SECRET=null
+      #- CLIENT_SECRET=null
       - ASPNETCORE_URLS="https://+;http://+"
       - ASPNETCORE_HTTPS_PORT=443
-      - ASPNETCORE_Kestrel__Certificates__Default__Password={certPW}
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/smics/https/cert.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=4xftuxtO7tbn
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/app/Certificates/smics.pfx
     ports:
       - "80:80"
       - "443:443"

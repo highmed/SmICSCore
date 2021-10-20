@@ -45,13 +45,7 @@ namespace SmICSWebApp
                 //.UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseKestrel(options =>
-                    {
-                        options.ListenAnyIP(443, listenOptions =>
-                        {
-                            listenOptions.UseHttps(@"C:/Users/biermapa/Downloads/smics.pfx", "4xftuxtO7tbn");
-                        });
-                    }).UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }

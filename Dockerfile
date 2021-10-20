@@ -2,8 +2,7 @@
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+
 WORKDIR /src
 COPY ["SmICSWebApp/SmICSWebApp.csproj", "SmICSWebApp/"]
 COPY ["SmICSCoreLib/SmICSCoreLib.csproj", "SmICSCoreLib/"]
@@ -39,4 +38,6 @@ RUN update-ca-certificates
 
 WORKDIR /app
 COPY --from=publish /app/out .
+EXPOSE 80
+EXPOSE 443
 ENTRYPOINT ["dotnet", "SmICSWebApp.dll"]
