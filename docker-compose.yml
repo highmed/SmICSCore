@@ -13,13 +13,13 @@ services:
       - AUTHORITY=https://keycloak.mh-hannover.local:8443/auth/realms/Better
       - CLIENT_ID=medic-c-t
       #- CLIENT_SECRET=null
-      - ASPNETCORE_URLS="https://+;http://+"
+      - ASPNETCORE_URLS=https://+;http://+
       - ASPNETCORE_HTTPS_PORT=443
       - ASPNETCORE_Kestrel__Certificates__Default__Password=4xftuxtO7tbn
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/app/Certificates/smics.pfx
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
     networks: 
         - smics-net
 
@@ -37,7 +37,7 @@ services:
       - HTTPS_METHOD=noredirect
       #- AUTH_CLIENT_SECRET=
     ports:
-      - "3231:3231"
+      - 3231:3231
     container_name: smics_visualisierung
     networks: 
      - smics-net
