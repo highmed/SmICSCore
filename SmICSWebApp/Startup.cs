@@ -10,7 +10,6 @@ using System.IO;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using SmICSWebApp.Data;
-using Serilog;
 using Quartz.Spi;
 using Quartz;
 using Quartz.Impl;
@@ -31,9 +30,7 @@ using SmICSCoreLib.Authentication;
 using SmICSCWebApp.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Logging;
-using System.Net;
-using System.Net.Http;
-using Microsoft.Extensions.Logging;
+
 
 namespace SmICSWebApp
 {

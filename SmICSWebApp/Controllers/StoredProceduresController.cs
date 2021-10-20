@@ -67,8 +67,9 @@ namespace SmICSWebApp.Controllers
         /// Gibt zu dem angegebenen Patienten und dem angegebenen Zeitraum alle weiteren Patienten zurück mit welchem der Patient kontakt hatte. Hierzu werden Informationen bzgl. des Zeitraums und der Grad des Kontakts geliefert. 
         /// </remarks>
         /// <param name="parameter"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
-        
+
         [Route("Contact_NthDegree_TTKP_Degree")]
         [HttpPost]
         public ActionResult<ContactModel> Contact_NthDegree_TTP_Degree([FromBody] ContactParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
