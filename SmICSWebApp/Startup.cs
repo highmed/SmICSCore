@@ -122,7 +122,7 @@ namespace SmICSWebApp
                     ValidIssuer = "https://keycloak.mh-hannover.local:8443/auth/realms/Better",
                     //ValidIssuer = Environment.GetEnvironmentVariable("AUTHORITY"),
                     ValidAudience = "account"
-                    //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])) 
+                  //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])) 
                 };
             });
             services.AddAuthorization(options =>
@@ -196,7 +196,8 @@ namespace SmICSWebApp
                 app.UseHsts();
             }
 
-            OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
+            OpenehrConfig.openehrEndpoint = "https://medic-c-t.mh-hannover.local:8083/rest/openehr/v1";
+            //OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
 
             app.UseSwagger();
 

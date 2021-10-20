@@ -19,8 +19,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using SmICSCoreLib.StatistikDataModels;
 using SmICSCoreLib.Factories.InfectionSituation;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Protocols;
 using System.Linq;
-using SmICSWebApp.Helper;
 
 namespace SmICSWebApp.Controllers
 {
@@ -282,6 +288,6 @@ namespace SmICSWebApp.Controllers
             {
                 return ErrorHandling(e);
             }
-        } 
+        }
     }
 }

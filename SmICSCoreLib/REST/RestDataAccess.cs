@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SmICSCoreLib.Authentication;
 using SmICSCoreLib.Factories;
 
 namespace SmICSCoreLib.REST
@@ -25,9 +27,10 @@ namespace SmICSCoreLib.REST
 
         public List<T> AQLQuery<T>(AQLQuery query) where T : new()
         {
-            _logger.LogInformation("Posted Query: {Query}", query.Name);
+            string username = TokenValidator.GetValidatedTokenUsername(_client.Client.DefaultRequestHeaders.Authorization.Parameter);
+            //Methodenaufruf
+            _logger.LogInformation(username + " Posted Query: {Query}", query.Name);
             string restPath = "/query/aql";
-
             HttpResponseMessage response = _client.Client.PostAsync(OpenehrConfig.openehrEndpoint + restPath, GetHttpContentQuery(query.ToString())).Result;
             //System.Diagnostics.Debug.Print(response.RequestMessage.ToString());
             if (response.IsSuccessStatusCode)
@@ -36,13 +39,14 @@ namespace SmICSCoreLib.REST
                 {
                     return null;
                 }
-                _logger.LogInformation("Received AQL Result From {Query}", query.Name);
+                 
+                //_logger.LogInformation("Received AQL Result From {Query}", query.Name);
                 _logger.LogDebug("AQL Result: {Result}", response.Content.ReadAsStringAsync().Result);
                 return openEHRJSONSerializer<T>.ReceiveModelConstructor(response);
             }
             else
             {
-                _logger.LogInformation("NO AQL Result Received {Query}", query.Name);
+                //_logger.LogInformation("NO AQL Result Received {Query}", query.Name);
                 _logger.LogDebug("No Success Code: {statusCode} \n {responsePhrase}", response.StatusCode, response.ReasonPhrase);
                 return null;
             }
@@ -93,6 +97,7 @@ namespace SmICSCoreLib.REST
                 _client.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Split(" ")[1]);
             }
         }
+
         #region private Methods
         private HttpContent GetHttpContentADL(string xml)
         {
