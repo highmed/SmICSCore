@@ -11,7 +11,7 @@ namespace SmICSCoreLib.Authentication
     {
         public static string GetValidatedTokenUsername(string jwtToken)
         {
-
+            Console.WriteLine(Environment.GetEnvironmentVariable("AUTHORITY"));
             var configManager = new ConfigurationManager<OpenIdConnectConfiguration>(Environment.GetEnvironmentVariable("AUTHORITY"), new OpenIdConnectConfigurationRetriever());
 
             var openidconfig = configManager.GetConfigurationAsync().Result;
@@ -28,7 +28,7 @@ namespace SmICSCoreLib.Authentication
             validationParameters.IssuerSigningKeys = openidconfig.SigningKeys;
             ClaimsPrincipal principal = new JwtSecurityTokenHandler().ValidateToken(jwtToken, validationParameters, out validatedToken);
             string username = principal.FindFirst("preferred_username")?.Value;
-
+            Console.WriteLine("User: "+ username);
             return username;
         }
     }
