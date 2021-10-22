@@ -27,9 +27,9 @@ namespace SmICSCoreLib.REST
 
         public List<T> AQLQuery<T>(AQLQuery query) where T : new()
         {
-            string username = TokenValidator.GetValidatedTokenUsername(_client.Client.DefaultRequestHeaders.Authorization.Parameter);
+            //string username = TokenValidator.GetValidatedTokenUsername(_client.Client.DefaultRequestHeaders.Authorization.Parameter);
             //Methodenaufruf
-            _logger.LogInformation(username + " Posted Query: {Query}", query.Name);
+            _logger.LogInformation(" Posted Query: {Query}", query.Name);
             string restPath = "/query/aql";
             HttpResponseMessage response = _client.Client.PostAsync(OpenehrConfig.openehrEndpoint + restPath, GetHttpContentQuery(query.ToString())).Result;
             //System.Diagnostics.Debug.Print(response.RequestMessage.ToString());
