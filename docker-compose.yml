@@ -45,7 +45,7 @@ services:
      - nginx-net
 
   nginx:
-    image: nginx:mainlinealpine
+    image: nginx:mainline-alpine
     container_name: nginx
     restart: unless-stropped
     ports: 
