@@ -5,7 +5,6 @@ services:
   smics_core:
     build:
         context: .
-    container_name: smics_core
     volumes:
       - /home/smics/.aspnet/https/:/root/app/Certificates/
     environment:
@@ -39,7 +38,6 @@ services:
       #- AUTH_CLIENT_SECRET=
     ports:
       - 3231:3231
-    container_name: smics_visualisierung
     networks: 
      - smics-net
      - nginx-net
@@ -49,8 +47,8 @@ services:
     container_name: nginx
     restart: unless-stopped
     ports: 
-      - 8080:80
-      - 8443:443
+      - 8080:8080
+      - 8443:8443
     depends_on:
       - smics_visualisierung
     networks:
