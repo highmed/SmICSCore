@@ -47,7 +47,7 @@ services:
   nginx:
     image: nginx:mainline-alpine
     container_name: nginx
-    restart: unless-stropped
+    restart: unless-stopped
     ports: 
       - 8080:80
       - 8443:443
