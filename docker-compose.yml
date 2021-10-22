@@ -42,7 +42,23 @@ services:
     container_name: smics_visualisierung
     networks: 
      - smics-net
+     - nginx-net
 
+  nginx:
+    image: nginx:mainlinealpine
+    container_name: nginx
+    restart: unless-stropped
+    ports: 
+      - 8080:80
+      - 8443:443
+    depends_on: smics_visualisierung
+    networks:
+      - nginx-net
+    volumes:
+      - web-root:/var/www/html/
+      - ../SmICSVisualisierung/nginx-conf:/etc/nginx/conf.d
+      - ../certs/:etc/nginx/ssl/
 networks:
   smics-net: {}
+  nginx-net: {}
 
