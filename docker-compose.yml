@@ -56,7 +56,6 @@ services:
     networks:
       - nginx-net
     volumes:
-      - web-root:/var/www/html/
       - ../SmICSVisualisierung/nginx-conf:/etc/nginx/conf.d
       - ../certs/:etc/nginx/ssl/
 networks:
