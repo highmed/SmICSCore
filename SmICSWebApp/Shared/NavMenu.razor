@@ -1,7 +1,8 @@
-﻿@inject NavigationManager navigation
+﻿@using SmICSCoreLib.REST
+
+@inject NavigationManager navigation
 @inject AuthenticationStateProvider AuthState
 @attribute [Authorize]
-
 <nav class="navbar navbar-expand-lg shadow-sm fixed-top">
     <div class="collapse navbar-collapse">
         <a class="navbar-brand" href="" style="margin-left: 1%;">
@@ -45,7 +46,7 @@
         string http = splitted[0] + ":";
         string url = splitted[1];
         //url = url.Substring(0, (url.Length - 2));
-        string port = ":" + "3231";
+        string port = ":" + OpenehrConfig.smicsVisuPort;
 
         visuLink = "http:" + url.Substring(0, url.LastIndexOf('/')) + port;
 

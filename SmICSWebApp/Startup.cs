@@ -191,7 +191,7 @@ namespace SmICSWebApp
 
             //OpenehrConfig.openehrEndpoint = "https://medic-c-t.mh-hannover.local:8083/rest/openehr/v1";
             OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
-
+            OpenehrConfig.smicsVisuPort = Environment.GetEnvironmentVariable("SMICS_VISU_PORT");
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
