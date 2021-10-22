@@ -57,7 +57,7 @@ services:
       - nginx-net
     volumes:
       - ../SmICSVisualisierung/nginx-conf:/etc/nginx/conf.d
-      - ../certs/:etc/nginx/ssl/
+      - ../certs/:etc/ssl/
 networks:
   smics-net: {}
   nginx-net: {}
