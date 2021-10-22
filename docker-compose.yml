@@ -51,7 +51,8 @@ services:
     ports: 
       - 8080:80
       - 8443:443
-    depends_on: smics_visualisierung
+    depends_on:
+      - smics_visualisierung
     networks:
       - nginx-net
     volumes:
