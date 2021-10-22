@@ -28,6 +28,7 @@ services:
       - smics_core
     build: ../SmICSVisualisierung
     environment:
+      - DEV_MODE=true
       - USE_AUTH=true
       - SMICS_HOSTNAME=smics.mh-hannover.local
       - SMICS_PORT=443
