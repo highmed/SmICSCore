@@ -39,6 +39,7 @@ namespace SmICSWebApp.Controllers
         private readonly ISymptomFactory _symptomFac;
         private readonly IVaccinationFactory _vaccinationFac;
         private readonly OutbreakDetectionService _outbreakService;
+
         public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService)
         {
             _logger = logger;

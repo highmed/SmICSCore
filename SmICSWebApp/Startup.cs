@@ -16,7 +16,6 @@ using Quartz;
 using Quartz.Impl;
 using SmICSCoreLib.StatistikServices.CronJob;
 using SmICSCoreLib.StatistikServices;
-using Microsoft.Extensions.Logging;
 using SmICSCoreLib.Database;
 using SmICSCoreLib.Factories.RKIConfig;
 
