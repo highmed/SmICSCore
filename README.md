@@ -45,7 +45,7 @@ The openEHR Repository needs to be prefilled with following templates and compos
 
 Docker and docker-compose tool. 
 
-Installation: https://docs.docker.com/engine/install/ and if necessary: https://docs.docker.com/compose/install/
+Installation: https://docs.docker.com/engine/install/ and https://docs.docker.com/compose/install/
 
 ___
 ## Preparation
