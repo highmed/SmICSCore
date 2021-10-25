@@ -19,7 +19,7 @@ The openEHR Repository needs to be prefilled with following templates and compos
 - [Stationärer Versorgungsfall](https://ckm.highmed.org/ckm/templates/1246.169.620)
 - [Patientenaufenthalt](https://ckm.highmed.org/ckm/templates/1246.169.590) *(Altough "Station" is no mandatory field in the template, it is necessary for the full functionality for the SmICS)*
 - [Virologischer Befund](https://ckm.highmed.org/ckm/templates/1246.169.636)
-- [Imfpstatus](https://ckm.highmed.org/ckm/templates/1246.169.1187)
+- [Impfstatus](https://ckm.highmed.org/ckm/templates/1246.169.1187)
 - [Symptome](https://ckm.highmed.org/ckm/templates/1246.169.1109)
 
 *Upcoming:*
