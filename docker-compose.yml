@@ -7,14 +7,14 @@ services:
         context: .
     restart: unless-stopped
     volumes:
-      - ../certs/smicscore/:/etc/ssl/
+      - ../certs/smicscore/:/root/app/https/
     environment:
       - OPENEHR_DB=<openEHR REST API URL>
       - AUTHORITY=<oauth2 Authority  URL>
       - CLIENT_ID=<oauth2 Client>
       - CLIENT_SECRET=<oauth2 Client Secret>
       - ASPNETCORE_Kestrel__Certificates__Default__Password=<.pfx Certificate password>
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/etc/ssl/<filename of pfx certificate>.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/app/https/<filename of pfx certificate>.pfx
     ports:
       - 80:80
       - 443:443
