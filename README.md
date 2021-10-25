@@ -73,15 +73,15 @@ mkdir -p certs/smicscore
 mkdir certs/smicsvisualisierung
 ```
 
-If the SmICSCore Directory doesn't contain a <i>Certifactes</i> folder, create one within the SmICSCore Directory.
+If the SmICSCore Directory doesn't contain a <i>Certificates</i> folder, create one within the SmICSCore Directory.
 ```
 mkdir SmICSCore/Certificates
 ```
 
 <ul>
 <li>Copy the root certificates to the Certificates Folder</li>
-<li>Copy the .pfy certificates to certs/smicscore</li>
-<li>Copy the standard format certificates to certs/smicsvisualization</li>
+<li>Copy the .pfx certificates to certs/smicscore</li>
+<li>Copy the standard format certificates to certs/smicsvisualisierung</li>
 </ul>
 
 ### 3. Editing nginx.conf
