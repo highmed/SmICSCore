@@ -18,6 +18,7 @@ using SmICSCoreLib.StatistikServices.CronJob;
 using SmICSCoreLib.StatistikServices;
 using Microsoft.Extensions.Logging;
 using SmICSCoreLib.Database;
+using SmICSCoreLib.Factories.RKIConfig;
 
 namespace SmICSWebApp
 {
@@ -38,12 +39,16 @@ namespace SmICSWebApp
             services.AddControllers().AddNewtonsoftJson();
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSmICSLibrary();
             services.AddLogging();
             services.AddSingleton<RkiService>();            
             services.AddSingleton<SymptomService>();
             services.AddSingleton<EhrDataService>();
+            
+            //AUTH - START 
 
+            //AUTH - ENDE
+            
+            services.AddSmICSLibrary();
             //CronJob GetReport
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
@@ -59,7 +64,24 @@ namespace SmICSWebApp
 
             //CronJob UpdateRkidata
             services.AddSingleton<JobUpdateRkidata>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));            
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
+
+            if (File.Exists(@"./Resources/RKIConfig/RKIConfigTime.json"))
+            {
+                LabDataTimeModel runtimeString = SmICSCoreLib.JSONFileStream.JSONReader<LabDataTimeModel>.ReadObject(@"./Resources/RKIConfig/RKIConfigTime.json");
+                string[] runtimeArr = runtimeString.Zeitpunkt.Split(":");
+                OpenehrConfig.OutbreakDetectionRuntime = runtimeArr[2] + " " + runtimeArr[1] + " " + runtimeArr[0] + " * * ?";
+            }
+            else
+            {
+                OpenehrConfig.OutbreakDetectionRuntime = null;
+            }
+
+            services.AddSingleton<JobOutbreakDetection>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(),
+                                  typeof(JobOutbreakDetection),
+                                  "JobOutbreakDetection",
+                                  OpenehrConfig.OutbreakDetectionRuntime));
 
             services.AddSwaggerGen(c =>
             {

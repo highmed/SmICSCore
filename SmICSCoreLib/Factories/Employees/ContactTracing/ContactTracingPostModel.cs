@@ -18,5 +18,17 @@ namespace SmICSCoreLib.Factories.Employees.ContactTracing
         [JsonProperty(PropertyName = "PersonenID2")]
         [Required]
         public string PersonenID2 { get; set; }
+        [JsonProperty(PropertyName = "Schutzkleidung1")]
+        [Required]
+        public string Schutzkleidung1 { get; set; }
+        [JsonProperty(PropertyName = "Person1")]
+        [Required]
+        public string Person1 { get; set; }
+        [JsonProperty(PropertyName = "Schutzkleidung2")]
+        [Required]
+        public string Schutzkleidung2 { get; set; }
+        [JsonProperty(PropertyName = "Person2")]
+        [Required]
+        public string Person2 { get; set; }
     }
 }

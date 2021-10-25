@@ -130,6 +130,7 @@
     private List<RKIConfigTemplate> RKIConfigForm = new List<RKIConfigTemplate>();
     private List<RKIConfigTemplate> ConfigList = new List<RKIConfigTemplate>();
     private LabDataTimeModel ZeitpunktList = new LabDataTimeModel();
+    private string path = @"./Resources/";
 
     protected override async Task OnInitializedAsync()
     {
@@ -183,6 +184,15 @@
             RKIConfigForm.Where(x => x.Erreger != "SARS-CoV-2").ToList().ForEach(s => s.Erregerstatus = "mikrobiologisch");
 
             RKIConfigService.StoreRules(RKIConfigForm, ZeitpunktList);
+
+
+            foreach (var item in RKIConfigForm)
+            {
+                bool exists = System.IO.Directory.Exists(path + item.Erreger + "_" + item.Station + "_" + item.Zeitraum + (item.Retro ? "_Retro" : "") + "/");
+                if (!exists)
+                    System.IO.Directory.CreateDirectory(path + item.Erreger + "_" + item.Station + "_" + item.Zeitraum + (item.Retro ? "_Retro" : "") + "/");
+            }
+
             await Task.Run(GetConfigs);
             DynamicFragment.RemoveRange(0, DynamicFragment.Count());
             RKIConfigForm.RemoveRange(0, RKIConfigForm.Count());

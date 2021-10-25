@@ -1,0 +1,13 @@
+{
+ "Ausbruchswahrscheinlichkeit": [ 0.002333756 ],
+"p-Value": [        1 ],
+"Zeitstempel": [ "2021-04-30" ],
+"Erregeranzahl": [        0 ],
+"Endemisches Niveau": [ 0.1802576 ],
+"Epidemisches Niveau": [ 3.248258 ],
+"Obergrenze": [        2 ],
+"Faelle unter der Obergrenze": [        0 ],
+"Faelle ueber der Obergrenze": [        0 ],
+"Klassifikation der Alarmfaelle": [ "0 cases" ],
+"Algorithmusergebnis enthaelt keine null-Werte": [ true ] 
+}

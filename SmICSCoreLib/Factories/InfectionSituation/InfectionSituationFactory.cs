@@ -14,7 +14,7 @@ namespace SmICSCoreLib.Factories.InfectionSituation
     public class InfectionSituationFactory : IInfectionSituationFactory
     {
         private readonly string positiv = "260373001";
-     
+
         private readonly ICountFactory _countFactory;
         private readonly IStationaryFactory _stationaryFactory;
         private readonly ISymptomFactory _symptomFactory;
@@ -28,7 +28,7 @@ namespace SmICSCoreLib.Factories.InfectionSituation
                                          IVaccinationFactory vaccFac, ILogger<InfectionSituationFactory> logger)
         {
             _countFactory = countFactory;
-            _symptomFactory = symptomFactory;            
+            _symptomFactory = symptomFactory;
             _stationaryFactory = stationaryFactory;
             _patMoveFac = patMoveFac;
             _vaccFac = vaccFac;
@@ -132,7 +132,7 @@ namespace SmICSCoreLib.Factories.InfectionSituation
                         {
                             foreach (var symptom in symptoms)
                             {
-                                if (!symptomList.Contains(symptom.NameDesSymptoms) && 
+                                if (!symptomList.Contains(symptom.NameDesSymptoms) &&
                                     !patNoskumalList.Contains(new PatientModel { PatientID = positivPat.PatientID }))
                                 {
                                     patNoskumalList.Add(new PatientModel(positivPat.PatientID,
@@ -161,7 +161,7 @@ namespace SmICSCoreLib.Factories.InfectionSituation
                 patListParameter.patientList = patientList;
 
                 List<PatientMovementModel> nosPatBewegungen = _patMoveFac.Process(patListParameter);
-                if (nosPatBewegungen.Count != 0 )
+                if (nosPatBewegungen.Count != 0)
                 {
                     foreach (var bewegung in nosPatBewegungen)
                     {
