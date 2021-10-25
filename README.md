@@ -84,7 +84,7 @@ mkdir certs/main
 
 The nginx.conf can be found in the SmICSCore folder within the nginx folder. 
 
-Replace ```example.com``` and ```www.example.com``` by your local server address.
+Replace ```example.com``` and ```www.example.com``` by your local server address. And the ```smics.cer``` and ```smics.key```  by the names of your certificate and key.
 
 ### 5. Editing docker-compose.yml
 
