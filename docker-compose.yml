@@ -5,6 +5,7 @@ services:
   smics_core:
     build:
         context: .
+    restart: unless-stopped
     volumes:
       - ../certs/main/:/usr/local/share/ca-certificates/
     environment:
@@ -24,6 +25,7 @@ services:
     depends_on: 
       - smics_core
     build: ../SmICSVisualisierung
+    restart: unless-stopped
     environment:
       - SMICS_HOSTNAME=<local DNS entry of the server>
       - AUTH_PROVIDER_URL=<oauth2 Authority Root URL without "/auth/realm"> 
