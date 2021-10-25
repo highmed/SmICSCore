@@ -29,7 +29,7 @@ COPY . ./
 RUN dotnet publish "SmICSWebApp/SmICSWebApp.csproj" -c Release -o /app/out
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS final
-
+COPY Certificates/ /usr/local/share/ca-certificates/
 RUN find /usr/local/share/ca-certificates -type f -exec chmod 644 {} \;
 RUN update-ca-certificates
 
