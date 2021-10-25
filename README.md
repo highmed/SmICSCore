@@ -71,11 +71,15 @@ Within the directory where the two applications are stored, create following fol
 ```
 mkdir -p certs/smicscore
 mkdir certs/smicsvisualisierung
-mkdir certs/main
+```
+
+If the SmICSCore Directory doesn't contain a <i>Certifactes</i> folder, create one within the SmICSCore Directory.
+```
+mkdir SmICSCore/Certificates
 ```
 
 <ul>
-<li>Copy the root certificates to certs/main</li>
+<li>Copy the root certificates to the Certificates Folder</li>
 <li>Copy the .pfy certificates to certs/smicscore</li>
 <li>Copy the standard format certificates to certs/smicsvisualization</li>
 </ul>
