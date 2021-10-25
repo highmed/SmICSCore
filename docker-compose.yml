@@ -7,7 +7,6 @@ services:
         context: .
     restart: unless-stopped
     volumes:
-      - ../certs/main/:/usr/local/share/ca-certificates/
       - ../certs/smicscore/:/etc/ssl/
     environment:
       - OPENEHR_DB=<openEHR REST API URL>
