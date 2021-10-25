@@ -30,7 +30,7 @@ The openEHR Repository needs to be prefilled with following templates and compos
 #### Server 
 - CPU: 4 Cores<sup>1</sup> 
 - RAM: 4 GB<sup>1</sup> 
-- Storage: 5 GB<sup>1</sup> 
+- Storage: 30 GB<sup>1</sup> 
 - OS: Linux *(recommended)*<sup>2</sup> 
 
 <sup>1</sup> *Estimated Requirements*
