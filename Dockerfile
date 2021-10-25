@@ -40,4 +40,7 @@ WORKDIR /app
 COPY --from=publish /app/out .
 EXPOSE 80
 EXPOSE 443
+ENV SMICS_VISU_PORT=8443
+ENV ASPNETCORE_URLS=https://+;http://+
+ENV ASPNETCORE_HTTPS_PORT=443
 ENTRYPOINT ["dotnet", "SmICSWebApp.dll"]

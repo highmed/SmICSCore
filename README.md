@@ -7,6 +7,11 @@ ___
 
 ### Repository
 
+<br>
+
+**IMPORTANT:** If you want to run the SmICS in its authentication version your openEHR Respository needs to be configured to work with oauth2 authentication
+
+
 Installed and functional openEHR Repository which provides the basic REST API from the openEHR Reference Model.
 
 The openEHR Repository needs to be prefilled with following templates and compositions for these templates:
@@ -38,67 +43,60 @@ The openEHR Repository needs to be prefilled with following templates and compos
 
 ### Docker
 
-Docker or docker-compose tool. 
+Docker and docker-compose tool. 
 
 Installation: https://docs.docker.com/engine/install/ and if necessary: https://docs.docker.com/compose/install/
 
 ___
-## Execution
+## Preparation
 
-**Get the Software**
+### 1. Get the Software
 
-Download the latest versions of the SmICSCore and the SmICS Visualization
+Download the latest versions of the SmICSCore and the SmICS Visualization in the same directory and unpack it.
 
 SmICSCore: https://github.com/highmed/SmICSCore/releases <br>
 SmICS Visualization: https://github.com/highmed/SmICSVisualisierung/releases
 
-**Certificates**
+### 3. Prepare Certificates
 
-Before you build and run the SmICSCore you need to copy your Root Certificates  of your local CA in the Certificates folder.
+You need:
+<ul>
+<li>Root Certificates</li>
+<li>Server Certificates</li>
+<b>IMPORTANT:</b> For the SmICSCore a .pfx certificate is need. For the SmICSVisualization the standard formats required. 
+</ul>
 
-**Build & Run Process - Docker**
-
-Within each local git repository following commands need to be executed. **You need to start with the SmICSCore Repository**
-
-If you didn't created an Docker network you need to do so. You just need to do this ones.
-
-```
-docker network create smics-net
-```
-
-To build and run the containers run the following commands.
+Within the directory where the two applications are stored, create following folder structure:
 
 ```
-docker build -t smics .
-docker run --name smics_core --network smics-net -e OPENEHR_DB="$OPENEHR_REST_PATH" -e AUTHORITY=$AUTHORITY -e CLIENT_ID="$CLIENT_ID" -e CLIENT_SECRET=$CLIENT_SECRET -d -p 9787:9787 smics
+mkdir -p certs/smicscore
+mkdir certs/smicsvisualization
+mkdir certs/main
 ```
 
-**Environment Variablen - SmICSCore**
+<ul>
+<li>Copy the root certificates to certs/main</li>
+<li>Copy the .pfy certificates to certs/smicscore</li>
+<li>Copy the standard format certificates to certs/smicsvisualization</li>
+</ul>
 
-| Environment | Description |
-|-------------|-------------|
-| OPENEHR_DB | The path to the RESTful API from the OpenEHR Repository <br> e.g. for local Better: http://localhost:8081/rest/openehr/v1  |
-| AUTHORITY | The link to your oauth2 authority <br> e.g. for local keyclaok: http://localhost/auth/realms/realmName  |
- |CLIENT_ID| Your ClientID of your oauth2 client |
-| CLIENT_SECRET| Your ClientSecret of your oauth2 client |
+### 4. Editing nginx.conf
 
+The nginx.conf can be found in the SmICSCore folder within the nginx folder. 
 
+Replace ```example.com``` and ```www.example.com``` by your local server address.
+
+### 5. Editing docker-compose.yml
+
+The docker-compose.yml is located in the SmICSCore folder.
+
+Every Environment Variable which contains an expression with ```<>``` needs to be replaced by your local settings.
+
+### 6. Running docker-compose
+
+Enter the SmICSCore directory and enter following command. 
 
 ```
-docker build -t smicsvisualisierung .
-docker run --name smics_visualisierung --network smics-net -d -p 3231:3231 smicsvisualisierung -e USE_AUTH=$bool -e SMICS_HOSTNAME=$SMICS_HOSTNAME -e AUTH_PROVIDER_URL=$AUTH_PROVIDER_URL -e AUTH_REALM=$AUTH_REALM -e AUTH_CLIENT_ID=$AUTH_CLIENT_ID -e AUTH_CLIENT_SECRET=$AUTH_CLIENT_SECRET
+docker-compose up --build -d
 ```
-
-
-**Environment Variablen - SmICS Visualization**
-| Environment | Description |
-|-------------|-------------|
-| USE_AUTH | Set ```true``` for enabling oauth2 authentication  |
-| SMICS_HOSTNAME | DNS of your server where the smics is running |
-| SMICS_PORT | The port which you use for the SmICS Core <br> Default: 9787 |
-| AUTH_PROVIDER_URL |The root link to you oauth2 server |
-| AUTH_REALM | Name of you oauth2 realm |
-| AUTH_CLIENT_ID | Your ClientID of you oauth2 client |
-| AUTH_CLIENT_SECRET | Your ClientSecret of your oauth2 client |
-
 

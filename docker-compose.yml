@@ -6,17 +6,14 @@ services:
     build:
         context: .
     volumes:
-      - /home/smics/.aspnet/https/:/root/app/Certificates/
+      - ../certs/main/:/usr/local/share/ca-certificates/
     environment:
-      - OPENEHR_DB=https://medic-c-t.mh-hannover.local:8083/rest/openehr/v1
-      - AUTHORITY=https://keycloak.mh-hannover.local:8443/auth/realms/Better
-      - CLIENT_ID=medic-c-t
-      - SMICS_VISU_PORT=8443
-      #- CLIENT_SECRET=null
-      - ASPNETCORE_URLS=https://+;http://+
-      - ASPNETCORE_HTTPS_PORT=443
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=4xftuxtO7tbn
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/app/Certificates/smics.pfx
+      - OPENEHR_DB=<openEHR REST API URL>
+      - AUTHORITY=<oauth2 Authority  URL>
+      - CLIENT_ID=<oauth2 Client>
+      - CLIENT_SECRET=<oauth2 Client Secret>
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=<.pfx Certificate password>
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/etc/ssl/<filename of pfx certificate>.pfx
     ports:
       - 80:80
       - 443:443
@@ -28,15 +25,11 @@ services:
       - smics_core
     build: ../SmICSVisualisierung
     environment:
-      - DEV_MODE=true
-      - USE_AUTH=true
-      - SMICS_HOSTNAME=smics.mh-hannover.local
-      - SMICS_PORT=443
-      - AUTH_PROVIDER_URL=https://keycloak.mh-hannover.local:8443
-      - AUTH_REALM=Better
-      - AUTH_CLIENT_ID=medic-c-t
-      - HTTPS_METHOD=noredirect
-      #- AUTH_CLIENT_SECRET=
+      - SMICS_HOSTNAME=<local DNS entry of the server>
+      - AUTH_PROVIDER_URL=<oauth2 Authority Root URL without "/auth/realm"> 
+      - AUTH_REALM=<oauth2 realm name>
+      - AUTH_CLIENT_ID=<oauth2 client>
+      - AUTH_CLIENT_SECRET=<oauth2 client secret>
     ports:
       - 3231:3231
     networks: 
@@ -56,7 +49,7 @@ services:
       - nginx-net
     volumes:
       - ./nginx/:/etc/nginx/conf.d/
-      - ../certs/:/etc/ssl/
+      - ../certs/smicsvisualisierung/:/etc/ssl/
 networks:
   smics-net: {}
   nginx-net: {}
