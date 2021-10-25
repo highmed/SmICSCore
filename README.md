@@ -70,7 +70,7 @@ Within the directory where the two applications are stored, create following fol
 
 ```
 mkdir -p certs/smicscore
-mkdir certs/smicsvisualization
+mkdir certs/smicsvisualisierung
 mkdir certs/main
 ```
 
