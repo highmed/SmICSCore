@@ -22,11 +22,11 @@ namespace SmICSCoreLib.StatistikServices.CronJob
             _proxy = proxy;
         }
 
-        public async Task Execute(IJobExecutionContext context)
+        public Task Execute(IJobExecutionContext context)
         {
             try
             {
-                string path = @"./Resources/RKIConfig/RKIConfig.json"; //TODO: Für publish Version anpassen
+                //string path = @"./Resources/RKIConfig/RKIConfig.json"; //TODO: Für publish Version anpassen
                 //List<RKIConfigTemplate> configs = JSONReader<RKIConfigTemplate>.Read(path);
                 List<RKIConfigTemplate> configs = new List<RKIConfigTemplate>()
                 {
@@ -82,7 +82,8 @@ namespace SmICSCoreLib.StatistikServices.CronJob
                 Console.WriteLine(e.Message);
                 //_logger.Warning("JobOutbreakDetection FAILED: " + e.Message);
             }
-            
+
+            return Task.CompletedTask;
         }
 
         private string GetSavingFolder(RKIConfigTemplate config)

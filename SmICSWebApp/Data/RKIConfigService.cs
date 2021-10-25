@@ -6,15 +6,16 @@ using SmICSCoreLib.Factories.RKIConfig;
 using SmICSCoreLib.Factories.PatientMovement;
 using System.IO;
 using System.Linq;
+using SmICSCoreLib.Database;
 
 namespace SmICSWebApp.Data
 {
     public class RKIConfigService
     {
-        private IRestDataAccess _restData;
+        private readonly IRestDataAccess _restData;
         private readonly IRKILabDataFactory _labdata;
         private readonly IPatientMovementFactory _patientInformation;
-        private readonly string path = @"./Resources/RKIConfig/RKIConfig.json";
+        //private readonly string path = @"./Resources/RKIConfig/RKIConfig.json";
         private readonly string path_time = @"./Resources/RKIConfig/RKIConfigTime.json";
 
         public RKIConfigService(IRestDataAccess restData, IPatientMovementFactory patientInfo, IRKILabDataFactory labdata)
@@ -37,28 +38,32 @@ namespace SmICSWebApp.Data
             }
         }
 
-        public void StoreRules(List<RKIConfigTemplate> storedValues, LabDataTimeModel zeitpunkt)
+        //DB
+        public void StoreRules(List<RKIConfigTemplate> storedValues, LabDataTimeModel zeitpunkt, DBService dbService)
         {
             try
             {
                 StoreTimeSet(zeitpunkt);
                 storedValues.Where(w => w.Erreger != null).ToList().ForEach(s => s.ErregerID = GetErregerList(s.Erreger));
-                if (File.Exists(path) == false)
-                {
-                    string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
-                    File.WriteAllText(path, json);
-                }
-                else
-                {
-                    string json = File.ReadAllText(path);
 
-                    List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
-                    newList.AddRange(storedValues);
+                //Testen ob er nur die neuen Configs speichert oder die ganze Liste nochmal
+                dbService.Insert((RKIConfigTemplate)storedValues.AsEnumerable());
+                //if (File.Exists(path) == false)
+                //{
+                //    string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
+                //    File.WriteAllText(path, json);
+                //}
+                //else
+                //{
+                //    string json = File.ReadAllText(path);
 
-                    string storeJson = JsonConvert.SerializeObject(newList.ToArray(), Formatting.Indented);
-                    File.WriteAllText(path, storeJson);
-                }
-                
+                //    List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
+                //    newList.AddRange(storedValues);
+
+                //    string storeJson = JsonConvert.SerializeObject(newList.ToArray(), Formatting.Indented);
+                //    File.WriteAllText(path, storeJson);
+                //}
+
             }
             catch(Exception)
             {
@@ -66,12 +71,14 @@ namespace SmICSWebApp.Data
             }
         }
 
-        public List<RKIConfigTemplate> ShowValues()
+        //DB
+        public List<RKIConfigTemplate> ShowValues(DBService dbService)
         {
-            string json = File.ReadAllText(path);
-            List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
+            //string json = File.ReadAllText(path);
+            //List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
+            List<RKIConfigTemplate> newList = dbService.FindAll<RKIConfigTemplate>().ToList();
 
-            if(newList != null)
+            if (newList != null)
             {
                 return newList;
             }
@@ -81,14 +88,16 @@ namespace SmICSWebApp.Data
             }
         }
 
-        public void RestoreRules(List<RKIConfigTemplate> storedValues)
+        //DB
+        public void RestoreRules(List<RKIConfigTemplate> storedValues, DBService dbService)
         {
             try
             {
                 storedValues.Where(w => w.Erreger != null).ToList().ForEach(s => s.ErregerID = GetErregerList(s.Erreger));
 
-                string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
-                File.WriteAllText(path, json);
+                dbService.Insert((RKIConfigTemplate)storedValues.AsEnumerable());
+                //string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
+                //File.WriteAllText(path, json);
 
             }
             catch (Exception)

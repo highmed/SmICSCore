@@ -1,9 +1,8 @@
 ﻿@page "/rkiconfig"
 
-@using System.IO
 @using Microsoft.Extensions.Logging
 @using SmICSCoreLib.Factories.RKIConfig
-@using Newtonsoft.Json.Linq
+@using SmICSCoreLib.Database
 @using SmICSWebApp.Data
 
 
@@ -132,8 +131,11 @@
     private LabDataTimeModel ZeitpunktList = new LabDataTimeModel();
     private string path = @"./Resources/";
 
+    private DBService dbService;
+
     protected override async Task OnInitializedAsync()
     {
+        dbService = new();
         await Task.Run(GetConfigs);
         await Task.Run(GetConfigsTime);
     }
@@ -142,7 +144,8 @@
     {
         try
         {
-            ConfigList = RKIConfigService.ShowValues();
+            ConfigList = RKIConfigService.ShowValues(dbService);
+            //DB
         }
         catch
         {
@@ -183,7 +186,8 @@
             RKIConfigForm.Where(x => x.Erreger == "SARS-CoV-2").ToList().ForEach(s => s.Erregerstatus = "virologisch");
             RKIConfigForm.Where(x => x.Erreger != "SARS-CoV-2").ToList().ForEach(s => s.Erregerstatus = "mikrobiologisch");
 
-            RKIConfigService.StoreRules(RKIConfigForm, ZeitpunktList);
+            RKIConfigService.StoreRules(RKIConfigForm, ZeitpunktList, dbService);
+            //DB
 
 
             foreach (var item in RKIConfigForm)
@@ -229,7 +233,8 @@
     private async Task DeleteReadyRules(RKIConfigTemplate item)
     {
         ConfigList.Remove(item);
-        RKIConfigService.RestoreRules(ConfigList);
+        //DB
+        RKIConfigService.RestoreRules(ConfigList, dbService);
         await Task.Run(GetConfigs);
     }
 
