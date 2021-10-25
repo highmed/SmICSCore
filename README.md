@@ -57,7 +57,7 @@ Download the latest versions of the SmICSCore and the SmICS Visualization in the
 SmICSCore: https://github.com/highmed/SmICSCore/releases <br>
 SmICS Visualization: https://github.com/highmed/SmICSVisualisierung/releases
 
-### 3. Prepare Certificates
+### 2. Prepare Certificates
 
 You need:
 <ul>
@@ -84,19 +84,19 @@ mkdir SmICSCore/Certificates
 <li>Copy the standard format certificates to certs/smicsvisualization</li>
 </ul>
 
-### 4. Editing nginx.conf
+### 3. Editing nginx.conf
 
 The nginx.conf can be found in the SmICSCore folder within the nginx folder. 
 
 Replace ```example.com``` and ```www.example.com``` by your local server address. And the ```smics.cer``` and ```smics.key```  by the names of your certificate and key.
 
-### 5. Editing docker-compose.yml
+### 4. Editing docker-compose.yml
 
 The docker-compose.yml is located in the SmICSCore folder.
 
 Every Environment Variable which contains an expression with ```<>``` needs to be replaced by your local settings.
 
-### 6. Running docker-compose
+### 5. Running docker-compose
 
 Enter the SmICSCore directory and enter following command. 
 
