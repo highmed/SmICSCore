@@ -19,7 +19,7 @@ The openEHR Repository needs to be prefilled with following templates and compos
 - [Stationärer Versorgungsfall](https://ckm.highmed.org/ckm/templates/1246.169.620)
 - [Patientenaufenthalt](https://ckm.highmed.org/ckm/templates/1246.169.590) *(Altough "Station" is no mandatory field in the template, it is necessary for the full functionality for the SmICS)*
 - [Virologischer Befund](https://ckm.highmed.org/ckm/templates/1246.169.636)
-- [Imfpstatus](https://ckm.highmed.org/ckm/templates/1246.169.1187)
+- [Impfstatus](https://ckm.highmed.org/ckm/templates/1246.169.1187)
 - [Symptome](https://ckm.highmed.org/ckm/templates/1246.169.1109)
 
 *Upcoming:*
@@ -30,7 +30,7 @@ The openEHR Repository needs to be prefilled with following templates and compos
 #### Server 
 - CPU: 4 Cores<sup>1</sup> 
 - RAM: 4 GB<sup>1</sup> 
-- Storage: 5 GB<sup>1</sup> 
+- Storage: 30 GB<sup>1</sup> 
 - OS: Linux *(recommended)*<sup>2</sup> 
 
 <sup>1</sup> *Estimated Requirements*
@@ -73,15 +73,15 @@ mkdir -p certs/smicscore
 mkdir certs/smicsvisualisierung
 ```
 
-If the SmICSCore Directory doesn't contain a <i>Certifactes</i> folder, create one within the SmICSCore Directory.
+If the SmICSCore Directory doesn't contain a <i>Certificates</i> folder, create one within the SmICSCore Directory.
 ```
 mkdir SmICSCore/Certificates
 ```
 
 <ul>
 <li>Copy the root certificates to the Certificates Folder</li>
-<li>Copy the .pfy certificates to certs/smicscore</li>
-<li>Copy the standard format certificates to certs/smicsvisualization</li>
+<li>Copy the .pfx certificates to certs/smicscore</li>
+<li>Copy the standard format certificates to certs/smicsvisualisierung</li>
 </ul>
 
 ### 3. Editing nginx.conf
