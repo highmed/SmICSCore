@@ -7,6 +7,6 @@ namespace SmICSCoreLib.REST
         public static string openehrEndpoint;
         public static string openehrUser;
         public static string openehrPassword;
-        public static string openehrAdaptor;
+        public static string smicsVisuPort;
     }
 }

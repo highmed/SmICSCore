@@ -74,12 +74,10 @@ namespace SmICSWebApp
             OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
             OpenehrConfig.openehrUser = "etltestuser";
             OpenehrConfig.openehrPassword = "etltestuser#01";
-            OpenehrConfig.openehrAdaptor = "BETTER";
 
             /*OpenehrConfig.openehrEndpoint = "https://172.0.0.1:8080/ehrbase/rest/openehr/v1";
             OpenehrConfig.openehrUser = "test";
-            OpenehrConfig.openehrPassword = "test";
-            OpenehrConfig.openehrAdaptor = "STANDARD";*/
+            OpenehrConfig.openehrPassword = "test";*/
 
             //OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
             //OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
