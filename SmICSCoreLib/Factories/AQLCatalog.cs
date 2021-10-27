@@ -663,7 +663,7 @@ namespace SmICSCoreLib.Factories
                                                         WHERE c/name/value ='Patientenaufenthalt' 
                                                         AND u/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)'
                                                         AND Ward = '{parameter.Ward}' 
-                                                        AND h/data[at0001]/items[at0004]/value/value <= '{parameter.Endtime.ToString("yyyy-MM-dd")}' 
+                                                        AND h/data[at0001]/items[at0004]/value/value < '{parameter.Endtime.ToString("yyyy-MM-dd")}' 
                                                         AND (h/data[at0001]/items[at0005]/value/value >= '{parameter.Starttime.ToString("yyyy-MM-dd")}' OR NOT EXISTS u/data[at0001]/items[at0005]/value/value)");
         }
 

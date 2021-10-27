@@ -63,12 +63,11 @@ namespace SmICSCoreLib.StatistikServices.CronJob
                     OutbreakDetectionParameter outbreakParam = ConfigToParam(config, savingFolder);
                     SmICSVersion version = config.Erregerstatus == "virologisch" ? SmICSVersion.VIROLOGY : SmICSVersion.MICROBIOLOGY;
 
-
-
                     ProxyParameterModel parameter = new ProxyParameterModel()
                     {
                         EpochsObserved = _paramFac.Process(outbreakParam, version),
                         SavingFolder = savingFolder,
+                        SavingDirectory = Directory.GetCurrentDirectory(),
                         FitRange = GetFitRange(outbreakParam, savingFolder, Convert.ToInt32(config.Zeitraum)),
                         LookbackWeeks = Convert.ToInt32(config.Zeitraum)
                     };
@@ -119,8 +118,8 @@ namespace SmICSCoreLib.StatistikServices.CronJob
             {
                 outbreakParam.Retro = false;
             }
-            outbreakParam.Starttime = DateTime.Now.AddDays(-(Convert.ToInt32(config.Zeitraum) * 7));
-            outbreakParam.Endtime = DateTime.Now; //oder DateTime.Now.AddDays(-1);
+            outbreakParam.Starttime = DateTime.Now.AddDays(-((Convert.ToInt32(config.Zeitraum) * 7)+1));
+            outbreakParam.Endtime = DateTime.Now;
             outbreakParam.PathogenIDs = config.ErregerID.Select(k => k.KeimID).ToList();
             outbreakParam.Ward = config.Station;
             

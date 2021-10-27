@@ -15,31 +15,31 @@ namespace SmICSCoreLib.OutbreakDetection
 
         public void Covid19Extension(ProxyParameterModel parameter)
         {
-            string RScript = Directory.GetCurrentDirectory() + "\\Resources\\RRuntime\\R_Script_00010.R";
-            string RArgPath = Directory.GetCurrentDirectory().Replace(@"\", @"/") + "/Resources/RRuntime/";
-            string RResultFileName = @"./Resources/RRuntime/Variables_for_Visualization.json";
+            string RScript = parameter.SavingDirectory + "\\Resources\\RRuntime\\R_Script_00010.R";
+            string RArgPath = parameter.SavingDirectory.Replace(@"\", @"/") + "/Resources/RRuntime/";
+            string RResultFileName = parameter.SavingDirectory+"/Resources/RRuntime/Variables_for_Visualization.json";
 
             //Rscript.exe rscript00010.r pfad fitrange fitrange lookbackweek
             string argumentString = RArgPath + " " + parameter.FitRange[0] + " " + parameter.FitRange[1] + " " + parameter.LookbackWeeks;
 
-            //GenerateTransferScript(parameter.EpochsObserved);
+            GenerateTransferScript(parameter.EpochsObserved, parameter.SavingDirectory);
             ExternalProcess.Execute(RScript, RExecPath, argumentString);
             List<OutbreakDetectionStoringModel> results = JSONReader<OutbreakDetectionStoringModel>.ReadOutbreakDetectionResult(RResultFileName);
-            SaveResults(results, parameter.SavingFolder);
+            SaveResults(results, parameter.SavingDirectory, parameter.SavingFolder);
         }
 
-        private void GenerateTransferScript(int[][] epochs_and_observed)
+        private void GenerateTransferScript(int[][] epochs_and_observed, string directory)
         {
             TransfersScriptModel transfersScript = new TransfersScriptModel() { Epoch = epochs_and_observed[0].ToList(), Frequency = FREQUENCY, Observed = epochs_and_observed[1].ToList()};
-            JSONWriter.Write(transfersScript, @"./Resources/RRuntime", "variables_for_r_transfer_script");
+            JSONWriter.Write(transfersScript, directory+"/Resources/RRuntime", "variables_for_r_transfer_script");
         }
 
-        private void SaveResults(List<OutbreakDetectionStoringModel> results, string savingFolder)
+        private void SaveResults(List<OutbreakDetectionStoringModel> results, string savingDirectory, string savingFolder)
         {
            foreach(OutbreakDetectionStoringModel result in results)
            {
                 //Speicherordner aus Parameter bestimmen
-                JSONWriter.Write(result, @"../Resources/OutbreakDetection/" + savingFolder, result.Date.ToString("yyyy-MM-dd") + ".json");
+                JSONWriter.Write(result, savingDirectory + "/Resources/OutbreakDetection/" + savingFolder, result.Date.ToString("yyyy-MM-dd"));
            }
         }
     }
