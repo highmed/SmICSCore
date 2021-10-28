@@ -23,7 +23,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 			ContactParameter contactParams = new ContactParameter()
 			{
 				Degree = degree,
-				PatientID = patient[ehrNo].EHR_ID,
+				PatientID = patient[ehrNo].Patient,
 				Starttime = new DateTime(start_year, start_month, start_day),
 				Endtime = new DateTime(end_year, end_month, end_day)
 			};

@@ -43,7 +43,7 @@ namespace SmICSCoreLib.Tests.TestData
             {
                 foreach(string id in templateIDs)
                 {
-                    if (id == "Stationärer Versorgungsfall" || id == "Patientenaufenthalt" || id == "Virologischer Befund")
+                    if (id == "Stationärer Versorgungsfall" || id == "Patientenaufenthalt" || id == "Virologischer Befund" || id == "Impfstatus" || id == "Symptom")
                     {
                         XmlDocument xmlDoc = new XmlDocument();
                         xmlDoc.Load(@"../../../../TestData/templates/" + id.Replace(" ", "_") + ".opt");

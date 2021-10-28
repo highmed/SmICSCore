@@ -103,6 +103,10 @@ namespace SmICSCoreLib.Factories.PatientMovement
 
         private void addAdmissionObject(PatientStayModel patientStay, EpisodeOfCareModel episodeOfCare, List<PatientMovementModel> patientMovementList)
         {
+            if (patientStay.Beginn == patientStay.Ende)
+            {
+                return;
+            }
             if (!(episodeOfCare is null) && patientStay.Beginn == episodeOfCare.Beginn)
             {
                 PatientMovementModel patientMovement = new PatientMovementModel(patientStay); ;

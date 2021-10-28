@@ -22,7 +22,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
 
             PatientListParameter patientParams = new PatientListParameter()
             {
-                patientList = new List<string>() { patient[ehrNo].EHR_ID }
+                patientList = new List<string>() { patient[ehrNo].Patient }
             };
 
             VaccinationFactory factory = new VaccinationFactory(_data, NullLogger<VaccinationFactory>.Instance);
@@ -34,7 +34,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
             for (int i = 0; i < actual.Count; i++)
             {
                 Assert.Equal(expected[i].PatientenID, actual[i].PatientenID);
-                Assert.Equal(expected[i].DokumentationsID.ToString("s"), actual[i].DokumentationsID.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].DokumentationsID.ToUniversalTime().ToString("s"), actual[i].DokumentationsID.ToUniversalTime().ToString("s"));
                 Assert.Equal(Regex.Replace(expected[i].Impfstoff, @"\s", ""), Regex.Replace(actual[i].Impfstoff, @"\s", ""));
                 Assert.Equal(expected[i].Dosierungsreihenfolge.ToString(), actual[i].Dosierungsreihenfolge);
                 Assert.Equal(expected[i].Dosiermenge.ToString(), actual[i].Dosiermenge);
