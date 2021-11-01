@@ -401,7 +401,8 @@ namespace SmICSCoreLib.Factories
                                 CONTAINS COMPOSITION c 
                                 CONTAINS OBSERVATION k[openEHR-EHR-OBSERVATION.symptom_sign.v0] 
                                 WHERE e/ehr_status/subject/external_ref/id/value ='{patientId}' 
-                                AND k/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value = '{datum.Date.ToString("yyyy-MM-dd")}' ");
+                                AND k/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value >= '{datum.Date.ToString("yyyy-MM-dd")}'
+                                AND k/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value < '{datum.Date.AddDays(1.0).ToString("yyyy-MM-dd")}'"); 
         }
        
         public static AQLQuery StayFromCase(string patientId, string fallId)
