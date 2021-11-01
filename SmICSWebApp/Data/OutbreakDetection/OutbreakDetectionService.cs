@@ -15,7 +15,9 @@ namespace SmICSWebApp.Data.OutbreakDetection
             List<OutbreakDetectionConfig> configs = new List<OutbreakDetectionConfig>();
             foreach(string folder in Directory.GetDirectories(dir))
             {
-                configs.Add(new OutbreakDetectionConfig { Name = folder.Substring(dir.Length + 1) });
+                string name = folder.Substring(dir.Length + 1);
+                string ward = name.Split("_")[1];
+                configs.Add(new OutbreakDetectionConfig { Name = name, Ward = ward});
             }
             return configs;
         }
@@ -30,7 +32,7 @@ namespace SmICSWebApp.Data.OutbreakDetection
         public List<OutbreakDetectionStoringModel> GetsResultsInTimespan(OutbreakSavingInTimespan outbreak)
         {
             List<OutbreakDetectionStoringModel> OutbreakDetectionResults = new List<OutbreakDetectionStoringModel>();
-            for (DateTime date = outbreak.Start; date <= outbreak.End; date = date.AddDays(1.0))
+            for (DateTime date = outbreak.Starttime; date <= outbreak.Endtime; date = date.AddDays(1.0))
             {
                 OutbreakDetectionResults.Add(JSONReader<OutbreakDetectionStoringModel>.NewtonsoftReadSingle(dir + "/" + outbreak.ConfigName + "/" + date.ToString("yyyy-MM-dd") + ".json"));
             }

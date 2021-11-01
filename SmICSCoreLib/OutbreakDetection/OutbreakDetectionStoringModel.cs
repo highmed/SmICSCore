@@ -11,7 +11,7 @@ namespace SmICSCoreLib.OutbreakDetection
         [JsonProperty("Ausbruchswahrscheinlichkeit")]
         public double? Probability { get; set; }
 
-        [JsonProperty("p-Value")]
+        [JsonProperty("pValue")]
         public double? pValue { get; set; }
 
         [JsonProperty("Erregeranzahl")]
