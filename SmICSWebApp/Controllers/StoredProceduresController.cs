@@ -418,6 +418,7 @@ namespace SmICSWebApp.Controllers
         {
             try
             {
+                outbreak.ConfigName = "SarsCov_Coronastation_4_Test";
                 return _outbreakService.GetsResultsInTimespan(outbreak);
             }
             catch (Exception e)
