@@ -1,7 +1,6 @@
-[
   {
-    "Zeitstempel": "2021-01-29T00:00:00",
-    "Ausbruchswahrscheinlichkeit": 0.0003701269,
+    "Zeitstempel": "2021-01-07T00:00:00",
+    "Ausbruchswahrscheinlichkeit": 0.0001,
     "p-Value": 1.0,
     "Erregeranzahl": 0,
     "Endemisches Niveau": 1.374023,
@@ -13,4 +12,3 @@
     "Algorithmusergebnis enthaelt keine null-Werte": true,
     "Keine Warnungen zum Datenpunkt": false
   }
-]
