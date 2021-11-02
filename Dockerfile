@@ -16,16 +16,14 @@ FROM build AS publish
 COPY . ./
 RUN dotnet publish "SmICSWebApp/SmICSWebApp.csproj" -c Release -o /app/out
 
-FROM rocker/r-ver:latest as rbuild
-WORKDIR /app/out
-COPY RKIAlgorithm/Statistik.dod.zip RKIAlgorithm/
-RUN R -e "options(repos = 'https://cran.r-project.org')"
-RUN R -e ".libPaths('/app/out/R')"
-RUN R -e "install.packages('RJSONIO')"
-RUN R -e "install.packages('surveillance')"
-RUN R -e "install.packages('dplyr')"
-RUN R -e "install.packages('lubridate')"
-RUN R -e "install.packages('RKIAlgorithm/Statistik.dod.zip')"
+RUN apt-get update & apt-get install r-base
+
+RUN Rscript -e "options(repos = 'https://cran.r-project.org')"
+RUN Rscript -e "install.packages('RJSONIO')"
+RUN Rscript -e "install.packages('surveillance')"
+RUN Rscript -e "install.packages('dplyr')"
+RUN Rscript -e "install.packages('lubridate')"
+RUN Rscript -e "install.packages('RKIAlgorithm/Statistik.dod.zip')"
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS final
 WORKDIR /app
