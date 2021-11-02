@@ -16,6 +16,7 @@ FROM build AS publish
 COPY . ./
 RUN dotnet publish "SmICSWebApp/SmICSWebApp.csproj" -c Release -o /app/out
 
+RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/'
 RUN apt-get update & apt-get install r-base
 
 RUN Rscript -e "options(repos = 'https://cran.r-project.org')"
