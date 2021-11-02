@@ -16,7 +16,7 @@ FROM rocker/r-ver:latest as rbuild
 
 COPY ["RKIAlgorithm/Statistik.dod.zip", "RKIAlgorithm/"]
 
-RUN R -e "local({r <- getOption('repos')r['CRAN'] <- 'http://cran.r-project.org'options(repos=r)})"
+RUN R -e "options(repos = 'https://cran.r-project.org')"
 RUN R -e "install.packages(RJSONIO)"
 RUN R -e "install.packages(surveillance)"
 RUN R -e "install.packages(dplyr)"

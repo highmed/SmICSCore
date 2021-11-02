@@ -1,25 +1,32 @@
-version: '3'
+version: '3.1'
 
 services:  
 
-  dotnet:
+  smics_core:
     build:
         context: .
-        args:
-            repo: "http//192.168.2.132:8080/ehrbase/rest/openehr/v1"
-    container_name: smics_core
+    restart: unless-stopped
+    environment:
+      - OPENEHR_DB=<openEHR REST API URL>
+      - OPENEHR_USER=<openEHR SmICS User>
+      - OPENEHR_PWD=<openEHR SmICS User PW>
     ports:
-      - "80:80"
+      - 80:80
     networks: 
-        - smics-net
+      - smics-net
 
-  webapp:
-    build: ./infectioncontrolsystem2
+  smics_visualisierung:
+    depends_on:
+      - smics_core
+    build: ../SmICSVisualisierung
+    restart: unless-stopped
+    environment:
+      - SMICS_HOSTNAME=<local DNS entry of the server>
+      - SMICS_PORT=<Smics Core outside port>
     ports:
-      - "8081:3231"
-    container_name: smics_visualisierung
+      - 3231:3231
     networks: 
-     - smics-net
+      - smics-net
 
 networks:
   smics-net: {}
