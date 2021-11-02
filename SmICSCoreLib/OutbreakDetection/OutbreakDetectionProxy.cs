@@ -10,7 +10,7 @@ namespace SmICSCoreLib.OutbreakDetection
 {
     public class OutbreakDetectionProxy
     {
-        private readonly string RExecPath = "C:\\Programme\\R\\R-4.1.1\\bin\\Rscript.exe"; //EnviromentVariable 
+        private readonly string RExecPath = Environment.GetEnvironmentVariable("R_HOME");  //"C:\\Programme\\R\\R-4.1.1\\bin\\Rscript.exe"; 
         private readonly int FREQUENCY = 7;
 
         public void Covid19Extension(ProxyParameterModel parameter)
