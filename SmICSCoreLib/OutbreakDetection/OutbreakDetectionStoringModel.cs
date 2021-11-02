@@ -20,7 +20,7 @@ namespace SmICSCoreLib.OutbreakDetection
         [JsonProperty("Endemisches Niveau")]
         public double? EndemicNiveau { get; set; }
 
-        [JsonProperty("Epidemisches Nivea")]
+        [JsonProperty("Epidemisches Niveau")]
         public double? EpidemicNiveau { get; set; }
 
         [JsonProperty("Obergrenze")]
