@@ -16,13 +16,11 @@ FROM build AS publish
 COPY . ./
 RUN dotnet publish "SmICSWebApp/SmICSWebApp.csproj" -c Release -o /app/out
 
+FROM rocker/r-ver:latest as rbuild
 WORKDIR /app/out
 COPY RKIAlgorithm/Statistik.dod.zip RKIAlgorithm/
-
-FROM rocker/r-ver:latest as rbuild
-
 RUN R -e "options(repos = 'https://cran.r-project.org')"
-RUN R -e ".libPaths('/app')"
+RUN R -e ".libPaths('/app/out/R')"
 RUN R -e "install.packages('RJSONIO')"
 RUN R -e "install.packages('surveillance')"
 RUN R -e "install.packages('dplyr')"

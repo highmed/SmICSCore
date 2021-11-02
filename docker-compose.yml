@@ -15,18 +15,18 @@ services:
     networks: 
       - smics-net
 
-  smics_visualisierung:
-    depends_on:
-      - smics_core
-    build: ../SmICSVisualisierung
-    restart: unless-stopped
-    environment:
-      - SMICS_HOSTNAME=<local DNS entry of the server>
-      - SMICS_PORT=<Smics Core outside port>
-    ports:
-      - 3231:3231
-    networks: 
-      - smics-net
+#  smics_visualisierung:
+#    depends_on:
+#      - smics_core
+#    build: ../SmICSVisualisierung
+#    restart: unless-stopped
+#    environment:
+#      - SMICS_HOSTNAME=<local DNS entry of the server>
+#      - SMICS_PORT=<Smics Core outside port>
+#    ports:
+#      - 3231:3231
+#    networks: 
+#      - smics-net
 
 networks:
   smics-net: {}
