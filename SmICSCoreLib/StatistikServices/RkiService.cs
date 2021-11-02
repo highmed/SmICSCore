@@ -598,7 +598,7 @@ namespace SmICSCoreLib.StatistikServices
                 {
                     ArrayList reportArrayList = new();
 
-                    for (int i = zeileFahlahl; i <= 416; i++)
+                    for (int i = zeileFahlahl; i < 416; i++)
                     {
                         LKReport lkReportObj = new();
                         lkReportObj.LKName = result.Tables[tabelle].Rows[i][1].ToString();
@@ -608,11 +608,11 @@ namespace SmICSCoreLib.StatistikServices
                         {
                             LKReportAttribute reportAttribute = new();
                             reportAttribute.Datum = result.Tables[tabelle].Rows[zeileDatum][y].ToString().Substring(0, 10);
-                            try
+                            if (result.Tables[tabelle].Rows[i][y].ToString() != "")
                             {
                                 reportAttribute.Fahlzahl = int.Parse(result.Tables[tabelle].Rows[i][y].ToString());
                             }
-                            catch (Exception)
+                            else
                             {
                                 reportAttribute.Fahlzahl = 0;
                             }
@@ -644,7 +644,7 @@ namespace SmICSCoreLib.StatistikServices
 
         public bool BLReportSerialize(string path)
         {
-            Report report = GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 1, 457);
+            Report report = GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 1, 547);
             try
             {
                 if (!Directory.Exists(path))
@@ -666,7 +666,7 @@ namespace SmICSCoreLib.StatistikServices
 
         public bool LKReportSerialize(string path)
         {
-            LKReportJson lKReportJson = GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 3, 263);
+            LKReportJson lKReportJson = GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 3, 353);
             try
             {
                 if (!Directory.Exists(path))
