@@ -54,7 +54,7 @@ RUN Rscript -e "install.packages('lubridate')"
 #RUN Rscript -e "install.packages('/app/RKIAlgorithm/Statistik.dod.tar.gz', repos=NULL, type='source')"
 
 RUN tar -zxvf /app/RKIAlgorithm/Statistik.dod.tar.gz
-RUN cp /app/RKIAlgorithm/Statistik.dod /usr/local/lib/R/site-library/
+RUN cp /app/RKIAlgorithm/Statistik.dod/* /usr/local/lib/R/site-library/Statistik.dod/
 
 EXPOSE 80
 EXPOSE 443
