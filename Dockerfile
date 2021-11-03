@@ -34,7 +34,7 @@ RUN apt-get -y install apt-transport-https
 
 #RUN gpg --keyserver hkp://subkeys.pgp.net:80 --recv-key 381BA480
 #RUN gpg -a --export 381BA480 > jranke_cran.asc
-RUN apt-key add jranke_cran.asc
+RUN apt-key add jranke.asc
 
 #RUN apt-key adv --keyserver keyserver.ubuntu.com -http_proxy=http://proxy.mh-hannover.de:8080 --recv-key E19F5F87128899B192B1A2C2AD5F960A256A04AF
 RUN add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
