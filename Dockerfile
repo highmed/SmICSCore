@@ -21,8 +21,9 @@ WORKDIR /app
 
 COPY --from=publish /app/out .
 
-COPY RKIAlgorithm/Statistik.dod.zip RKIAlgorithm/Statistik.dod.zip
-COPY RKIAlgorithm/Statistik.dod.tar.gz RKIAlgorithm/Statistik.dod.tar.gz
+#COPY RKIAlgorithm/Statistik.dod.zip RKIAlgorithm/Statistik.dod.zip
+#COPY RKIAlgorithm/Statistik.dod.tar.gz RKIAlgorithm/Statistik.dod.tar.gz
+COPY RKIAlgorithm/ /usr/local/lib/R/site-library/
 COPY pub/jranke.asc jranke.asc
 
 
@@ -52,9 +53,6 @@ RUN Rscript -e "install.packages('surveillance')"
 RUN Rscript -e "install.packages('dplyr')"
 RUN Rscript -e "install.packages('lubridate')"
 #RUN Rscript -e "install.packages('/app/RKIAlgorithm/Statistik.dod.tar.gz', repos=NULL, type='source')"
-
-RUN tar -zxvf /app/RKIAlgorithm/Statistik.dod.tar.gz
-RUN cp /app/RKIAlgorithm/Statistik.dod/* /usr/local/lib/R/site-library/Statistik.dod/
 
 EXPOSE 80
 EXPOSE 443
