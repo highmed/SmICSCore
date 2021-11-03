@@ -51,8 +51,8 @@
           "PatientenID": "Patient10",
           "DokumentationsID": "2020-03-05T13:13:00Z",
           "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-          "Dosierungsreihenfolge": "1",
-          "Dosiermenge": "1",
+          "Dosierungsreihenfolge": 1,
+          "Dosiermenge": 1,
           "ImpfungGegen": "Infectious disease (disorder)",
           "Abwesenheit": null
         }
@@ -71,8 +71,8 @@
           "PatientenID": "Patient03",
           "DokumentationsID": "2020-11-27T13:13:00Z",
           "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-          "Dosierungsreihenfolge": "1",
-          "Dosiermenge": "1",
+          "Dosierungsreihenfolge": 1,
+          "Dosiermenge": 1,
           "ImpfungGegen": "Infectious disease (disorder)",
           "Abwesenheit": null
         }
@@ -91,8 +91,8 @@
           "PatientenID": "Patient05",
           "DokumentationsID": "2020-02-10T21:47:45Z",
           "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-          "Dosierungsreihenfolge": "1",
-          "Dosiermenge": "1",
+          "Dosierungsreihenfolge": 1,
+          "Dosiermenge": 1,
           "ImpfungGegen": "Infectious disease (disorder)",
           "Abwesenheit": null
         }
