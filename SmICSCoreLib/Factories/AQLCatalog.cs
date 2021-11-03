@@ -444,7 +444,7 @@ namespace SmICSCoreLib.Factories
         {          
             return new AQLQuery("CovidPat", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID, 
                                 i/items[at0001]/value/value as Fallkennung, 
-                                m/items[at0034]/value/value as Zeitpunkt_des_Probeneingangs 
+                                m/items[at0015]/value/value as Zeitpunkt_der_Probenentnahme
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] 
                                 AND OBSERVATION z[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
