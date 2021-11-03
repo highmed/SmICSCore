@@ -23,6 +23,7 @@ COPY --from=publish /app/out .
 
 COPY RKIAlgorithm/Statistik.dod.zip RKIAlgorithm/Statistik.dod.zip
 COPY RKIAlgorithm/Statistik.dod.tar.gz RKIAlgorithm/Statistik.dod.tar.gz
+COPY SmICSWebApp/Resources/RRuntime/R_Script_00010.R Resources/RRuntime/
 #COPY RKIAlgorithm/ /usr/local/lib/R/site-library/
 COPY pub/jranke.asc jranke.asc
 
