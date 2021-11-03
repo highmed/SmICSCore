@@ -21,6 +21,7 @@ WORKDIR /app
 
 COPY --from=publish /app/out .
 
+RUN apt update
 #RUN apt install dirmngr --install-recommends
 RUN apt install software-properties-common
 RUN apt install apt-transport-https
