@@ -45,6 +45,7 @@ RUN apt-get -y install -t buster-cran40 r-base
 #RUN apt-get -y install r-base
 
 RUN Rscript -e "options(repos = 'https://cran.r-project.org')"
+RUN Rscript -e "install.packages('dod')"
 RUN Rscript -e "install.packages('RJSONIO')"
 RUN Rscript -e "install.packages('surveillance')"
 RUN Rscript -e "install.packages('dplyr')"
