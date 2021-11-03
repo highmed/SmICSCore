@@ -31,6 +31,15 @@ WORKDIR /app
 
 COPY --from=publish /app/out .
 
+RUN apt install dirmngr --install-recommends
+RUN apt install software-properties-common
+RUN apt install apt-transport-https
+
+RUN apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
+RUN add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian bullseye-cran40/'
+RUN apt update
+RUN apt install r-base
+
 EXPOSE 80
 EXPOSE 443
 ENV SMICS_VISU_PORT=3231
