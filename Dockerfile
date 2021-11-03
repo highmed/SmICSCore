@@ -26,7 +26,7 @@ RUN apt-get -y install gnupg2
 RUN apt-get -y install dirmngr --install-recommends
 RUN apt-get -y install software-properties-common
 RUN apt-get -y install apt-transport-https
-RUN apt-get -y install r-base
+RUN apt-get -y -t buster-cran40 r-base
 
 RUN Rscript -e "options(repos = 'https://cran.r-project.org')"
 RUN Rscript -e "install.packages('RJSONIO')"
