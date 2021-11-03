@@ -54,12 +54,13 @@ namespace SmICSCoreLib.StatistikServices.CronJob
                         Zeitraum = "4"
                     }
                 };
-                
+
+                Console.WriteLine("READ CONFIG");
 
                 foreach(RKIConfigTemplate config in configs)
                 {
                     string savingFolder = GetSavingFolder(config);
-
+                    savingFolder = "";
                     OutbreakDetectionParameter outbreakParam = ConfigToParam(config, savingFolder);
                     SmICSVersion version = config.Erregerstatus == "virologisch" ? SmICSVersion.VIROLOGY : SmICSVersion.MICROBIOLOGY;
 
@@ -71,6 +72,8 @@ namespace SmICSCoreLib.StatistikServices.CronJob
                         FitRange = GetFitRange(outbreakParam, savingFolder, Convert.ToInt32(config.Zeitraum)),
                         LookbackWeeks = Convert.ToInt32(config.Zeitraum)
                     };
+
+                    Console.WriteLine("FACTORY FINISHED AND PROXY PARAMETER SET");
 
                     _proxy.Covid19Extension(parameter);
                 }

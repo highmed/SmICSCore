@@ -15,7 +15,7 @@ namespace SmICSCoreLib.OutbreakDetection
 
         public void Covid19Extension(ProxyParameterModel parameter)
         {
-            string RScript = parameter.SavingDirectory + "\\Resources\\RRuntime\\R_Script_00010.R";
+            string RScript = parameter.SavingDirectory + "/Resources/RRuntime/R_Script_00010.R";
             string RArgPath = parameter.SavingDirectory.Replace(@"\", @"/") + "/Resources/RRuntime/";
             string RResultFileName = parameter.SavingDirectory+"/Resources/RRuntime/Variables_for_Visualization.json";
 
@@ -23,9 +23,12 @@ namespace SmICSCoreLib.OutbreakDetection
             string argumentString = RArgPath + " " + parameter.FitRange[0] + " " + parameter.FitRange[1] + " " + parameter.LookbackWeeks;
 
             GenerateTransferScript(parameter.EpochsObserved, parameter.SavingDirectory);
+            Console.WriteLine("START R SKRIPT");
             ExternalProcess.Execute(RScript, RExecPath, argumentString);
+            Console.WriteLine("END R SKRIPT");
             List<OutbreakDetectionStoringModel> results = JSONReader<OutbreakDetectionStoringModel>.ReadOutbreakDetectionResult(RResultFileName);
             SaveResults(results, parameter.SavingDirectory, parameter.SavingFolder);
+
         }
 
         private void GenerateTransferScript(int[][] epochs_and_observed, string directory)
