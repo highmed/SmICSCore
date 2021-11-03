@@ -25,6 +25,7 @@ COPY RKIAlgorithm/Statistik.dod.zip RKIAlgorithm/Statistik.dod.zip
 COPY RKIAlgorithm/Statistik.dod.tar.gz RKIAlgorithm/Statistik.dod.tar.gz
 COPY pub/jranke.asc jranke.asc
 
+
 RUN apt-get update 
 Run apt-get -y upgrade
 RUN apt-get -y install ca-certificates wget
@@ -44,13 +45,16 @@ RUN apt-get update
 RUN apt-get -y install -t buster-cran40 r-base
 #RUN apt-get -y install r-base
 
+
 RUN Rscript -e "options(repos = 'https://cran.r-project.org')"
-RUN Rscript -e "install.packages('dod')"
 RUN Rscript -e "install.packages('RJSONIO')"
 RUN Rscript -e "install.packages('surveillance')"
 RUN Rscript -e "install.packages('dplyr')"
 RUN Rscript -e "install.packages('lubridate')"
-RUN Rscript -e "install.packages('/app/RKIAlgorithm/Statistik.dod.tar.gz', repos=NULL, type='source')"
+//RUN Rscript -e "install.packages('/app/RKIAlgorithm/Statistik.dod.tar.gz', repos=NULL, type='source')"
+
+RUN tar -zxvf /app/RKIAlgorithm/Statistik.dod.tar.gz
+RUN cp /app/RKIAlgorithm/Statistik.dod /usr/local/lib/R/site-library/
 
 EXPOSE 80
 EXPOSE 443
