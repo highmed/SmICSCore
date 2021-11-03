@@ -24,6 +24,7 @@ COPY --from=publish /app/out .
 COPY pub/jranke.asc jranke.asc
 
 RUN apt-get update
+RUN apt-get -y install ca-certificates wget
 RUN apt-get -y install gnupg2
 RUN apt-get -y install dirmngr --install-recommends
 RUN apt-get -y install software-properties-common
