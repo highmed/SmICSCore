@@ -16,16 +16,6 @@ FROM build AS publish
 COPY . ./
 RUN dotnet publish "SmICSWebApp/SmICSWebApp.csproj" -c Release -o /app/out
 
-RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/'
-RUN apt-get update & apt-get install r-base
-
-RUN Rscript -e "options(repos = 'https://cran.r-project.org')"
-RUN Rscript -e "install.packages('RJSONIO')"
-RUN Rscript -e "install.packages('surveillance')"
-RUN Rscript -e "install.packages('dplyr')"
-RUN Rscript -e "install.packages('lubridate')"
-RUN Rscript -e "install.packages('RKIAlgorithm/Statistik.dod.zip')"
-
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS final
 WORKDIR /app
 
@@ -39,6 +29,13 @@ RUN apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2A
 RUN add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian bullseye-cran40/'
 RUN apt update
 RUN apt install r-base
+
+#RUN Rscript -e "options(repos = 'https://cran.r-project.org')"
+#RUN Rscript -e "install.packages('RJSONIO')"
+#RUN Rscript -e "install.packages('surveillance')"
+#RUN Rscript -e "install.packages('dplyr')"
+#RUN Rscript -e "install.packages('lubridate')"
+#RUN Rscript -e "install.packages('RKIAlgorithm/Statistik.dod.zip')"
 
 EXPOSE 80
 EXPOSE 443
