@@ -1,5 +1,5 @@
 {
-  "Datum": "05.08.2021",
+  "Datum": "02.11.2021",
   "BLReport": [
     {
       "BlName": "Baden-Württemberg",
@@ -1827,6 +1827,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 1559
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 1642
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 1729
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 1749
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 1881
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 1911
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 1916
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 2128
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 2369
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 2628
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 2830
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 3255
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 3330
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 3292
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 3716
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 4072
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 4474
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 4676
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 5173
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 5347
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 5313
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 5843
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 6838
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 7546
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 7956
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 8455
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 8709
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 8642
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 8694
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 9072
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 9287
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 9686
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 10087
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 10345
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 10116
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 10100
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 10286
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 10356
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 10366
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 8778
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 10190
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 10097
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 10141
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 10314
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 10469
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 10255
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 10443
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 10348
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 9857
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 9307
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 8958
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 8981
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 8865
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 8907
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 8978
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 8767
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 8911
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 9200
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 9148
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 9151
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 9189
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 9374
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 8916
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 8731
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 8695
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 8907
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 9178
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 9535
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 9562
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 8969
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 9417
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 9514
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 9829
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 10334
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 10680
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 10896
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 10730
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 11452
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 10621
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 13636
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 14202
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 15097
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 15809
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 15883
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 16468
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 17905
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 18992
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 20113
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 20848
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 21721
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 21018
         }
       ]
     },
@@ -3656,6 +4016,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 1759
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 1786
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 1817
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 1866
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 2014
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 2081
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 2110
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 2383
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 2687
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 2974
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 3162
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 3408
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 3564
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 3672
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 4068
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 4476
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 4823
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 5037
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 5396
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 5728
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 5935
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 6512
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 7299
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 8119
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 8662
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 9001
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 9285
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 9206
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 9174
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 8494
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 9692
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 9858
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 9971
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 10169
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 10182
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 10185
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 10514
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 10684
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 10913
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 11058
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 11349
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 11272
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 10734
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 11080
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 11399
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 11345
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 11299
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 11442
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 11435
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 11191
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 10580
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 10771
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 9804
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 10733
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 10874
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 10676
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 11021
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 11348
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 11539
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 11786
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 11712
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 11842
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 11831
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 11638
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 11548
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 11893
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 11814
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 12001
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 12173
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 12128
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 12005
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 12707
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 13167
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 13820
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 14321
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 14836
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 15256
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 16895
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 18534
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 20224
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 21512
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 22692
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 23540
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 24538
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 25132
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 27417
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 29158
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 30310
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 31026
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 32599
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 32707
         }
       ]
     },
@@ -5485,6 +6205,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 1082
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 1199
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 1285
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 1344
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 1389
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 1396
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 1492
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 1573
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 1628
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 1844
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 2229
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 2284
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 2251
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 2429
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 2538
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 2540
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 2556
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 2460
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 2468
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 2463
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 2521
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 2471
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 2643
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 2772
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 2718
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 2727
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 2702
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 2644
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 2951
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 3049
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 3071
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 3034
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 3057
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 3022
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 3219
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 2967
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 3039
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 3104
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 3069
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 3101
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 3078
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 3123
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 3126
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 3143
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 3056
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 2863
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 2869
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 2859
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 2773
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 2569
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 2533
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 2532
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 2522
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 2533
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 2534
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 2271
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 2420
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 2480
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 2725
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 2777
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 2758
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 2755
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 2807
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 2805
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 2866
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 2873
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 2832
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 2890
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 2854
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 2911
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 2946
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 2898
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 3102
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 3008
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 3141
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 3158
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 3389
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 3508
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 3980
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 4167
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 4243
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 4222
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 4211
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 4350
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 4579
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 4743
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 5054
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 5188
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 5099
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 5137
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 5719
         }
       ]
     },
@@ -7314,6 +8394,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 248
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 266
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 284
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 291
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 316
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 328
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 328
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 340
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 401
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 453
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 488
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 511
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 511
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 522
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 579
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 623
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 594
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 621
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 634
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 648
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 611
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 589
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 625
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 648
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 670
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 649
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 647
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 680
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 716
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 715
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 774
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 836
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 917
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 945
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 921
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 948
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 1016
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 1038
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 1082
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 1099
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 1122
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 1078
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 1091
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 1119
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 1106
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 1044
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 1037
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 1040
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 1007
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 996
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 946
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 964
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 921
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 912
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 909
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 879
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 874
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 931
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 975
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 956
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 972
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 997
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 1021
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 1051
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 1191
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 1182
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 1285
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 1338
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 1247
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 1272
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 1278
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 1292
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 1354
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 1372
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 1421
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 1440
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 1462
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 1618
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 1794
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 1987
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 2067
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 2135
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 2179
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 2279
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 2418
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 2636
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 2800
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 2945
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 3083
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 3248
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 3197
         }
       ]
     },
@@ -9143,6 +10583,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 172
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 177
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 179
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 177
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 164
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 169
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 166
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 176
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 191
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 200
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 225
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 243
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 261
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 282
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 276
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 302
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 344
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 337
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 359
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 370
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 365
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 408
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 443
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 457
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 509
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 562
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 569
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 557
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 643
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 661
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 687
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 717
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 747
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 790
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 785
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 800
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 831
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 846
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 850
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 778
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 798
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 798
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 776
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 767
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 741
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 720
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 713
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 754
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 736
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 700
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 726
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 757
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 785
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 778
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 744
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 767
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 788
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 794
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 823
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 778
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 783
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 771
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 776
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 721
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 740
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 719
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 701
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 708
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 696
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 686
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 653
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 582
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 540
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 528
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 496
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 515
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 495
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 478
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 492
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 493
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 479
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 480
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 459
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 472
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 503
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 511
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 528
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 538
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 578
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 583
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 585
         }
       ]
     },
@@ -10972,6 +12772,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 574
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 638
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 687
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 760
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 908
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 1013
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 1098
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 1147
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 1174
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 1270
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 1271
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 1373
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 1438
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 1447
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 1376
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 1402
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 1421
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 1345
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 1167
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 1323
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 1319
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 1259
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 972
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 1376
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 1457
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 1493
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 1525
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 1489
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 1430
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 1407
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 1463
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 1439
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 1485
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 1502
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 1478
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 1462
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 1487
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 1446
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 1442
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 1407
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 1397
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 1310
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 1191
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 1214
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 1187
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 1116
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 1118
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 1122
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 1065
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 974
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 928
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 971
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 963
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 1004
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 1048
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 1003
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 1004
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 955
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 1081
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 1272
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 1169
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 1189
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 1262
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 1130
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 1063
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 1038
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 1017
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 1022
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 957
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 941
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 933
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 948
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 948
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 967
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 1073
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 1101
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 1090
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 1141
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 1303
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 1465
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 1600
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 1708
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 1862
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 1798
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 1656
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 1711
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 1792
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 1859
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 1865
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 2004
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 2134
         }
       ]
     },
@@ -12801,6 +14961,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 1243
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 1237
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 1255
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 1278
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 1380
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 1384
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 1387
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 1510
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 1689
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 1826
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 1930
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 2146
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 2175
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 2290
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 2585
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 2774
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 3197
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 3301
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 3550
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 3576
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 3538
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 3813
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 3991
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 4286
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 4489
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 4569
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 4786
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 4710
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 5387
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 5990
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 6525
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 6931
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 7329
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 7357
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 7243
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 7152
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 6956
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 6909
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 6687
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 6626
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 6539
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 6330
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 6013
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 5723
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 5465
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 5095
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 4973
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 4918
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 4681
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 4555
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 4317
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 4169
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 4159
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 4076
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 4161
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 4018
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 4030
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 4111
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 4103
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 4001
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 3997
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 4000
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 3913
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 3862
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 3789
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 3828
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 3816
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 3939
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 3925
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 3852
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 3641
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 3497
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 3399
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 3428
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 3503
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 3532
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 3373
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 3850
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 4136
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 4411
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 4591
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 4988
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 5045
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 5176
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 5847
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 6482
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 7022
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 7220
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 7474
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 7816
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 7735
         }
       ]
     },
@@ -14630,6 +17150,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 172
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 194
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 222
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 264
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 267
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 280
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 287
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 280
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 302
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 312
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 344
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 365
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 404
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 412
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 470
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 506
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 512
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 476
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 501
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 490
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 470
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 425
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 434
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 425
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 483
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 496
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 492
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 510
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 522
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 547
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 557
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 538
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 557
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 580
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 556
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 587
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 618
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 638
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 626
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 608
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 610
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 624
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 609
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 583
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 542
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 521
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 508
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 512
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 485
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 443
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 442
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 441
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 493
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 522
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 548
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 558
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 628
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 724
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 786
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 800
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 813
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 804
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 802
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 769
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 757
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 786
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 761
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 755
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 806
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 821
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 820
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 911
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 894
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 926
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 907
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 890
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 884
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 864
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 867
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 947
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 960
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 967
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 999
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 1002
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 1061
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 1152
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 1231
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 1339
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 1446
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 1500
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 1520
         }
       ]
     },
@@ -16459,6 +19339,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 1370
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 1396
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 1378
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 1428
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 1450
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 1468
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 1466
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 1500
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 1651
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 1768
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 1856
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 1988
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 2000
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 2080
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 2321
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 2516
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 2834
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 2977
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 3160
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 3255
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 3328
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 3489
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 3636
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 4071
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 4317
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 4643
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 4796
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 4660
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 4816
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 4867
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 5174
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 4742
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 5699
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 5804
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 5702
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 5728
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 5999
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 6126
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 5942
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 6061
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 6064
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 5845
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 5468
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 5247
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 4949
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 4733
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 4666
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 4688
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 4546
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 4089
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 4081
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 3945
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 3804
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 3748
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 3743
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 3616
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 3591
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 3699
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 3744
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 3759
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 3637
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 3687
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 3652
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 3371
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 3415
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 3388
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 3315
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 3317
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 3417
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 3413
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 3372
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 3513
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 3637
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 3871
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 3998
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 3961
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 3920
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 4060
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 4352
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 4521
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 4309
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 4860
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 4908
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 5000
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 5225
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 5654
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 5871
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 6038
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 6259
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 6339
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 6231
         }
       ]
     },
@@ -18288,6 +21528,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 4893
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 5100
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 5422
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 5625
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 6095
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 6195
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 6262
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 6638
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 7437
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 8165
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 9093
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 9762
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 10265
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 10557
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 11592
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 12851
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 14965
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 16478
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 17798
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 18544
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 19463
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 20521
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 21949
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 22563
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 22281
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 22452
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 22894
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 22390
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 21568
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 21509
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 21323
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 20905
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 20600
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 20609
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 20390
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 19607
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 19432
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 19159
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 18524
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 18065
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 17806
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 17816
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 16962
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 15748
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 14656
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 13928
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 13197
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 13080
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 12371
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 11688
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 11479
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 10972
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 10495
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 10444
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 10306
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 9964
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 9667
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 10018
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 10026
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 9716
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 9635
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 9477
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 9240
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 9173
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 9002
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 9019
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 9041
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 9347
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 9360
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 9321
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 8936
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 8900
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 8692
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 8580
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 8589
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 8701
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 8796
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 9323
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 10238
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 10936
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 11508
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 12352
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 12662
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 13068
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 14206
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 16444
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 17864
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 18664
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 19543
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 19934
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 19169
         }
       ]
     },
@@ -20117,6 +23717,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 742
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 785
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 815
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 831
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 820
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 806
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 843
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 855
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 935
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 1054
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 1133
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 1152
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 1235
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 1347
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 1453
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 1666
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 1776
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 1950
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 1840
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 1913
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 2129
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 2204
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 2425
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 2581
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 2771
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 2759
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 2831
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 2952
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 3071
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 3399
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 3718
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 3863
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 3905
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 4109
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 4245
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 4223
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 4114
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 4138
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 4076
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 3822
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 3861
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 3926
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 3576
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 3378
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 3258
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 3060
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 2831
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 2995
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 2921
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 2754
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 2702
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 2524
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 2531
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 2404
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 2384
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 2441
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 2301
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 2297
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 2329
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 2253
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 2176
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 2251
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 2166
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 2067
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 2100
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 2164
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 2231
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 2199
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 2321
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 2426
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 2349
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 2258
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 2248
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 2250
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 2095
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 2150
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 2270
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 2234
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 2447
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 2676
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 2766
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 2811
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 2941
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 3051
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 3233
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 3573
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 3815
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 3996
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 3923
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 4036
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 3906
         }
       ]
     },
@@ -21946,6 +25906,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 255
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 269
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 278
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 321
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 330
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 329
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 319
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 325
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 350
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 353
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 354
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 371
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 396
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 423
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 430
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 420
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 541
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 604
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 631
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 638
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 653
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 705
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 802
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 759
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 752
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 799
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 810
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 788
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 874
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 894
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 908
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 915
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 939
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 960
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 948
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 878
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 892
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 834
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 805
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 760
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 711
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 715
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 720
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 650
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 665
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 649
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 620
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 613
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 610
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 607
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 595
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 611
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 607
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 563
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 569
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 571
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 527
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 499
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 448
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 425
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 422
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 422
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 421
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 391
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 395
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 392
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 426
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 444
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 452
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 480
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 535
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 602
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 611
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 600
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 612
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 616
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 600
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 568
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 509
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 518
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 521
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 525
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 522
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 523
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 521
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 586
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 643
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 687
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 705
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 713
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 731
         }
       ]
     },
@@ -23775,6 +28095,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 241
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 243
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 273
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 274
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 310
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 308
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 316
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 324
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 401
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 421
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 488
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 443
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 429
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 496
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 572
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 606
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 572
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 613
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 616
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 644
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 600
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 661
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 728
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 749
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 755
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 801
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 822
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 783
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 793
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 920
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 1020
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 1079
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 1178
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 1230
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 1190
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 1305
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 1451
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 1535
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 1603
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 1672
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 1769
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 1627
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 1494
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 1543
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 1538
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 1483
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 1287
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 1619
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 1493
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 1432
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 1522
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 1552
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 1577
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 1656
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 1724
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 1629
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 1838
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 2160
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 2360
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 2523
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 2794
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 2879
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 2659
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 2756
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 3001
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 3158
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 3278
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 3541
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 3700
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 3462
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 3484
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 3752
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 4012
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 4269
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 4618
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 5003
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 4612
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 4727
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 5230
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 5783
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 6452
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 7220
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 7983
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 7776
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 8146
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 9681
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 10301
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 10806
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 11230
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 11829
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 11538
         }
       ]
     },
@@ -25604,6 +30284,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 139
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 140
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 153
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 164
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 158
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 161
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 179
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 190
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 188
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 214
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 208
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 213
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 234
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 230
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 243
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 271
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 280
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 303
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 301
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 297
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 324
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 321
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 338
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 320
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 357
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 337
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 327
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 344
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 368
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 413
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 473
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 494
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 500
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 509
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 552
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 551
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 584
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 561
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 596
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 593
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 596
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 637
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 653
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 722
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 783
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 785
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 789
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 793
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 859
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 789
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 727
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 802
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 783
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 731
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 728
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 774
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 723
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 788
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 917
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 958
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 902
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 902
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 975
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 871
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 965
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 1020
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 1076
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 1052
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 1026
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 1153
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 1106
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 1243
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 1299
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 1359
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 1349
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 1336
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 1530
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 1555
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 1701
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 1825
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 2030
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 2011
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 1969
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 2351
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 2222
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 2432
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 2571
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 2602
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 2661
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 2654
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 3036
         }
       ]
     },
@@ -27433,6 +32473,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 800
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 883
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 1012
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 1115
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 1184
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 1228
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 1282
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 1348
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 1409
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 1388
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 1384
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 1413
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 1421
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 1449
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 1466
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 1487
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 1451
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 1419
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 1440
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 1410
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 1398
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 1419
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 1373
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 1377
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 1372
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 1392
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 1392
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 1370
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 1387
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 1440
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 1438
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 1440
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 1495
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 1470
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 1478
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 1429
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 1374
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 1364
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 1299
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 1260
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 1255
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 1232
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 1179
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 1171
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 1175
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 1154
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 1097
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 1055
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 1001
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 1004
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 956
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 912
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 894
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 884
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 881
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 880
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 892
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 851
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 846
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 834
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 818
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 834
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 841
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 816
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 809
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 792
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 792
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 790
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 801
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 808
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 742
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 788
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 809
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 790
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 813
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 825
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 950
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 1139
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 1307
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 1416
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 1526
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 1647
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 1678
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 1688
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 1801
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 1842
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 1945
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 2016
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 2027
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 2063
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 2055
         }
       ]
     },
@@ -29262,6 +34662,366 @@
         {
           "Datum": "04.08.2021",
           "Fahlzahl": 124
+        },
+        {
+          "Datum": "05.08.2021",
+          "Fahlzahl": 150
+        },
+        {
+          "Datum": "06.08.2021",
+          "Fahlzahl": 139
+        },
+        {
+          "Datum": "07.08.2021",
+          "Fahlzahl": 150
+        },
+        {
+          "Datum": "08.08.2021",
+          "Fahlzahl": 135
+        },
+        {
+          "Datum": "09.08.2021",
+          "Fahlzahl": 138
+        },
+        {
+          "Datum": "10.08.2021",
+          "Fahlzahl": 129
+        },
+        {
+          "Datum": "11.08.2021",
+          "Fahlzahl": 138
+        },
+        {
+          "Datum": "12.08.2021",
+          "Fahlzahl": 144
+        },
+        {
+          "Datum": "13.08.2021",
+          "Fahlzahl": 163
+        },
+        {
+          "Datum": "14.08.2021",
+          "Fahlzahl": 166
+        },
+        {
+          "Datum": "15.08.2021",
+          "Fahlzahl": 172
+        },
+        {
+          "Datum": "16.08.2021",
+          "Fahlzahl": 168
+        },
+        {
+          "Datum": "17.08.2021",
+          "Fahlzahl": 182
+        },
+        {
+          "Datum": "18.08.2021",
+          "Fahlzahl": 236
+        },
+        {
+          "Datum": "19.08.2021",
+          "Fahlzahl": 236
+        },
+        {
+          "Datum": "20.08.2021",
+          "Fahlzahl": 268
+        },
+        {
+          "Datum": "21.08.2021",
+          "Fahlzahl": 281
+        },
+        {
+          "Datum": "22.08.2021",
+          "Fahlzahl": 292
+        },
+        {
+          "Datum": "23.08.2021",
+          "Fahlzahl": 293
+        },
+        {
+          "Datum": "24.08.2021",
+          "Fahlzahl": 299
+        },
+        {
+          "Datum": "25.08.2021",
+          "Fahlzahl": 314
+        },
+        {
+          "Datum": "26.08.2021",
+          "Fahlzahl": 360
+        },
+        {
+          "Datum": "27.08.2021",
+          "Fahlzahl": 402
+        },
+        {
+          "Datum": "28.08.2021",
+          "Fahlzahl": 441
+        },
+        {
+          "Datum": "29.08.2021",
+          "Fahlzahl": 469
+        },
+        {
+          "Datum": "30.08.2021",
+          "Fahlzahl": 464
+        },
+        {
+          "Datum": "31.08.2021",
+          "Fahlzahl": 500
+        },
+        {
+          "Datum": "01.09.2021",
+          "Fahlzahl": 526
+        },
+        {
+          "Datum": "02.09.2021",
+          "Fahlzahl": 565
+        },
+        {
+          "Datum": "03.09.2021",
+          "Fahlzahl": 577
+        },
+        {
+          "Datum": "04.09.2021",
+          "Fahlzahl": 612
+        },
+        {
+          "Datum": "05.09.2021",
+          "Fahlzahl": 645
+        },
+        {
+          "Datum": "06.09.2021",
+          "Fahlzahl": 662
+        },
+        {
+          "Datum": "07.09.2021",
+          "Fahlzahl": 696
+        },
+        {
+          "Datum": "08.09.2021",
+          "Fahlzahl": 813
+        },
+        {
+          "Datum": "09.09.2021",
+          "Fahlzahl": 864
+        },
+        {
+          "Datum": "10.09.2021",
+          "Fahlzahl": 934
+        },
+        {
+          "Datum": "11.09.2021",
+          "Fahlzahl": 952
+        },
+        {
+          "Datum": "12.09.2021",
+          "Fahlzahl": 965
+        },
+        {
+          "Datum": "13.09.2021",
+          "Fahlzahl": 963
+        },
+        {
+          "Datum": "14.09.2021",
+          "Fahlzahl": 1007
+        },
+        {
+          "Datum": "15.09.2021",
+          "Fahlzahl": 1030
+        },
+        {
+          "Datum": "16.09.2021",
+          "Fahlzahl": 1042
+        },
+        {
+          "Datum": "17.09.2021",
+          "Fahlzahl": 1106
+        },
+        {
+          "Datum": "18.09.2021",
+          "Fahlzahl": 1095
+        },
+        {
+          "Datum": "19.09.2021",
+          "Fahlzahl": 1163
+        },
+        {
+          "Datum": "20.09.2021",
+          "Fahlzahl": 1214
+        },
+        {
+          "Datum": "21.09.2021",
+          "Fahlzahl": 1082
+        },
+        {
+          "Datum": "22.09.2021",
+          "Fahlzahl": 926
+        },
+        {
+          "Datum": "23.09.2021",
+          "Fahlzahl": 1019
+        },
+        {
+          "Datum": "24.09.2021",
+          "Fahlzahl": 1098
+        },
+        {
+          "Datum": "25.09.2021",
+          "Fahlzahl": 1156
+        },
+        {
+          "Datum": "26.09.2021",
+          "Fahlzahl": 1182
+        },
+        {
+          "Datum": "27.09.2021",
+          "Fahlzahl": 1177
+        },
+        {
+          "Datum": "28.09.2021",
+          "Fahlzahl": 1309
+        },
+        {
+          "Datum": "29.09.2021",
+          "Fahlzahl": 1496
+        },
+        {
+          "Datum": "30.09.2021",
+          "Fahlzahl": 1561
+        },
+        {
+          "Datum": "01.10.2021",
+          "Fahlzahl": 1587
+        },
+        {
+          "Datum": "02.10.2021",
+          "Fahlzahl": 1597
+        },
+        {
+          "Datum": "03.10.2021",
+          "Fahlzahl": 1589
+        },
+        {
+          "Datum": "04.10.2021",
+          "Fahlzahl": 1624
+        },
+        {
+          "Datum": "05.10.2021",
+          "Fahlzahl": 1615
+        },
+        {
+          "Datum": "06.10.2021",
+          "Fahlzahl": 1677
+        },
+        {
+          "Datum": "07.10.2021",
+          "Fahlzahl": 1754
+        },
+        {
+          "Datum": "08.10.2021",
+          "Fahlzahl": 1886
+        },
+        {
+          "Datum": "09.10.2021",
+          "Fahlzahl": 1948
+        },
+        {
+          "Datum": "10.10.2021",
+          "Fahlzahl": 2065
+        },
+        {
+          "Datum": "11.10.2021",
+          "Fahlzahl": 2038
+        },
+        {
+          "Datum": "12.10.2021",
+          "Fahlzahl": 2059
+        },
+        {
+          "Datum": "13.10.2021",
+          "Fahlzahl": 2198
+        },
+        {
+          "Datum": "14.10.2021",
+          "Fahlzahl": 2325
+        },
+        {
+          "Datum": "15.10.2021",
+          "Fahlzahl": 2545
+        },
+        {
+          "Datum": "16.10.2021",
+          "Fahlzahl": 2738
+        },
+        {
+          "Datum": "17.10.2021",
+          "Fahlzahl": 2875
+        },
+        {
+          "Datum": "18.10.2021",
+          "Fahlzahl": 2944
+        },
+        {
+          "Datum": "19.10.2021",
+          "Fahlzahl": 3118
+        },
+        {
+          "Datum": "20.10.2021",
+          "Fahlzahl": 3467
+        },
+        {
+          "Datum": "21.10.2021",
+          "Fahlzahl": 3651
+        },
+        {
+          "Datum": "22.10.2021",
+          "Fahlzahl": 4085
+        },
+        {
+          "Datum": "23.10.2021",
+          "Fahlzahl": 4375
+        },
+        {
+          "Datum": "24.10.2021",
+          "Fahlzahl": 4658
+        },
+        {
+          "Datum": "25.10.2021",
+          "Fahlzahl": 4755
+        },
+        {
+          "Datum": "26.10.2021",
+          "Fahlzahl": 4998
+        },
+        {
+          "Datum": "27.10.2021",
+          "Fahlzahl": 5126
+        },
+        {
+          "Datum": "28.10.2021",
+          "Fahlzahl": 5508
+        },
+        {
+          "Datum": "29.10.2021",
+          "Fahlzahl": 6125
+        },
+        {
+          "Datum": "30.10.2021",
+          "Fahlzahl": 6307
+        },
+        {
+          "Datum": "31.10.2021",
+          "Fahlzahl": 6431
+        },
+        {
+          "Datum": "01.11.2021",
+          "Fahlzahl": 6511
+        },
+        {
+          "Datum": "02.11.2021",
+          "Fahlzahl": 6498
         }
       ]
     }

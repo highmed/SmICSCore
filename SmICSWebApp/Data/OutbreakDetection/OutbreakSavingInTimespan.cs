@@ -4,8 +4,8 @@ namespace SmICSWebApp.Data.OutbreakDetection
 {
     public class OutbreakSavingInTimespan : OutbreakSaving
     {
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+        public DateTime Starttime { get; set; }
+        public DateTime Endtime { get; set; }
 
     }
 }

@@ -44,8 +44,8 @@ namespace SmICSDataGenerator.Tests.Contact_Network
                 Assert.Equal(expected.PatientMovements[i].Bewegungsart_l, actual.PatientMovements[i].Bewegungsart_l);
                 Assert.Equal(expected.PatientMovements[i].Bewegungstyp, actual.PatientMovements[i].Bewegungstyp);
                 Assert.Equal(expected.PatientMovements[i].BewegungstypID, actual.PatientMovements[i].BewegungstypID);
-                Assert.Equal(expected.PatientMovements[i].Beginn.ToString("s"), actual.PatientMovements[i].Beginn.ToString("s"));
-                Assert.Equal(expected.PatientMovements[i].Ende.ToString("g"), actual.PatientMovements[i].Ende.ToString("g"));
+                Assert.Equal(expected.PatientMovements[i].Beginn.ToUniversalTime().ToString("s"), actual.PatientMovements[i].Beginn.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected.PatientMovements[i].Ende.ToUniversalTime().ToString("g"), actual.PatientMovements[i].Ende.ToUniversalTime().ToString("g"));
                 Assert.Equal(expected.PatientMovements[i].StationID, actual.PatientMovements[i].StationID);
                 Assert.Equal(expected.PatientMovements[i].Raum, actual.PatientMovements[i].Raum);
             }
@@ -55,7 +55,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
                 Assert.Equal(expected.LaborData[i].PatientID, actual.LaborData[i].PatientID);
                 Assert.Equal(expected.LaborData[i].FallID, actual.LaborData[i].FallID);
                 Assert.Equal(expected.LaborData[i].Befund, actual.LaborData[i].Befund);
-                Assert.Equal(expected.LaborData[i].Befunddatum.ToString("s"), actual.LaborData[i].Befunddatum.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected.LaborData[i].Befunddatum.ToUniversalTime().ToString("s"), actual.LaborData[i].Befunddatum.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected.LaborData[i].Befundkommentar, actual.LaborData[i].Befundkommentar);
                 Assert.Equal(expected.LaborData[i].KeimID, actual.LaborData[i].KeimID);
                 Assert.Equal(expected.LaborData[i].LabordatenID, actual.LaborData[i].LabordatenID);
@@ -83,11 +83,11 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 			{
 				{
 					0,
-					new List<int> { 1, 2, 0, 3 }
+					new List<int> { 2, 0, 1, 3 }
 				},
 				{
 					1,
-					new List<int> { 1, 2, 0 , 3 }
+					new List<int> { 2, 0, 1, 3 }
 				}
 			};
 

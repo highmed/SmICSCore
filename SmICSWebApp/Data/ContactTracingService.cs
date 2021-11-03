@@ -104,8 +104,6 @@ namespace SmICSWebApp.Data
                     var obj = JsonConvert.DeserializeObject(json_all);
                     var finishedJson = JsonConvert.SerializeObject(obj, Formatting.Indented);
 
-                    //File.WriteAllText(@".. / .. / .. / .. / TestData / contacttracing.txt", finishedJson);
-
                     SaveComposition(ehr_id, finishedJson);
                 }
 
@@ -138,12 +136,12 @@ namespace SmICSWebApp.Data
             if (responseMessage.StatusCode != System.Net.HttpStatusCode.Created)
             {
                 string returnValue = responseMessage.Content.ReadAsStringAsync().Result;
-                throw new Exception($"Failed to POST data: ({responseMessage.StatusCode}): {returnValue}");
+                throw new Exception($"Failed to POST data: ({responseMessage.StatusCode})");
             }
             else
             {
                 string returnValue = responseMessage.Content.ReadAsStringAsync().Result;
-                _logger.LogInformation($"Succeded to POST data: ({responseMessage.StatusCode}): {returnValue}");
+                _logger.LogInformation($"Succeded to POST data: ({responseMessage.StatusCode})");
             }
 
         }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
 
 namespace SmICSCoreLib.Factories.Vaccination
@@ -14,9 +12,9 @@ namespace SmICSCoreLib.Factories.Vaccination
         [JsonProperty(PropertyName = "Impfstoff")]
         public string Impfstoff { get; set; }
         [JsonProperty(PropertyName = "Dosierungsreihenfolge")]
-        public string Dosierungsreihenfolge { get; set; }
+        public int Dosierungsreihenfolge { get; set; }
         [JsonProperty(PropertyName = "Dosiermenge")]
-        public string Dosiermenge { get; set; }
+        public int Dosiermenge { get; set; }
         [JsonProperty(PropertyName = "ImpfungGegen")]
         public string ImpfungGegen { get; set; }
         [JsonProperty(PropertyName = "Abwesenheit")]

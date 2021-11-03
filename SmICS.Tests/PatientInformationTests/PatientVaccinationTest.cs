@@ -36,8 +36,8 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                 Assert.Equal(expected[i].PatientenID, actual[i].PatientenID);
                 Assert.Equal(expected[i].DokumentationsID.ToUniversalTime().ToString("s"), actual[i].DokumentationsID.ToUniversalTime().ToString("s"));
                 Assert.Equal(Regex.Replace(expected[i].Impfstoff, @"\s", ""), Regex.Replace(actual[i].Impfstoff, @"\s", ""));
-                Assert.Equal(expected[i].Dosierungsreihenfolge.ToString(), actual[i].Dosierungsreihenfolge);
-                Assert.Equal(expected[i].Dosiermenge.ToString(), actual[i].Dosiermenge);
+                Assert.Equal(expected[i].Dosierungsreihenfolge, actual[i].Dosierungsreihenfolge);
+                Assert.Equal(expected[i].Dosiermenge, actual[i].Dosiermenge);
                 Assert.Equal(Regex.Replace(expected[i].ImpfungGegen, @"\s", ""), Regex.Replace(actual[i].ImpfungGegen, @"\s", ""));
                 Assert.Equal(expected[i].Abwesendheit == null ? null : Regex.Replace(expected[i].Abwesendheit, @"\s", ""), actual[i].Abwesendheit == null ? null : Regex.Replace(actual[i].Abwesendheit, @"\s", ""));
             }

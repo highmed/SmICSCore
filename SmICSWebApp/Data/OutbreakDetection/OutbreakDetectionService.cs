@@ -9,28 +9,32 @@ namespace SmICSWebApp.Data.OutbreakDetection
 {
     public class OutbreakDetectionService
     {
-        private readonly string dir = "@./Resources/OutbreakDetection";
-        public OutbreakDetectionConfigs GetConfigurations()
+        private readonly string dir = @"./Resources/OutbreakDetection";
+        public List<OutbreakDetectionConfig> GetConfigurations()
         {
-            return new OutbreakDetectionConfigs()
+            List<OutbreakDetectionConfig> configs = new List<OutbreakDetectionConfig>();
+            foreach(string folder in Directory.GetDirectories(dir))
             {
-                ConfigNames = Directory.GetDirectories(dir).ToList()
-            };
+                string name = folder.Substring(dir.Length + 1);
+                string ward = name.Split("_")[1];
+                configs.Add(new OutbreakDetectionConfig { Name = name, Ward = ward});
+            }
+            return configs;
         }
 
-        public OutbreakDetectionResultModel GetLatestResult(OutbreakSaving outbreak)
+        public OutbreakDetectionStoringModel GetLatestResult(OutbreakSaving outbreak)
         {
             DirectoryInfo directory = new DirectoryInfo(dir + outbreak.ConfigName);
             FileInfo file = directory.GetFiles().OrderByDescending(f => f.Name).FirstOrDefault();
-            return JSONReader<OutbreakDetectionResultModel>.ReadObject(file.FullName);
+            return JSONReader<OutbreakDetectionStoringModel>.NewtonsoftReadSingle(file.FullName);
         }
 
-        public List<OutbreakDetectionResultModel> GetsResultsInTimespan(OutbreakSavingInTimespan outbreak)
+        public List<OutbreakDetectionStoringModel> GetsResultsInTimespan(OutbreakSavingInTimespan outbreak)
         {
-            List<OutbreakDetectionResultModel> OutbreakDetectionResults = new List<OutbreakDetectionResultModel>();
-            for (DateTime date = outbreak.Start; date <= outbreak.End; date.AddDays(1.0))
+            List<OutbreakDetectionStoringModel> OutbreakDetectionResults = new List<OutbreakDetectionStoringModel>();
+            for (DateTime date = outbreak.Starttime; date <= outbreak.Endtime; date = date.AddDays(1.0))
             {
-                OutbreakDetectionResults.Add(JSONReader<OutbreakDetectionResultModel>.ReadObject(dir + outbreak.ConfigName + "/" + date.ToString("yyyy-MM-dd")));
+                OutbreakDetectionResults.Add(JSONReader<OutbreakDetectionStoringModel>.NewtonsoftReadSingle(dir + "/" + outbreak.ConfigName + "/" + date.ToString("yyyy-MM-dd") + ".json"));
             }
             return OutbreakDetectionResults;
         }

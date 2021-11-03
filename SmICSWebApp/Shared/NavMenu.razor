@@ -1,38 +1,39 @@
 ﻿@inject NavigationManager navigation
 
-<nav class="navbar navbar-expand-lg shadow-sm fixed-top">
-    <div class="collapse navbar-collapse">
-        <a class="navbar-brand" href="" style="margin-left: 1%;">
-            <h1>SmICS</h1>
+<nav class="navbar navbar-expand-lg shadow-sm fixed-top" width="100%">
+    <div class="container_logo">
+        @*<h1>SmICS</h1>*@
+        <a href="">
+            <img src="/resources/SmICS_Logo.png" />
         </a>
-        <ul class="navbar-nav mr-auto" style="margin-left: 2%;">
-            <li class="nav-item">
-                <NavLink class="nav-link" href="state">
-                    <span class="oi oi-vertical-align-bottom" aria-hidden="true"></span> Statistik
-                </NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink class="nav-link" href="@visuLink" Match="NavLinkMatch.All">
-                    <span class="oi oi-eye" aria-hidden="true"></span> Visualisierung
-                </NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink class="nav-link" href="contactIndex" Match="NavLinkMatch.All">
-                    <span class="oi oi-people" aria-hidden="true"></span> Kontakterfassung klin. Personals (Prototyp)
-                </NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink class="nav-link" href="rkiconfig" Match="NavLinkMatch.All">
-                    <span class="oi oi-clipboard" aria-hidden="true"></span> RKI Konfigurationen (Prototyp)
-                </NavLink>
-            </li>
-            <!--
-    <li class="nav-item" style="display: none;">
-        <NavLink class="nav-link" href="/swagger/index.html" Match="NavLinkMatch.All">
+    </div>
+    <div class="navbar-nav-box">
+        <div class="nav-item-box">
+            <NavLink class="nav-link-box" href="state">
+                <span class="oi oi-vertical-align-bottom" aria-hidden="true"></span> Statistik
+            </NavLink>
+        </div>
+        <div class="nav-item-box">
+            <NavLink class="nav-link-box" href="@visuLink" Match="NavLinkMatch.All">
+                <span class="oi oi-eye" aria-hidden="true"></span> Visualisierung
+            </NavLink>
+        </div>
+        <div class="nav-item-box">
+            <NavLink class="nav-link-box" href="contactIndex" Match="NavLinkMatch.All">
+                <span class="oi oi-people" aria-hidden="true"></span> Kontakterfassung klin. Personals (Prototyp)
+            </NavLink>
+        </div>
+        <div class="nav-item-box">
+            <NavLink class="nav-link-box" href="rkiconfig" Match="NavLinkMatch.All">
+                <span class="oi oi-clipboard" aria-hidden="true"></span> RKI Konfigurationen (Prototyp)
+            </NavLink>
+        </div>
+        <!--
+    <li class="nav-item-box" style="display: none;">
+        <NavLink class="nav-link-box" href="/swagger/index.html" Match="NavLinkMatch.All">
             <span class="oi oi-list" aria-hidden="true"></span> REST API
         </NavLink>
     </li>-->
-        </ul>
     </div>
 </nav>
 

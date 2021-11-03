@@ -386,7 +386,7 @@ namespace SmICSWebApp.Controllers
 
         [Route("OutbreakDetectionConfigurations")]
         [HttpPost]
-        public ActionResult<OutbreakDetectionConfigs> OutbreakDetectionConfigurations()
+        public ActionResult<List<OutbreakDetectionConfig>> OutbreakDetectionConfigurations()
         {
             try
             {
@@ -400,7 +400,7 @@ namespace SmICSWebApp.Controllers
 
         [Route("LatestOutbreakDetectionResult")]
         [HttpPost]
-        public ActionResult<OutbreakDetectionResultModel> LatestOutbreakDetectionResult([FromBody] OutbreakSaving outbreak)
+        public ActionResult<OutbreakDetectionStoringModel> LatestOutbreakDetectionResult([FromBody] OutbreakSaving outbreak)
         {
             try
             {
@@ -414,10 +414,11 @@ namespace SmICSWebApp.Controllers
 
         [Route("OutbreakDetectionResultSet")]
         [HttpPost]
-        public ActionResult<List<OutbreakDetectionResultModel>> OutbreakDetectionResultSet([FromBody] OutbreakSavingInTimespan outbreak)
+        public ActionResult<List<OutbreakDetectionStoringModel>> OutbreakDetectionResultSet([FromBody] OutbreakSavingInTimespan outbreak)
         {
             try
             {
+                outbreak.ConfigName = "SarsCov_Coronastation_4_Test";
                 return _outbreakService.GetsResultsInTimespan(outbreak);
             }
             catch (Exception e)

@@ -392,12 +392,12 @@ namespace SmICSWebApp.Data
             if (responseMessage.StatusCode != System.Net.HttpStatusCode.Created)
             {
                 string returnValue = responseMessage.Content.ReadAsStringAsync().Result;
-                throw new Exception($"Failed to POST data: ({responseMessage.StatusCode}): {returnValue}");
+                throw new Exception($"Failed to POST data: ({responseMessage.StatusCode})");
             }
             else
             {
                 string returnValue = responseMessage.Content.ReadAsStringAsync().Result;
-                _logger.LogInformation($"Succeded to POST data: ({responseMessage.StatusCode}): {returnValue}");
+                _logger.LogInformation($"Succeded to POST data: ({responseMessage.StatusCode})");
             }
 
         }
