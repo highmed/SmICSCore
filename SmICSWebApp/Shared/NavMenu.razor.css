@@ -5,7 +5,7 @@ nav {
 
 .nav-text {
     color: rgb(41, 35, 92);
-    //font-weight: bold;
+    font-weight: bold;
     font-size: 1.2em;
     margin: 0 0 0 50px;
 }
