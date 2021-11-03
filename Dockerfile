@@ -27,8 +27,9 @@ RUN apt-get -y install dirmngr --install-recommends
 RUN apt-get -y install software-properties-common
 RUN apt-get -y install apt-transport-https
 
-#RUN apt-key adv --keyserver keyserver.ubuntu.com  -http_proxy=http://proxy.mh-hannover.de:8080 --recv-key FCAE2A0E115C3D8A
-RUN add-apt-repository 'deb [trusted=yes] http://cloud.r-project.org/bin/linux/debian buster-cran40/'
+#RUN gpg --keyserver keyserver.ubuntu.com --recv-key E19F5F87128899B192B1A2C2AD5F960A256A04AF
+RUN apt-key adv --keyserver keyserver.ubuntu.com -http_proxy=http://proxy.mh-hannover.de:8080 --recv-key 0xE19F5F87128899B192B1A2C2AD5F960A256A04AF
+RUN add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
 RUN apt-get update
 RUN apt-get -y install r-base
 
