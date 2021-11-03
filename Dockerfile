@@ -25,7 +25,7 @@ COPY RKIAlgorithm/Statistik.dod.zip RKIAlgorithm/Statistik.dod.zip
 COPY pub/jranke.asc jranke.asc
 
 RUN apt-get update 
-Run apt-get upgrade
+Run apt-get -y upgrade
 RUN apt-get -y install ca-certificates wget
 RUN apt-get -y install gnupg2 gnupg1
 RUN apt-get -y install dirmngr --install-recommends
