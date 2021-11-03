@@ -40,7 +40,7 @@ RUN apt-key add jranke.asc
 RUN add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
 RUN apt-get update
 #RUN apt-get -y upgrade
-RUN apt-get -y  -t buster-cran40 r-base
+RUN apt-get -y install -t buster-cran40 r-base
 #RUN apt-get -y install r-base
 
 RUN Rscript -e "options(repos = 'https://cran.r-project.org')"
