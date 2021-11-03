@@ -444,7 +444,7 @@ namespace SmICSCoreLib.Factories
         {          
             return new AQLQuery("CovidPat", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID, 
                                 i/items[at0001]/value/value as Fallkennung, 
-                                m/items[at0034]/value/value as Zeitpunkt_des_Probeneingangs 
+                                m/items[at0015]/value/value as Zeitpunkt_der_Probenentnahme
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] 
                                 AND OBSERVATION z[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
@@ -452,14 +452,14 @@ namespace SmICSCoreLib.Factories
                                 AND CLUSTER m [openEHR-EHR-CLUSTER.specimen.v1])) 
                                 WHERE a/items[at0001,'Nachweis']/value/defining_code/code_string='{nachweis}'
                                 AND a/items[at0024]/value/defining_code/code_string MATCHES {{'94500-6','94558-4', '94745-7'}} 
-                                ORDER BY Zeitpunkt_des_Probeneingangs ASC");
+                                ORDER BY m/items[at0015]/value/value ASC");
         }
 
         public static AQLQuery CovidPatByID(string nachweis, PatientListParameter patientList)
         {
             return new AQLQuery("CovidPat", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID, 
                                 i/items[at0001]/value/value as Fallkennung, 
-                                m/items[at0034]/value/value as Zeitpunkt_des_Probeneingangs 
+                                m/items[at0015]/value/value as Zeitpunkt_der_Probenentnahme
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] 
                                 AND OBSERVATION z[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
@@ -467,7 +467,7 @@ namespace SmICSCoreLib.Factories
                                 WHERE  a/items[at0001,'Nachweis']/value/defining_code/code_string='{nachweis}'
                                 AND e/ehr_status/subject/external_ref/id/value matches { patientList.ToAQLMatchString() } 
                                 AND a/items[at0024]/value/defining_code/code_string MATCHES {{'94500-6','94558-4', '94745-7'}} 
-                                ORDER BY Zeitpunkt_des_Probeneingangs ASC");
+                                ORDER BY m/items[at0015]/value/value ASC");
         }
 
         public static AQLQuery PatientBySymptom(string symptom)

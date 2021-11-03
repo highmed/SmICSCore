@@ -114,7 +114,7 @@ namespace SmICSCoreLib.Factories.InfectionSituation
             foreach (CountDataModel positivPat in positivPatList)
             {
                 //Check, ob der Patient Stationaer Behandlung hat
-                List<StationaryDataModel> statPatList = _stationaryFactory.Process(positivPat.PatientID, positivPat.Fallkennung, positivPat.Zeitpunkt_des_Probeneingangs);
+                List<StationaryDataModel> statPatList = _stationaryFactory.Process(positivPat.PatientID, positivPat.Fallkennung, positivPat.Zeitpunkt_der_Probenentnahme);
                 if (statPatList != null || statPatList.Count != 0)
                 {
                     foreach (StationaryDataModel statPatient in statPatList)
@@ -124,7 +124,7 @@ namespace SmICSCoreLib.Factories.InfectionSituation
                         if (symptoms is null || symptoms.Count == 0)
                         {
                             patNoskumalList.Add(new PatientModel(positivPat.PatientID,
-                                                            positivPat.Zeitpunkt_des_Probeneingangs,
+                                                            positivPat.Zeitpunkt_der_Probenentnahme,
                                                             statPatient.Datum_Uhrzeit_der_Aufnahme,
                                                             statPatient.Datum_Uhrzeit_der_Entlassung));
                         }
@@ -136,7 +136,7 @@ namespace SmICSCoreLib.Factories.InfectionSituation
                                     !patNoskumalList.Contains(new PatientModel { PatientID = positivPat.PatientID }))
                                 {
                                     patNoskumalList.Add(new PatientModel(positivPat.PatientID,
-                                                                  positivPat.Zeitpunkt_des_Probeneingangs,
+                                                                  positivPat.Zeitpunkt_der_Probenentnahme,
                                                                   statPatient.Datum_Uhrzeit_der_Aufnahme,
                                                                   statPatient.Datum_Uhrzeit_der_Entlassung));
                                 }

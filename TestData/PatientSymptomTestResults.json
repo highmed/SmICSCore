@@ -6,7 +6,7 @@
       "Lokalisation": "Anatomische Lokalisation 51",
       "Beginn": "2020-12-02T12:45:00Z",
       "Schweregrad": "Mild (qualifier value)",
-      "Rueckgang": "2020-12-06T09:30:20",
+      "Rueckgang": "2020-12-06T09:30:20Z",
       "AusschlussAussage": null,
       "Diagnose": null,
       "UnbekanntesSymptom": null,
@@ -399,7 +399,7 @@
       "AussageFehlendeInfo": null
     },
     {
-      "BefundDatum": "2020-02-14T11:47:45",
+      "BefundDatum": "2020-02-14T11:47:45Z",
       "NameDesSymptoms": null,
       "Lokalisation": null,
       "Beginn": null,

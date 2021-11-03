@@ -118,7 +118,7 @@ namespace SmICSFactory.Tests
         {
             foreach (JObject obj in array)
             {
-                obj.Add(new JProperty("PatientenID", id.EHR_ID));
+                obj.Add(new JProperty("PatientenID", id.Patient));
                 obj.Property("BefundDatum").Value = DateTime.Parse(obj.Property("BefundDatum").Value.ToString());
             }
         }
@@ -127,7 +127,7 @@ namespace SmICSFactory.Tests
         {
             foreach (JObject obj in array)
             {
-                obj.Add(new JProperty("PatientenID", id.EHR_ID));
+                obj.Add(new JProperty("PatientenID", id.Patient));
                 obj.Property("DokumentationsID").Value = DateTime.Parse(obj.Property("DokumentationsID").Value.ToString());
                 obj.Property("Impfstoff").Value = obj.Property("Impfstoff").Value;
                 obj.Property("Dosierungsreihenfolge").Value = obj.Property("Dosierungsreihenfolge").Value;
@@ -141,7 +141,7 @@ namespace SmICSFactory.Tests
         {
             foreach (JObject obj in array)
             {
-                if (id.EHR_ID != null)
+                if (id.Patient != null)
                 {
                     obj.Add(new JProperty("PatientID", id.Patient));
                     obj.Property("FallID").Value = obj.Property("FallID").Value;
@@ -164,9 +164,9 @@ namespace SmICSFactory.Tests
         {
             foreach (JObject obj in array)
             {
-                if (info.EHR_ID != null && info.FallID != null)
+                if (info.Patient != null && info.FallID != null)
                 {
-                    obj.Add(new JProperty("PatientID", info.EHR_ID));
+                    obj.Add(new JProperty("PatientID", info.Patient));
                     obj.Add(new JProperty("FallID", info.FallID));
                 }
 
@@ -202,7 +202,7 @@ namespace SmICSFactory.Tests
             {
                 obj.Property("PatientID").Value = obj.Property("PatientID").Value;
                 obj.Property("Fallkennung").Value = obj.Property("Fallkennung").Value;
-                obj.Property("Zeitpunkt_des_Probeneingangs").Value = obj.Property("Zeitpunkt_des_Probeneingangs").Value;
+                obj.Property("Zeitpunkt_der_Probenentnahme").Value = obj.Property("Zeitpunkt_der_Probenentnahme").Value;
             }
         }
 
@@ -210,14 +210,14 @@ namespace SmICSFactory.Tests
         {
             foreach (JObject obj in array)
             {
-                if (info.NameDesSymptoms == null && info.EHR_ID == null)
+                if (info.NameDesSymptoms == null && info.Patient == null)
                 {
                     obj.Property("NameDesSymptoms").Value = obj.Property("NameDesSymptoms").Value;
                     obj.Property("Anzahl_Patienten").Value = obj.Property("Anzahl_Patienten").Value;
                 }
                 else if (info.EHR_ID != null)
                 {
-                    obj.Add(new JProperty("PatientID", info.EHR_ID));
+                    obj.Add(new JProperty("PatientID", info.Patient));
                     obj.Property("Beginn").Value = DateTime.Parse(obj.Property("Beginn").Value.ToString());
                     obj.Property("Rueckgang").Value = DateTime.Parse(obj.Property("Rueckgang").Value.ToString());
                     obj.Property("NameDesSymptoms").Value = obj.Property("NameDesSymptoms").Value;

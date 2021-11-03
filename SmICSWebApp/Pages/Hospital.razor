@@ -436,15 +436,15 @@
             int i;
             foreach (var pat in patientenTest)
             {
-                if (sortEhrDaten.ContainsKey(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM")))
+                if (sortEhrDaten.ContainsKey(pat.Zeitpunkt_der_Probenentnahme.ToString("yyyy/MMMM")))
                 {
-                    sortEhrDaten.TryGetValue(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), out i);
-                    sortEhrDaten.Remove(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"));
-                    sortEhrDaten.Add(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), i + 1);
+                    sortEhrDaten.TryGetValue(pat.Zeitpunkt_der_Probenentnahme.ToString("yyyy/MMMM"), out i);
+                    sortEhrDaten.Remove(pat.Zeitpunkt_der_Probenentnahme.ToString("yyyy/MMMM"));
+                    sortEhrDaten.Add(pat.Zeitpunkt_der_Probenentnahme.ToString("yyyy/MMMM"), i + 1);
                 }
                 else
                 {
-                    sortEhrDaten.Add(pat.Zeitpunkt_des_Probeneingangs.ToString("yyyy/MMMM"), 1);
+                    sortEhrDaten.Add(pat.Zeitpunkt_der_Probenentnahme.ToString("yyyy/MMMM"), 1);
                 }
             }
             return sortEhrDaten;
@@ -553,7 +553,7 @@
         {
             foreach (var pat in patListe)
             {
-                if (pat.Zeitpunkt_des_Probeneingangs.Date == datum)
+                if (pat.Zeitpunkt_der_Probenentnahme.Date == datum)
                 {
                     patHeute.Add(pat);
                 }
