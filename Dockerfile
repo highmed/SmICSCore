@@ -28,7 +28,7 @@ RUN apt-get -y install software-properties-common
 RUN apt-get -y install apt-transport-https
 
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 -http_proxy=http://proxy.mh-hannover.de:8080 --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
-RUN add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian bullseye-cran40/'
+RUN add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
 RUN apt-get update
 RUN apt-get -y install r-base
 
