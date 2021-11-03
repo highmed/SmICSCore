@@ -30,13 +30,13 @@ RUN apt-get -y install dirmngr --install-recommends
 RUN apt-get -y install software-properties-common
 RUN apt-get -y install apt-transport-https
 
-RUN gpg --keyserver hkp://subkeys.pgp.net:80 --recv-key 381BA480
-RUN gpg -a --export 381BA480 > jranke_cran.asc
-RUN apt-key add jranke_cran.asc
+#RUN gpg --keyserver hkp://subkeys.pgp.net:80 --recv-key 381BA480
+#RUN gpg -a --export 381BA480 > jranke_cran.asc
+#RUN apt-key add jranke_cran.asc
 #RUN apt-key adv --keyserver keyserver.ubuntu.com -http_proxy=http://proxy.mh-hannover.de:8080 --recv-key E19F5F87128899B192B1A2C2AD5F960A256A04AF
 RUN add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
 RUN apt-get update
-RUN apt-get -y install -t buster-cran40 r-base
+RUN apt-get -y --allow-unauthenticated install -t buster-cran40 r-base
 
 #RUN Rscript -e "options(repos = 'https://cran.r-project.org')"
 #RUN Rscript -e "install.packages('RJSONIO')"
