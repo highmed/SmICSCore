@@ -55,7 +55,7 @@ namespace WebApp.Test.DataServiceTest
                 string stationID = "Coronastation";
                 DateTime beginn = Convert.ToDateTime("2021-01-01T09:00:00");
                 DateTime ende = Convert.ToDateTime("2021-01-05T15:00:00");
-                yield return new object[] { patient[16].EHR_ID, stationID, beginn, ende, 0, 16 };
+                yield return new object[] { patient[16].Patient, stationID, beginn, ende, 0, 16 };
             }
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }

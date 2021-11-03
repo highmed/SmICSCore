@@ -88,7 +88,7 @@ namespace SmICSFactory.Tests
         {
             foreach (JObject obj in array)
             {
-                obj.Add(new JProperty("PatientID", id.EHR_ID));
+                obj.Add(new JProperty("PatientID", id.Patient));
                 obj.Property("Beginn").Value = DateTime.Parse(obj.Property("Beginn").Value.ToString());
 
                 if (obj.Property("Ende").Value.Type == JTokenType.Null)
@@ -106,7 +106,7 @@ namespace SmICSFactory.Tests
         {
             foreach (JObject obj in array)
             {
-                obj.Add(new JProperty("PatientID", id.EHR_ID));
+                obj.Add(new JProperty("PatientID", id.Patient));
                 obj.Property("Befunddatum").Value = DateTime.Parse(obj.Property("Befunddatum").Value.ToString());
                 obj.Property("ZeitpunktProbeneingang").Value = DateTime.Parse(obj.Property("ZeitpunktProbeneingang").Value.ToString());
                 obj.Property("Eingangsdatum").Value = DateTime.Parse(obj.Property("Eingangsdatum").Value.ToString());
@@ -143,7 +143,7 @@ namespace SmICSFactory.Tests
             {
                 if (id.EHR_ID != null)
                 {
-                    obj.Add(new JProperty("PatientID", id.EHR_ID));
+                    obj.Add(new JProperty("PatientID", id.Patient));
                     obj.Property("FallID").Value = obj.Property("FallID").Value;
                     obj.Property("Datum_Uhrzeit_der_Aufnahme").Value = DateTime.Parse(obj.Property("Datum_Uhrzeit_der_Aufnahme").Value.ToString());
                 }
@@ -183,7 +183,7 @@ namespace SmICSFactory.Tests
         {
             foreach (JObject obj in array)
             {
-                obj.Add(new JProperty("PatientID", id.EHR_ID));
+                obj.Add(new JProperty("PatientID", id.Patient));
                 obj.Property("StationID").Value = obj.Property("StationID").Value;
                 obj.Property("Beginn").Value = DateTime.Parse(obj.Property("Beginn").Value.ToString());
                 obj.Property("Ende").Value = DateTime.Parse(obj.Property("Ende").Value.ToString());
