@@ -7,8 +7,8 @@
       "Bewegungstyp": "Aufnahme",
       "Raum": "Zimmerkennung 101",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-11-28T12:13:00",
-      "Ende": "2020-11-28T12:13:00"
+      "Beginn": "2020-11-28T12:13:00Z",
+      "Ende": "2020-11-28T12:13:00Z"
     },
     {
       "FallID": "00000019",
@@ -17,8 +17,8 @@
       "Bewegungstyp": "Wechsel",
       "Raum": "Zimmerkennung 101",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-11-28T12:13:00",
-      "Ende": "2020-12-12T12:13:00"
+      "Beginn": "2020-11-28T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
     },
     {
       "FallID": "00000019",
@@ -27,8 +27,8 @@
       "Bewegungstyp": "Entlassung",
       "Raum": "Zimmerkennung 101",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-12-12T12:13:00",
-      "Ende": "2020-12-12T12:13:00"
+      "Beginn": "2020-12-12T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
     }
   ],
   "1": [
@@ -39,8 +39,8 @@
       "Bewegungstyp": "Aufnahme",
       "Raum": "Zimmerkennung 101",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-11-26T12:13:00",
-      "Ende": "2020-11-26T12:13:00"
+      "Beginn": "2020-11-28T12:13:00Z",
+      "Ende": "2020-11-28T12:13:00Z"
     },
     {
       "FallID": "00000020",
@@ -49,8 +49,8 @@
       "Bewegungstyp": "Wechsel",
       "Raum": "Zimmerkennung 101",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-11-26T12:13:00",
-      "Ende": "2020-12-12T12:13:00"
+      "Beginn": "2020-11-28T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
     },
     {
       "FallID": "00000020",
@@ -59,8 +59,8 @@
       "Bewegungstyp": "Entlassung",
       "Raum": "Zimmerkennung 101",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-12-12T12:13:00",
-      "Ende": "2020-12-12T12:13:00"
+      "Beginn": "2020-12-12T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
     }
   ],
   "2": [
@@ -71,8 +71,8 @@
       "Bewegungstyp": "Aufnahme",
       "Raum": "Zimmerkennung 102",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-11-27T12:13:00",
-      "Ende": "2020-11-27T12:13:00"
+      "Beginn": "2020-11-27T12:13:00Z",
+      "Ende": "2020-11-27T12:13:00Z"
     },
     {
       "FallID": "00000021",
@@ -81,8 +81,8 @@
       "Bewegungstyp": "Wechsel",
       "Raum": "Zimmerkennung 102",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-11-27T12:13:00",
-      "Ende": "2020-12-12T12:13:00"
+      "Beginn": "2020-11-27T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
     },
     {
       "FallID": "00000021",
@@ -91,8 +91,8 @@
       "Bewegungstyp": "Entlassung",
       "Raum": "Zimmerkennung 102",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-12-12T12:13:00",
-      "Ende": "2020-12-12T12:13:00"
+      "Beginn": "2020-12-12T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
     }
   ],
   "3": [
@@ -103,8 +103,8 @@
       "Bewegungstyp": "Aufnahme",
       "Raum": "Zimmerkennung 102",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-12-01T12:13:00",
-      "Ende": "2020-12-01T12:13:00"
+      "Beginn": "2020-12-01T12:13:00Z",
+      "Ende": "2020-12-01T12:13:00Z"
     },
     {
       "FallID": "00000022",
@@ -113,8 +113,8 @@
       "Bewegungstyp": "Wechsel",
       "Raum": "Zimmerkennung 102",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-12-01T12:13:00",
-      "Ende": "2020-12-12T12:13:00"
+      "Beginn": "2020-12-01T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
     },
     {
       "FallID": "00000022",
@@ -123,8 +123,8 @@
       "Bewegungstyp": "Entlassung",
       "Raum": "Zimmerkennung 102",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-12-12T12:13:00",
-      "Ende": "2020-12-12T12:13:00"
+      "Beginn": "2020-12-12T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
     }
   ],
   "4": [
@@ -135,8 +135,8 @@
       "Bewegungstyp": "Aufnahme",
       "Raum": "Zimmerkennung 204",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-05T12:13:00",
-      "Ende": "2020-02-05T12:13:00"
+      "Beginn": "2020-02-05T12:13:00Z",
+      "Ende": "2020-02-05T12:13:00Z"
     },
     {
       "FallID": "00000023",
@@ -145,8 +145,8 @@
       "Bewegungstyp": "Wechsel",
       "Raum": "Zimmerkennung 204",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-05T12:13:00",
-      "Ende": "2020-02-11T12:13:00"
+      "Beginn": "2020-02-05T12:13:00Z",
+      "Ende": "2020-02-11T12:13:00Z"
     },
     {
       "FallID": "00000023",
@@ -155,8 +155,8 @@
       "Bewegungstyp": "Wechsel",
       "Raum": "Zimmerkennung 202",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-11T12:13:00",
-      "Ende": "2020-02-23T12:13:00"
+      "Beginn": "2020-02-11T12:13:00Z",
+      "Ende": "2020-02-23T12:13:00Z"
     },
     {
       "FallID": "00000023",
@@ -165,8 +165,8 @@
       "Bewegungstyp": "Entlassung",
       "Raum": "Zimmerkennung 202",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-23T12:13:00",
-      "Ende": "2020-02-23T12:13:00"
+      "Beginn": "2020-02-23T12:13:00Z",
+      "Ende": "2020-02-23T12:13:00Z"
     }
   ],
   "5": [
@@ -177,8 +177,8 @@
       "Bewegungstyp": "Aufnahme",
       "Raum": "Zimmerkennung 204",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-08T12:13:00",
-      "Ende": "2020-02-08T12:13:00"
+      "Beginn": "2020-02-08T12:13:00Z",
+      "Ende": "2020-02-08T12:13:00Z"
     },
     {
       "FallID": "00000024",
@@ -187,8 +187,8 @@
       "Bewegungstyp": "Wechsel",
       "Raum": "Zimmerkennung 204",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-08T12:13:00",
-      "Ende": "2020-02-20T12:13:00"
+      "Beginn": "2020-02-08T12:13:00Z",
+      "Ende": "2020-02-20T12:13:00Z"
     },
     {
       "FallID": "00000024",
@@ -197,8 +197,8 @@
       "Bewegungstyp": "Entlassung",
       "Raum": "Zimmerkennung 204",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-20T12:13:00",
-      "Ende": "2020-02-20T12:13:00"
+      "Beginn": "2020-02-20T12:13:00Z",
+      "Ende": "2020-02-20T12:13:00Z"
     }
   ],
   "6": [
@@ -209,8 +209,8 @@
       "Bewegungstyp": "Aufnahme",
       "Raum": "Zimmerkennung 204",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-09T12:13:00",
-      "Ende": "2020-02-09T12:13:00"
+      "Beginn": "2020-02-09T12:13:00Z",
+      "Ende": "2020-02-09T12:13:00Z"
     },
     {
       "FallID": "00000025",
@@ -219,8 +219,8 @@
       "Bewegungstyp": "Wechsel",
       "Raum": "Zimmerkennung 204",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-09T12:13:00",
-      "Ende": "2020-02-20T12:13:00"
+      "Beginn": "2020-02-09T12:13:00Z",
+      "Ende": "2020-02-20T12:13:00Z"
     },
     {
       "FallID": "00000025",
@@ -229,8 +229,8 @@
       "Bewegungstyp": "Entlassung",
       "Raum": "Zimmerkennung 204",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-20T12:13:00",
-      "Ende": "2020-02-20T12:13:00"
+      "Beginn": "2020-02-20T12:13:00Z",
+      "Ende": "2020-02-20T12:13:00Z"
     }
   ],
   "7": [
@@ -241,8 +241,8 @@
       "Bewegungstyp": "Aufnahme",
       "Raum": "Zimmerkennung 203",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-10T12:13:00",
-      "Ende": "2020-02-10T12:13:00"
+      "Beginn": "2020-02-10T12:13:00Z",
+      "Ende": "2020-02-10T12:13:00Z"
     },
     {
       "FallID": "00000026",
@@ -251,8 +251,8 @@
       "Bewegungstyp": "Wechsel",
       "Raum": "Zimmerkennung 203",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-10T12:13:00",
-      "Ende": "2020-03-03T12:13:00"
+      "Beginn": "2020-02-10T12:13:00Z",
+      "Ende": "2020-03-03T12:13:00Z"
     },
     {
       "FallID": "00000026",
@@ -261,8 +261,8 @@
       "Bewegungstyp": "Entlassung",
       "Raum": "Zimmerkennung 203",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-03-03T12:13:00",
-      "Ende": "2020-03-03T12:13:00"
+      "Beginn": "2020-03-03T12:13:00Z",
+      "Ende": "2020-03-03T12:13:00Z"
     }
   ],
   "8": [
@@ -273,8 +273,8 @@
       "Bewegungstyp": "Aufnahme",
       "Raum": "Zimmerkennung 203",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-09T12:13:00",
-      "Ende": "2020-02-09T12:13:00"
+      "Beginn": "2020-02-09T12:13:00Z",
+      "Ende": "2020-02-09T12:13:00Z"
     },
     {
       "FallID": "00000027",
@@ -283,8 +283,8 @@
       "Bewegungstyp": "Wechsel",
       "Raum": "Zimmerkennung 203",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-02-09T12:13:00",
-      "Ende": "2020-03-04T12:13:00"
+      "Beginn": "2020-02-09T12:13:00Z",
+      "Ende": "2020-03-04T12:13:00Z"
     },
     {
       "FallID": "00000027",
@@ -293,8 +293,8 @@
       "Bewegungstyp": "Entlassung",
       "Raum": "Zimmerkennung 203",
       "StationID": "Stationskennung X",
-      "Beginn": "2020-03-04T12:13:00",
-      "Ende": "2020-03-04T12:13:00"
+      "Beginn": "2020-03-04T12:13:00Z",
+      "Ende": "2020-03-04T12:13:00Z"
     }
   ],
   "9": [

@@ -1,58 +1,58 @@
 {
   "0": [
     {
-      "PatientID": "f7f106b1-3aef-481e-aa76-af9092dc63dc",
-      "Zeitpunkt_der_Probenentnahme": "2020-12-02T13:40:33",
-      "Aufnahme_Datum": "2020-11-26T12:13:00+01:00",
-      "Entlastung_Datum": "2020-12-12T12:13:00+01:00",
+      "PatientID": "Patient02",
+      "Zeitpunkt_der_Probenentnahme": "2020-12-02T13:40:33Z",
+      "Aufnahme_Datum": "2020-11-28T12:13:00Z",
+      "Entlastung_Datum": "2020-12-12T12:13:00Z",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
       "VaccinationModel": null
     }
   ],
   "1": [
     {
-      "PatientID": "eae9b822-6015-430c-a694-123249e977eb",
-      "Zeitpunkt_der_Probenentnahme": "2020-02-16T10:47:45+01:00",
-      "Aufnahme_Datum": "2020-02-09T12:13:00+01:00",
-      "Entlastung_Datum": "2020-03-04T12:13:00+01:00",
+      "PatientID": "Patient09",
+      "Zeitpunkt_der_Probenentnahme": "2020-02-16T10:47:45Z",
+      "Aufnahme_Datum": "2020-02-09T12:13:00Z",
+      "Entlastung_Datum": "2020-03-04T12:13:00Z",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
       "VaccinationModel": null
     }
   ],
   "2": [
     {
-      "PatientID": "db7be72a-db86-4dc6-b55b-dcf510b0f23e",
-      "Zeitpunkt_der_Probenentnahme": "2020-03-14T10:47:45+01:00",
-      "Aufnahme_Datum": "2020-03-08T12:13:00+01:00",
-      "Entlastung_Datum": "2020-03-27T12:13:00+01:00",
+      "PatientID": "Patient11",
+      "Zeitpunkt_der_Probenentnahme": "2020-03-14T10:47:45Z",
+      "Aufnahme_Datum": "2020-03-08T12:13:00Z",
+      "Entlastung_Datum": "2020-03-27T12:13:00Z",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
       "VaccinationModel": null
     }
   ],
   "3": [
     {
-      "PatientID": "db7be72a-db86-4dc6-b55b-dcf510b0f23e",
-      "Zeitpunkt_der_Probenentnahme": "2020-03-14T10:47:45+01:00",
-      "Aufnahme_Datum": "2020-03-08T12:13:00+01:00",
-      "Entlastung_Datum": "2020-03-27T12:13:00+01:00",
+      "PatientID": "Patient11",
+      "Zeitpunkt_der_Probenentnahme": "2020-03-14T10:47:45Z",
+      "Aufnahme_Datum": "2020-03-08T12:13:00Z",
+      "Entlastung_Datum": "2020-03-27T12:13:00Z",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
       "VaccinationModel": null
     }
   ],
   "4": [
     {
-      "PatientID": "ac8a6002-d728-4b4e-a629-bfa66ebeace7",
-      "Zeitpunkt_der_Probenentnahme": "2020-03-10T14:13:00+01:00",
-      "Aufnahme_Datum": "2020-03-05T12:13:00+01:00",
-      "Entlastung_Datum": "2020-03-20T12:13:00+01:00",
+      "PatientID": "Patient10",
+      "Zeitpunkt_der_Probenentnahme": "2020-03-10T14:13:00Z",
+      "Aufnahme_Datum": "2020-03-05T12:13:00Z",
+      "Entlastung_Datum": "2020-03-20T12:13:00Z",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
       "VaccinationModel": [
         {
-          "PatientenID": "ac8a6002-d728-4b4e-a629-bfa66ebeace7",
-          "DokumentationsID": "2020-03-05T13:13:00+01:00",
+          "PatientenID": "Patient10",
+          "DokumentationsID": "2020-03-05T13:13:00Z",
           "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-          "Dosierungsreihenfolge": "1",
-          "Dosiermenge": "1",
+          "Dosierungsreihenfolge": 1,
+          "Dosiermenge": 1,
           "ImpfungGegen": "Infectious disease (disorder)",
           "Abwesenheit": null
         }
@@ -61,18 +61,18 @@
   ],
   "5": [
     {
-      "PatientID": "959c26c9-de4a-40b8-bf76-a315574d3da7",
-      "Zeitpunkt_der_Probenentnahme": "2020-12-01T10:13:09",
-      "Aufnahme_Datum": "2020-11-27T12:13:00+01:00",
-      "Entlastung_Datum": "2020-12-12T12:13:00+01:00",
+      "PatientID": "Patient03",
+      "Zeitpunkt_der_Probenentnahme": "2020-12-01T10:13:09Z",
+      "Aufnahme_Datum": "2020-11-27T12:13:00Z",
+      "Entlastung_Datum": "2020-12-12T12:13:00Z",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
       "VaccinationModel": [
         {
-          "PatientenID": "959c26c9-de4a-40b8-bf76-a315574d3da7",
-          "DokumentationsID": "2020-11-27T13:13:00",
+          "PatientenID": "Patient03",
+          "DokumentationsID": "2020-11-27T13:13:00Z",
           "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-          "Dosierungsreihenfolge": "1",
-          "Dosiermenge": "1",
+          "Dosierungsreihenfolge": 1,
+          "Dosiermenge": 1,
           "ImpfungGegen": "Infectious disease (disorder)",
           "Abwesenheit": null
         }
@@ -81,18 +81,18 @@
   ],
   "6": [
     {
-      "PatientID": "7a347dcf-209f-46cf-ad4e-5f242b73d5cd",
-      "Zeitpunkt_der_Probenentnahme": "2020-02-17T22:47:45+01:00",
-      "Aufnahme_Datum": "2020-02-05T12:13:00+01:00",
-      "Entlastung_Datum": "2020-02-23T12:13:00+01:00",
+      "PatientID": "Patient05",
+      "Zeitpunkt_der_Probenentnahme": "2020-02-17T22:47:45Z",
+      "Aufnahme_Datum": "2020-02-05T12:13:00Z",
+      "Entlastung_Datum": "2020-02-23T12:13:00Z",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
       "VaccinationModel": [
         {
-          "PatientenID": "7a347dcf-209f-46cf-ad4e-5f242b73d5cd",
-          "DokumentationsID": "2020-02-10T21:47:45+01:00",
+          "PatientenID": "Patient05",
+          "DokumentationsID": "2020-02-10T21:47:45Z",
           "Impfstoff": "Vaccine product containing only Severe acute respiratory syndrome coronavirus 2 messenger ribonucleic acid (medicinal product)",
-          "Dosierungsreihenfolge": "1",
-          "Dosiermenge": "1",
+          "Dosierungsreihenfolge": 1,
+          "Dosiermenge": 1,
           "ImpfungGegen": "Infectious disease (disorder)",
           "Abwesenheit": null
         }
@@ -101,20 +101,20 @@
   ],
   "7": [
     {
-      "PatientID": "386ff697-7fe4-4fe0-942c-eb389b81704f",
-      "Zeitpunkt_der_Probenentnahme": "2020-12-02T13:13:33",
-      "Aufnahme_Datum": "2020-11-28T12:13:00+01:00",
-      "Entlastung_Datum": "2020-12-12T12:13:00+01:00",
+      "PatientID": "Patient01",
+      "Zeitpunkt_der_Probenentnahme": "2020-12-02T13:13:33Z",
+      "Aufnahme_Datum": "2020-11-28T12:13:00Z",
+      "Entlastung_Datum": "2020-12-12T12:13:00Z",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
       "VaccinationModel": null
     }
   ],
   "8": [
     {
-      "PatientID": "11fcaa10-d510-4eb7-a4a4-c96add98bae2",
-      "Zeitpunkt_der_Probenentnahme": "2020-02-28T18:47:45+01:00",
-      "Aufnahme_Datum": "2020-02-10T12:13:00+01:00",
-      "Entlastung_Datum": "2020-03-03T12:13:00+01:00",
+      "PatientID": "Patient08",
+      "Zeitpunkt_der_Probenentnahme": "2020-02-28T18:47:45Z",
+      "Aufnahme_Datum": "2020-02-10T12:13:00Z",
+      "Entlastung_Datum": "2020-03-03T12:13:00Z",
       "Infektion": "Wahrscheinliche Nosokomiale Infektion",
       "VaccinationModel": null
     }

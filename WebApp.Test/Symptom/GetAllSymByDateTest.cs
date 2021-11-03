@@ -40,7 +40,7 @@ namespace WebApp.Test.Symptom
                 List<PatientInfos> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientInfos>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
 
                 DateTime beginn = Convert.ToDateTime("2020-02-13");
-                yield return new object[] { patient[5].EHR_ID, beginn, 0, 5 };
+                yield return new object[] { patient[5].Patient, beginn, 0, 5 };
             }
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }

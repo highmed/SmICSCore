@@ -1,19 +1,19 @@
 {
   "0": [
     {
-      "PatientenID": "52afa449-07a2-4d57-bb7a-86e7960124ac",
+      "PatientenID": "Patient06",
       "NameDesSymptoms": "Cough (finding)",
       "Beginn": "2020-02-13T21:47:45Z",
       "Rueckgang": "2020-02-22T09:35:20Z"
     },
     {
-      "PatientenID": "52afa449-07a2-4d57-bb7a-86e7960124ac",
+      "PatientenID": "Patient06",
       "NameDesSymptoms": "Feeling feverish (finding)",
       "Beginn": "2020-02-13T23:59:59Z",
       "Rueckgang": "2020-03-17T02:35:20Z"
     },
     {
-      "PatientenID": "52afa449-07a2-4d57-bb7a-86e7960124ac",
+      "PatientenID": "Patient06",
       "NameDesSymptoms": "Fatigue (finding)",
       "Beginn": "2020-02-13T14:59:59Z",
       "Rueckgang": "2020-03-21T02:35:20Z"
