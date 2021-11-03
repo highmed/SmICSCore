@@ -24,7 +24,7 @@ namespace WebApp.Test.DataServiceTest
             {
                 Assert.Equal(expected[i].PatientID, actual[i].PatientID);
                 Assert.Equal(expected[i].Fallkennung, actual[i].Fallkennung);
-                Assert.Equal(expected[i].Zeitpunkt_des_Probeneingangs.ToString("yyyy-MM-dd"), actual[i].Zeitpunkt_des_Probeneingangs.ToString("yyyy-MM-dd"));
+                Assert.Equal(expected[i].Zeitpunkt_der_Probenentnahme.ToString("yyyy-MM-dd"), actual[i].Zeitpunkt_der_Probenentnahme.ToString("yyyy-MM-dd"));
             }
         }
 

@@ -179,7 +179,7 @@ namespace SmICSCoreLib.StatistikServices
                     {
                         CountDataModel data = testPat.Find(i => i.PatientID == countData.PatientID);
 
-                        if (data.Zeitpunkt_des_Probeneingangs > countData.Zeitpunkt_des_Probeneingangs)
+                        if (data.Zeitpunkt_der_Probenentnahme > countData.Zeitpunkt_der_Probenentnahme)
                         {
                             testPat.Remove(data);
                             testPat.Add(countData);
@@ -211,7 +211,7 @@ namespace SmICSCoreLib.StatistikServices
 
                 foreach (CountDataModel positivPat in positivPatList)
                 {
-                    List<StationaryDataModel> statPatList = StationaryPatForNosku(positivPat.PatientID, positivPat.Fallkennung, positivPat.Zeitpunkt_des_Probeneingangs);
+                    List<StationaryDataModel> statPatList = StationaryPatForNosku(positivPat.PatientID, positivPat.Fallkennung, positivPat.Zeitpunkt_der_Probenentnahme);
 
                     if (statPatList != null)
                     {
@@ -222,7 +222,7 @@ namespace SmICSCoreLib.StatistikServices
                                 List<SymptomModel> symptoms = symptom.GetAllSymByPatID(statPatient.PatientID, statPatient.Datum_Uhrzeit_der_Aufnahme);
                                 if (symptoms is null || symptoms.Count == 0)
                                 {
-                                    patNoskumalList.Add(new PatientModel(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
+                                    patNoskumalList.Add(new PatientModel(positivPat.PatientID, positivPat.Zeitpunkt_der_Probenentnahme, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
                                 }
                                 else
                                 {
@@ -231,7 +231,7 @@ namespace SmICSCoreLib.StatistikServices
                                         if (!symptomList.Contains(symptomItem.NameDesSymptoms) &&
                                             !patNoskumalList.Contains(new PatientModel { PatientID = positivPat.PatientID }))
                                         {
-                                            patNoskumalList.Add(new PatientModel(positivPat.PatientID, positivPat.Zeitpunkt_des_Probeneingangs, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
+                                            patNoskumalList.Add(new PatientModel(positivPat.PatientID, positivPat.Zeitpunkt_der_Probenentnahme, statPatient.Datum_Uhrzeit_der_Aufnahme, statPatient.Datum_Uhrzeit_der_Entlassung));
                                         }
                                     }
                                 }
