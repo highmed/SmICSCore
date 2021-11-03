@@ -43,8 +43,7 @@ namespace SmICSWebApp
                 //.UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>()
-                    .UseUrls("http://*:9787");
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }
