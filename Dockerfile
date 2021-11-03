@@ -27,10 +27,7 @@ RUN apt-get -y install dirmngr --install-recommends
 RUN apt-get -y install software-properties-common
 RUN apt-get -y install apt-transport-https
 
-RUN gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-key E084DAB9 -http_proxy=http://proxy.mh-hannover.de:8080
-RUN gpg -a --export 381BA480 > jranke_cran.asc
-RUN apt-key add jranke_cran.asc
-#RUN apt-key adv --keyserver keyserver.ubuntu.com  -http_proxy=http://proxy.mh-hannover.de:8080 --recv-key FCAE2A0E115C3D8A
+RUN apt-key adv --keyserver keyserver.ubuntu.com  -http_proxy=http://proxy.mh-hannover.de:8080 --recv-key FCAE2A0E115C3D8A
 RUN add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
 RUN apt-get update
 RUN apt-get -y install r-base
