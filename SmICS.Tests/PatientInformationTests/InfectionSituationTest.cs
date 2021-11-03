@@ -70,12 +70,11 @@ namespace SmICSFactory.Tests.PatientInformationTests
                 yield return new object[] { 1,  0 };
                 yield return new object[] { 8,  1 };
                 yield return new object[] { 10, 2 };
-                yield return new object[] { 10, 3 };
-                yield return new object[] { 9,  4 };
-                yield return new object[] { 2,  5 };
-                yield return new object[] { 4,  6 };
-                yield return new object[] { 0,  7 };
-                yield return new object[] { 7,  8 };
+                yield return new object[] { 9,  3 };
+                yield return new object[] { 2,  4 };
+                yield return new object[] { 4,  5 };
+                yield return new object[] { 0,  6 };
+                yield return new object[] { 7,  7 };
             }
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }

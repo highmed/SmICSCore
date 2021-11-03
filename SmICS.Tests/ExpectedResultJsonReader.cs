@@ -202,7 +202,7 @@ namespace SmICSFactory.Tests
             {
                 obj.Property("PatientID").Value = obj.Property("PatientID").Value;
                 obj.Property("Fallkennung").Value = obj.Property("Fallkennung").Value;
-                obj.Property("Zeitpunkt_des_Probeneingangs").Value = obj.Property("Zeitpunkt_des_Probeneingangs").Value;
+                obj.Property("Zeitpunkt_der_Probenentnahme").Value = obj.Property("Zeitpunkt_der_Probenentnahme").Value;
             }
         }
 

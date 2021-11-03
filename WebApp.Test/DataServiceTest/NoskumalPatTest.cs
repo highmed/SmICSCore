@@ -59,16 +59,16 @@ namespace WebApp.Test.DataServiceTest
         private List<PatientModel> GetPatientList()
         {
             List<PatientModel> patientList = new();
-            patientList.Add(new PatientModel("Patient09", DateTime.Parse("16.02.2020 09:47:45Z"), DateTime.Parse("09.02.2020 12:13:00Z"), DateTime.Parse("04.03.2020 12:13:00Z")));
-            patientList.Add(new PatientModel("Patient06", DateTime.Parse("16.02.2020 12:03:00Z"), DateTime.Parse("08.02.2020 12:13:00Z"), DateTime.Parse("20.02.2020 12:13:00Z")));
-            patientList.Add(new PatientModel("Patient05", DateTime.Parse("17.02.2020 21:47:45Z"), DateTime.Parse("05.02.2020 12:13:00Z"), DateTime.Parse("23.02.2020 12:13:00Z")));
-            patientList.Add(new PatientModel("Patient08", DateTime.Parse("28.02.2020 17:47:45Z"), DateTime.Parse("10.02.2020 12:13:00Z"), DateTime.Parse("03.03.2020 12:13:00Z")));
-            patientList.Add(new PatientModel("Patient10", DateTime.Parse("10.03.2020 13:13:00Z"), DateTime.Parse("05.03.2020 12:13:00Z"), DateTime.Parse("20.03.2020 12:13:00Z")));
-            patientList.Add(new PatientModel("Patient11", DateTime.Parse("14.03.2020 09:47:45Z"), DateTime.Parse("08.03.2020 12:13:00Z"), DateTime.Parse("27.03.2020 12:13:00Z")));
-            patientList.Add(new PatientModel("Patient11", DateTime.Parse("20.03.2020 17:47:45Z"), DateTime.Parse("08.03.2020 12:13:00Z"), DateTime.Parse("27.03.2020 12:13:00Z")));
-            patientList.Add(new PatientModel("Patient03", DateTime.Parse("01.12.2020 09:13:09Z"), DateTime.Parse("27.11.2020 12:13:00Z"), DateTime.Parse("12.12.2020 12:13:00Z")));
-            patientList.Add(new PatientModel("Patient01", DateTime.Parse("02.12.2020 12:13:33Z"), DateTime.Parse("28.11.2020 12:13:00Z"), DateTime.Parse("12.12.2020 12:13:00Z")));
-            patientList.Add(new PatientModel("Patient02", DateTime.Parse("02.12.2020 12:40:33Z"), DateTime.Parse("28.11.2020 12:13:00Z"), DateTime.Parse("12.12.2020 12:13:00Z")));
+            patientList.Add(new PatientModel("Patient09", DateTime.Parse("15.02.2020 16:47:45Z"), DateTime.Parse("09.02.2020 12:13:00Z"), DateTime.Parse("04.03.2020 12:13:00Z")));
+            patientList.Add(new PatientModel("Patient06", DateTime.Parse("16.02.2020 11:03:00Z"), DateTime.Parse("08.02.2020 12:13:00Z"), DateTime.Parse("20.02.2020 12:13:00Z")));
+            patientList.Add(new PatientModel("Patient05", DateTime.Parse("17.02.2020 20:47:45Z"), DateTime.Parse("05.02.2020 12:13:00Z"), DateTime.Parse("23.02.2020 12:13:00Z")));
+            patientList.Add(new PatientModel("Patient08", DateTime.Parse("28.02.2020 16:47:45Z"), DateTime.Parse("10.02.2020 12:13:00Z"), DateTime.Parse("03.03.2020 12:13:00Z")));
+            patientList.Add(new PatientModel("Patient10", DateTime.Parse("10.03.2020 12:13:00Z"), DateTime.Parse("05.03.2020 12:13:00Z"), DateTime.Parse("20.03.2020 12:13:00Z")));
+            patientList.Add(new PatientModel("Patient11", DateTime.Parse("13.03.2020 16:47:45Z"), DateTime.Parse("08.03.2020 12:13:00Z"), DateTime.Parse("27.03.2020 12:13:00Z")));
+            patientList.Add(new PatientModel("Patient11", DateTime.Parse("20.03.2020 16:47:45Z"), DateTime.Parse("08.03.2020 12:13:00Z"), DateTime.Parse("27.03.2020 12:13:00Z")));
+            patientList.Add(new PatientModel("Patient03", DateTime.Parse("01.12.2020 08:13:00Z"), DateTime.Parse("27.11.2020 12:13:00Z"), DateTime.Parse("12.12.2020 12:13:00Z")));
+            patientList.Add(new PatientModel("Patient01", DateTime.Parse("02.12.2020 10:13:33Z"), DateTime.Parse("28.11.2020 12:13:00Z"), DateTime.Parse("12.12.2020 12:13:00Z")));
+            patientList.Add(new PatientModel("Patient02", DateTime.Parse("02.12.2020 10:22:33Z"), DateTime.Parse("28.11.2020 12:13:00Z"), DateTime.Parse("12.12.2020 12:13:00Z")));
             return patientList;
         }
     }
