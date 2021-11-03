@@ -22,6 +22,7 @@ WORKDIR /app
 COPY --from=publish /app/out .
 
 COPY RKIAlgorithm/Statistik.dod.zip RKIAlgorithm/Statistik.dod.zip
+COPY RKIAlgorithm/Statistik.dod.tar.gz RKIAlgorithm/Statistik.dod.tar.gz
 COPY pub/jranke.asc jranke.asc
 
 RUN apt-get update 
