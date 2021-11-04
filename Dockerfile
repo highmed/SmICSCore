@@ -21,6 +21,10 @@ WORKDIR /app
 
 COPY --from=publish /app/out .
 
+COPY Certificates/ /usr/local/share/ca-certificates/
+RUN find /usr/local/share/ca-certificates -type f -exec chmod 644 {} \;
+RUN update-ca-certificates
+
 COPY RKIAlgorithm/Statistik.dod.zip RKIAlgorithm/Statistik.dod.zip
 COPY RKIAlgorithm/Statistik.dod.tar.gz RKIAlgorithm/Statistik.dod.tar.gz
 COPY SmICSWebApp/Resources/RRuntime/R_Script_00010.R Resources/RRuntime/
