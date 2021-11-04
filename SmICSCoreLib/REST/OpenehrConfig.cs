@@ -9,6 +9,6 @@ namespace SmICSCoreLib.REST
         public static string openehrPassword;
         public static string openehrAdaptor;
 
-        public static string? OutbreakDetectionRuntime { get; set; }
+        public static string OutbreakDetectionRuntime { get; set; }
     }
 }

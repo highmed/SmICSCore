@@ -5,6 +5,7 @@
 @using SmICSCoreLib.Factories.RKIConfig
 @using Newtonsoft.Json.Linq
 @using SmICSWebApp.Data
+@using SmICSCoreLib.REST
 
 
 @inject ILogger<RKIConfig> Logger
@@ -67,7 +68,7 @@
                                 <label for="Zeitpunkt" class="tb_bez">Tgl. Ausführuhrzeit d. Regeln</label>
                             </div>
                             <div>
-                                <InputText type="time" @bind-Value="ZeitpunktList.Zeitpunkt" class="input-field" />
+                                <InputText type="time" @bind-Value="ZeitpunktList.Zeitpunkt" class="input-field" disabled="@true"/>
                             </div>
                         </div>
 
@@ -154,7 +155,7 @@
     {
         try
         {
-            ZeitpunktList = RKIConfigService.GetTimeSet();
+            ZeitpunktList.Zeitpunkt = OpenehrConfig.OutbreakDetectionRuntime;
         }
         catch
         {
@@ -169,10 +170,6 @@
 
             if (RKIConfigForm.Count > 0)
             {
-                if (ZeitpunktList is null)
-                {
-                    ZeitpunktList.Zeitpunkt = DateTime.Now.ToString("h:mm:ss tt");
-                }
                 List<int> indices = RKIConfigForm.Where(x => x.Station == "").Select(x => RKIConfigForm.IndexOf(x)).ToList();
                 foreach (int index in indices)
                 {

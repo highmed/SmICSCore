@@ -66,16 +66,11 @@ namespace SmICSWebApp
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
 
             services.AddScoped<OutbreakDetectionService>();
-            if (File.Exists(@"./Resources/RKIConfig/RKIConfigTime.json"))
-            {
-                LabDataTimeModel runtimeString = SmICSCoreLib.JSONFileStream.JSONReader<LabDataTimeModel>.ReadObject(@"./Resources/RKIConfig/RKIConfigTime.json");
-                string[] runtimeArr = runtimeString.Zeitpunkt.Split(":");
-                OpenehrConfig.OutbreakDetectionRuntime = runtimeArr[2] + " " + runtimeArr[1] + " " + runtimeArr[0] + " * * ?";
-            }
-            else
-            {
-                OpenehrConfig.OutbreakDetectionRuntime = null;
-            }
+
+            OpenehrConfig.OutbreakDetectionRuntime = Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME");
+            LabDataTimeModel runtimeString = SmICSCoreLib.JSONFileStream.JSONReader<LabDataTimeModel>.ReadObject(@"./Resources/RKIConfig/RKIConfigTime.json");
+            string[] runtimeArr = runtimeString.Zeitpunkt.Split(":");
+            OpenehrConfig.OutbreakDetectionRuntime = runtimeArr[2] + " " + runtimeArr[1] + " " + runtimeArr[0] + " * * ?";
 
             services.AddSingleton<JobOutbreakDetection>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(),
