@@ -10,7 +10,7 @@ services:
       - OPENEHR_DB=<openEHR REST API URL>
       - OPENEHR_USER=<openEHR SmICS User>
       - OPENEHR_PWD=<openEHR SmICS User PW>
-      - OUTBREAK_DETECTION_TIME=08:00:00
+      - OUTBREAK_DETECTION_TIME=08:22:00
     ports:
       - 80:80
     networks: 

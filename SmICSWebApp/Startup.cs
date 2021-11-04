@@ -68,6 +68,7 @@ namespace SmICSWebApp
             services.AddScoped<OutbreakDetectionService>();
 
             OpenehrConfig.OutbreakDetectionRuntime = Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME");
+            Console.WriteLine("Transformed: OUTBREAK_DETECTION_TIME " + Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME") + "to CONFIG: " + OpenehrConfig.OutbreakDetectionRuntime);
             LabDataTimeModel runtimeString = SmICSCoreLib.JSONFileStream.JSONReader<LabDataTimeModel>.ReadObject(@"./Resources/RKIConfig/RKIConfigTime.json");
             string[] runtimeArr = runtimeString.Zeitpunkt.Split(":");
             OpenehrConfig.OutbreakDetectionRuntime = runtimeArr[2] + " " + runtimeArr[1] + " " + runtimeArr[0] + " * * ?";
