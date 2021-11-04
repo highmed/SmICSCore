@@ -267,7 +267,7 @@ namespace SmICSCoreLib.Factories
         }
         public static AQLQuery SamplesFromResult(MetaDataReceiveModel metaData)
         {
-            return new AQLQuery("SamplesFromResult", $@"SELECT b/items[at0029]/value/value as MaterialID
+            return new AQLQuery("SamplesFromResult", $@"SELECT b/items[at0029]/value/value as MaterialID,
                                 b/items[at0001]/value/id as LabordatenID,
                                 b/items[at0015]/value/value as ZeitpunktProbeentnahme,
                                 b/items[at0034]/value/value as ZeitpunktProbeneingang 

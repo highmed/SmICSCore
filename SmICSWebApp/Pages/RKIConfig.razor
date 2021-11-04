@@ -1,9 +1,7 @@
 ﻿@page "/rkiconfig"
 
-@using System.IO
 @using Microsoft.Extensions.Logging
 @using SmICSCoreLib.Factories.RKIConfig
-@using Newtonsoft.Json.Linq
 @using SmICSWebApp.Data
 @using SmICSCoreLib.REST
 
@@ -180,7 +178,7 @@
             RKIConfigForm.Where(x => x.Erreger == "SARS-CoV-2").ToList().ForEach(s => s.Erregerstatus = "virologisch");
             RKIConfigForm.Where(x => x.Erreger != "SARS-CoV-2").ToList().ForEach(s => s.Erregerstatus = "mikrobiologisch");
 
-            RKIConfigService.StoreRules(RKIConfigForm, ZeitpunktList);
+            RKIConfigService.StoreRules(RKIConfigForm);
 
 
             foreach (var item in RKIConfigForm)

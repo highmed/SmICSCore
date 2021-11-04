@@ -15,7 +15,7 @@ namespace SmICSFactory.Tests
         {
             List<U> patients = SmICSCoreLib.JSONFileStream.JSONReader<U>.Read(parameterPath);
 
-            using (StreamReader reader = new(testResultPath, Encoding.UTF7))
+            using (StreamReader reader = new(testResultPath, Encoding.UTF8))
             {
                 string json = reader.ReadToEnd();
                 JObject jObject = JsonConvert.DeserializeObject<JObject>(json);

@@ -31,5 +31,10 @@ namespace SmICSCoreLib.Factories.PatientStay.Count
             if (objAsPart == null) return false;
             else return (this.PatientID == objAsPart.PatientID);
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

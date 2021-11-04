@@ -59,6 +59,7 @@ namespace SmICSWebApp.Controllers
         /// Gibt zu dem angegebenen Patienten und dem angegebenen Zeitraum alle weiteren Patienten zurück mit welchem der Patient kontakt hatte. Hierzu werden Informationen bzgl. des Zeitraums und der Grad des Kontakts geliefert. 
         /// </remarks>
         /// <param name="parameter"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
         [Route("Contact_NthDegree_TTKP_Degree")]
         [HttpPost]
@@ -84,6 +85,7 @@ namespace SmICSWebApp.Controllers
         /// Momentan sind die virologischen Befunde auf das SARS-CoV-2 Wirus beschränkt.
         /// </remarks>
         /// <param name="parameter"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
         [Route("Patient_Labordaten_Ps")]
         [HttpPost]
@@ -109,6 +111,7 @@ namespace SmICSWebApp.Controllers
         /// Eine Prozedur wird immer nur als ein Zeitpunkt wiedergegeben, da in den meisten Fällen die genaue Dauer einer Prozedur nicht dokumentiert wird.
         /// </remarks>
         /// <param name="parameter"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
         [Route("Patient_Bewegung_Ps")]
         [HttpPost]
@@ -135,6 +138,7 @@ namespace SmICSWebApp.Controllers
         /// Alle mit "_cs" markierten Werte sind für die virologische Auswertung irrelevant.
         /// </remarks>
         /// <param name="parameter"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
         [Route("Labor_ErregerProTag_TTEsKSs")]
         [HttpPost]

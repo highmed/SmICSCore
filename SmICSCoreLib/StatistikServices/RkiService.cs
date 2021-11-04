@@ -475,7 +475,6 @@ namespace SmICSCoreLib.StatistikServices
                     farbe = "#FFFFFF";
                     return farbe;
                 }
-                _logger.LogInformation("SetMapColor");
             }
             catch (Exception e)
             {

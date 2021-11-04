@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using SmICSCoreLib.JSONFileStream;
+﻿using SmICSCoreLib.JSONFileStream;
 using SmICSCoreLib.ScriptService;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace SmICSCoreLib.OutbreakDetection
@@ -23,9 +20,7 @@ namespace SmICSCoreLib.OutbreakDetection
             string argumentString = RArgPath + " " + parameter.FitRange[0] + " " + parameter.FitRange[1] + " " + parameter.LookbackWeeks;
 
             GenerateTransferScript(parameter.EpochsObserved, parameter.SavingDirectory);
-            Console.WriteLine("START R SKRIPT");
             ExternalProcess.Execute(RScript, RExecPath, argumentString);
-            Console.WriteLine("END R SKRIPT");
             List<OutbreakDetectionStoringModel> results = JSONReader<OutbreakDetectionStoringModel>.ReadOutbreakDetectionResult(RResultFileName);
             SaveResults(results, parameter.SavingDirectory, parameter.SavingFolder);
 

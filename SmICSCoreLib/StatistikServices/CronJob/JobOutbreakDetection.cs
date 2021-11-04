@@ -27,35 +27,7 @@ namespace SmICSCoreLib.StatistikServices.CronJob
             try
             {
                 string path = @"./Resources/RKIConfig/RKIConfig.json"; //TODO: Für publish Version anpassen
-                //List<RKIConfigTemplate> configs = JSONReader<RKIConfigTemplate>.Read(path);
-                List<RKIConfigTemplate> configs = new List<RKIConfigTemplate>()
-                {
-                    new RKIConfigTemplate
-                    {
-                        Station = "Coronastation",
-                        Erreger = "Sars-Cov-2",
-                        ErregerID = new List<LabDataKeimReceiveModel>
-                        {
-                            new LabDataKeimReceiveModel()
-                            {
-                                KeimID = "94500-6"
-                            },
-                            new LabDataKeimReceiveModel()
-                            {
-                                KeimID = "94558-4"
-                            },
-                            new LabDataKeimReceiveModel()
-                            {
-                                KeimID = "94745-7"
-                            }
-                        },
-                        Retro = false,
-                        Erregerstatus = "virologisch",
-                        Zeitraum = "4"
-                    }
-                };
-
-                Console.WriteLine("READ CONFIG");
+                List<RKIConfigTemplate> configs = JSONReader<RKIConfigTemplate>.Read(path);
 
                 foreach(RKIConfigTemplate config in configs)
                 {
@@ -73,11 +45,8 @@ namespace SmICSCoreLib.StatistikServices.CronJob
                         LookbackWeeks = Convert.ToInt32(config.Zeitraum)
                     };
 
-                    Console.WriteLine("FACTORY FINISHED AND PROXY PARAMETER SET");
-
                     _proxy.Covid19Extension(parameter);
                 }
-                
             }
             catch (Exception e)
             {

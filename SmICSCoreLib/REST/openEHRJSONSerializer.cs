@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
@@ -47,10 +45,10 @@ namespace SmICSCoreLib.REST
             return columns.Children<JObject>().Select(x => x.Property("name").Value.ToString()).ToList<string>();
         }
 
-        private static Dictionary<string, int> GetParameterAllocation<T>(List<string> PropertyNames)
+        private static Dictionary<string, int> GetParameterAllocation<U>(List<string> PropertyNames)
         {
             Dictionary<string, int> paramteterAllocation = new Dictionary<string, int>();
-            Type genericType = typeof(T);
+            Type genericType = typeof(U);
             PropertyInfo[] properties = genericType.GetProperties();
 
             for(int i = 0; i < PropertyNames.Count; i++)

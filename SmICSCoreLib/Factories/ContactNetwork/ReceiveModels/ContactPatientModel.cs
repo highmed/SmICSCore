@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SmICSCoreLib.Factories.ContactNetwork.ReceiveModels
 {
@@ -21,6 +19,11 @@ namespace SmICSCoreLib.Factories.ContactNetwork.ReceiveModels
                 }
             }
             return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }
