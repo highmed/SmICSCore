@@ -132,7 +132,6 @@ namespace SmICSWebApp
             services.AddControllers().AddNewtonsoftJson();
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSmICSLibrary();
             services.AddLogging();
             services.AddScoped<RkiService>();            
             services.AddScoped<SymptomService>();
@@ -144,14 +143,27 @@ namespace SmICSWebApp
             services.AddSingleton<JobGetReport>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 00 10 ? * *"));
             services.AddHostedService<QuartzHostedService>();
-
+            services.AddScoped<RKIConfigService>();
             services.AddScoped<ContactTracingService>();
             services.AddScoped<PersonInformationService>();
             services.AddScoped<PersInfoInfectCtrlService>();
 
             //CronJob UpdateRkidata
             services.AddSingleton<JobUpdateRkidata>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));            
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
+
+            services.AddScoped<OutbreakDetectionService>();
+
+            OpenehrConfig.OutbreakDetectionRuntime = Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME");
+            Console.WriteLine("Transformed: OUTBREAK_DETECTION_TIME " + Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME") + "to CONFIG: " + OpenehrConfig.OutbreakDetectionRuntime);
+            string[] runtimeArr = OpenehrConfig.OutbreakDetectionRuntime.Split(":");
+            OpenehrConfig.OutbreakDetectionRuntime = runtimeArr[2] + " " + runtimeArr[1] + " " + runtimeArr[0] + " * * ?";
+
+            services.AddSingleton<JobOutbreakDetection>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(),
+                                  typeof(JobOutbreakDetection),
+                                  "JobOutbreakDetection",
+                                  OpenehrConfig.OutbreakDetectionRuntime));
 
             services.AddMvcCore(options =>
             {

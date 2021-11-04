@@ -10,6 +10,7 @@ services:
       - ../certs/smicscore/:/root/app/https/
     environment:
       - OPENEHR_DB=<openEHR REST API URL>
+      - OUTBREAK_DETECTION_TIME=<Time in the format of hh:mm:ss>
       - AUTHORITY=<oauth2 Authority  URL>
       - CLIENT_ID=<oauth2 Client>
       - CLIENT_SECRET=<oauth2 Client Secret>
@@ -19,7 +20,7 @@ services:
       - 80:80
       - 443:443
     networks: 
-        - smics-net
+      - smics-net
 
   smics_visualisierung:
     depends_on: 
@@ -28,6 +29,7 @@ services:
     restart: unless-stopped
     environment:
       - SMICS_HOSTNAME=<local DNS entry of the server>
+      - SMICS_PORT=<Smics Core outside port>
       - AUTH_PROVIDER_URL=<oauth2 Authority Root URL without "/auth/realm"> 
       - AUTH_REALM=<oauth2 realm name>
       - AUTH_CLIENT_ID=<oauth2 client>

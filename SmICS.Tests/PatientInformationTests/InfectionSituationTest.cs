@@ -26,7 +26,7 @@ namespace SmICSFactory.Tests.PatientInformationTests
             List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
             PatientListParameter patientParams = new PatientListParameter()
             {
-                patientList = new List<string>() { patient[ehrNo].EHR_ID }
+                patientList = new List<string>() { patient[ehrNo].Patient }
             };
 
             IPatientMovementFactory patMoveFac = new PatientMovementFactory(_data, NullLogger<PatientMovementFactory>.Instance);
@@ -36,22 +36,22 @@ namespace SmICSFactory.Tests.PatientInformationTests
             IStationaryFactory stationaryFactory = new StationaryFactory(_data);
             InfectionSituationFactory infecFac = new InfectionSituationFactory(countFactory, stationaryFactory, symptomFac, patMoveFac, vaccFac, NullLogger<InfectionSituationFactory>.Instance);
 
-            List<Patient> actual = infecFac.Process(patientParams);
-            List<Patient> expected = GetExpectedPatientModels(ehrNo, expectedResultSet);
+            List<PatientModel> actual = infecFac.Process(patientParams);
+            List<PatientModel> expected = GetExpectedPatientModels(ehrNo, expectedResultSet);
 
             Assert.Equal(expected.Count, actual.Count);
             for (int i = 0; i < actual.Count; i++)
             {
                 Assert.Equal(expected[i].PatientID, actual[i].PatientID);
-                Assert.Equal(expected[i].Probenentnahme, actual[i].Probenentnahme);
-                Assert.Equal(expected[i].Aufnahme, actual[i].Aufnahme);
-                Assert.Equal(expected[i].Entlastung, actual[i].Entlastung);
+                Assert.Equal(expected[i].Probenentnahme.ToUniversalTime().ToString("s"), actual[i].Probenentnahme.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].Aufnahme.ToUniversalTime().ToString("s"), actual[i].Aufnahme.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].Entlastung.ToUniversalTime().ToString("s"), actual[i].Entlastung.ToUniversalTime().ToString("s"));
                 if ( actual[i].VaccinationModel != null)
                 {
                     for (int j = 0; j < actual[i].VaccinationModel.Count; j++)
                     {
                         Assert.Equal(expected[i].VaccinationModel[j].PatientenID, actual[i].VaccinationModel[j].PatientenID);
-                        Assert.Equal(expected[i].VaccinationModel[j].DokumentationsID, actual[i].VaccinationModel[j].DokumentationsID);
+                        Assert.Equal(expected[i].VaccinationModel[j].DokumentationsID.ToUniversalTime().ToString("s"), actual[i].VaccinationModel[j].DokumentationsID.ToUniversalTime().ToString("s"));
                         Assert.Equal(expected[i].VaccinationModel[j].Impfstoff, actual[i].VaccinationModel[j].Impfstoff);
                         Assert.Equal(expected[i].VaccinationModel[j].Dosierungsreihenfolge, actual[i].VaccinationModel[j].Dosierungsreihenfolge);
                         Assert.Equal(expected[i].VaccinationModel[j].Dosiermenge, actual[i].VaccinationModel[j].Dosiermenge);
@@ -70,23 +70,22 @@ namespace SmICSFactory.Tests.PatientInformationTests
                 yield return new object[] { 1,  0 };
                 yield return new object[] { 8,  1 };
                 yield return new object[] { 10, 2 };
-                yield return new object[] { 10, 3 };
-                yield return new object[] { 9,  4 };
-                yield return new object[] { 2,  5 };
-                yield return new object[] { 4,  6 };
-                yield return new object[] { 0,  7 };
-                yield return new object[] { 7,  8 };
+                yield return new object[] { 9,  3 };
+                yield return new object[] { 2,  4 };
+                yield return new object[] { 4,  5 };
+                yield return new object[] { 0,  6 };
+                yield return new object[] { 7,  7 };
             }
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
 
-        private List<Patient> GetExpectedPatientModels(int ehrNo, int ResultSetID)
+        private List<PatientModel> GetExpectedPatientModels(int ehrNo, int ResultSetID)
         {
             string path = "../../../../TestData/InfectionSituationTestResults.json";
             string parameterPath = "../../../../TestData/GeneratedEHRIDs.json";
 
-            List<Patient> result = ExpectedResultJsonReader.ReadResults<Patient, PatientIDs>(path, parameterPath, ResultSetID, ehrNo, ExpectedType.PATIENT);
+            List<PatientModel> result = ExpectedResultJsonReader.ReadResults<PatientModel, PatientIDs>(path, parameterPath, ResultSetID, ehrNo, ExpectedType.PATIENT);
             return result;
         }
     }

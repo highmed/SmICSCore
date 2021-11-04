@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using SmICSCoreLib.StatistikDataModels;
 using SmICSCoreLib.Factories.InfectionSituation;
+using SmICSWebApp.Data.OutbreakDetection;
+using SmICSCoreLib.OutbreakDetection;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -47,8 +49,8 @@ namespace SmICSWebApp.Controllers
         private readonly IInfectionSituationFactory _infectionSituationFac;
         private readonly ISymptomFactory _symptomFac;
         private readonly IVaccinationFactory _vaccinationFac;
-
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac)
+        private readonly OutbreakDetectionService _outbreakService;
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService)
         {
             _logger = logger;
             _contact = contact;
@@ -60,6 +62,7 @@ namespace SmICSWebApp.Controllers
             _infectionSituationFac = infectionSituationFac;
             _symptomFac = symptomFac;
             _vaccinationFac = vaccinationFac;
+            _outbreakService = outbreakService;
         }
 
         /// <summary></summary>
@@ -94,6 +97,7 @@ namespace SmICSWebApp.Controllers
         /// Momentan sind die virologischen Befunde auf das SARS-CoV-2 Wirus beschränkt.
         /// </remarks>
         /// <param name="parameter"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
         
         [Route("Patient_Labordaten_Ps")]
@@ -124,6 +128,7 @@ namespace SmICSWebApp.Controllers
         /// Eine Prozedur wird immer nur als ein Zeitpunkt wiedergegeben, da in den meisten Fällen die genaue Dauer einer Prozedur nicht dokumentiert wird.
         /// </remarks>
         /// <param name="parameter"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
         
         [Route("Patient_Bewegung_Ps")]
@@ -151,6 +156,7 @@ namespace SmICSWebApp.Controllers
         /// Alle mit "_cs" markierten Werte sind für die virologische Auswertung irrelevant.
         /// </remarks>
         /// <param name="parameter"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
        
         [Route("Labor_ErregerProTag_TTEsKSs")]
@@ -182,7 +188,7 @@ namespace SmICSWebApp.Controllers
         
         [Route("Infection_Situation")]
         [HttpPost]
-        public ActionResult<List<Patient>> Infection_Situation([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
+        public ActionResult<List<PatientModel>> Infection_Situation([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Infection_Situation without any parameters");
 
@@ -284,6 +290,49 @@ namespace SmICSWebApp.Controllers
             try
             {
                 return _employeeinformation.Employee_PersInfoInfecCtrl(parameter);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
+
+        [Route("OutbreakDetectionConfigurations")]
+        [HttpPost]
+        public ActionResult<List<OutbreakDetectionConfig>> OutbreakDetectionConfigurations()
+        {
+            try
+            {
+                return _outbreakService.GetConfigurations();
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
+
+        [Route("LatestOutbreakDetectionResult")]
+        [HttpPost]
+        public ActionResult<OutbreakDetectionStoringModel> LatestOutbreakDetectionResult([FromBody] OutbreakSaving outbreak)
+        {
+            try
+            {
+                return _outbreakService.GetLatestResult(outbreak);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
+
+        [Route("OutbreakDetectionResultSet")]
+        [HttpPost]
+        public ActionResult<List<OutbreakDetectionStoringModel>> OutbreakDetectionResultSet([FromBody] OutbreakSavingInTimespan outbreak)
+        {
+            try
+            {
+                outbreak.ConfigName = "SarsCov_Coronastation_4_Test";
+                return _outbreakService.GetsResultsInTimespan(outbreak);
             }
             catch (Exception e)
             {

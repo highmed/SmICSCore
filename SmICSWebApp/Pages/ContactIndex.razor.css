@@ -11,6 +11,7 @@
     color: azure;
     padding: 2%;
     margin: 2%;
+    margin-top:0;
 }
 
 .index-button:hover {

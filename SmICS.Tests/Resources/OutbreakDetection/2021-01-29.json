@@ -1,0 +1,16 @@
+[
+  {
+    "Zeitstempel": "2021-01-29T00:00:00",
+    "Ausbruchswahrscheinlichkeit": 0.0003701269,
+    "p-Value": 1.0,
+    "Erregeranzahl": 0,
+    "Endemisches Niveau": 1.374023,
+    "Epidemisches Nivea": 4.108086,
+    "Obergrenze": 6,
+    "Faelle unter der Obergrenze": 0,
+    "Faelle ueber der Obergrenze": 0,
+    "Klassifikation der Alarmfaelle": "0 cases",
+    "Algorithmusergebnis enthaelt keine null-Werte": true,
+    "Keine Warnungen zum Datenpunkt": false
+  }
+]

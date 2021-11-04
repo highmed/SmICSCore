@@ -41,12 +41,6 @@ namespace SmICSCoreLib.Factories.Employees.ContactTracing
         [JsonProperty(PropertyName = "Abstand")]
         [Required]
         public string Abstand { get; set; }
-        [JsonProperty(PropertyName = "Schutzkleidung")]
-        [Required]
-        public string Schutzkleidung { get; set; }
-        [JsonProperty(PropertyName = "Person")]
-        [Required]
-        public string Person { get; set; }
         [JsonProperty(PropertyName = "Kommentar")]
         public string Kommentar { get; set; }
     }

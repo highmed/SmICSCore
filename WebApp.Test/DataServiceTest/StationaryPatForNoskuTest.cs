@@ -27,8 +27,8 @@ namespace WebApp.Test.DataServiceTest
             {
                 Assert.Equal(expected[i].PatientID, actual[i].PatientID);
                 Assert.Equal(expected[i].FallID, actual[i].FallID);
-                Assert.Equal(expected[i].Datum_Uhrzeit_der_Aufnahme, actual[i].Datum_Uhrzeit_der_Aufnahme);
-                Assert.Equal(expected[i].Datum_Uhrzeit_der_Entlassung, actual[i].Datum_Uhrzeit_der_Entlassung);
+                Assert.Equal(expected[i].Datum_Uhrzeit_der_Aufnahme.ToUniversalTime().ToString("s"), actual[i].Datum_Uhrzeit_der_Aufnahme.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].Datum_Uhrzeit_der_Entlassung.ToUniversalTime().ToString("s"), actual[i].Datum_Uhrzeit_der_Entlassung.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].Aufnahmeanlass, actual[i].Aufnahmeanlass);
                 Assert.Equal(expected[i].Art_der_Entlassung, actual[i].Art_der_Entlassung);
                 Assert.Equal(expected[i].Versorgungsfallgrund, actual[i].Versorgungsfallgrund);
@@ -44,7 +44,7 @@ namespace WebApp.Test.DataServiceTest
 
                 string  fallkennung="00000020";
                 DateTime datum = Convert.ToDateTime("2020-12-02T12:40:33Z");
-                yield return new object[] { patient[1].EHR_ID, fallkennung, datum, 0, 1 }; 
+                yield return new object[] { patient[1].Patient, fallkennung, datum, 0, 1 }; 
             }
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }

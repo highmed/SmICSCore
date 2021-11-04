@@ -21,7 +21,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
 
             PatientListParameter patientParams = new PatientListParameter()
             {
-                patientList = new List<string>() { patient[ehrNo].EHR_ID }
+                patientList = new List<string>() { patient[ehrNo].Patient }
             };
 
             ViroLabDataFactory factory = new ViroLabDataFactory(_data, NullLogger<ViroLabDataFactory>.Instance);
@@ -35,15 +35,15 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                 Assert.Equal(expected[i].PatientID, actual[i].PatientID);
                 Assert.Equal(expected[i].FallID, actual[i].FallID);
                 Assert.Equal(expected[i].Befund, actual[i].Befund);
-                Assert.Equal(expected[i].Befunddatum.ToString("s"), actual[i].Befunddatum.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].Befunddatum.ToUniversalTime().ToString("s"), actual[i].Befunddatum.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].Befundkommentar, actual[i].Befundkommentar);
                 Assert.Equal(expected[i].KeimID, actual[i].KeimID);
                 Assert.Equal(expected[i].LabordatenID, actual[i].LabordatenID);
                 Assert.Equal(expected[i].MaterialID, actual[i].MaterialID);
                 Assert.Equal(expected[i].Material_l, actual[i].Material_l);
                 Assert.Equal(expected[i].ProbeID, actual[i].ProbeID);
-                Assert.Equal(expected[i].ZeitpunktProbeneingang.Value.ToString("s"), actual[i].ZeitpunktProbeneingang.Value.ToUniversalTime().ToString("s"));
-                Assert.Equal(expected[i].ZeitpunktProbenentnahme.ToString("s"), actual[i].ZeitpunktProbenentnahme.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].ZeitpunktProbeneingang.Value.ToUniversalTime().ToString("s"), actual[i].ZeitpunktProbeneingang.Value.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].ZeitpunktProbenentnahme.ToUniversalTime().ToString("s"), actual[i].ZeitpunktProbenentnahme.ToUniversalTime().ToString("s"));
                 //Assert.Equal(expected[i].Fachabteilung, actual[i].Fachabteilung); --> Exisitiert noch nicht, muss aber eingebunden werden
             }
         }

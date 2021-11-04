@@ -1,14 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace SmICSWebApp
@@ -25,7 +18,6 @@ namespace SmICSWebApp
                 .CreateLogger();
             try
             {
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
                 Log.Information("SmICS Application Starting up");
                 CreateHostBuilder(args).Build().Run();
             }
@@ -42,7 +34,6 @@ namespace SmICSWebApp
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseSerilog()
-                //.UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

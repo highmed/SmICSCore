@@ -181,12 +181,12 @@
                     </div>
                 </div>
                 <div class="deph_3">
-                    <span class="span">Schutzkleidung</span>
+                    <span class="span">Schutzkleidung der 1. Person</span>
                     <div class="table">
                         <div class="tr">
                             <div class="tb tb_bez"><label>Schutzkleidung :</label></div>
                             <div class="tb">
-                                <InputSelect @bind-Value="contact_tracing.Schutzkleidung" disabled="@disabled" class="input">
+                                <InputSelect @bind-Value="contact_tracing.Schutzkleidung1" disabled="@disabled" class="input">
                                     <option selected disabled>Bitte wählen Sie aus</option>
                                     <option value="Kittel">Kittel</option>
                                     <option value="Augenschutz">Augenschutz</option>
@@ -201,9 +201,39 @@
                         <div class="tr">
                             <div class="tb tb_bez"><label>Person :</label></div>
                             <div class="tb">
-                                <InputSelect @bind-Value="contact_tracing.Person" disabled="@disabled" class="input">
+                                <InputSelect @bind-Value="contact_tracing.Person1" disabled="@disabled" class="input">
                                     <option selected disabled>Bitte wählen Sie aus</option>
-                                    <option value="Idexperson">Idexperson</option>
+                                    <option value="Idexperson">Indexperson</option>
+                                    <option value="Kontaktperson">Kontaktperson</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="deph_3">
+                    <span class="span">Schutzkleidung der 2. Person</span>
+                    <div class="table">
+                        <div class="tr">
+                            <div class="tb tb_bez"><label>Schutzkleidung :</label></div>
+                            <div class="tb">
+                                <InputSelect @bind-Value="contact_tracing.Schutzkleidung2" disabled="@disabled" class="input">
+                                    <option selected disabled>Bitte wählen Sie aus</option>
+                                    <option value="Kittel">Kittel</option>
+                                    <option value="Augenschutz">Augenschutz</option>
+                                    <option value="Chirurgische Maske">Chirurgische Maske</option>
+                                    <option value="FFP2">FFP2</option>
+                                    <option value="FFP3">FFP3</option>
+                                    <option value="Community- Maske">Community- Maske</option>
+                                    <option value="Keine Schutzkleidung">Keine Schutzkleidung</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="tr">
+                            <div class="tb tb_bez"><label>Person :</label></div>
+                            <div class="tb">
+                                <InputSelect @bind-Value="contact_tracing.Person2" disabled="@disabled" class="input">
+                                    <option selected disabled>Bitte wählen Sie aus</option>
+                                    <option value="Idexperson">Indexperson</option>
                                     <option value="Kontaktperson">Kontaktperson</option>
                                 </InputSelect>
                             </div>

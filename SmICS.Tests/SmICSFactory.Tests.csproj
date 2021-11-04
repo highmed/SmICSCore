@@ -24,4 +24,8 @@
     <ProjectReference Include="..\SmICSWebApp\SmICSWebApp.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\OutbreakDetection\" />
+  </ItemGroup>
+
 </Project>

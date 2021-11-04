@@ -21,7 +21,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
 
             PatientListParameter patientParams = new PatientListParameter()
             {
-                patientList = new List<string>() { patient[ehrNo].EHR_ID }
+                patientList = new List<string>() { patient[ehrNo].Patient }
             };
 
             PatientMovementFactory factory = new PatientMovementFactory(_data, NullLogger<PatientMovementFactory>.Instance);
@@ -37,8 +37,8 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
                 Assert.Equal(expected[i].Bewegungsart_l, actual[i].Bewegungsart_l);
                 Assert.Equal(expected[i].Bewegungstyp, actual[i].Bewegungstyp);
                 Assert.Equal(expected[i].BewegungstypID, actual[i].BewegungstypID);
-                Assert.Equal(expected[i].Beginn.ToString("s"), actual[i].Beginn.ToString("s"));
-                Assert.Equal(expected[i].Ende.ToString("g"), actual[i].Ende.ToString("g"));
+                Assert.Equal(expected[i].Beginn.ToUniversalTime().ToString("s"), actual[i].Beginn.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].Ende.ToUniversalTime().ToString("s"), actual[i].Ende.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].StationID, actual[i].StationID);
                 Assert.Equal(expected[i].Raum, actual[i].Raum);
                 //Assert.Equal(expected[i].Fachabteilung, actual[i].Fachabteilung); 

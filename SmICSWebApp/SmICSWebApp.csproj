@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -6,6 +6,19 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-01.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-02.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-03.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-04.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-05.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-06.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-07.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-08.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-09.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-10.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ChartJs.Blazor.Fork" Version="2.0.2" />
@@ -40,6 +53,20 @@
 
   <ItemGroup>
     <Folder Include="Resources\nec\json\" />
+    <Folder Include="Resources\RKIConfig\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-01.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-02.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-03.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-04.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-05.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-06.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-07.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-08.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-09.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-10.json" />
   </ItemGroup>
   
   <ItemGroup>

@@ -1,0 +1,227 @@
+﻿.welcome_header_config {
+    margin-left: 2%;
+    color: #637492;
+    text-shadow: 1px 1px 5px lightgrey;
+}
+
+.welcome_text_config {
+    margin-left: 2%;
+    margin-right: 2%;
+    opacity: 1;
+}
+
+.index_config {
+    display: flex;
+    margin: 2%;
+    flex-direction: column;
+    margin: 2%;
+}
+
+.index-text_config {
+    background-color: #5F90AF;
+    opacity: 1;
+    color: azure;
+    padding: 0.2%;
+    margin: 1%;
+}
+
+#div_card_1 {
+    display: flex;
+    flex-direction: column;
+    padding: 1%;
+    margin-bottom: 10%;
+}
+
+#div_card_2 {
+    display: flex;
+    flex-direction: row;
+    margin: 1%;
+}
+
+#div_card_3_a {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    background-image: url("../resources/Form_BG.png");
+    background-repeat: no-repeat;
+    background-size: 90% 80%;
+    opacity: 0.9;
+    padding-left: 2%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+#div_card_3_b {
+    width: 5%;
+    display: flex;
+    align-items: flex-end;
+    padding: 0.5%;
+}
+
+#div_card_3_c {
+    width: 25%;
+    margin: 1%;
+}
+
+#div_card_4 {
+    display: flex;
+    flex-direction: row;
+    margin: 0.5%;
+    border: 1.75px dotted lightgrey;
+    background-color: #F8F8F8;
+    padding: 0.5%;
+}
+
+#div_card_5 {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0%;
+    margin-right: 0%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    flex-grow: 1;
+}
+
+.span_hr {
+    background-color: #56A5EC;
+    margin: 0%;
+    padding: 0%;
+    height: 3px;
+    box-shadow: 1px 1px 5px lightgrey;
+}
+
+#button {
+    width: 20%;
+    border-radius: 8px;
+    background: linear-gradient(to bottom, #33ccff 0%, #3399ff 100%);
+    padding: 0.5%;
+    color: white;
+    margin-right: 2%;
+    border: none;
+}
+
+#button:hover {
+    opacity: 1
+}
+
+#btn {
+    width: 2em;
+    height: 2em;
+    background: linear-gradient(to bottom, #33ccff 0%, #3399ff 100%);
+    border-radius: 8px;
+    color: white;
+    border: none;
+}
+
+#btn:focus {
+    outline: none;
+}
+
+.check {
+    padding-left: 20%;
+}
+
+.input-field {
+    border: none;
+}
+
+.tb-header {
+
+}
+
+.tb-bez-header {
+    background-color: #e6f2ff;
+    background-image: url(../images/select-arrow.png), -webkit-linear-gradient(top, #E5E5E5, #F4F4F4); /* For Chrome and Safari */
+    background-image: url(../images/select-arrow.png), -moz-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Firefox (3.6 to 15) */
+    background-image: url(../images/select-arrow.png), -ms-linear-gradient(top, #E5E5E5, #F4F4F4); /* For pre-releases of Internet Explorer  10*/
+    background-image: url(../images/select-arrow.png), -o-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Opera (11.1 to 12.0) */
+    background-image: url(../images/select-arrow.png), linear-gradient(to bottom, #E5E5E5, #F4F4F4); /* Standard syntax; must be last */
+    border: 2px 0px solid white;
+    width: 100%;
+    padding-left: 0%;
+    padding-right: 0%;
+}
+
+.span-tr {
+    color: white;
+    font-size: 22px;
+    margin-left: 1%;
+}
+
+.sort_card {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+.space-1 {
+    width: 95%;
+}
+
+.space-2 {
+    width: 5%;
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.tb-config {
+    display: flex;
+    flex-direction: column;
+    padding: 1%;
+}
+
+.tb-header-config {
+    display: flex;
+    flex-direction: row;
+    color: white;
+    background-color: #5F90AF;
+}
+
+.tb-colunm-config {
+    display: flex;
+    flex-direction: row;
+}
+
+.tb-cell-config-1:nth-child(n+1) {
+    background-color: #e6f2ff;
+    background-image: url(../images/select-arrow.png), -webkit-linear-gradient(top, #E5E5E5, #F4F4F4); /* For Chrome and Safari */
+    background-image: url(../images/select-arrow.png), -moz-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Firefox (3.6 to 15) */
+    background-image: url(../images/select-arrow.png), -ms-linear-gradient(top, #E5E5E5, #F4F4F4); /* For pre-releases of Internet Explorer  10*/
+    background-image: url(../images/select-arrow.png), -o-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Opera (11.1 to 12.0) */
+    background-image: url(../images/select-arrow.png), linear-gradient(to bottom, #E5E5E5, #F4F4F4); /* Standard syntax; must be last */
+    border: 2px solid white;
+    color: #637492;
+    width: 20%;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.tb-cell-config-1:nth-child(2n+1) {
+    background-color: #e6f2ff;
+    background-image: url(../images/select-arrow.png), -webkit-linear-gradient(top, #E5E5E5, #F4F4F4); /* For Chrome and Safari */
+    background-image: url(../images/select-arrow.png), -moz-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Firefox (3.6 to 15) */
+    background-image: url(../images/select-arrow.png), -ms-linear-gradient(top, #E5E5E5, #F4F4F4); /* For pre-releases of Internet Explorer  10*/
+    background-image: url(../images/select-arrow.png), -o-linear-gradient(top, #E5E5E5, #F4F4F4); /* For old Opera (11.1 to 12.0) */
+    background-image: url(../images/select-arrow.png), linear-gradient(to bottom, #E5E5E5, #F4F4F4); /* Standard syntax; must be last */
+    border: 2px solid white;
+    color: #637492;
+    width: 20%;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.tb-cell-config-2 {
+    border: none;
+    color: white;
+    width: 20%;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.span-tr-config {
+    margin-top: 2%;
+    color: #637492;
+    font-size: 22px;
+    margin-left: 1%;
+}

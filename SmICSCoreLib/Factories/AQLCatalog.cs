@@ -4,6 +4,8 @@ using SmICSCoreLib.Factories.EpiCurve;
 using SmICSCoreLib.Factories.LabData.MibiLabdata.ReceiveModel;
 using SmICSCoreLib.Factories.PatientMovement;
 using System;
+using SmICSCoreLib.Factories.OutbreakDetection;
+using SmICSCoreLib.Factories.OutbreakDetection.ReceiveModel;
 
 namespace SmICSCoreLib.Factories
 {
@@ -17,6 +19,7 @@ namespace SmICSCoreLib.Factories
                                 WHERE e/ehr_status/subject/external_ref/id/value='{subjectID}' 
                                 AND e/ehr_status/subject/external_ref/namespace='SmICSTests'");
         }
+
         public static AQLQuery ContactPatientWards(ContactParameter parameter)
         {
             return new AQLQuery("ContactPatientWards",$@"SELECT m/data[at0001]/items[at0004]/value/value as Beginn, 
@@ -264,7 +267,7 @@ namespace SmICSCoreLib.Factories
         }
         public static AQLQuery SamplesFromResult(MetaDataReceiveModel metaData)
         {
-            return new AQLQuery("SamplesFromResult", $@"SELECT b/items[at0029]/value/value as MaterialID
+            return new AQLQuery("SamplesFromResult", $@"SELECT b/items[at0029]/value/value as MaterialID,
                                 b/items[at0001]/value/id as LabordatenID,
                                 b/items[at0015]/value/value as ZeitpunktProbeentnahme,
                                 b/items[at0034]/value/value as ZeitpunktProbeneingang 
@@ -398,7 +401,8 @@ namespace SmICSCoreLib.Factories
                                 CONTAINS COMPOSITION c 
                                 CONTAINS OBSERVATION k[openEHR-EHR-OBSERVATION.symptom_sign.v0] 
                                 WHERE e/ehr_status/subject/external_ref/id/value ='{patientId}' 
-                                AND k/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value = '{datum.Date.ToString("yyyy-MM-dd")}' ");
+                                AND k/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value >= '{datum.Date.ToString("yyyy-MM-dd")}'
+                                AND k/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value < '{datum.Date.AddDays(1.0).ToString("yyyy-MM-dd")}'"); 
         }
        
         public static AQLQuery StayFromCase(string patientId, string fallId)
@@ -440,7 +444,7 @@ namespace SmICSCoreLib.Factories
         {          
             return new AQLQuery("CovidPat", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID, 
                                 i/items[at0001]/value/value as Fallkennung, 
-                                m/items[at0034]/value/value as Zeitpunkt_des_Probeneingangs 
+                                m/items[at0015]/value/value as Zeitpunkt_der_Probenentnahme
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] 
                                 AND OBSERVATION z[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
@@ -448,14 +452,14 @@ namespace SmICSCoreLib.Factories
                                 AND CLUSTER m [openEHR-EHR-CLUSTER.specimen.v1])) 
                                 WHERE a/items[at0001,'Nachweis']/value/defining_code/code_string='{nachweis}'
                                 AND a/items[at0024]/value/defining_code/code_string MATCHES {{'94500-6','94558-4', '94745-7'}} 
-                                ORDER BY Zeitpunkt_des_Probeneingangs ASC");
+                                ORDER BY m/items[at0015]/value/value ASC");
         }
 
         public static AQLQuery CovidPatByID(string nachweis, PatientListParameter patientList)
         {
             return new AQLQuery("CovidPat", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID, 
                                 i/items[at0001]/value/value as Fallkennung, 
-                                m/items[at0034]/value/value as Zeitpunkt_des_Probeneingangs 
+                                m/items[at0015]/value/value as Zeitpunkt_der_Probenentnahme
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] 
                                 AND OBSERVATION z[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
@@ -463,7 +467,7 @@ namespace SmICSCoreLib.Factories
                                 WHERE  a/items[at0001,'Nachweis']/value/defining_code/code_string='{nachweis}'
                                 AND e/ehr_status/subject/external_ref/id/value matches { patientList.ToAQLMatchString() } 
                                 AND a/items[at0024]/value/defining_code/code_string MATCHES {{'94500-6','94558-4', '94745-7'}} 
-                                ORDER BY Zeitpunkt_des_Probeneingangs ASC");
+                                ORDER BY m/items[at0015]/value/value ASC");
         }
 
         public static AQLQuery PatientBySymptom(string symptom)
@@ -619,6 +623,75 @@ namespace SmICSCoreLib.Factories
                                CLUSTER h[openEHR-EHR-CLUSTER.individual_professional.v0])
                                WHERE c/archetype_details/template_id='Personendaten' 
                                AND e/ehr_status/subject/external_ref/id/value matches { patientList.ToAQLMatchString() }");
+        }
+
+        public static AQLQuery GetAllStationsForConfig()
+        {
+            return new AQLQuery("RKIConfig", $@"SELECT DISTINCT b/items[at0027]/value/value as StationID
+                                FROM EHR e
+                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
+                                CONTAINS CLUSTER b[openEHR-EHR-CLUSTER.location.v1]");
+        }
+
+        public static AQLQuery GetErregernameFromViro(string name)
+        {
+            return new AQLQuery("RKIConfig", $@"SELECT DISTINCT n/items[at0024,'Virusnachweistest']/value/defining_code/code_string AS KeimID
+                                FROM EHR e
+                                CONTAINS COMPOSITION c
+                                CONTAINS CLUSTER n[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]
+                                WHERE n/items[at0024,'Virusnachweistest']/value/value LIKE '{name}*'");
+        }
+        //to-do: muss auf akt. Template angepasst werden
+        public static AQLQuery GetErregernameFromMikro(string name)
+        {
+            return new AQLQuery("RKIConfig", $@"SELECT DISTINCT
+                                w/items[at0001,'Erregername']/value/encoding/code_string AS KeimID
+                                FROM EHR e
+                                CONTAINS COMPOSITION c
+                                CONTAINS CLUSTER w[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] 
+                                WHERE w/items[at0001,'Erregername']/value/value LIKE '*{name}*'");
+        }
+
+        public static AQLQuery GetPatientCaseList(OutbreakDetectionParameter parameter)
+        {
+            return new AQLQuery("OutbreakDetectionPatientCaseList", $@"SELECT DISTINCT e/ehr_status/subject/external_ref/id/value as PatientID,
+                                                        r/items[at0027]/value/value as Ward,
+                                                        u/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value/value as CaseID
+                                                        FROM EHR e
+                                                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
+                                                        CONTAINS (CLUSTER u[openEHR-EHR-CLUSTER.case_identification.v0] AND ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]
+                                                        CONTAINS CLUSTER r[openEHR-EHR-CLUSTER.location.v1]) 
+                                                        WHERE c/name/value ='Patientenaufenthalt' 
+                                                        AND u/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)'
+                                                        AND Ward = '{parameter.Ward}' 
+                                                        AND h/data[at0001]/items[at0004]/value/value < '{parameter.Endtime.ToString("yyyy-MM-dd")}' 
+                                                        AND (h/data[at0001]/items[at0005]/value/value >= '{parameter.Starttime.ToString("yyyy-MM-dd")}' OR NOT EXISTS u/data[at0001]/items[at0005]/value/value)");
+        }
+
+        public static AQLQuery GetPatientLabResultList(OutbreakDetectionParameter parameter, OutbreakDectectionPatient pat)
+        {
+            return new AQLQuery("OutbreakDetectionPatientLabResults", $@"SELECT e/ehr_status/subject/external_ref/id/value AS PatientID,
+                                                        y/items[at0001,'Nachweis']/value/defining_code/code_string AS Result,
+                                                        j/items[at0015]/value/value AS ResultDate,
+                                                        q/items[at0001]/value/value as CaseID
+                                                        FROM EHR e
+                                                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+                                                        CONTAINS (CLUSTER q[openEHR-EHR-CLUSTER.case_identification.v0] AND OBSERVATION n[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]
+                                                        CONTAINS (CLUSTER j[openEHR-EHR-CLUSTER.specimen.v1] AND CLUSTER y[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]))
+                                                        WHERE c/name/value= 'Virologischer Befund' 
+                                                        AND PatientID = '{pat.PatientID}' 
+                                                        AND y/items[at0024,'Virusnachweistest']/value/defining_code/code_string matches {parameter.ToAQLMatchString()}
+                                                        AND Result = '260373001'");
+        }
+
+        public static AQLQuery GetFirstMovementFromStation(OutbreakDetectionParameter parameter)
+        {
+            return new AQLQuery("FirstMovementFromStation", $@"SELECT min(h/data[at0001]/items[at0004]/value/value)
+                                                        FROM EHR e
+                                                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
+                                                        CONTAINS ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]
+                                                        CONTAINS CLUSTER r[openEHR-EHR-CLUSTER.location.v1]
+                                                        WHERE r/items[at0027]/value/value='{parameter.Ward}'");
         }
 
     }

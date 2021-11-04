@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SmICSCoreLib.Factories.PatientStay.Count.ReceiveModel;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SmICSCoreLib.Factories.PatientStay.Count
 {
@@ -15,15 +13,15 @@ namespace SmICSCoreLib.Factories.PatientStay.Count
         [JsonProperty(PropertyName = "Fallkennung")]
         public string Fallkennung { get; set; }
 
-        [JsonProperty(PropertyName = "Zeitpunkt_des_Probeneingangs")]
-        public DateTime Zeitpunkt_des_Probeneingangs { get; set; }
+        [JsonProperty(PropertyName = "Zeitpunkt_der_Probenentnahme")]
+        public DateTime Zeitpunkt_der_Probenentnahme { get; set; }
 
         public CountDataModel() { }
         public CountDataModel(CountDataReceiveModel countDataReceiveModel ) 
         {
             PatientID = countDataReceiveModel.PatientID;
             Fallkennung = countDataReceiveModel.Fallkennung;
-            Zeitpunkt_des_Probeneingangs = countDataReceiveModel.Zeitpunkt_des_Probeneingangs;
+            Zeitpunkt_der_Probenentnahme = countDataReceiveModel.Zeitpunkt_der_Probenentnahme;
         }
 
         public override bool Equals(object obj)
@@ -32,6 +30,11 @@ namespace SmICSCoreLib.Factories.PatientStay.Count
             CountDataModel objAsPart = obj as CountDataModel;
             if (objAsPart == null) return false;
             else return (this.PatientID == objAsPart.PatientID);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

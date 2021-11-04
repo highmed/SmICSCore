@@ -22,7 +22,7 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
 
             PatientListParameter patientParams = new PatientListParameter()
             {
-                patientList = new List<string>() { patient[ehrNo].EHR_ID }
+                patientList = new List<string>() { patient[ehrNo].Patient }
             };
 
             SymptomFactory factory = new SymptomFactory(_data, NullLogger<SymptomFactory>.Instance);
@@ -34,12 +34,12 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
             for (int i = 0; i < actual.Count; i++)
             {
                 Assert.Equal(expected[i].PatientenID, actual[i].PatientenID);
-                Assert.Equal(expected[i].BefundDatum.ToString("s"), actual[i].BefundDatum.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].BefundDatum.ToUniversalTime().ToString("s"), actual[i].BefundDatum.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].NameDesSymptoms == null ? null : Regex.Replace(expected[i].NameDesSymptoms, @"\s", ""), actual[i].NameDesSymptoms == null ? null : Regex.Replace(actual[i].NameDesSymptoms, @"\s", ""));
                 Assert.Equal(expected[i].Lokalisation == null ? null : Regex.Replace(expected[i].Lokalisation, @"\s", ""), actual[i].Lokalisation == null ? null : Regex.Replace(actual[i].Lokalisation, @"\s", ""));
-                Assert.Equal(expected[i].Beginn == null ? null : expected[i].Beginn.Value.ToString("s"), actual[i].Beginn == null ? null : actual[i].Beginn.Value.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].Beginn == null ? null : expected[i].Beginn.Value.ToUniversalTime().ToString("s"), actual[i].Beginn == null ? null : actual[i].Beginn.Value.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].Schweregrad == null ? null : Regex.Replace(expected[i].Schweregrad, @"\s", ""), actual[i].Schweregrad == null ? null : Regex.Replace(actual[i].Schweregrad, @"\s", ""));
-                Assert.Equal(expected[i].Rueckgang == null ? null : expected[i].Rueckgang.Value.ToString("s"), actual[i].Rueckgang == null ? null : actual[i].Rueckgang.Value.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].Rueckgang == null ? null : expected[i].Rueckgang.Value.ToUniversalTime().ToString("s"), actual[i].Rueckgang == null ? null : actual[i].Rueckgang.Value.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].AusschlussAussage == null ? null : Regex.Replace(expected[i].AusschlussAussage, @"\s", ""), actual[i].AusschlussAussage == null ? null : Regex.Replace(actual[i].AusschlussAussage, @"\s", ""));
                 Assert.Equal(expected[i].Diagnose == null ? null : Regex.Replace(expected[i].Diagnose, @"\s", ""), actual[i].Diagnose == null ? null : Regex.Replace(actual[i].Diagnose, @"\s", ""));
                 Assert.Equal(expected[i].UnbekanntesSymptom == null ? null : Regex.Replace(expected[i].UnbekanntesSymptom, @"\s", ""), actual[i].UnbekanntesSymptom == null ? null : Regex.Replace(actual[i].UnbekanntesSymptom, @"\s", ""));
