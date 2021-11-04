@@ -72,6 +72,10 @@ a, .btn-link {
     display: flex;
 }*/
 
+.logout {
+    align-content: flex-end;
+}
+
 @media (min-width: 900px) {
     .navbar-toggler {
         display: none;
