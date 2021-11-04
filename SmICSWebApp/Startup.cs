@@ -93,6 +93,7 @@ namespace SmICSWebApp
             OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
             OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
             OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
+            OpenehrConfig.smicsVisuPort = Environment.GetEnvironmentVariable("SMICS_VISU_PORT");
 
             if (env.IsDevelopment())
             {
