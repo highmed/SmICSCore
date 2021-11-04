@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Xunit;
 
@@ -124,7 +122,7 @@ namespace SmICSCoreLib.Tests.TestData
             //OpenehrConfig.openehrUser = "etltestuser";
             //OpenehrConfig.openehrPassword = "etltestuser#01";
 
-            RestClientConnector restClient = new RestClientConnector();
+            RestClientConnector restClient = new RestClientConnector(new Authentication.TokenProvider());
             return new RestDataAccess(NullLogger<RestDataAccess>.Instance, restClient);
 
         }

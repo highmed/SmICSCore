@@ -24,7 +24,7 @@ namespace SmICSConnection.Tests
             //OpenehrConfig.openehrUser = "etltestuser";
             //OpenehrConfig.openehrPassword = "etltestuser#01";
 
-            var restClient = new RestClientConnector();
+            var restClient = new RestClientConnector(new SmICSCoreLib.Authentication.TokenProvider());
 
             JObject obj = new JObject();
             obj.Add("q", "SELECT e/ehr_id/value FROM EHR e");

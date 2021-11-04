@@ -1,4 +1,8 @@
-﻿@using SmICSCoreLib.REST
+﻿@inject NavigationManager navigation
+@inject AuthenticationStateProvider AuthState
+
+@using SmICSCoreLib.REST
+@attribute [Authorize]
 
 <nav class="navbar navbar-expand-lg shadow-sm fixed-top" width="100%">
     <div class="container_logo">
@@ -29,11 +33,11 @@
             </NavLink>
         </div>
         <!--
-    <li class="nav-item-box" style="display: none;">
-        <NavLink class="nav-link-box" href="/swagger/index.html" Match="NavLinkMatch.All">
-            <span class="oi oi-list" aria-hidden="true"></span> REST API
-        </NavLink>
-    </li>-->
+        <li class="nav-item-box" style="display: none;">
+            <NavLink class="nav-link-box" href="/swagger/index.html" Match="NavLinkMatch.All">
+                <span class="oi oi-list" aria-hidden="true"></span> REST API
+            </NavLink>
+        </li>-->
     </div>
 </nav>
 

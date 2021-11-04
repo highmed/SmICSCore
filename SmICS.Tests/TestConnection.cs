@@ -22,7 +22,7 @@ namespace SmICSDataGenerator.Tests
             OpenehrConfig.openehrUser = "etltestuser";
             OpenehrConfig.openehrPassword = "etltestuser#01";
 
-            RestClientConnector restClient = new RestClientConnector();
+            RestClientConnector restClient = new RestClientConnector(new SmICSCoreLib.Authentication.TokenProvider());
             return new RestDataAccess(NullLogger<RestDataAccess>.Instance, restClient);
         }
     }
