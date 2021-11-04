@@ -4,7 +4,6 @@ using SmICSCoreLib.OutbreakDetection;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 
 namespace SmICSCoreLib.JSONFileStream
 {
@@ -15,7 +14,7 @@ namespace SmICSCoreLib.JSONFileStream
             using (StreamReader reader = new StreamReader(path))
             {
                 string json = reader.ReadToEnd();
-                return System.Text.Json.JsonSerializer.Deserialize<List<T>>(json);              
+                return System.Text.Json.JsonSerializer.Deserialize<List<T>>(json);
             }
         }
 
