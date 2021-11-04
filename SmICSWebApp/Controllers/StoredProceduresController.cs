@@ -247,7 +247,7 @@ namespace SmICSWebApp.Controllers
         }
 
         
-        [Route("Employee_ContactTracing")]
+        /*[Route("Employee_ContactTracing")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
         [HttpPost]
@@ -295,7 +295,7 @@ namespace SmICSWebApp.Controllers
             {
                 return ErrorHandling(e);
             }
-        }
+        }*/
 
         [Route("OutbreakDetectionConfigurations")]
         [HttpPost]
