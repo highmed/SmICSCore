@@ -26,27 +26,7 @@ namespace SmICSCoreLib.StatistikServices.CronJob
         {
             try
             {
-                string path = @"./Resources/RKIConfig/RKIConfig.json"; //TODO: Für publish Version anpassen
-                List<RKIConfigTemplate> configs = JSONReader<RKIConfigTemplate>.Read(path);
-
-                foreach(RKIConfigTemplate config in configs)
-                {
-                    string savingFolder = GetSavingFolder(config);
-                    savingFolder = "";
-                    OutbreakDetectionParameter outbreakParam = ConfigToParam(config, savingFolder);
-                    SmICSVersion version = config.Erregerstatus == "virologisch" ? SmICSVersion.VIROLOGY : SmICSVersion.MICROBIOLOGY;
-
-                    ProxyParameterModel parameter = new ProxyParameterModel()
-                    {
-                        EpochsObserved = _paramFac.Process(outbreakParam, version),
-                        SavingFolder = savingFolder,
-                        SavingDirectory = Directory.GetCurrentDirectory(),
-                        FitRange = GetFitRange(outbreakParam, savingFolder, Convert.ToInt32(config.Zeitraum)),
-                        LookbackWeeks = Convert.ToInt32(config.Zeitraum)
-                    };
-
-                    _proxy.Covid19Extension(parameter);
-                }
+                await Task.Run(InitiateOutbreakDetection);
             }
             catch (Exception e)
             {
@@ -54,6 +34,31 @@ namespace SmICSCoreLib.StatistikServices.CronJob
                 //_logger.Warning("JobOutbreakDetection FAILED: " + e.Message);
             }
             
+        }
+
+        private void InitiateOutbreakDetection()
+        {
+            string path = @"./Resources/RKIConfig/RKIConfig.json"; //TODO: Für publish Version anpassen
+            List<RKIConfigTemplate> configs = JSONReader<RKIConfigTemplate>.Read(path);
+
+            foreach (RKIConfigTemplate config in configs)
+            {
+                string savingFolder = GetSavingFolder(config);
+                savingFolder = "";
+                OutbreakDetectionParameter outbreakParam = ConfigToParam(config, savingFolder);
+                SmICSVersion version = config.Erregerstatus == "virologisch" ? SmICSVersion.VIROLOGY : SmICSVersion.MICROBIOLOGY;
+
+                ProxyParameterModel parameter = new ProxyParameterModel()
+                {
+                    EpochsObserved = _paramFac.Process(outbreakParam, version),
+                    SavingFolder = savingFolder,
+                    SavingDirectory = Directory.GetCurrentDirectory(),
+                    FitRange = GetFitRange(outbreakParam, savingFolder, Convert.ToInt32(config.Zeitraum)),
+                    LookbackWeeks = Convert.ToInt32(config.Zeitraum)
+                };
+
+                _proxy.Covid19Extension(parameter);
+            }
         }
 
         private string GetSavingFolder(RKIConfigTemplate config)
