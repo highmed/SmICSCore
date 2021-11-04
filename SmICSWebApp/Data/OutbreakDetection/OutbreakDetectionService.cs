@@ -26,7 +26,7 @@ namespace SmICSWebApp.Data.OutbreakDetection
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return null;
+                return new List<OutbreakDetectionConfig>();
             }
         }
 
@@ -60,7 +60,7 @@ namespace SmICSWebApp.Data.OutbreakDetection
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return null;
+                return new List<OutbreakDetectionStoringModel>();
             }
         }
     }
