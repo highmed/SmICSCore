@@ -1,8 +1,6 @@
 ﻿@inject NavigationManager navigation
-@inject AuthenticationStateProvider AuthState
 
 @using SmICSCoreLib.REST
-@attribute [Authorize]
 
 <nav class="navbar navbar-expand-lg shadow-sm fixed-top" width="100%">
     <div class="container_logo">
@@ -23,13 +21,13 @@
             </NavLink>
         </div>
         <div class="nav-item-box">
-            <NavLink class="nav-link-box" href="contactIndex" Match="NavLinkMatch.All">
-                <span class="oi oi-people" aria-hidden="true"></span> Kontakterfassung klin. Personals (Prototyp)
+            <NavLink class="nav-link-box" href="rkiconfig" Match="NavLinkMatch.All">
+                <span class="oi oi-clipboard" aria-hidden="true"></span> RKI Konfigurationen
             </NavLink>
         </div>
         <div class="nav-item-box">
-            <NavLink class="nav-link-box" href="rkiconfig" Match="NavLinkMatch.All">
-                <span class="oi oi-clipboard" aria-hidden="true"></span> RKI Konfigurationen (Prototyp)
+            <NavLink class="nav-link-box" href="contactIndex" Match="NavLinkMatch.All">
+                <span class="oi oi-people" aria-hidden="true"></span> Kontakterfassung klin. Personals (Prototyp)
             </NavLink>
         </div>
         <!--
@@ -43,7 +41,7 @@
 
 @code {
     private string visuLink = "";
-    private string Username = "Anonymous User";
+
     protected override void OnInitialized()
     {
 
@@ -51,23 +49,9 @@
         string[] splitted = baseURL.Split(':');
         string http = splitted[0] + ":";
         string url = splitted[1];
-        //url = url.Substring(0, (url.Length - 2));
         string port = ":" + OpenehrConfig.smicsVisuPort;
 
         visuLink = http + url.Substring(0, url.LastIndexOf('/')) + port;
 
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        var state = await AuthState.GetAuthenticationStateAsync();
-
-        Username =
-            state.User.Claims
-                 .Where(c => c.Type.Equals("name"))
-                 .Select(c => c.Value)
-                 .FirstOrDefault() ?? string.Empty;
-
-        await base.OnInitializedAsync();
     }
 }

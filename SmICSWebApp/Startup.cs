@@ -30,7 +30,7 @@ using SmICSCoreLib.Authentication;
 using SmICSCWebApp.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Logging;
-
+using SmICSWebApp.Data.OutbreakDetection;
 
 namespace SmICSWebApp
 {
@@ -80,13 +80,6 @@ namespace SmICSWebApp
 
                 options.SaveTokens = true;
                 options.GetClaimsFromUserInfoEndpoint = true;
-
-                //UNSAFE - BEGIN 
-                //Need to implement Certificates
-                options.NonceCookie.SameSite = SameSiteMode.Unspecified;
-                options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
-                //options.BackchannelHttpHandler = new HttpClientHandler { ServerCertificateCustomValidationCallback = delegate { return true; } };
-                //UNSAFE - END
 
                 options.Events = new OpenIdConnectEvents
                 {
@@ -201,7 +194,6 @@ namespace SmICSWebApp
                 app.UseHsts();
             }
 
-            //OpenehrConfig.openehrEndpoint = "https://medic-c-t.mh-hannover.local:8083/rest/openehr/v1";
             OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
             OpenehrConfig.smicsVisuPort = Environment.GetEnvironmentVariable("SMICS_VISU_PORT");
             app.UseSwagger();

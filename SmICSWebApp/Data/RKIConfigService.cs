@@ -63,10 +63,20 @@ namespace SmICSWebApp.Data
 
         public List<RKIConfigTemplate> ShowValues()
         {
-            string json = File.ReadAllText(path);
-            List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
-
-            if(newList != null)
+            List<RKIConfigTemplate> newList = null;
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                if (json != "")
+                {
+                    newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
+                }
+            }
+            else
+            {
+                File.Create(path);
+            }
+            if (newList != null)
             {
                 return newList;
             }
