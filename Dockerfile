@@ -29,7 +29,7 @@ COPY RKIAlgorithm/Statistik.dod.zip RKIAlgorithm/Statistik.dod.zip
 COPY RKIAlgorithm/Statistik.dod.tar.gz RKIAlgorithm/Statistik.dod.tar.gz
 COPY SmICSWebApp/Resources/RRuntime/R_Script_00010.R Resources/RRuntime/
 COPY pub/jranke.asc jranke.asc
-COPY Resources/ Resources/
+COPY SmICSWebApp/Resources/ Resources/
 
 RUN apt-get update 
 Run apt-get -y upgrade
