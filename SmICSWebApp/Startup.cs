@@ -68,6 +68,7 @@ namespace SmICSWebApp
             services.AddScoped<OutbreakDetectionService>();
 
             OpenehrConfig.OutbreakDetectionRuntime = Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME");
+            //OpenehrConfig.OutbreakDetectionRuntime = "10:16:30";
             Console.WriteLine("Transformed: OUTBREAK_DETECTION_TIME " + Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME") + "to CONFIG: " + OpenehrConfig.OutbreakDetectionRuntime);
             string[] runtimeArr = OpenehrConfig.OutbreakDetectionRuntime.Split(":");
             OpenehrConfig.OutbreakDetectionRuntime = runtimeArr[2] + " " + runtimeArr[1] + " " + runtimeArr[0] + " * * ?";
