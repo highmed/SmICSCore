@@ -72,12 +72,40 @@ namespace SmICSCoreLib.Database
             }
         }
 
+        public IEnumerable<T> FindAllByAttributes<T>(string firstAttribute, string firstValue, string secondAttribute, string secondValue) where T : class
+        {
+            UnitOfWork<T> unitOfWork = new();
+            try
+            {
+                return unitOfWork.Repository.FindAllByAttributes(firstAttribute, firstValue, secondAttribute, secondValue);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
         public T FindOneByAttribute<T>(string attribute, string value) where T : class
-         {
+        {
             UnitOfWork<T> unitOfWork = new();
             try
             {
                 return unitOfWork.Repository.FindOneByAttribute(attribute, value);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return default(T);
+            }
+        }
+
+        public T FindOneByAttributes<T>(string firstAttribute, string firstValue, string secondAttribute, string secondValue) where T : class
+        {
+            UnitOfWork<T> unitOfWork = new();
+            try
+            {
+                return unitOfWork.Repository.FindOneByAttributes(firstAttribute, firstValue, secondAttribute, secondValue);
             }
             catch (Exception e)
             {
@@ -104,13 +132,13 @@ namespace SmICSCoreLib.Database
             UnitOfWork<T> unitOfWork = new();
             try
             {
-                  unitOfWork.Repository.UpdateByAttribute(newObj, attribute, value);
+                unitOfWork.Repository.UpdateByAttribute(newObj, attribute, value);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
-     
+
     }
 }

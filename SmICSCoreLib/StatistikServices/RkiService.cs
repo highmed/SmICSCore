@@ -1032,12 +1032,12 @@ namespace SmICSCoreLib.StatistikServices
                             landkreisObj.Inzidenz7Tage = lk.DistrictAttributes.Cases7_per_100k.ToString("0.##").Replace(",", ".");
                             landkreisObj.Todesfaelle = lk.DistrictAttributes.Deaths.ToString("#,##");
                             landkreisObj.Todesfaelle7Lk = lk.DistrictAttributes.Death7_lk.ToString("0.##");
-                            landkreisObj.AdmUnitId = lk.DistrictAttributes.AdmUnitId;
+                            landkreisObj.Stand = DateTime.Now.Date.ToString("dd.MM.yyyy");
                             landkreise.Add(landkreisObj);
                         }
                     }
                 }
-                LandkreisNew[]  landkreisNews =((LandkreisNew[])landkreise.ToArray(typeof(LandkreisNew)));
+                LandkreisNew[] landkreisNews = ((LandkreisNew[])landkreise.ToArray(typeof(LandkreisNew)));
                 return landkreisNews;
             }
             catch (Exception e)
@@ -1068,7 +1068,7 @@ namespace SmICSCoreLib.StatistikServices
                         landkreisObj.Inzidenz7Tage = lk.DistrictAttributes.Cases7_per_100k.ToString("0.##").Replace(",", ".");
                         landkreisObj.Todesfaelle = lk.DistrictAttributes.Deaths.ToString("#,##");
                         landkreisObj.Todesfaelle7Lk = lk.DistrictAttributes.Death7_lk.ToString("0.##");
-                        landkreisObj.AdmUnitId = lk.DistrictAttributes.AdmUnitId;
+                        landkreisObj.Stand = DateTime.Now.Date.ToString("dd.MM.yyyy");
                         landkreise.Add(landkreisObj);
                     }
                 }
@@ -1081,6 +1081,6 @@ namespace SmICSCoreLib.StatistikServices
                 return null;
             }
         }
-     
+
     }
 }

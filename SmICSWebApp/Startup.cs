@@ -39,14 +39,14 @@ namespace SmICSWebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddLogging();
-            services.AddSingleton<RkiService>();            
+            services.AddSingleton<RkiService>();
             services.AddSingleton<SymptomService>();
             services.AddSingleton<EhrDataService>();
-            
+
             //AUTH - START 
 
             //AUTH - ENDE
-            
+
             services.AddSmICSLibrary();
             //CronJob GetReport
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
@@ -115,10 +115,12 @@ namespace SmICSWebApp
             //DBConfig.DB_User = Environment.GetEnvironmentVariable("DB_User");
             //DBConfig.DB_Password = Environment.GetEnvironmentVariable("DB_Password");
 
-            DBConfig.DB_Url = "192.168.0.14";
+            DBConfig.DB_Url = "192.168.178.125";
             DBConfig.DB_Keyspace = "newkeyspace";
-            DBConfig.DB_User = "cassandra";
-            DBConfig.DB_Password = "cassandra";
+            //DBConfig.DB_User = "cassandra";
+            //DBConfig.DB_Password = "cassandra";
+            DBConfig.DB_User = "dba";
+            DBConfig.DB_Password = "super";
 
             if (env.IsDevelopment())
             {

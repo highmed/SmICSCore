@@ -467,27 +467,29 @@
 
     private void SetRKIData()
     {
-        BundeslandNew[] bundeslander = rkiService.GetBundeslaender();
-        if (bundeslander != null)
+        try
         {
-            foreach (var bundesland in bundeslander)
+            BundeslandNew[] bundeslander = rkiService.GetBundeslaender();
+            if (bundeslander != null)
             {
-                dbService.Insert<BundeslandNew>(bundesland);
+                foreach (var bundesland in bundeslander)
+                {
+                    dbService.Insert<BundeslandNew>(bundesland);
+                }
+            }
+
+            BerichtNew bericht = rkiService.GetBerichtNew();
+            if (bericht != null)
+            {
+                dbService.Insert<BerichtNew>(bericht);
             }
         }
-
-        BerichtNew bericht = rkiService.GetBerichtNew();
-        if (bericht != null)
+        catch (Exception)
         {
-            dbService.Insert<BerichtNew>(bericht);
+            Logger.LogWarning("Bericht koennte nicht hochgeladen werden!");
+            status = true;
+            standAktuell = false;
         }
-
-        //bool check = rkiService.SerializeRkiData(StatistikPath);
-        //if (check == false)
-        //{
-        //    Logger.LogWarning("RKI-Daten stehen nicht zur Verfügung!");
-        //    status = false;
-        //}
     }
 
     private void GetRKIData()
@@ -597,7 +599,8 @@
     }
 
     //Test Methode to Insert a BlAttribute into Database
-    private void TestDB() {
+    private void TestDB()
+    {
 
         LandkreisNew[] landkreise = rkiService.GetLkFromBl("Niedersachsen");
         //LandkreisNew[] landkreise = rkiService.GetLandkreise();

@@ -21,11 +21,11 @@ namespace SmICSCoreLib.Database
             //prepare schema
             //Session.Execute(new SimpleStatement("CREATE KEYSPACE IF NOT EXISTS " + keyspace + " WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' };"));
             Session.Execute(new SimpleStatement("USE " + keyspace + " ;"));
-      
+
             //create an instance of a Mapper from the session
             Mapper = new Mapper(Session);
         }
-     
+
         public void Insert(T Entity)
         {
             try
@@ -37,6 +37,7 @@ namespace SmICSCoreLib.Database
                 Console.WriteLine(e.Message);
             }
         }
+
         public void Delete(T Entity)
         {
             try
@@ -48,6 +49,7 @@ namespace SmICSCoreLib.Database
                 Console.WriteLine(e.Message);
             }
         }
+
         public void Update(T Entity)
         {
             try
@@ -59,6 +61,7 @@ namespace SmICSCoreLib.Database
                 Console.WriteLine(e.Message);
             }
         }
+
         public IEnumerable<T> FindAll()
         {
             try
@@ -71,6 +74,7 @@ namespace SmICSCoreLib.Database
                 return null;
             }
         }
+
         public IEnumerable<T> FindAllByAttribute(string attribute, string value)
         {
             try
@@ -83,10 +87,25 @@ namespace SmICSCoreLib.Database
                 return null;
             }
         }
+
+        public IEnumerable<T> FindAllByAttributes(string firstAttribute, string firstValue, string secondAttribute, string secondValue)
+        {
+            try
+            {
+                return Mapper.Fetch<T>("WHERE " + firstAttribute + " = '" + firstValue + "' and " + secondAttribute + " = '" + secondValue + "' ALLOW FILTERING");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
         public T FindOneByAttribute(string attribute, string value)
         {
             try
             {
+                //Console.WriteLine("WHERE " + attribute + " = ?", value);
                 return Mapper.SingleOrDefault<T>("WHERE " + attribute + " = ?", value);
             }
             catch (Exception e)
@@ -95,6 +114,21 @@ namespace SmICSCoreLib.Database
                 return null;
             }
         }
+
+        public T FindOneByAttributes(string firstAttribute, string firstValue, string secondAttribute, string secondValue)
+        {
+            try
+            {
+                //Console.WriteLine("WHERE " + firstAttribute + " = '" + firstValue + "' and " + secondAttribute + " = '" + secondValue + "' ALLOW FILTERING");
+                return Mapper.SingleOrDefault<T>("WHERE " + firstAttribute + " = '" + firstValue + "' and " + secondAttribute + " = '" + secondValue + "' ALLOW FILTERING");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
         public void DeleteByAttribute(string attribute, string value)
         {
             try
@@ -110,6 +144,7 @@ namespace SmICSCoreLib.Database
                 Console.WriteLine(e.Message);
             }
         }
+
         public void UpdateByAttribute(T newObj, string attribute, string value)
         {
             try

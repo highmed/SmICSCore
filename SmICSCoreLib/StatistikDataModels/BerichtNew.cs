@@ -96,6 +96,9 @@ namespace SmICSCoreLib.StatistikDataModels
         [JsonProperty(PropertyName = "Bundesland")]
         public string Bundesland { get; set; }
 
+        [JsonProperty(PropertyName = "Stand")]
+        public string Stand { get; set; }
+
         [JsonProperty(PropertyName = "Stadt")]
         public string Stadt { get; set; }
 
@@ -119,9 +122,6 @@ namespace SmICSCoreLib.StatistikDataModels
 
         [JsonProperty(PropertyName = "Todesfaelle7Lk")]
         public string Todesfaelle7Lk { get; set; }
-
-        [JsonProperty(PropertyName = "AdmUnitId")]
-        public int AdmUnitId { get; set; }
     }
 
 }

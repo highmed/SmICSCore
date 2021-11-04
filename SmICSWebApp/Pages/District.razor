@@ -4,6 +4,7 @@
 @using SmICSCoreLib.StatistikDataModels
 @using SmICSCoreLib.StatistikServices
 @using Microsoft.Extensions.Logging
+@using SmICSCoreLib.Database
 @inject ILogger<District> Logger
 @inject RkiService rkiService
 @inject IJSRuntime JS
@@ -140,7 +141,7 @@
                                                 </thead>
                                                 <tbody>
 
-                                                    @foreach (var district in lkArray)
+                                                    @foreach (var district in lkList)
                                                     {
                                                         <tr>
                                                             <td scope="row">@district.LandkreisName</td>
@@ -171,9 +172,7 @@
 
 @code {
     private DateTime datum = DateTime.Now;
-    private DailyReport dailyReport = new DailyReport();
-    private DailyReport lastReport = new DailyReport();
-    private bool standAktuell, blStandAktuell, status;
+    private bool standAktuell, status;
     private string rWert7Tage;
     private string rWert7TageVortag;
     private string inzidenz7Tage;
@@ -183,28 +182,24 @@
     private int fallzahlVortag;
     private string todesfaelle;
     private int todesfaelleVortag;
-    private Bundesland[] bundeslaender = new Bundesland[16];
-    private Bundesland[] lastBundeslaender = new Bundesland[16];
     private string inzidenzColor;
     private string rWertColor;
-    private List<string> farbe = new List<string>();
-    private ArrayList landkreise = new ArrayList();
-    private Landkreis[] lkArray;
-    private Landkreis[] lkArrayLast;
-    private string path, pathLastDay;
+
+    private DBService dbService;
+    private BundeslandNew bundeslandNew;
+    private BundeslandNew lastBundeslandNew;
+    private BerichtNew bericht;
+    private List<LandkreisNew> lkList;
 
     [Parameter]
     public string lb { get; set; }
 
-    private string ResourcesPath = "Resources/";
-    private string StatistikPath;
 
     protected override async Task OnInitializedAsync()
     {
+        dbService = new();
         status = false;
         standAktuell = true;
-
-        StatistikPath = @"" + ResourcesPath + "statistik/json";
 
         await Task.Run(GetRKIData);
 
@@ -216,56 +211,76 @@
         }
     }
 
+    private void SetRKIData()
+    {
+        try
+        {
+            LandkreisNew[] landkreise = rkiService.GetLandkreise();
+            if (landkreise != null)
+            {
+                foreach (var lk in landkreise)
+                {
+                    dbService.Insert<LandkreisNew>(lk);
+                }
+            }
+        }
+        catch (Exception)
+        {
+            Logger.LogWarning("DailyReport koennte nicht hochgeladen werden!");
+            status = true;
+            standAktuell = false;
+        }
+    }
+
     private void GetRKIData()
     {
         try
         {
-            path = @"" + StatistikPath + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
-            dailyReport = rkiService.DeserializeRkiData(path);
-            stand = dailyReport.Bericht.Stand;
-            rWert7Tage = dailyReport.Bericht.RWert7Tage;
-            rWert7TageVortag = dailyReport.Bericht.RWert7TageVortag;
-            standAktuell = dailyReport.Bericht.StandAktuell;
-            blStandAktuell = dailyReport.Bericht.BlStandAktuell;
+            string valueBundeslandNew = lb + "-" + datum.ToString("dd.MM.yyyy");
+            bundeslandNew = dbService.FindOneByAttributes<BundeslandNew>("id", valueBundeslandNew, "bundesland", lb);
+            stand = bundeslandNew.Stand;
+            fallzahl = bundeslandNew.FallzahlGesamt;
+            todesfaelle = bundeslandNew.Todesfaelle;
+            inzidenz7Tage = bundeslandNew.Inzidenz7Tage;
 
-            bundeslaender = dailyReport.Bericht.Bundesland;
-            foreach (var bundesland in bundeslaender)
-            {
-                if (bundesland.BlAttribute.Bundesland == lb)
-                {
-                    fallzahl = bundesland.BlAttribute.FallzahlGesamt;
-                    todesfaelle = bundesland.BlAttribute.Todesfaelle;
-                    inzidenz7Tage = bundesland.BlAttribute.Inzidenz7Tage;
-                    lkArray = bundesland.Landkreise;
-                }
-            }
+            string valueBericht = "Bericht-" + datum.ToString("dd.MM.yyyy");
+            bericht = dbService.FindOneByAttribute<BerichtNew>("id", valueBericht);
+            rWert7Tage = bericht.RWert7Tage;
+            rWert7TageVortag = bericht.RWert7TageVortag;
+            standAktuell = bericht.StandAktuell;
 
-            foreach (var bundesland in bundeslaender)
+            string lastDayValue = lb + "-" + datum.AddDays(-1).ToString("dd.MM.yyyy");
+            lastBundeslandNew = dbService.FindOneByAttributes<BundeslandNew>("id", lastDayValue, "bundesland", lb);
+            if (lastBundeslandNew != null)
             {
-                farbe.Add(bundesland.BlAttribute.Farbe);
-            }
+                string vortag = lastBundeslandNew.FallzahlGesamt;
+                fallzahlVortag = Int32.Parse(fallzahl.Replace(".", "").Trim()) - Int32.Parse(vortag.Replace(".", "").Trim());
+                string vortag2 = lastBundeslandNew.Todesfaelle;
+                todesfaelleVortag = Int32.Parse(todesfaelle.Replace(".", "").Trim()) - Int32.Parse(vortag2.Replace(".", "").Trim());
 
-            pathLastDay = @""+ StatistikPath + "/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
-            lastReport = rkiService.DeserializeRkiData(pathLastDay);
-            if (lastReport != null)
-            {
-                lastBundeslaender = lastReport.Bericht.Bundesland;
-                foreach (var lastBundesland in lastBundeslaender)
-                {
-                    if (lastBundesland.BlAttribute.Bundesland == lb)
-                    {
-                        string vortag = lastBundesland.BlAttribute.FallzahlGesamt;
-                        fallzahlVortag = Int32.Parse(fallzahl.Replace(".", "").Trim()) - Int32.Parse(vortag.Replace(".", "").Trim());
-                        string vortag2 = lastBundesland.BlAttribute.Todesfaelle;
-                        todesfaelleVortag = Int32.Parse(todesfaelle.Replace(".", "").Trim()) - Int32.Parse(vortag2.Replace(".", "").Trim());
-                        inzidenz7TageVortag = lastBundesland.BlAttribute.Inzidenz7Tage;
-                        lkArrayLast = lastBundesland.Landkreise;
-                    }
-                }
+                inzidenz7TageVortag = lastBundeslandNew.Inzidenz7Tage;
             }
             else
             {
-                lastBundeslaender = bundeslaender;
+                string vortag = bundeslandNew.FallzahlGesamt;
+                fallzahlVortag = Int32.Parse(fallzahl.Replace(".", "").Trim()) - Int32.Parse(vortag.Replace(".", "").Trim());
+                string vortag2 = bundeslandNew.Todesfaelle;
+                todesfaelleVortag = Int32.Parse(todesfaelle.Replace(".", "").Trim()) - Int32.Parse(vortag2.Replace(".", "").Trim());
+
+                inzidenz7TageVortag = bundeslandNew.Inzidenz7Tage;
+            }
+
+
+            string valueLk = datum.ToString("dd.MM.yyyy");
+            IEnumerable<LandkreisNew> lks = dbService.FindAllByAttributes<LandkreisNew>("Stand", valueLk, "bundesland", lb);
+            lkList = lks.ToList();
+            if (lks != null && lkList.Count != 0)
+            {
+                List<LandkreisNew> lkList = lks.ToList();
+            }
+            else
+            {
+                SetRKIData();
             }
 
             inzidenzColor = rkiService.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
@@ -285,35 +300,30 @@
     {
         try
         {
-            pathLastDay = @"" + StatistikPath + "/" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + ".json";
-            lastReport = rkiService.DeserializeRkiData(pathLastDay);
-            if (lastReport != null)
-            {
-                blStandAktuell = lastReport.Bericht.BlStandAktuell;
-                standAktuell = lastReport.Bericht.StandAktuell;
-                stand = lastReport.Bericht.Stand;
-                rWert7Tage = lastReport.Bericht.RWert7Tage;
-                rWert7TageVortag = lastReport.Bericht.RWert7TageVortag;
-                lastBundeslaender = lastReport.Bericht.Bundesland;
-                foreach (var lastBundesland in lastBundeslaender)
-                {
-                    if (lastBundesland.BlAttribute.Bundesland == lb)
-                    {
-                        string vortag = lastBundesland.BlAttribute.FallzahlGesamt;
-                        fallzahlVortag = Int32.Parse(fallzahl.Replace(".", "").Trim()) - Int32.Parse(vortag.Replace(".", "").Trim());
-                        string vortag2 = lastBundesland.BlAttribute.Todesfaelle;
-                        todesfaelleVortag = Int32.Parse(todesfaelle.Replace(".", "").Trim()) - Int32.Parse(vortag2.Replace(".", "").Trim());
-                        inzidenz7TageVortag = lastBundesland.BlAttribute.Inzidenz7Tage;
-                        lkArrayLast = lastBundesland.Landkreise;
-                    }
-                }
-                lkArray = lkArrayLast;
-                inzidenzColor = rkiService.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
-                rWertColor = rkiService.SetCaseColor(rWert7Tage, rWert7TageVortag);
+            string valueBundeslandNew = lb + "-" + datum.AddDays(-1).ToString("dd.MM.yyyy");
+            bundeslandNew = dbService.FindOneByAttributes<BundeslandNew>("id", valueBundeslandNew, "bundesland", lb);
+            fallzahl = bundeslandNew.FallzahlGesamt;
+            todesfaelle = bundeslandNew.Todesfaelle;
+            inzidenz7Tage = bundeslandNew.Inzidenz7Tage;
 
-                Logger.LogInformation("LastDailyReport wurde erfolgreich heruntergeladen");
-                status = true;
-            }
+            string valueBericht = "Bericht-" + datum.AddDays(-1).ToString("dd.MM.yyyy");
+            bericht = dbService.FindOneByAttribute<BerichtNew>("id", valueBericht);
+            rWert7Tage = bericht.RWert7Tage;
+            rWert7TageVortag = bericht.RWert7TageVortag;
+            standAktuell = bericht.StandAktuell;
+
+            string lastDayValue = lb + "-" + datum.AddDays(-2).ToString("dd.MM.yyyy");
+            lastBundeslandNew = dbService.FindOneByAttributes<BundeslandNew>("id", lastDayValue, "bundesland", lb);
+
+            string vortag = lastBundeslandNew.FallzahlGesamt;
+            fallzahlVortag = Int32.Parse(fallzahl.Replace(".", "").Trim()) - Int32.Parse(vortag.Replace(".", "").Trim());
+            string vortag2 = lastBundeslandNew.Todesfaelle;
+            todesfaelleVortag = Int32.Parse(todesfaelle.Replace(".", "").Trim()) - Int32.Parse(vortag2.Replace(".", "").Trim());
+            inzidenz7TageVortag = lastBundeslandNew.Inzidenz7Tage;
+
+            Logger.LogInformation("LastDailyReport wurde erfolgreich heruntergeladen");
+            status = true;
+
         }
         catch (Exception)
         {
