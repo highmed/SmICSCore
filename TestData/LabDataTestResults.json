@@ -1,519 +1,1010 @@
 {
-    "0": [
-        {
-            "FallID": "00000001",
-            "Befund": true,
-            "Befunddatum": "2021-01-01T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "Eingangsdatum": "2021-01-01T09:30:00",
-            "ZeitpunktProbeneingang": "2021-01-01T10:00:00"
-        },
-        {
-            "FallID": "00000001",
-            "Befund": false,
-            "Befunddatum": "2021-01-03T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "Eingangsdatum": "2021-01-03T09:30:00",
-            "ZeitpunktProbeneingang": "2021-01-03T10:00:00"
-        },
-        {
-            "FallID": "00000001",
-            "Befund": false,
-            "Befunddatum": "2021-01-05T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "03",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "03",
-            "Eingangsdatum": "2021-01-05T09:30:00",
-            "ZeitpunktProbeneingang": "2021-01-05T10:00:00"
-        }
-    ],
-    "1": [
-        {
-            "FallID": "00000002",
-            "Befund": true,
-            "Befunddatum": "2021-01-02T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-02T10:00:00",
-            "Eingangsdatum": "2021-01-02T09:30:00"
-        },
-        {
-            "FallID": "00000002",
-            "Befund": false,
-            "Befunddatum": "2021-01-04T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-04T10:00:00",
-            "Eingangsdatum": "2021-01-04T09:30:00"
-        },
-        {
-            "FallID": "00000002",
-            "Befund": false,
-            "Befunddatum": "2021-01-07T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "03",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "03",
-            "ZeitpunktProbeneingang": "2021-01-07T10:00:00",
-            "Eingangsdatum": "2021-01-07T09:30:00"
-        }
-    ],
-    "2": [
-        {
-            "FallID": "00000003",
-            "Befund": true,
-            "Befunddatum": "2021-01-03T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-03T10:00:00",
-            "Eingangsdatum": "2021-01-03T09:30:00"
-        },
-        {
-            "FallID": "00000003",
-            "Befund": false,
-            "Befunddatum": "2021-01-07T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-07T10:00:00",
-            "Eingangsdatum": "2021-01-07T09:30:00"
-        },
-        {
-            "FallID": "00000003",
-            "Befund": false,
-            "Befunddatum": "2021-01-09T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "03",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "03",
-            "ZeitpunktProbeneingang": "2021-01-09T10:00:00",
-            "Eingangsdatum": "2021-01-09T09:30:00"
-        }
-    ],
-    "3": [
-        {
-            "FallID": "00000004",
-            "Befund": true,
-            "Befunddatum": "2021-01-03T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-03T10:00:00",
-            "Eingangsdatum": "2021-01-03T09:30:00"
-        },
-        {
-            "FallID": "00000004",
-            "Befund": false,
-            "Befunddatum": "2021-01-06T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-06T10:00:00",
-            "Eingangsdatum": "2021-01-06T09:30:00"
-        },
-        {
-            "FallID": "00000004",
-            "Befund": false,
-            "Befunddatum": "2021-01-09T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "03",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "03",
-            "ZeitpunktProbeneingang": "2021-01-09T10:00:00",
-            "Eingangsdatum": "2021-01-09T09:30:00"
-        }
-    ],
-    "4": [
-        {
-            "FallID": "00000005",
-            "Befund": true,
-            "Befunddatum": "2021-01-04T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-04T10:00:00",
-            "Eingangsdatum": "2021-01-04T09:30:00"
-        },
-        {
-            "FallID": "00000005",
-            "Befund": false,
-            "Befunddatum": "2021-01-08T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-08T10:00:00",
-            "Eingangsdatum": "2021-01-08T09:30:00"
-        }
-    ],
-    "5": [
-        {
-            "FallID": "00000006",
-            "Befund": true,
-            "Befunddatum": "2021-01-04T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-04T10:00:00",
-            "Eingangsdatum": "2021-01-04T09:30:00"
-        },
-        {
-            "FallID": "00000006",
-            "Befund": false,
-            "Befunddatum": "2021-01-09T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-09T10:00:00",
-            "Eingangsdatum": "2021-01-09T09:30:00"
-        }
-    ],
-    "6": [
-        {
-            "FallID": "00000007",
-            "Befund": true,
-            "Befunddatum": "2021-01-05T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-05T10:00:00",
-            "Eingangsdatum": "2021-01-05T09:30:00"
-        },
-        {
-            "FallID": "00000007",
-            "Befund": false,
-            "Befunddatum": "2021-01-09T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-09T10:00:00",
-            "Eingangsdatum": "2021-01-09T09:30:00"
-        }
-    ],
-    "7": [
-        {
-            "FallID": "00000008",
-            "Befund": true,
-            "Befunddatum": "2021-01-06T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-06T10:00:00",
-            "Eingangsdatum": "2021-01-06T09:30:00"
-        },
-        {
-            "FallID": "00000008",
-            "Befund": false,
-            "Befunddatum": "2021-01-10T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-10T10:00:00",
-            "Eingangsdatum": "2021-01-10T09:30:00"
-        }
-    ],
-    "8": [
-        {
-            "FallID": "00000009",
-            "Befund": true,
-            "Befunddatum": "2021-01-06T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-06T10:00:00",
-            "Eingangsdatum": "2021-01-06T09:30:00"
-        },
-        {
-            "FallID": "00000009",
-            "Befund": false,
-            "Befunddatum": "2021-01-09T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-09T10:00:00",
-            "Eingangsdatum": "2021-01-09T09:30:00"
-        }
-    ],
-    "9": [
-        {
-            "FallID": "00000010",
-            "Befund": true,
-            "Befunddatum": "2021-01-06T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-06T10:00:00",
-            "Eingangsdatum": "2021-01-06T09:30:00"
-        },
-        {
-            "FallID": "00000010",
-            "Befund": false,
-            "Befunddatum": "2021-01-08T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-08T10:00:00",
-            "Eingangsdatum": "2021-01-08T09:30:00"
-        }
-    ],
-    "10": [
-        {
-            "FallID": "00000011",
-            "Befund": true,
-            "Befunddatum": "2021-01-07T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-07T10:00:00",
-            "Eingangsdatum": "2021-01-07T09:30:00"
-        },
-        {
-            "FallID": "00000011",
-            "Befund": false,
-            "Befunddatum": "2021-01-11T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-11T10:00:00",
-            "Eingangsdatum": "2021-01-11T09:30:00"
-        }
-    ],
-    "11": [
-        {
-            "FallID": "00000012",
-            "Befund": true,
-            "Befunddatum": "2021-01-07T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-07T10:00:00",
-            "Eingangsdatum": "2021-01-07T09:30:00"
-        },
-        {
-            "FallID": "00000012",
-            "Befund": false,
-            "Befunddatum": "2021-01-10T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-10T10:00:00",
-            "Eingangsdatum": "2021-01-10T09:30:00"
-        }
-    ],
-    "12": [
-        {
-            "FallID": "00000013",
-            "Befund": true,
-            "Befunddatum": "2021-01-07T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-07T10:00:00",
-            "Eingangsdatum": "2021-01-07T09:30:00"
-        },
-        {
-            "FallID": "00000013",
-            "Befund": false,
-            "Befunddatum": "2021-01-12T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-12T10:00:00",
-            "Eingangsdatum": "2021-01-12T09:30:00"
-        }
-    ],
-    "13": [
-        {
-            "FallID": "00000014",
-            "Befund": true,
-            "Befunddatum": "2021-01-07T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-07T10:00:00",
-            "Eingangsdatum": "2021-01-07T09:30:00"
-        },
-        {
-            "FallID": "00000014",
-            "Befund": false,
-            "Befunddatum": "2021-01-11T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-11T10:00:00",
-            "Eingangsdatum": "2021-01-11T09:30:00"
-        }
-    ],
-    "14": [
-        {
-            "FallID": "00000015",
-            "Befund": true,
-            "Befunddatum": "2021-01-08T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-08T10:00:00",
-            "Eingangsdatum": "2021-01-08T09:30:00"
-        },
-        {
-            "FallID": "00000015",
-            "Befund": false,
-            "Befunddatum": "2021-01-10T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "02",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "02",
-            "ZeitpunktProbeneingang": "2021-01-10T10:00:00",
-            "Eingangsdatum": "2021-01-10T09:30:00"
-        }
-    ],
-    "15": [
-        {
-            "FallID": "00000016",
-            "Befund": true,
-            "Befunddatum": "2021-01-09T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-09T10:00:00",
-            "Eingangsdatum": "2021-01-09T09:30:00"
-        }
-    ],
-    "16": [
-        {
-            "FallID": "00000017",
-            "Befund": true,
-            "Befunddatum": "2021-01-09T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-09T10:00:00",
-            "Eingangsdatum": "2021-01-09T09:30:00"
-        }
-    ],
-    "17": [
-        {
-            "FallID": "00000018",
-            "Befund": true,
-            "Befunddatum": "2021-01-10T09:30:00",
-            "Befundkommentar": "Kommentar 1",
-            "KeimID": "94500-6",
-            "LabordatenID": "01",
-            "Probenart": "119342007",
-            "Material_l": "Salvia specimen (specimen)",
-            "ProbeID": "01",
-            "ZeitpunktProbeneingang": "2021-01-10T10:00:00",
-            "Eingangsdatum": "2021-01-10T09:30:00"
-        }
-    ]
+  "0": [
+    {
+      "FallID": "00000019",
+      "Befund": false,
+      "Befunddatum": "2020-11-28T12:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2020-11-28T13:13:00Z",
+      "Eingangsdatum": "2020-11-28T12:13:00Z"
+    },
+    {
+      "FallID": "00000019",
+      "Befund": true,
+      "Befunddatum": "2020-12-02T10:13:33Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2020-12-02T12:13:33Z",
+      "Eingangsdatum": "2020-12-02T10:13:33Z"
+    }
+  ],
+  "1": [
+    {
+      "FallID": "00000020",
+      "Befund": false,
+      "Befunddatum": "2020-11-28T12:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2020-11-28T13:13:00Z",
+      "Eingangsdatum": "2020-11-28T12:13:00Z"
+    },
+    {
+      "FallID": "00000020",
+      "Befund": true,
+      "Befunddatum": "2020-12-02T10:22:33Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2020-12-02T12:40:33Z",
+      "Eingangsdatum": "2020-12-02T10:22:33Z"
+    }
+  ],
+  "2": [
+    {
+      "FallID": "00000021",
+      "Befund": false,
+      "Befunddatum": "2020-11-27T12:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2020-11-27T13:13:00Z",
+      "Eingangsdatum": "2020-11-27T12:13:00Z"
+    },
+    {
+      "FallID": "00000021",
+      "Befund": true,
+      "Befunddatum": "2020-12-01T08:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2020-12-01T09:13:09Z",
+      "Eingangsdatum": "2020-12-01T08:13:00Z"
+    }
+  ],
+  "3": [
+    {
+      "FallID": "00000022",
+      "Befund": false,
+      "Befunddatum": "2020-12-01T12:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2020-12-01T13:24:00Z",
+      "Eingangsdatum": "2020-12-01T12:13:00Z"
+    }
+  ],
+  "4": [
+    {
+      "FallID": "00000023",
+      "Befund": false,
+      "Befunddatum": "2020-02-10T21:47:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "Eingangsdatum": "2020-02-10T20:47:45Z",
+      "ZeitpunktProbeneingang": "2020-02-10T21:47:45Z"
+    },
+    {
+      "FallID": "00000023",
+      "Befund": true,
+      "Befunddatum": "2020-02-17T20:47:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "Eingangsdatum": "2020-02-17T20:47:45Z",
+      "ZeitpunktProbeneingang": "2020-02-17T21:47:45Z"
+    }
+  ],
+  "5": [
+    {
+      "FallID": "00000024",
+      "Befund": true,
+      "Befunddatum": "2020-02-08T12:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "Eingangsdatum": "2020-02-08T11:03:00Z",
+      "ZeitpunktProbeneingang": "2020-02-08T11:13:00Z"
+    },
+    {
+      "FallID": "00000024",
+      "Befund": true,
+      "Befunddatum": "2020-02-16T11:03:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "Eingangsdatum": "2020-02-16T11:03:00Z",
+      "ZeitpunktProbeneingang": "2020-02-16T12:03:00Z"
+    }
+  ],
+  "6": [
+    {
+      "FallID": "00000025",
+      "Befund": false,
+      "Befunddatum": "2020-02-10T21:47:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "Eingangsdatum": "2020-02-14T18:47:45Z",
+      "ZeitpunktProbeneingang": "2020-02-14T20:47:45Z"
+    },
+    {
+      "FallID": "00000025",
+      "Befund": false,
+      "Befunddatum": "2020-02-28T18:47:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "Eingangsdatum": "2020-02-28T18:47:45Z",
+      "ZeitpunktProbeneingang": "2020-02-28T19:47:45Z"
+    }
+  ],
+  "7": [
+    {
+      "FallID": "00000026",
+      "Befund": false,
+      "Befunddatum": "2020-02-10T15:37:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "Eingangsdatum": "2020-02-14T16:47:45Z",
+      "ZeitpunktProbeneingang": "2020-02-14T15:47:45Z"
+    },
+    {
+      "FallID": "00000026",
+      "Befund": true,
+      "Befunddatum": "2020-02-28T16:47:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "Eingangsdatum": "2020-02-28T16:47:45Z",
+      "ZeitpunktProbeneingang": "2020-02-28T17:47:45Z"
+    }
+  ],
+  "8": [
+    {
+      "FallID": "00000027",
+      "Befund": true,
+      "Befunddatum": "2020-02-16T15:37:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "Eingangsdatum": "2020-02-15T16:47:45Z",
+      "ZeitpunktProbeneingang": "2020-02-16T09:47:45Z"
+    },
+    {
+      "FallID": "00000027",
+      "Befund": false,
+      "Befunddatum": "2020-02-25T16:47:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "Eingangsdatum": "2020-02-25T16:47:45Z",
+      "ZeitpunktProbeneingang": "2020-02-25T17:47:45Z"
+    }
+  ],
+  "9": [
+    {
+      "FallID": "00000028",
+      "Befund": false,
+      "Befunddatum": "2020-03-05T12:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2020-03-05T13:13:00Z",
+      "Eingangsdatum": "2020-03-05T12:13:00Z"
+    },
+    {
+      "FallID": "00000028",
+      "Befund": true,
+      "Befunddatum": "2020-03-10T12:13:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2020-03-10T13:13:00Z",
+      "Eingangsdatum": "2020-03-10T12:13:00Z"
+    }
+  ],
+  "10": [
+    {
+      "FallID": "00000029",
+      "Befund": true,
+      "Befunddatum": "2020-03-14T15:37:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "Eingangsdatum": "2020-03-13T16:47:45Z",
+      "ZeitpunktProbeneingang": "2020-03-14T09:47:45Z"
+    },
+    {
+      "FallID": "00000029",
+      "Befund": true,
+      "Befunddatum": "2020-03-20T16:47:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "Eingangsdatum": "2020-03-20T16:47:45Z",
+      "ZeitpunktProbeneingang": "2020-03-20T17:47:45Z"
+    }
+  ],
+  "11": [
+    {
+      "FallID": "00000032",
+      "Befund": false,
+      "Befunddatum": "2020-02-14T15:37:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "Eingangsdatum": "2020-02-13T16:47:45Z",
+      "ZeitpunktProbeneingang": "2020-02-14T09:47:45Z"
+    }
+  ],
+  "12": [
+    {
+      "FallID": "00000033",
+      "Befund": false,
+      "Befunddatum": "2020-03-17T15:37:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "Eingangsdatum": "2020-03-16T16:47:45Z",
+      "ZeitpunktProbeneingang": "2020-03-17T09:47:45Z"
+    }
+  ],
+  "13": [
+    {
+      "FallID": "00000034",
+      "Befund": false,
+      "Befunddatum": "2020-03-19T15:37:45Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "Eingangsdatum": "2020-03-18T16:47:45Z",
+      "ZeitpunktProbeneingang": "2020-03-19T09:47:45Z"
+    }
+  ],
+  "16": [
+    {
+      "FallID": "00000001",
+      "Befund": true,
+      "Befunddatum": "2021-01-01T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "Eingangsdatum": "2021-01-01T09:30:00Z",
+      "ZeitpunktProbeneingang": "2021-01-01T10:00:00Z"
+    },
+    {
+      "FallID": "00000001",
+      "Befund": false,
+      "Befunddatum": "2021-01-03T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "Eingangsdatum": "2021-01-03T09:30:00Z",
+      "ZeitpunktProbeneingang": "2021-01-03T10:00:00Z"
+    },
+    {
+      "FallID": "00000001",
+      "Befund": false,
+      "Befunddatum": "2021-01-05T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "03",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "03",
+      "Eingangsdatum": "2021-01-05T09:30:00Z",
+      "ZeitpunktProbeneingang": "2021-01-05T10:00:00Z"
+    }
+  ],
+  "17": [
+    {
+      "FallID": "00000002",
+      "Befund": true,
+      "Befunddatum": "2021-01-02T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-02T10:00:00Z",
+      "Eingangsdatum": "2021-01-02T09:30:00Z"
+    },
+    {
+      "FallID": "00000002",
+      "Befund": false,
+      "Befunddatum": "2021-01-04T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-04T10:00:00Z",
+      "Eingangsdatum": "2021-01-04T09:30:00Z"
+    },
+    {
+      "FallID": "00000002",
+      "Befund": false,
+      "Befunddatum": "2021-01-07T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "03",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "03",
+      "ZeitpunktProbeneingang": "2021-01-07T10:00:00Z",
+      "Eingangsdatum": "2021-01-07T09:30:00Z"
+    }
+  ],
+  "18": [
+    {
+      "FallID": "00000003",
+      "Befund": true,
+      "Befunddatum": "2021-01-03T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-03T10:00:00Z",
+      "Eingangsdatum": "2021-01-03T09:30:00Z"
+    },
+    {
+      "FallID": "00000003",
+      "Befund": false,
+      "Befunddatum": "2021-01-07T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-07T10:00:00Z",
+      "Eingangsdatum": "2021-01-07T09:30:00Z"
+    },
+    {
+      "FallID": "00000003",
+      "Befund": false,
+      "Befunddatum": "2021-01-09T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "03",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "03",
+      "ZeitpunktProbeneingang": "2021-01-09T10:00:00Z",
+      "Eingangsdatum": "2021-01-09T09:30:00Z"
+    }
+  ],
+  "19": [
+    {
+      "FallID": "00000004",
+      "Befund": true,
+      "Befunddatum": "2021-01-03T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-03T10:00:00Z",
+      "Eingangsdatum": "2021-01-03T09:30:00Z"
+    },
+    {
+      "FallID": "00000004",
+      "Befund": false,
+      "Befunddatum": "2021-01-06T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-06T10:00:00Z",
+      "Eingangsdatum": "2021-01-06T09:30:00Z"
+    },
+    {
+      "FallID": "00000004",
+      "Befund": false,
+      "Befunddatum": "2021-01-09T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "03",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "03",
+      "ZeitpunktProbeneingang": "2021-01-09T10:00:00Z",
+      "Eingangsdatum": "2021-01-09T09:30:00Z"
+    }
+  ],
+  "20": [
+    {
+      "FallID": "00000005",
+      "Befund": true,
+      "Befunddatum": "2021-01-04T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-04T10:00:00Z",
+      "Eingangsdatum": "2021-01-04T09:30:00Z"
+    },
+    {
+      "FallID": "00000005",
+      "Befund": false,
+      "Befunddatum": "2021-01-08T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-08T10:00:00Z",
+      "Eingangsdatum": "2021-01-08T09:30:00Z"
+    }
+  ],
+  "21": [
+    {
+      "FallID": "00000006",
+      "Befund": true,
+      "Befunddatum": "2021-01-04T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-04T10:00:00Z",
+      "Eingangsdatum": "2021-01-04T09:30:00Z"
+    },
+    {
+      "FallID": "00000006",
+      "Befund": false,
+      "Befunddatum": "2021-01-09T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-09T10:00:00Z",
+      "Eingangsdatum": "2021-01-09T09:30:00Z"
+    }
+  ],
+  "22": [
+    {
+      "FallID": "00000007",
+      "Befund": true,
+      "Befunddatum": "2021-01-05T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-05T10:00:00Z",
+      "Eingangsdatum": "2021-01-05T09:30:00Z"
+    },
+    {
+      "FallID": "00000007",
+      "Befund": false,
+      "Befunddatum": "2021-01-09T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-09T10:00:00Z",
+      "Eingangsdatum": "2021-01-09T09:30:00Z"
+    }
+  ],
+  "23": [
+    {
+      "FallID": "00000008",
+      "Befund": true,
+      "Befunddatum": "2021-01-06T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-06T10:00:00Z",
+      "Eingangsdatum": "2021-01-06T09:30:00Z"
+    },
+    {
+      "FallID": "00000008",
+      "Befund": false,
+      "Befunddatum": "2021-01-10T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-10T10:00:00Z",
+      "Eingangsdatum": "2021-01-10T09:30:00Z"
+    }
+  ],
+  "24": [
+    {
+      "FallID": "00000009",
+      "Befund": true,
+      "Befunddatum": "2021-01-06T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-06T10:00:00Z",
+      "Eingangsdatum": "2021-01-06T09:30:00Z"
+    },
+    {
+      "FallID": "00000009",
+      "Befund": false,
+      "Befunddatum": "2021-01-09T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-09T10:00:00Z",
+      "Eingangsdatum": "2021-01-09T09:30:00Z"
+    }
+  ],
+  "25": [
+    {
+      "FallID": "00000010",
+      "Befund": true,
+      "Befunddatum": "2021-01-06T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-06T10:00:00Z",
+      "Eingangsdatum": "2021-01-06T09:30:00Z"
+    },
+    {
+      "FallID": "00000010",
+      "Befund": false,
+      "Befunddatum": "2021-01-08T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-08T10:00:00Z",
+      "Eingangsdatum": "2021-01-08T09:30:00Z"
+    }
+  ],
+  "26": [
+    {
+      "FallID": "00000011",
+      "Befund": true,
+      "Befunddatum": "2021-01-07T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-07T10:00:00Z",
+      "Eingangsdatum": "2021-01-07T09:30:00Z"
+    },
+    {
+      "FallID": "00000011",
+      "Befund": false,
+      "Befunddatum": "2021-01-11T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-11T10:00:00Z",
+      "Eingangsdatum": "2021-01-11T09:30:00Z"
+    }
+  ],
+  "27": [
+    {
+      "FallID": "00000012",
+      "Befund": true,
+      "Befunddatum": "2021-01-07T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-07T10:00:00Z",
+      "Eingangsdatum": "2021-01-07T09:30:00Z"
+    },
+    {
+      "FallID": "00000012",
+      "Befund": false,
+      "Befunddatum": "2021-01-10T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-10T10:00:00Z",
+      "Eingangsdatum": "2021-01-10T09:30:00Z"
+    }
+  ],
+  "28": [
+    {
+      "FallID": "00000013",
+      "Befund": true,
+      "Befunddatum": "2021-01-07T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-07T10:00:00Z",
+      "Eingangsdatum": "2021-01-07T09:30:00Z"
+    },
+    {
+      "FallID": "00000013",
+      "Befund": false,
+      "Befunddatum": "2021-01-12T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-12T10:00:00Z",
+      "Eingangsdatum": "2021-01-12T09:30:00Z"
+    }
+  ],
+  "29": [
+    {
+      "FallID": "00000014",
+      "Befund": true,
+      "Befunddatum": "2021-01-07T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-07T10:00:00Z",
+      "Eingangsdatum": "2021-01-07T09:30:00Z"
+    },
+    {
+      "FallID": "00000014",
+      "Befund": false,
+      "Befunddatum": "2021-01-11T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-11T10:00:00Z",
+      "Eingangsdatum": "2021-01-11T09:30:00Z"
+    }
+  ],
+  "30": [
+    {
+      "FallID": "00000015",
+      "Befund": true,
+      "Befunddatum": "2021-01-08T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-08T10:00:00Z",
+      "Eingangsdatum": "2021-01-08T09:30:00Z"
+    },
+    {
+      "FallID": "00000015",
+      "Befund": false,
+      "Befunddatum": "2021-01-10T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-10T10:00:00Z",
+      "Eingangsdatum": "2021-01-10T09:30:00Z"
+    }
+  ],
+  "31": [
+    {
+      "FallID": "00000016",
+      "Befund": true,
+      "Befunddatum": "2021-01-09T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-09T10:00:00Z",
+      "Eingangsdatum": "2021-01-09T09:30:00Z"
+    }
+  ],
+  "32": [
+    {
+      "FallID": "00000017",
+      "Befund": true,
+      "Befunddatum": "2021-01-09T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-09T10:00:00Z",
+      "Eingangsdatum": "2021-01-09T09:30:00Z"
+    }
+  ],
+  "33": [
+    {
+      "FallID": "00000018",
+      "Befund": true,
+      "Befunddatum": "2021-01-10T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-10T10:00:00Z",
+      "Eingangsdatum": "2021-01-10T09:30:00Z"
+    }
+  ],
+  "34": [
+    {
+      "FallID": "00000035",
+      "Befund": true,
+      "Befunddatum": "2021-01-05T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-05T10:30:00Z",
+      "Eingangsdatum": "2021-01-05T09:30:00Z"
+    },
+    {
+      "FallID": "00000035",
+      "Befund": true,
+      "Befunddatum": "2021-01-10T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-10T11:30:00Z",
+      "Eingangsdatum": "2021-01-10T09:30:00Z"
+    }
+  ],
+  "35": [
+    {
+      "FallID": "00000036",
+      "Befund": true,
+      "Befunddatum": "2021-01-04T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-04T11:30:00Z",
+      "Eingangsdatum": "2021-01-04T09:30:00Z"
+    },
+    {
+      "FallID": "00000036",
+      "Befund": true,
+      "Befunddatum": "2021-01-08T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-08T11:30:00Z",
+      "Eingangsdatum": "2021-01-08T09:30:00Z"
+    },
+    {
+      "FallID": "00000036",
+      "Befund": false,
+      "Befunddatum": "2021-01-10T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "03",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "03",
+      "ZeitpunktProbeneingang": "2021-01-10T10:30:00Z",
+      "Eingangsdatum": "2021-01-10T09:30:00Z"
+    }
+  ],
+  "36": [
+    {
+      "FallID": "00000037",
+      "Befund": true,
+      "Befunddatum": "2021-01-03T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-03T10:30:00Z",
+      "Eingangsdatum": "2021-01-03T09:30:00Z"
+    },
+    {
+      "FallID": "00000037",
+      "Befund": false,
+      "Befunddatum": "2021-01-06T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-06T11:30:00Z",
+      "Eingangsdatum": "2021-01-06T09:30:00Z"
+    },
+    {
+      "FallID": "00000037",
+      "Befund": true,
+      "Befunddatum": "2021-01-08T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "03",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "03",
+      "ZeitpunktProbeneingang": "2021-01-08T11:30:00Z",
+      "Eingangsdatum": "2021-01-08T09:30:00Z"
+    }
+  ],
+  "37": [
+    {
+      "FallID": "00000038",
+      "Befund": false,
+      "Befunddatum": "2021-01-07T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "01",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "01",
+      "ZeitpunktProbeneingang": "2021-01-07T11:30:00Z",
+      "Eingangsdatum": "2021-01-07T09:30:00Z"
+    },
+    {
+      "FallID": "00000038",
+      "Befund": true,
+      "Befunddatum": "2021-01-09T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "02",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "02",
+      "ZeitpunktProbeneingang": "2021-01-09T10:00:00Z",
+      "Eingangsdatum": "2021-01-09T09:30:00Z"
+    },
+    {
+      "FallID": "00000038",
+      "Befund": true,
+      "Befunddatum": "2021-01-10T09:30:00Z",
+      "Befundkommentar": "Kommentar 1",
+      "KeimID": "94500-6",
+      "LabordatenID": "03",
+      "Probenart": "119342007",
+      "Material_l": "Salvia specimen (specimen)",
+      "ProbeID": "03",
+      "ZeitpunktProbeneingang": "2021-01-10T10:00:00Z",
+      "Eingangsdatum": "2021-01-10T09:30:00Z"
+    }
+  ]
 }

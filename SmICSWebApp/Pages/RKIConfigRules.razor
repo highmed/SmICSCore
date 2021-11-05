@@ -1,0 +1,139 @@
+﻿@using SmICSCoreLib.Factories.PatientMovement
+@using SmICSCoreLib.Factories.RKIConfig
+@using SmICSWebApp.Data
+
+@inject RKIConfigService RKIConfigService
+
+<div id="div_card_5_full">
+    <div id="div_card_5_only_rules">
+        <div id="div_card_5">
+            <div>
+                <label for="Station" class="tb-bez-header">Station</label>
+            </div>
+            <div>
+                <InputSelect @bind-Value="RKIConfigForm.Station" id="@ID">
+                    <option selected="true" disabled="disabled" value="">Bitte wählen Sie aus</option>
+                    <option value="Gesamtklink">Gesamtklink</option>
+                    @if (StationList != null)
+                    {
+                        foreach (var item in StationList)
+                        {
+                            <option value="@item.StationID">@item.StationID</option>
+                        }
+                    }
+
+                </InputSelect>
+            </div>
+        </div>
+        <div id="div_card_5">
+            <div>
+                <label for="Erreger" class="tb-bez-header">Erreger</label>
+            </div>
+            <div>
+                <InputSelect @bind-Value="RKIConfigForm.Erreger" id="@ID">
+                    <option selected disabled>Bitte wählen Sie aus</option>
+                    <option value="MRSA" disabled>Methicillin-Resistant Staphylococcus aureus (MRSA)</option>
+                    <option value="Klebsiella pneumoniae" disabled>Klebsiella pneumoniae</option>
+                    <option value="Escherichia coli" disabled>Escherichia coli</option>
+                    <option value="Acinetobacter baumannii" disabled>Acinetobacter baumannii</option>
+                    <option value="MSSA" disabled>Methicillin-Susceptible Staphylococcus aureus (MSSA)</option>
+                    <option value="SARS-CoV-2">SARS-CoV-2</option>
+                </InputSelect>
+            </div>
+        </div>
+        <div id="div_card_5">
+            <div>
+                <label for="Zeitraum" class="tb-bez-header">Zeitraum</label>
+            </div>
+            <div>
+                <InputSelect @bind-Value="RKIConfigForm.Zeitraum" id="@ID" @oninput=ZeitraumSelected>
+                    <option selected="true" disabled="disabled" value=0>Bitte wählen Sie aus</option>
+                    <option value=1>1 Woche</option>
+                    <option value=2>2 Wochen</option>
+                    <option value=3>3 Wochen</option>
+                    <option value=4>4 Wochen</option>
+                    <option value=5>5 Wochen</option>
+                    <option value=6>6 Wochen</option>
+                    <option value=7>7 Wochen</option>
+                    <option value=8>8 Wochen</option>
+                    <option value=9>9 Wochen</option>
+                    <option value=10>10 Wochen</option>
+                    <option value=11>11 Wochen</option>
+                    <option value=12>12 Wochen</option>
+                </InputSelect>
+            </div>
+        </div>
+        <div id="div_card_5">
+            <div>
+                <label for="Retro" class="tb-bez-header" style="width: 100%;">Retrospektiv</label>
+            </div>
+            <div class="check">
+                <InputCheckbox @bind-Value="RKIConfigForm.Retro" id="@("op"+ID)" class="css-checkbox"
+                               @onchange="eventArgs => { CheckboxClicked(eventArgs.Value); }" />
+                <label class="css-label" for="@("op"+ID)"></label>
+            </div>
+        </div>
+    </div>
+    <div>
+        <p style="@messageStyles">
+            @message
+        </p>
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter]
+    public int ID { get; set; }
+    [Parameter]
+    public RKIConfigTemplate RKIConfigForm { get; set; }
+    private string message;
+    private string messageStyles = "visibility:hidden";
+
+    List<PatientMovementModel> StationList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Run(GetAllStations);
+    }
+
+    private void GetAllStations()
+    {
+        try
+        {
+            StationList = RKIConfigService.GetAllStations();
+        }
+        catch (Exception)
+        {
+            throw new Exception($"Failed to GET Station data");
+
+        }
+    }
+
+    void CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue == true)
+        {
+            checkedValue = false;
+        }
+        else
+        {
+            checkedValue = true;
+        }
+    }
+
+    void ZeitraumSelected(ChangeEventArgs e)
+    {
+        if (Convert.ToInt32(e.Value) < 4)
+        {
+            messageStyles = "color:red";
+            message = "Sie haben eine Einstellung gewählt, die unter Umständen einige NULL-Werte zur Folge haben kann.";
+        }
+        else
+        {
+            messageStyles = "visibility:hidden";
+            message = "";
+        }
+    }
+}

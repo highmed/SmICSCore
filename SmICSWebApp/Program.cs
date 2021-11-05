@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace SmICSWebApp
@@ -29,7 +23,7 @@ namespace SmICSWebApp
             }
             catch(Exception e)
             {
-                Log.Fatal(e, "The applaction failed to start correctly.");
+                Log.Fatal(e, "The application failed to start correctly.");
             }
             finally
             {
@@ -42,8 +36,7 @@ namespace SmICSWebApp
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>()
-                    .UseUrls("http://*:9787");
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }

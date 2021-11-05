@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmICSFactory.Tests", "SmICS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmICSDataGenerator.Test", "SmICSDataGenerator.Test\SmICSDataGenerator.Test.csproj", "{B68CA049-DB0C-4D8C-9A7E-7389FF32D5FA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.Test", "WebApp.Test\WebApp.Test.csproj", "{6B792E07-C098-42A1-BDBE-3DA67269709A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B68CA049-DB0C-4D8C-9A7E-7389FF32D5FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B68CA049-DB0C-4D8C-9A7E-7389FF32D5FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B68CA049-DB0C-4D8C-9A7E-7389FF32D5FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B792E07-C098-42A1-BDBE-3DA67269709A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B792E07-C098-42A1-BDBE-3DA67269709A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B792E07-C098-42A1-BDBE-3DA67269709A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B792E07-C098-42A1-BDBE-3DA67269709A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

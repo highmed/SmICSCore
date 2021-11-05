@@ -1,0 +1,34 @@
+{
+  "0": [
+    {
+      "FallID": "00000001",
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Raum": "Zimmerkennung 101",
+      "Fachabteilung": "Sonstige Fachabteilung",
+      "Beginn": "2021-01-01T09:00:00",
+      "Ende": "2021-01-01",
+      "FachabteilungsID": "3700",
+      "StationID": "Coronastation"
+    },
+    {
+      "FallID": "00000001",
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Raum": "Zimmerkennung 101",
+      "Fachabteilung": "Sonstige Fachabteilung",
+      "Beginn": "2021-01-01T09:00:00",
+      "Ende": "2021-01-05",
+      "FachabteilungsID": "3700",
+      "StationID": "Coronastation"
+    },
+    {
+      "FallID": "00000001",
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Raum": "Zimmerkennung 101",
+      "Fachabteilung": "Sonstige Fachabteilung",
+      "Beginn": "2021-01-05T15:00:00",
+      "Ende": "2021-01-05",
+      "FachabteilungsID": "3700",
+      "StationID": "Coronastation"
+    }
+  ]
+}

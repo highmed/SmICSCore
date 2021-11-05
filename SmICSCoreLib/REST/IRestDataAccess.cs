@@ -1,4 +1,4 @@
-﻿using SmICSCoreLib.AQL;
+﻿using SmICSCoreLib.Factories;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,5 +12,6 @@ namespace SmICSCoreLib.REST
         Task<HttpResponseMessage> SetTemplate(string value);
         Task<HttpResponseMessage> CreateComposition(string ehr_id, string json);
         Task<HttpResponseMessage> CreateEhrIDWithStatus(string Namespace, string ID);
+        void SetAuthenticationHeader(string token);
     }
 }

@@ -1,4 +1,4 @@
-﻿using SmICSCoreLib.AQL.PatientInformation.PatientMovement.ReceiveModels;
+﻿using SmICSCoreLib.Factories.PatientMovement.ReceiveModels;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;

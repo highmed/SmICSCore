@@ -1,558 +1,1378 @@
 {
-    "0": [
-        {
-            "FallID": "00000001",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-01T09:00:00",
-            "Ende": "2021-01-01T09:00:00"
-        },
-        {
-            "FallID": "00000001",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-01T09:00:00",
-            "Ende": "2021-01-05T15:00:00"
-        },
-        {
-            "FallID": "00000001",
-            "BewegungstypID": 2,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Entlassung",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-05T15:00:00",
-            "Ende": "2021-01-05T15:00:00"
-        }
-    ],
-    "1": [
-        {
-            "FallID": "00000002",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-02T09:00:00",
-            "Ende": "2021-01-02T09:00:00"
-        },
-        {
-            "FallID": "00000002",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-02T09:00:00",
-            "Ende": "2021-01-07T15:00:00"
-        },
-        {
-            "FallID": "00000002",
-            "BewegungstypID": 2,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Entlassung",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-07T15:00:00",
-            "Ende": "2021-01-07T15:00:00"
-        }
-    ],
-    "2": [
-        {
-            "FallID": "00000003",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Stationskennung X",
-            "Beginn": "2021-01-02T09:00:00",
-            "Ende": "2021-01-02T09:00:00"
-        },
-        {
-            "FallID": "00000003",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Stationskennung X",
-            "Beginn": "2021-01-02T09:00:00",
-            "Ende": "2021-01-03T11:00:00"
-        },
-        {
-            "FallID": "00000003",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-03T11:00:00",
-            "Ende": "2021-01-09T15:00:00"
-        },
-        {
-            "FallID": "00000003",
-            "BewegungstypID": 2,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Entlassung",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-09T15:00:00",
-            "Ende": "2021-01-09T15:00:00"
-        }
-    ],
-    "3": [
-        {
-            "FallID": "00000004",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-03T09:00:00",
-            "Ende": "2021-01-03T09:00:00"
-        },
-        {
-            "FallID": "00000004",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-03T09:00:00",
-            "Ende": "2021-01-09T15:00:00"
-        },
-        {
-            "FallID": "00000004",
-            "BewegungstypID": 2,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Entlassung",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-09T15:00:00",
-            "Ende": "2021-01-09T15:00:00"
-        }
-    ],
-    "4": [
-        {
-            "FallID": "00000005",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Stationskennung X",
-            "Beginn": "2021-01-02T09:00:00",
-            "Ende": "2021-01-02T09:00:00"
-        },
-        {
-            "FallID": "00000005",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Stationskennung X",
-            "Beginn": "2021-01-02T09:00:00",
-            "Ende": "2021-01-04T15:30:00"
-        },
-        {
-            "FallID": "00000005",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-04T15:30:00",
-            "Ende": "2021-01-06T16:00:00"
-        },
-        {
-            "FallID": "00000005",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Stationskennung Y",
-            "Beginn": "2021-01-06T16:00:00",
-            "Ende": "2021-01-08T14:00:00"
-        },
-        {
-            "FallID": "00000005",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-08T14:00:00",
-            "Ende": null
-        }
-    ],
-    "5": [
-        {
-            "FallID": "00000006",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-04T09:00:00",
-            "Ende": "2021-01-04T09:00:00"
-        },
-        {
-            "FallID": "00000006",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-04T09:00:00",
-            "Ende": null
-        }
-    ],
-    "6": [
-        {
-            "FallID": "00000007",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-05T09:00:00",
-            "Ende": "2021-01-05T09:00:00"
-        },
-        {
-            "FallID": "00000007",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-05T09:00:00",
-            "Ende": null
-        }
-    ],
-    "7": [
-        {
-            "FallID": "00000008",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-06T09:00:00",
-            "Ende": "2021-01-06T09:00:00"
-        },
-        {
-            "FallID": "00000008",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-06T09:00:00",
-            "Ende": null
-        }
-    ],
-    "8": [
-        {
-            "FallID": "00000009",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-06T09:00:00",
-            "Ende": "2021-01-06T09:00:00"
-        },
-        {
-            "FallID": "00000009",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-06T09:00:00",
-            "Ende": null
-        }
-    ],
-    "9": [
-        {
-            "FallID": "00000010",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-06T09:00:00",
-            "Ende": "2021-01-06T09:00:00"
-        },
-        {
-            "FallID": "00000010",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-06T09:00:00",
-            "Ende": null
-        }
-    ],
-    "10": [
-        {
-            "FallID": "00000011",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Stationskennung X",
-            "Beginn": "2021-01-04T09:00:00",
-            "Ende": "2021-01-04T09:00:00"
-        },
-        {
-            "FallID": "00000011",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Stationskennung X",
-            "Beginn": "2021-01-04T09:00:00",
-            "Ende": "2021-01-06T08:00:00"
-        },
-        {
-            "FallID": "00000011",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Radiologie",
-            "Beginn": "2021-01-06T08:00:00",
-            "Ende": "2021-01-07T16:00:00"
-        },
-        {
-            "FallID": "00000011",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-07T16:00:00",
-            "Ende": null
-        }
-    ],
-    "11": [
-        {
-            "FallID": "00000012",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-06T16:00:00",
-            "Ende": "2021-01-06T16:00:00"
-        },
-        {
-            "FallID": "00000012",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-06T16:00:00",
-            "Ende": null
-        }
-    ],
-    "12": [
-        {
-            "FallID": "00000013",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-07T09:00:00",
-            "Ende": "2021-01-07T09:00:00"
-        },
-        {
-            "FallID": "00000013",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-07T09:00:00",
-            "Ende": null
-        }
-    ],
-    "13": [
-        {
-            "FallID": "00000014",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Stationskennung X",
-            "Beginn": "2021-01-01T09:00:00",
-            "Ende": "2021-01-01T09:00:00"
-        },
-        {
-            "FallID": "00000014",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Stationskennung X",
-            "Beginn": "2021-01-01T09:00:00",
-            "Ende": "2021-01-07T14:00:00"
-        },
-        {
-            "FallID": "00000014",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-07T14:00:00",
-            "Ende": null
-        }
-    ],
-    "14": [
-        {
-            "FallID": "00000015",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Radiologie",
-            "Beginn": "2021-01-07T09:00:00",
-            "Ende": "2021-01-07T09:00:00"
-        },
-        {
-            "FallID": "00000015",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Radiologie",
-            "Beginn": "2021-01-07T09:00:00",
-            "Ende": "2021-01-08T13:00:00"
-        },
-        {
-            "FallID": "00000015",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-08T13:00:00",
-            "Ende": null
-        }
-    ],
-    "15": [
-        {
-            "FallID": "00000016",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Stationskennung X",
-            "Beginn": "2021-01-01T09:00:00",
-            "Ende": "2021-01-01T09:00:00"
-        },
-        {
-            "FallID": "00000016",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Stationskennung X",
-            "Beginn": "2021-01-01T09:00:00",
-            "Ende": "2021-01-03T12:00:00"
-        },
-        {
-            "FallID": "00000016",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Radiologie",
-            "Beginn": "2021-01-03T12:00:00",
-            "Ende": "2021-01-09T13:00:00"
-        },
-        {
-            "FallID": "00000016",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-09T13:00:00",
-            "Ende": "2021-01-10T20:00:00"
-        },
-        {
-            "FallID": "00000016",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Stationskennung Y",
-            "Beginn": "2021-01-10T20:00:00",
-            "Ende": null
-        }
-    ],
-    "16": [
-        {
-            "FallID": "00000017",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-09T09:00:00",
-            "Ende": "2021-01-09T09:00:00"
-        },
-        {
-            "FallID": "00000017",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-09T09:00:00",
-            "Ende": null
-        }
-    ],
-    "17": [
-        {
-            "FallID": "00000018",
-            "BewegungstypID": 1,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Aufnahme",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-10T09:00:00",
-            "Ende": "2021-01-10T09:00:00"
-        },
-        {
-            "FallID": "00000018",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Coronastation",
-            "Beginn": "2021-01-10T09:00:00",
-            "Ende": "2021-01-10T18:00:00"
-        },
-        {
-            "FallID": "00000018",
-            "BewegungstypID": 3,
-            "Bewegungsart_l": "Diagn./Therap.",
-            "Bewegungstyp": "Wechsel",
-            "Raum": "Zimmerkennung 101",
-            "StationID": "Stationskennung Y",
-            "Beginn": "2021-01-10T18:00:00",
-            "Ende": null
-        }
-    ]
+  "0": [
+    {
+      "FallID": "00000019",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-11-28T12:13:00Z",
+      "Ende": "2020-11-28T12:13:00Z"
+    },
+    {
+      "FallID": "00000019",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-11-28T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
+    },
+    {
+      "FallID": "00000019",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-12-12T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
+    }
+  ],
+  "1": [
+    {
+      "FallID": "00000020",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-11-28T12:13:00Z",
+      "Ende": "2020-11-28T12:13:00Z"
+    },
+    {
+      "FallID": "00000020",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-11-28T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
+    },
+    {
+      "FallID": "00000020",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-12-12T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
+    }
+  ],
+  "2": [
+    {
+      "FallID": "00000021",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 102",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-11-27T12:13:00Z",
+      "Ende": "2020-11-27T12:13:00Z"
+    },
+    {
+      "FallID": "00000021",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 102",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-11-27T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
+    },
+    {
+      "FallID": "00000021",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 102",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-12-12T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
+    }
+  ],
+  "3": [
+    {
+      "FallID": "00000022",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 102",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-12-01T12:13:00Z",
+      "Ende": "2020-12-01T12:13:00Z"
+    },
+    {
+      "FallID": "00000022",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 102",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-12-01T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
+    },
+    {
+      "FallID": "00000022",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 102",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-12-12T12:13:00Z",
+      "Ende": "2020-12-12T12:13:00Z"
+    }
+  ],
+  "4": [
+    {
+      "FallID": "00000023",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 204",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-05T12:13:00Z",
+      "Ende": "2020-02-05T12:13:00Z"
+    },
+    {
+      "FallID": "00000023",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 204",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-05T12:13:00Z",
+      "Ende": "2020-02-11T12:13:00Z"
+    },
+    {
+      "FallID": "00000023",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 202",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-11T12:13:00Z",
+      "Ende": "2020-02-23T12:13:00Z"
+    },
+    {
+      "FallID": "00000023",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 202",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-23T12:13:00Z",
+      "Ende": "2020-02-23T12:13:00Z"
+    }
+  ],
+  "5": [
+    {
+      "FallID": "00000024",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 204",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-08T12:13:00Z",
+      "Ende": "2020-02-08T12:13:00Z"
+    },
+    {
+      "FallID": "00000024",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 204",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-08T12:13:00Z",
+      "Ende": "2020-02-20T12:13:00Z"
+    },
+    {
+      "FallID": "00000024",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 204",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-20T12:13:00Z",
+      "Ende": "2020-02-20T12:13:00Z"
+    }
+  ],
+  "6": [
+    {
+      "FallID": "00000025",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 204",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-09T12:13:00Z",
+      "Ende": "2020-02-09T12:13:00Z"
+    },
+    {
+      "FallID": "00000025",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 204",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-09T12:13:00Z",
+      "Ende": "2020-02-20T12:13:00Z"
+    },
+    {
+      "FallID": "00000025",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 204",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-20T12:13:00Z",
+      "Ende": "2020-02-20T12:13:00Z"
+    }
+  ],
+  "7": [
+    {
+      "FallID": "00000026",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 203",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-10T12:13:00Z",
+      "Ende": "2020-02-10T12:13:00Z"
+    },
+    {
+      "FallID": "00000026",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 203",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-10T12:13:00Z",
+      "Ende": "2020-03-03T12:13:00Z"
+    },
+    {
+      "FallID": "00000026",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 203",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-03T12:13:00Z",
+      "Ende": "2020-03-03T12:13:00Z"
+    }
+  ],
+  "8": [
+    {
+      "FallID": "00000027",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 203",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-09T12:13:00Z",
+      "Ende": "2020-02-09T12:13:00Z"
+    },
+    {
+      "FallID": "00000027",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 203",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-09T12:13:00Z",
+      "Ende": "2020-03-04T12:13:00Z"
+    },
+    {
+      "FallID": "00000027",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 203",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-04T12:13:00Z",
+      "Ende": "2020-03-04T12:13:00Z"
+    }
+  ],
+  "9": [
+    {
+      "FallID": "00000028",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-05T12:13:00Z",
+      "Ende": "2020-03-05T12:13:00Z"
+    },
+    {
+      "FallID": "00000028",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-05T12:13:00Z",
+      "Ende": "2020-03-14T12:13:00Z"
+    },
+    {
+      "FallID": "00000028",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 204",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-14T12:13:00Z",
+      "Ende": "2020-03-20T12:13:00Z"
+    },
+    {
+      "FallID": "00000028",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 204",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-20T12:13:00Z",
+      "Ende": "2020-03-20T12:13:00Z"
+    }
+  ],
+  "10": [
+    {
+      "FallID": "00000029",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-08T12:13:00Z",
+      "Ende": "2020-03-08T12:13:00Z"
+    },
+    {
+      "FallID": "00000029",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-08T12:13:00Z",
+      "Ende": "2020-03-17T12:13:00Z"
+    },
+    {
+      "FallID": "00000029",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 102",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-17T12:13:00Z",
+      "Ende": "2020-03-27T12:13:00Z"
+    },
+    {
+      "FallID": "00000029",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 102",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-27T12:13:00Z",
+      "Ende": "2020-03-27T12:13:00Z"
+    }
+  ],
+  "11": [
+    {
+      "FallID": "00000030",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-10T12:13:00Z",
+      "Ende": "2020-03-10T12:13:00Z"
+    },
+    {
+      "FallID": "00000030",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-10T12:13:00Z",
+      "Ende": "2020-03-25T12:13:00Z"
+    },
+    {
+      "FallID": "00000030",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-25T12:13:00Z",
+      "Ende": "2020-03-25T12:13:00Z"
+    }
+  ],
+  "12": [
+    {
+      "FallID": "00000031",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-17T12:13:00Z",
+      "Ende": "2020-03-17T12:13:00Z"
+    },
+    {
+      "FallID": "00000031",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-17T12:13:00Z",
+      "Ende": "2020-03-18T12:13:00Z"
+    },
+    {
+      "FallID": "00000031",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "KMT",
+      "Beginn": "2020-03-18T12:13:00Z",
+      "Ende": "2020-03-29T12:13:00Z"
+    },
+    {
+      "FallID": "00000031",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "KMT",
+      "Beginn": "2020-03-29T12:13:00Z",
+      "Ende": "2020-03-29T12:13:00Z"
+    }
+  ],
+  "13": [
+    {
+      "FallID": "00000032",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 204",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-10T12:13:00Z",
+      "Ende": "2020-02-10T12:13:00Z"
+    },
+    {
+      "FallID": "00000032",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 204",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-10T12:13:00Z",
+      "Ende": "2020-02-17T12:13:00Z"
+    },
+    {
+      "FallID": "00000032",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 204",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-02-17T12:13:00Z",
+      "Ende": "2020-02-17T12:13:00Z"
+    }
+  ],
+  "14": [
+    {
+      "FallID": "00000033",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-09T12:13:00Z",
+      "Ende": "2020-03-09T12:13:00Z"
+    },
+    {
+      "FallID": "00000033",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-09T12:13:00Z",
+      "Ende": "2020-03-21T12:13:00Z"
+    },
+    {
+      "FallID": "00000033",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-21T12:13:00Z",
+      "Ende": "2020-03-21T12:13:00Z"
+    }
+  ],
+  "15": [
+    {
+      "FallID": "00000034",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-17T12:13:00Z",
+      "Ende": "2020-03-17T12:13:00Z"
+    },
+    {
+      "FallID": "00000034",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-17T12:13:00Z",
+      "Ende": "2020-03-25T12:13:00Z"
+    },
+    {
+      "FallID": "00000034",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2020-03-25T12:13:00Z",
+      "Ende": "2020-03-25T12:13:00Z"
+    }
+  ],
+  "16": [
+    {
+      "FallID": "00000001",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-01T09:00:00Z",
+      "Ende": "2021-01-01T09:00:00Z"
+    },
+    {
+      "FallID": "00000001",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-01T09:00:00Z",
+      "Ende": "2021-01-05T15:00:00Z"
+    },
+    {
+      "FallID": "00000001",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-05T15:00:00Z",
+      "Ende": "2021-01-05T15:00:00Z"
+    },
+    {
+      "FallID": "00000001",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 2100,
+      "Beginn": "2021-01-03T15:00:00Z",
+      "Ende": "2021-01-03T15:00:00Z"
+    },
+    {
+      "FallID": "00000001",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 3600,
+      "Beginn": "2021-01-03T19:40:00Z",
+      "Ende": "2021-01-03T19:40:00Z"
+    },
+    {
+      "FallID": "00000001",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 3700,
+      "Beginn": "2021-01-04T10:40:00Z",
+      "Ende": "2021-01-04T10:40:00Z"
+    }
+  ],
+  "17": [
+    {
+      "FallID": "00000002",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-02T09:00:00Z",
+      "Ende": "2021-01-02T09:00:00Z"
+    },
+    {
+      "FallID": "00000002",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-02T09:00:00Z",
+      "Ende": "2021-01-07T15:00:00Z"
+    },
+    {
+      "FallID": "00000002",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-07T15:00:00Z",
+      "Ende": "2021-01-07T15:00:00Z"
+    }
+  ],
+  "18": [
+    {
+      "FallID": "00000003",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2021-01-02T09:00:00Z",
+      "Ende": "2021-01-02T09:00:00Z"
+    },
+    {
+      "FallID": "00000003",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2021-01-02T09:00:00Z",
+      "Ende": "2021-01-03T11:00:00Z"
+    },
+    {
+      "FallID": "00000003",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-03T11:00:00Z",
+      "Ende": "2021-01-09T15:00:00Z"
+    },
+    {
+      "FallID": "00000003",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-09T15:00:00Z",
+      "Ende": "2021-01-09T15:00:00Z"
+    }
+  ],
+  "19": [
+    {
+      "FallID": "00000004",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-03T09:00:00Z",
+      "Ende": "2021-01-03T09:00:00Z"
+    },
+    {
+      "FallID": "00000004",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-03T09:00:00Z",
+      "Ende": "2021-01-09T15:00:00Z"
+    },
+    {
+      "FallID": "00000004",
+      "BewegungstypID": 2,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Entlassung",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-09T15:00:00Z",
+      "Ende": "2021-01-09T15:00:00Z"
+    },
+    {
+      "FallID": "00000004",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 3700,
+      "Beginn": "2021-01-06T15:00:00Z",
+      "Ende": "2021-01-06T15:00:00Z"
+    },
+    {
+      "FallID": "00000004",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": "0800",
+      "Beginn": "2021-01-06T17:34:00Z",
+      "Ende": "2021-01-06T17:34:00Z"
+    },
+    {
+      "FallID": "00000004",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 1400,
+      "Beginn": "2021-01-07T12:34:00Z",
+      "Ende": "2021-01-07T12:34:00Z"
+    },
+    {
+      "FallID": "00000004",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 3700,
+      "Beginn": "2021-01-08T15:25:00Z",
+      "Ende": "2021-01-08T15:25:00Z"
+    }
+  ],
+  "20": [
+    {
+      "FallID": "00000005",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2021-01-02T09:00:00Z",
+      "Ende": "2021-01-02T09:00:00Z"
+    },
+    {
+      "FallID": "00000005",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2021-01-02T09:00:00Z",
+      "Ende": "2021-01-04T15:30:00Z"
+    },
+    {
+      "FallID": "00000005",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 3700,
+      "Beginn": "2021-01-02T09:00:00Z",
+      "Ende": "2021-01-02T09:00:00Z"
+    },
+    {
+      "FallID": "00000005",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 3700,
+      "Beginn": "2021-01-02T09:45:00Z",
+      "Ende": "2021-01-02T09:45:00Z"
+    },
+    {
+      "FallID": "00000005",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 3700,
+      "Beginn": "2021-01-03T13:48:00Z",
+      "Ende": "2021-01-03T13:48:00Z"
+    },
+    {
+      "FallID": "00000005",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-04T15:30:00Z",
+      "Ende": "2021-01-06T16:00:00Z"
+    },
+    {
+      "FallID": "00000005",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung Y",
+      "Beginn": "2021-01-06T16:00:00Z",
+      "Ende": "2021-01-08T14:00:00Z"
+    },
+    {
+      "FallID": "00000005",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-08T14:00:00Z",
+      "Ende": null
+    }
+  ],
+  "21": [
+    {
+      "FallID": "00000006",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-04T09:00:00Z",
+      "Ende": "2021-01-04T09:00:00Z"
+    },
+    {
+      "FallID": "00000006",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-04T09:00:00Z",
+      "Ende": null
+    }
+  ],
+  "22": [
+    {
+      "FallID": "00000007",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-05T09:00:00Z",
+      "Ende": "2021-01-05T09:00:00Z"
+    },
+    {
+      "FallID": "00000007",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-05T09:00:00Z",
+      "Ende": null
+    }
+  ],
+  "23": [
+    {
+      "FallID": "00000008",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-06T09:00:00Z",
+      "Ende": "2021-01-06T09:00:00Z"
+    },
+    {
+      "FallID": "00000008",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-06T09:00:00Z",
+      "Ende": null
+    }
+  ],
+  "24": [
+    {
+      "FallID": "00000009",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-06T09:00:00Z",
+      "Ende": "2021-01-06T09:00:00Z"
+    },
+    {
+      "FallID": "00000009",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-06T09:00:00Z",
+      "Ende": null
+    }
+  ],
+  "25": [
+    {
+      "FallID": "00000010",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-06T09:00:00Z",
+      "Ende": "2021-01-06T09:00:00Z"
+    },
+    {
+      "FallID": "00000010",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-06T09:00:00Z",
+      "Ende": null
+    }
+  ],
+  "26": [
+    {
+      "FallID": "00000011",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2021-01-04T09:00:00Z",
+      "Ende": "2021-01-04T09:00:00Z"
+    },
+    {
+      "FallID": "00000011",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2021-01-04T09:00:00Z",
+      "Ende": "2021-01-06T08:00:00Z"
+    },
+    {
+      "FallID": "00000011",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 2800,
+      "Beginn": "2021-01-04T15:46:00Z",
+      "Ende": "2021-01-04T15:46:00Z"
+    },
+    {
+      "FallID": "00000011",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 3300,
+      "Beginn": "2021-01-05T09:46:00Z",
+      "Ende": "2021-01-05T09:46:00Z"
+    },
+    {
+      "FallID": "00000011",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Radiologie",
+      "Beginn": "2021-01-06T08:00:00Z",
+      "Ende": "2021-01-07T16:00:00Z"
+    },
+    {
+      "FallID": "00000011",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 2800,
+      "Beginn": "2021-01-06T10:46:00Z",
+      "Ende": "2021-01-06T10:46:00Z"
+    },
+    {
+      "FallID": "00000011",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "LA Klin.Auftrag",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 3700,
+      "Beginn": "2021-01-06T11:36:00Z",
+      "Ende": "2021-01-06T11:36:00Z"
+    },
+    {
+      "FallID": "00000011",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-07T16:00:00Z",
+      "Ende": null
+    }
+  ],
+  "27": [
+    {
+      "FallID": "00000012",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-06T16:00:00Z",
+      "Ende": "2021-01-06T16:00:00Z"
+    },
+    {
+      "FallID": "00000012",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-06T16:00:00Z",
+      "Ende": null
+    }
+  ],
+  "28": [
+    {
+      "FallID": "00000013",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-07T09:00:00Z",
+      "Ende": "2021-01-07T09:00:00Z"
+    },
+    {
+      "FallID": "00000013",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-07T09:00:00Z",
+      "Ende": null
+    }
+  ],
+  "29": [
+    {
+      "FallID": "00000014",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2021-01-01T09:00:00Z",
+      "Ende": "2021-01-01T09:00:00Z"
+    },
+    {
+      "FallID": "00000014",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2021-01-01T09:00:00Z",
+      "Ende": "2021-01-07T14:00:00Z"
+    },
+    {
+      "FallID": "00000014",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 3300,
+      "Beginn": "2021-01-05T09:46:00Z",
+      "Ende": "2021-01-05T09:46:00Z"
+    },
+    {
+      "FallID": "00000014",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 3700,
+      "Beginn": "2021-01-06T11:36:00Z",
+      "Ende": "2021-01-06T11:36:00Z"
+    },
+    {
+      "FallID": "00000014",
+      "BewegungstypID": 4,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Behandlung",
+      "Raum": null,
+      "StationID": 1400,
+      "Beginn": "2021-01-07T12:34:00Z",
+      "Ende": "2021-01-07T12:34:00Z"
+    },
+    {
+      "FallID": "00000014",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-07T14:00:00Z",
+      "Ende": null
+    }
+  ],
+  "30": [
+    {
+      "FallID": "00000015",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Radiologie",
+      "Beginn": "2021-01-07T09:00:00Z",
+      "Ende": "2021-01-07T09:00:00Z"
+    },
+    {
+      "FallID": "00000015",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Radiologie",
+      "Beginn": "2021-01-07T09:00:00Z",
+      "Ende": "2021-01-08T13:00:00Z"
+    },
+    {
+      "FallID": "00000015",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-08T13:00:00Z",
+      "Ende": null
+    }
+  ],
+  "31": [
+    {
+      "FallID": "00000016",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2021-01-01T09:00:00Z",
+      "Ende": "2021-01-01T09:00:00Z"
+    },
+    {
+      "FallID": "00000016",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2021-01-01T09:00:00Z",
+      "Ende": "2021-01-03T12:00:00Z"
+    },
+    {
+      "FallID": "00000016",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Radiologie",
+      "Beginn": "2021-01-03T12:00:00Z",
+      "Ende": "2021-01-09T13:00:00Z"
+    },
+    {
+      "FallID": "00000016",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-09T13:00:00Z",
+      "Ende": "2021-01-10T20:00:00Z"
+    },
+    {
+      "FallID": "00000016",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung Y",
+      "Beginn": "2021-01-10T20:00:00Z",
+      "Ende": null
+    }
+  ],
+  "32": [
+    {
+      "FallID": "00000017",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-09T09:00:00Z",
+      "Ende": "2021-01-09T09:00:00Z"
+    },
+    {
+      "FallID": "00000017",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-09T09:00:00Z",
+      "Ende": null
+    }
+  ],
+  "33": [
+    {
+      "FallID": "00000018",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-10T09:00:00Z",
+      "Ende": "2021-01-10T09:00:00Z"
+    },
+    {
+      "FallID": "00000018",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-10T09:00:00Z",
+      "Ende": "2021-01-10T18:00:00Z"
+    },
+    {
+      "FallID": "00000018",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung Y",
+      "Beginn": "2021-01-10T18:00:00Z",
+      "Ende": null
+    }
+  ],
+  "34": [
+    {
+      "FallID": "00000035",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-05T09:30:00Z",
+      "Ende": "2021-01-05T09:30:00Z"
+    },
+    {
+      "FallID": "00000035",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-05T09:30:00Z",
+      "Ende": null
+    }
+  ],
+  "35": [
+    {
+      "FallID": "00000036",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2021-01-04T09:30:00Z",
+      "Ende": "2021-01-04T09:30:00Z"
+    },
+    {
+      "FallID": "00000036",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Stationskennung X",
+      "Beginn": "2021-01-04T09:30:00Z",
+      "Ende": null
+    }
+  ],
+  "36": [
+    {
+      "FallID": "00000037",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-03T09:30:00Z",
+      "Ende": "2021-01-03T09:30:00Z"
+    },
+    {
+      "FallID": "00000037",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-03T09:30:00Z",
+      "Ende": null
+    }
+  ],
+  "37": [
+    {
+      "FallID": "00000038",
+      "BewegungstypID": 1,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Aufnahme",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-07T09:30:00Z",
+      "Ende": "2021-01-07T09:30:00Z"
+    },
+    {
+      "FallID": "00000038",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 101",
+      "StationID": "Coronastation",
+      "Beginn": "2021-01-07T09:30:00Z",
+      "Ende": "2021-01-09T09:30:00Z"
+    },
+    {
+      "FallID": "00000038",
+      "BewegungstypID": 3,
+      "Bewegungsart_l": "Diagn./Therap.",
+      "Bewegungstyp": "Wechsel",
+      "Raum": "Zimmerkennung 102",
+      "StationID": "Radiologie",
+      "Beginn": "2021-01-09T09:30:00Z",
+      "Ende": null
+    }
+  ]
 }
