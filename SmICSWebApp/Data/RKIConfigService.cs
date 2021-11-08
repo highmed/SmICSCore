@@ -12,7 +12,7 @@ namespace SmICSWebApp.Data
     {
         private readonly IRKILabDataFactory _labdata;
         private readonly IPatientMovementFactory _patientInformation;
-        private readonly string path = @"./Resources/RKIConfig/RKIConfig.json";
+        private readonly string path = @"./Resources/OutbreakDetection/RKIConfig.json";
 
         public RKIConfigService(IPatientMovementFactory patientInfo, IRKILabDataFactory labdata)
         {
