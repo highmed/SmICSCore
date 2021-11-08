@@ -251,25 +251,12 @@
 
             string lastDayValue = lb + "-" + datum.AddDays(-1).ToString("dd.MM.yyyy");
             lastBundeslandNew = dbService.FindOneByAttributes<BundeslandNew>("id", lastDayValue, "bundesland", lb);
-            if (lastBundeslandNew != null)
-            {
-                string vortag = lastBundeslandNew.FallzahlGesamt;
-                fallzahlVortag = Int32.Parse(fallzahl.Replace(".", "").Trim()) - Int32.Parse(vortag.Replace(".", "").Trim());
-                string vortag2 = lastBundeslandNew.Todesfaelle;
-                todesfaelleVortag = Int32.Parse(todesfaelle.Replace(".", "").Trim()) - Int32.Parse(vortag2.Replace(".", "").Trim());
 
-                inzidenz7TageVortag = lastBundeslandNew.Inzidenz7Tage;
-            }
-            else
-            {
-                string vortag = bundeslandNew.FallzahlGesamt;
-                fallzahlVortag = Int32.Parse(fallzahl.Replace(".", "").Trim()) - Int32.Parse(vortag.Replace(".", "").Trim());
-                string vortag2 = bundeslandNew.Todesfaelle;
-                todesfaelleVortag = Int32.Parse(todesfaelle.Replace(".", "").Trim()) - Int32.Parse(vortag2.Replace(".", "").Trim());
-
-                inzidenz7TageVortag = bundeslandNew.Inzidenz7Tage;
-            }
-
+            string vortag = lastBundeslandNew.FallzahlGesamt;
+            fallzahlVortag = Int32.Parse(fallzahl.Replace(".", "").Trim()) - Int32.Parse(vortag.Replace(".", "").Trim());
+            string vortag2 = lastBundeslandNew.Todesfaelle;
+            todesfaelleVortag = Int32.Parse(todesfaelle.Replace(".", "").Trim()) - Int32.Parse(vortag2.Replace(".", "").Trim());
+            inzidenz7TageVortag = lastBundeslandNew.Inzidenz7Tage;
 
             string valueLk = datum.ToString("dd.MM.yyyy");
             IEnumerable<LandkreisNew> lks = dbService.FindAllByAttributes<LandkreisNew>("Stand", valueLk, "bundesland", lb);
