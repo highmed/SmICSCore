@@ -46,14 +46,19 @@ namespace SmICSWebApp.Data
                 else
                 {
                     string json = File.ReadAllText(path);
-
                     List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
-                    newList.AddRange(storedValues);
-
-                    string storeJson = JsonConvert.SerializeObject(newList.ToArray(), Formatting.Indented);
-                    File.WriteAllText(path, storeJson);
+                    if (newList != null)
+                    {
+                        newList.AddRange(storedValues);
+                        string storeJson = JsonConvert.SerializeObject(newList.ToArray(), Formatting.Indented);
+                        File.WriteAllText(path, storeJson);
+                    }
+                    else
+                    {
+                        string oldJson = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
+                        File.WriteAllText(path, oldJson);
+                    }
                 }
-                
             }
             catch(Exception)
             {
@@ -74,7 +79,7 @@ namespace SmICSWebApp.Data
             }
             else
             {
-                File.Create(path);
+                File.Create(path).Close(); ;
             }
             if (newList != null)
             {
