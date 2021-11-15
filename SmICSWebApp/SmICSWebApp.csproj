@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<Compile Remove="Resources\RKIConfig\**" />
+	<Content Remove="Resources\RKIConfig\**" />
+	<EmbeddedResource Remove="Resources\RKIConfig\**" />
+    <None Remove="Resources\RKIConfig\**" />
+  </ItemGroup>
+	
+  <ItemGroup>
     <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-01.json" />
     <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-02.json" />
     <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-03.json" />
@@ -53,7 +60,6 @@
 
   <ItemGroup>
     <Folder Include="Resources\nec\json\" />
-    <Folder Include="Resources\RKIConfig\" />
   </ItemGroup>
 
   <ItemGroup>
