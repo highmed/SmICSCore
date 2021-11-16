@@ -38,5 +38,6 @@
 #div_card_5_only_rules {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     width: 100%;
 }
