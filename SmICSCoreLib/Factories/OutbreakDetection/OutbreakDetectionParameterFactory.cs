@@ -46,12 +46,16 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
             foreach (OutbreakDectectionPatient pat in patientList)
             {
                 List<OutbreakDetectionLabResult> labResult = _restData.AQLQuery<OutbreakDetectionLabResult>(AQLCatalog.GetPatientLabResultList(parameter, pat));
-                labResult = labResult.OrderBy(l => l.ResultDate).ToList();
-                OutbreakDetectionLabResult result = labResult.Where(l => l.ResultDate >= parameter.Starttime && l.Result == (int)SarsCovResult.POSITIVE).FirstOrDefault();
-                if (result != null)
+                if (labResult != null)
                 {
-                    FirstPositiveCounts[(int)(result.ResultDate - parameter.Starttime).TotalDays] += 1;
-                }
+                    labResult = labResult.OrderBy(l => l.ResultDate).ToList();
+                    OutbreakDetectionLabResult result = labResult.Where(l => l.ResultDate >= parameter.Starttime && l.Result == (int)SarsCovResult.POSITIVE).FirstOrDefault();
+                    if (result != null)
+                    {
+                        FirstPositiveCounts[(int)(result.ResultDate - parameter.Starttime).TotalDays] += 1;
+                    }
+                } 
+                //TODO: elseif
             }
 
             return FirstPositiveCounts;
