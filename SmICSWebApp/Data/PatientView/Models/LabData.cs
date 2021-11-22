@@ -1,5 +1,5 @@
-﻿using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
-using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
+﻿using SmICSCoreLib.Factories.Lab.MibiLabData;
+using SmICSCoreLib.Factories.PatientMovement;
 
 namespace SmICSWebApp.Data.PatientView.Models
 {

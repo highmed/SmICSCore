@@ -1,4 +1,4 @@
-﻿using SmICSCoreLib.AQL.PatientInformation.PatientData;
+﻿using SmICSCoreLib.Factories.PatientInformation.PatientData;
 using System.Collections;
 using System.Collections.Generic;
 using Xunit;

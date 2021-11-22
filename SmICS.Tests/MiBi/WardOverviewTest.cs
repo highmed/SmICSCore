@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
-using SmICSCoreLib.AQL.MiBi;
-using SmICSCoreLib.AQL.MiBi.WardOverview;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
+using SmICSCoreLib.Factories.MiBi;
+using SmICSCoreLib.Factories.MiBi.WardOverview;
+using SmICSCoreLib.Factories.Lab.MibiLabData;
 using SmICSCoreLib.REST;
 using SmICSDataGenerator.Tests;
 using System;

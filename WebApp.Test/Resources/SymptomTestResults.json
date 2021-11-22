@@ -1,0 +1,22 @@
+{
+  "0": [
+    {
+      "PatientenID": "Patient06",
+      "NameDesSymptoms": "Cough (finding)",
+      "Beginn": "2020-02-13T21:47:45Z",
+      "Rueckgang": "2020-02-22T09:35:20Z"
+    },
+    {
+      "PatientenID": "Patient06",
+      "NameDesSymptoms": "Feeling feverish (finding)",
+      "Beginn": "2020-02-13T23:59:59Z",
+      "Rueckgang": "2020-03-17T02:35:20Z"
+    },
+    {
+      "PatientenID": "Patient06",
+      "NameDesSymptoms": "Fatigue (finding)",
+      "Beginn": "2020-02-13T14:59:59Z",
+      "Rueckgang": "2020-03-21T02:35:20Z"
+    }
+  ]
+}

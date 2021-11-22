@@ -1,32 +1,32 @@
 ﻿@page "/atHospital"
 
 @using System;
-@using SmICSCoreLib.AQL.Patient_Stay.Stationary
-@using SmICSCoreLib.AQL.PatientInformation.PatientMovement
+@using SmICSCoreLib.Factories.PatientStay.Stationary
+@using SmICSCoreLib.Factories.PatientMovement
 @using System.ComponentModel.DataAnnotations
-@inject SmICSWebApp.Data.Symptom symptom
+@using Microsoft.Extensions.Logging
+@inject ILogger<AtHospital> Logger
+@inject SmICSCoreLib.StatistikServices.EhrDataService ehrDataService
 
-<h3>Statistik (Prototyp)</h3>
 
 <div class="card">
-    <StatistikNav>
-    </StatistikNav>
+    <div class="row">
+        <StatistikNav>
+        </StatistikNav>
 
-    <div class="card-body">
-        <div>
+        <div class="card-body col-10">
             <div style="padding: 30px 0px 100px 0px;">
-
-
                 @if (patStationary == null)
                 {
-                    @if (status == true)
-                    {
-                        <p><em>Daten werden geladen...</em></p>
-                        <div class="spinner"></div> }
-                    else
+                    @if (status == false)
                     {
                         <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
                         <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+                    }
+                    else
+                    {
+                        <p><em>Daten werden geladen...</em></p>
+                        <div class="spinner"></div>
                     }
                 }
                 else
@@ -44,7 +44,7 @@
                                             <tr>
                                                 <th scope="col">
                                                     <EditForm Model="@patData">
-                                                        <label>Aufgenommen am: </label>
+                                                        <label>Aufgenommen ab dem: </label>
                                                         <InputDate @bind-Value="@patData.datum"></InputDate>
                                                         <button @onclick="GetAllPat">Aktualisieren</button>
                                                     </EditForm>
@@ -56,13 +56,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var patient in patStationary)
+                                            @foreach (var patient in sortedPatStationary)
                                             {
                                                 <tr>
-                                                    <th scope="row">@patData.datum.Date.ToString("dd-MM-yyyy")</th>
+                                                    <th scope="row">@patient.Datum_Uhrzeit_der_Aufnahme</th>
                                                     <td>@patient.FallID</td>
                                                     <td>
-                                                        <a href="" @onclick="() => GetPatMovement(patient.PatientID)" @onclick:preventDefault>
+                                                        <a href="" @onclick="() => GetPatMovements(patient.PatientID)" @onclick:preventDefault>
                                                             @patient.PatientID
                                                         </a>
                                                     </td>
@@ -72,7 +72,7 @@
                                             }
                                         </tbody>
                                     </table>
-                                    @if (patStationary.Count == 0)
+                                    @if (sortedPatStationary.Count == 0)
                                     {
                                         <p>Am @patData.datum.ToString("dd.MM.yyyy") wurden keine neuen Patienten Aufgenommen</p>
                                     }
@@ -86,7 +86,7 @@
                         <div class="col-8 d-flex">
                             <div class="card flex-fill">
                                 <div class="card-header">
-                                    <h5 class="card-title">Patient Ansicht</h5>
+                                    <h5 class="card-title">Patientenansicht</h5>
                                 </div>
 
                                 <div class="card-body">
@@ -174,7 +174,8 @@
 
 @code {
     PatData patData = new PatData();
-    List<StationaryDataModel> patStationary = new();
+    List<StationaryDataModel> sortedPatStationary = new();
+    List<StationaryDataModel> patStationary;
     List<PatientMovementModel> patMovtList;
     PatientMovementModel patientMovement;
     private int moveCount;
@@ -188,25 +189,51 @@
     {
         status = true;
         await Task.Run(GetAllPat);
-    }
 
-    private void GetAllPat()
-    {
-        patStationary = symptom.GetAllPatByDate(patData.datum);
-        if (patStationary == null)
+        if (patStationary == null && status == true)
         {
+            Logger.LogWarning("Ehr-Datan stehen nicht zur Verfügung!");
+            patStationary = null;
             status = false;
         }
     }
 
-    private void GetPatMovement(string patientId)
+    private void GetAllPat()
     {
-        patMovtList = symptom.GetPatMovement(patientId);
-        moveCount = patMovtList.Count();
-
-        if (moveCount != 0)
+        try
         {
-            patientMovement = patMovtList.First();
+            patStationary = ehrDataService.StationaryPatByDate(patData.datum);
+            sortedPatStationary = patStationary.OrderBy(x => x.Datum_Uhrzeit_der_Aufnahme).ToList();
+            Logger.LogInformation("Ehr-Datan wurden erfolgreich heruntergeladen");
+        }
+        catch (Exception)
+        {
+            Logger.LogWarning("Ehr-Datan stehen nicht zur Verfügung!");
+            status = false;
+        }
+    }
+
+    private void GetPatMovements(string patientId)
+    {
+        try
+        {
+            patMovtList = ehrDataService.GetPatMovement(patientId);
+            moveCount = patMovtList.Count();
+            if (moveCount != 0)
+            {
+                patientMovement = patMovtList.First();
+            }
+
+            first = 0;
+            second = 0;
+            indexFirst = 1;
+            indexSec = 1;
+            Logger.LogInformation("Ehr-Datan wurden erfolgreich heruntergeladen");
+        }
+        catch (Exception)
+        {
+            Logger.LogWarning("Ehr-Datan stehen nicht zur Verfügung!");
+            status = false;
         }
     }
 
@@ -234,7 +261,6 @@
     {
         [Required]
         public DateTime datum = DateTime.Now.Date;
-
     }
 
 }

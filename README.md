@@ -1,11 +1,14 @@
-# SmICS
-
-The Smart Infection Control System (SmICS) is an application for the support of the infection control units in clinics. For the general use it is necessary to connect the application to an openEHR Repository like [ehrbase](https://github.com/ehrbase/ehrbase). It offers different statistics, a patient timeline of the patients locations and a contact network for patients to track possible transmission paths. 
+he Smart Infection Control System (SmICS) is an application for the support of the infection control units in clinics. For the general use it is necessary to connect the application to an openEHR Repository like [ehrbase](https://github.com/ehrbase/ehrbase). It offers different statistics, a patient timeline of the patients locations and a contact network for patients to track possible transmission paths. 
 
 ___
 ## Requirements
 
 ### Repository
+
+<br>
+
+**IMPORTANT:** If you want to run the SmICS in its authentication version your openEHR Respository needs to be configured to work with oauth2 authentication
+
 
 Installed and functional openEHR Repository which provides the basic REST API from the openEHR Reference Model.
 
@@ -14,10 +17,10 @@ The openEHR Repository needs to be prefilled with following templates and compos
 - [Stationärer Versorgungsfall](https://ckm.highmed.org/ckm/templates/1246.169.620)
 - [Patientenaufenthalt](https://ckm.highmed.org/ckm/templates/1246.169.590) *(Altough "Station" is no mandatory field in the template, it is necessary for the full functionality for the SmICS)*
 - [Virologischer Befund](https://ckm.highmed.org/ckm/templates/1246.169.636)
+- [Impfstatus](https://ckm.highmed.org/ckm/templates/1246.169.1187)
+- [Symptome](https://ckm.highmed.org/ckm/templates/1246.169.1109)
 
 *Upcoming:*
-- *[Imfpstatus](https://ckm.highmed.org/ckm/templates/1246.169.1187)*
-- *[Symptome](https://ckm.highmed.org/ckm/templates/1246.169.1109)*
 - *[Mikrobiologischer Befund](https://ckm.highmed.org/ckm/templates/1246.169.69)*
 
 ### Hardware
@@ -25,7 +28,7 @@ The openEHR Repository needs to be prefilled with following templates and compos
 #### Server 
 - CPU: 4 Cores<sup>1</sup> 
 - RAM: 4 GB<sup>1</sup> 
-- Storage: 5 GB<sup>1</sup> 
+- Storage: 30 GB<sup>1</sup> 
 - OS: Linux *(recommended)*<sup>2</sup> 
 
 <sup>1</sup> *Estimated Requirements*
@@ -38,54 +41,46 @@ The openEHR Repository needs to be prefilled with following templates and compos
 
 ### Docker
 
-Docker or docker-compose tool. 
+Docker and docker-compose tool. 
 
-Installation: https://docs.docker.com/engine/install/ and if necessary: https://docs.docker.com/compose/install/
+Installation: https://docs.docker.com/engine/install/ and https://docs.docker.com/compose/install/
 
 ___
-## Execution
+## Preparation
 
-Clone these two repositories:
+### 1. Get the Software
+
+Download the latest versions of the SmICSCore and the SmICS Visualization (without the authentication feature) in the same directory and unpack it.
+
+SmICSCore: https://github.com/highmed/SmICSCore/releases <br>
+SmICS Visualization: https://github.com/highmed/SmICSVisualisierung/releases
+
+### 2. Prepare Certificates
+
+You need:
+<ul>
+<li>Root Certificates</li>
+</ul>
+
+If the SmICSCore Directory doesn't contain a <i>Certificates</i> folder, create one within the SmICSCore Directory.
 ```
-git clone https://github.com/highmed/SmICSCore.git
-git clone https://github.com/highmed/SmICSVisualisierung.git
-```
-
-**Build & Run Process - Docker**
-Within each local git repository following commands need to be executed. **You need to start with the SmICSCore Repository**
-
-```
-docker network create smics-net
-docker build --build-arg repo="http://localhost:8080/ehrbase/rest/openehr/v1" --build-arg user="$USERNAME" --build-arg passwd="$PASSWORD"  -t smics .
-docker run --name smics_core --network smics-net -e OPENEHR_DB="http://localhost:8080/ehrbase/rest/openehr/v1" -e OPENEHR_USER="$USERNAME" -e OPENEHR_PASSWD="$PASSWORD" -d -p 9787:9787 smics
-```
-
-```http://localhost:8080/ehrbase/rest/openehr/v1``` must be exchanged for the valid link to the openEHR REST API from the openEHR repository.
-```$USERNAME``` and ```$PASSWORD``` must be exchanged for valid user credentials from the openEHR repository.
-
-If the SmICSCore container stops building because of failing test (especially if the openEHR Repository is ehrbase), the following lines needs to be commented in the <ins>Dockerfile</ins> to build the container without the tests.
-
-
-```
-RUN dotnet test "SmICSConnection.Test" --logger:trx -c Release
-RUN dotnet test "SmICSDataGenerator.Test" --logger:trx -c Release
-RUN dotnet test "SmICS.Tests" --logger:trx -c Release
+mkdir SmICSCore/Certificates
 ```
 
-**Run Process - Docker**
+<ul>
+<li>Copy the root certificates to the Certificates Folder</li>
+</ul>
+
+### 3. Editing docker-compose.yml
+
+The docker-compose.yml is located in the SmICSCore folder.
+
+Every Environment Variable which contains an expression with ```<>``` needs to be replaced by your local settings.
+
+### 4. Running docker-compose
+
+Enter the SmICSCore directory and enter following command. 
 
 ```
-docker build -t smicsvisualisierung .
-docker run --name smics_visualisierung --network smics-net -d -p 3231:3231 smicsvisualisierung
+docker-compose up --build -d
 ```
-
-If you want to change the ports through which the applications are accessible, you have to change the first port in ```-p 9787:9787``` and/or ```-p 3231:3231```.
-<!--
-**Build & Run Process - Docker Compose**
-Edit the ```args: repo:``` in the ```docker-compose.yml``` and enter your connection string to you openEHR REST API.
-
-```
-docker-compose up -d
-```
-
-The SmICS Core Componentes should know be reachable via ```http://localhost:9787``` and the SmICS Visualisierungs Componentents via ```http://localhost:3231`` on the machine where you installed the Docker Container. -->

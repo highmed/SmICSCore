@@ -1,38 +1,41 @@
 ﻿@page "/region"
 
-@using SmICSWebApp.Data
-@using System.Collections.Generic;
+@using SmICSCoreLib.StatistikDataModels
+@using SmICSCoreLib.StatistikServices
 @using System.ComponentModel.DataAnnotations
-@using SmICSCoreLib.AQL.Patient_Stay.Count;
+@using System
+@using System.IO;
+@using ChartJs.Blazor.LineChart
+@using SmICSCoreLib.JSONFileStream;
+@using Microsoft.Extensions.Logging
+@inject ILogger<Region> Logger
+@inject RkiService rkiService
 
-@inject DataService dataService
-
-<h3>Statistik (Prototyp)</h3>
 
 <div class="card">
-    <StatistikNav>
-    </StatistikNav>
+    <div class="row">
+        <StatistikNav>
+        </StatistikNav>
 
-    <div class="card-body">
-        <div>
+        <div class="card-body col-10">
             <div style="padding: 0px 0px 100px 0px;">
-
                 @if (lkArray == null)
                 {
-                    @if (status == true || status == false)
-                    {
-                        <p><em>Daten werden geladen...</em></p>
-                        <div class="spinner"></div> }
-                    else
+                    @if (status == false)
                     {
                         <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
                         <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+                    }
+                    else
+                    {
+                        <p><em>Daten werden geladen...</em></p>
+                        <div class="spinner"></div>
                     }
                 }
                 else
                 {
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-5">
                             <div class="card flex-fill">
                                 <div class="card-header" style="padding-top: 10px;">
                                     <h5 class="card-title">Vergleich Region-Bundesland</h5>
@@ -40,21 +43,21 @@
                                         <div style="display: inline-flex; ">
                                             <div>
                                                 <label>Bundesland: </label>
-                                                <InputSelect @bind-Value="data.bl" @onclick="@OnValueBl">
+                                                <InputSelect @bind-Value="data.bl" @onclick="@GetBl">
                                                     @foreach (var item in bundeslaender)
                                                         {
-                                                        <option value="@item.blAttribute.bundesland"> @item.blAttribute.bundesland</option>}
+                                                        <option value="@item.BlAttribute.Bundesland"> @item.BlAttribute.Bundesland</option>}
                                                     }
                                                 </InputSelect>
                                             </div>
 
                                             <div>
                                                 <label>Region: </label>
-                                                <InputSelect @bind-Value="data.gen" @onclick="@OnValueGen">
+                                                <InputSelect @bind-Value="data.gen" @onclick="@GetLk">
                                                     @foreach (var item in @lkArray)
                                                         {
-                                                        <option value="@item.stadt">
-                                                            @item.stadt
+                                                        <option value="@item.Stadt">
+                                                            @item.Stadt
                                                         </option>
                                                         }
                                                 </InputSelect>
@@ -69,31 +72,31 @@
                                             <thead style="background-color: #7FBDD2;">
                                                 <tr>
                                                     <th scope="col">Daten</th>
-                                                    <th scope="col">@landkreis.stadt</th>
-                                                    <th scope="col">@bundesland.blAttribute.bundesland</th>
+                                                    <th scope="col">@landkreis.Stadt</th>
+                                                    <th scope="col">@bundesland.BlAttribute.Bundesland</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
                                                     <th scope="row">Fallzahl</th>
-                                                    <td>@landkreis.fallzahlGesamt</td>
-                                                    <td>@bundesland.blAttribute.fallzahlGesamt</td>
+                                                    <td>@landkreis.FallzahlGesamt</td>
+                                                    <td>@bundesland.BlAttribute.FallzahlGesamt</td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Fallzahl pro 100.000 Einwohner</th>
-                                                    <td>@landkreis.faellePro100000Ew </td>
-                                                    <td>@bundesland.blAttribute.faellePro100000Ew</td>
+                                                    <td>@landkreis.FaellePro100000Ew </td>
+                                                    <td>@bundesland.BlAttribute.FaellePro100000Ew</td>
                                                 </tr>
 
                                                 <tr>
-                                                    <th scope="row">Fälle in der letzten 7 Tage</th>
-                                                    <td>@landkreis.faelle7Lk</td>
-                                                    <td>@bundesland.blAttribute.faelle7BL</td>
+                                                    <th scope="row">Fälle in den letzten 7 Tagen</th>
+                                                    <td>@landkreis.Faelle7Lk</td>
+                                                    <td>@bundesland.BlAttribute.Faelle7BL</td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">7-Tage-Inzidenz</th>
-                                                    <td>@landkreis.inzidenz7Tage</td>
-                                                    <td>@bundesland.blAttribute.inzidenz7Tage</td>
+                                                    <td>@landkreis.Inzidenz7Tage</td>
+                                                    <td>@bundesland.BlAttribute.Inzidenz7Tage</td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">7-Tage-R-Wert</th>
@@ -102,18 +105,18 @@
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Verstorben</th>
-                                                    <td>@landkreis.todesfaelle</td>
-                                                    <td>@bundesland.blAttribute.todesfaelle</td>
+                                                    <td>@landkreis.Todesfaelle</td>
+                                                    <td>@bundesland.BlAttribute.Todesfaelle</td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">Verstorben der letzten 7 Tage</th>
-                                                    <td>@landkreis.todesfaelle7Lk</td>
-                                                    <td>@bundesland.blAttribute.todesfaelle7BL</td>
+                                                    <th scope="row">Verstorben in den letzten 7 Tagen</th>
+                                                    <td>@landkreis.Todesfaelle7Lk</td>
+                                                    <td>@bundesland.BlAttribute.Todesfaelle7BL</td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Genesen</th>
-                                                    <td>.k.A</td>
-                                                    <td>.k.A</td>
+                                                    <td> k.A.</td>
+                                                    <td> k.A.</td>
                                                 </tr>
                                                 @*<tr>
                                                         <th scope="row">Nicht genesen</th>
@@ -127,11 +130,16 @@
                             </div>
                         </div>
 
-                       
+                        <div class="col-7">
+                            <div class="card flex-fill">
+                                @if (@chartStatus == true)
+                                {
+                                    <Chart Config="config" @ref="_chart"></Chart>
+                                }
+                            </div>
+                        </div>
                     </div>
-
                 }
-
             </div>
         </div>
     </div>
@@ -145,103 +153,124 @@
     private Bundesland bundesland = new();
     private Landkreis landkreis = new();
     private string stand;
-    private string rValue = "";
+    private string rValue;
+    //private string rWert7TageVortag;
+    //private string lkDefult;
+    private string path;
+    //private string rkipPath;
     private bool status;
+    private bool chartStatus;
 
-
-    private int anzahlFaelle;
-    private int anzahlPatTage;
+    private Chart _chart;
+    private LineConfig config;
+    private string ResourcesPath = "Resources/";
+    private string StatistikPath;
+    private string RKIDataPath;
 
     protected override async Task OnInitializedAsync()
     {
         status = true;
+        chartStatus = false;
         data.bl = "Baden-Württemberg";
         data.gen = "Stuttgart";
-        await Task.Run(LoadRValue);
-        await Task.Run(LoadRkiData);
 
+        StatistikPath = @"" + ResourcesPath + "statistik/json";
+        RKIDataPath = @"" + ResourcesPath + "/Rkidata/";
+
+        await Task.Run(LoadRkiData);
+        GetChart();
+
+        if (lkArray == null && status == true)
+        {
+            Logger.LogWarning("RKI-Daten stehen nicht zur Verfügung!");
+            lkArray = null;
+            status = false;
+        }
     }
 
     private void LoadRkiData()
     {
         try
         {
-            dailyReport = dataService.DeserializeRkiData(DateTime.Now);
+            path = @""+ StatistikPath + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+
+            dailyReport = rkiService.DeserializeRkiData(path);
             if (dailyReport != null)
             {
-                stand = dailyReport.bericht.stand;
-                bundeslaender = dailyReport.bericht.bundesland;
+                stand = dailyReport.Bericht.Stand;
+                rValue = dailyReport.Bericht.RWert7Tage;
+                bundeslaender = dailyReport.Bericht.Bundesland;
                 foreach (var item in bundeslaender)
                 {
-                    if (item.blAttribute.bundesland == "Baden-Württemberg")
+                    if (item.BlAttribute.Bundesland == "Baden-Württemberg")
                     {
                         bundesland = item;
-                        lkArray = item.landkreis;
+                        lkArray = item.Landkreise;
                         landkreis = lkArray.First();
                     }
                 }
             }
             else
             {
-                dataService.SerializeRkiData();
-                dailyReport = dataService.DeserializeRkiData(DateTime.Now);
+                rkiService.SerializeRkiData(StatistikPath);
+                dailyReport = rkiService.DeserializeRkiData(path);
                 if (dailyReport != null)
                 {
-                    stand = dailyReport.bericht.stand;
-                    bundeslaender = dailyReport.bericht.bundesland;
+                    stand = dailyReport.Bericht.Stand;
+                    rValue = dailyReport.Bericht.RWert7Tage;
+                    bundeslaender = dailyReport.Bericht.Bundesland;
                     foreach (var item in bundeslaender)
                     {
-                        if (item.blAttribute.bundesland == "Baden-Württemberg")
+                        if (item.BlAttribute.Bundesland == "Baden-Württemberg")
                         {
                             bundesland = item;
-                            lkArray = item.landkreis;
+                            lkArray = item.Landkreise;
                             landkreis = lkArray.First();
                         }
                     }
                 }
             }
+            Logger.LogInformation("DailyReport wurde erfolgreich heruntergeladen");
         }
         catch (Exception)
         {
+            Logger.LogWarning("DailyReport koennte nicht heruntergeladen werden!");
             bundeslaender = null;
             bundesland = null;
             lkArray = null;
             landkreis = null;
+            rValue = ".k.A";
             status = false;
         }
     }
 
-    private void LoadRValue()
-    {
-        rValue = dataService.GetRValue(2);
-        if (rValue == null)
-        {
-            rValue = ".k.A";
-        }
-    }
-
-    private void OnValueBl()
+    private void GetBl()
     {
         foreach (var item in bundeslaender)
         {
-            if (item.blAttribute.bundesland == data.bl)
+            if (item.BlAttribute.Bundesland == data.bl)
             {
                 bundesland = item;
-                lkArray = item.landkreis;
+                lkArray = item.Landkreise;
                 landkreis = lkArray.First();
+                data.gen = landkreis.ToString();
             }
         }
+
+        GetChart();
     }
 
-    private void OnValueGen()
+    private void GetLk()
     {
         foreach (var item in lkArray)
         {
-            if (item.stadt == data.gen)
+            if (item.Stadt == data.gen)
             {
                 landkreis = item;
             }
         }
+
+        GetChart();
     }
 
     private class StatistikData
@@ -253,4 +282,188 @@
         public string gen { get; set; }
     }
 
+    private Dictionary<string, int> GetLKDataForChart(string landkreis)
+    {
+        Dictionary<string, int> rkiDatenLk = new();
+
+        string filePath = @""+RKIDataPath+"LKReport.json";
+
+        if (!File.Exists(filePath))
+        {
+            Directory.CreateDirectory(path);
+            LKReportJson lKReport = rkiService.GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 3, 228);
+            string filename = ("LKReport");
+            JSONWriter.Write(lKReport, RKIDataPath, filename);
+        }
+        LKReportJson lKReportJson = rkiService.LKReportDeserialize(filePath);
+
+        foreach (var item in lKReportJson.LKReport)
+        {
+            if (item.LKName == landkreis)
+            {
+                foreach (var reportAttribute in item.LKReportAttribute)
+                {
+                    //if (reportAttribute.Datum.StartsWith("01") || reportAttribute.Datum.StartsWith("15")
+                    //    || reportAttribute.Datum.StartsWith("28"))
+                    if (reportAttribute.Datum.StartsWith("01"))
+                    {
+                        rkiDatenLk.Add(reportAttribute.Datum, reportAttribute.Fahlzahl);
+                    }
+                }
+
+            }
+        }
+
+        return rkiDatenLk;
+    }
+
+    private Dictionary<string, int> GetBLDataForChart(string bundesland, Dictionary<string, int> rkiDatenLk)
+    {
+        Dictionary<string, int> rkiDatenBl = new();
+
+        string filePath = @"" + RKIDataPath + "BLReport.json";
+        if (!File.Exists(filePath))
+        {
+            Directory.CreateDirectory(path);
+            Report report = rkiService.GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 1, 422);
+            string filename = ("BLReport");
+            JSONWriter.Write(report, RKIDataPath, filename);
+        }
+        Report blReportJson = rkiService.BLReportDeserialize(filePath);
+
+        foreach (var item in blReportJson.BLReport)
+        {
+            if (item.BlName == bundesland)
+            {
+                foreach (var reportAttribute in item.BLReportAttribute)
+                {
+                    //if (reportAttribute.Datum.StartsWith("01") || reportAttribute.Datum.StartsWith("15")
+                    //    || reportAttribute.Datum.StartsWith("28"))
+                    if (reportAttribute.Datum.StartsWith("01"))
+                    {
+                        rkiDatenBl.Add(reportAttribute.Datum, reportAttribute.Fahlzahl);
+                    }
+                }
+
+            }
+        }
+
+
+        foreach (var itemBl in rkiDatenBl)
+        {
+            if (!rkiDatenLk.ContainsKey(itemBl.Key))
+            {
+                rkiDatenBl.Remove(itemBl.Key);
+            }
+        }
+
+        return rkiDatenBl;
+    }
+
+    private void GetChart()
+    {
+        if (chartStatus == false)
+        {
+            Dictionary<string, int> rkiDatenLk = GetLKDataForChart(landkreis.LandkreisName);
+            Dictionary<string, int> rkiDatenBl = GetBLDataForChart(bundesland.BlAttribute.Bundesland, rkiDatenLk);
+            if (rkiDatenLk != null)
+            {
+                config = new();
+                IDataset<int> lkDataset = new LineDataset<int>(rkiDatenLk.Values)
+                {
+                    Label = landkreis.LandkreisName,
+                    BackgroundColor = "#4AA0CA",
+                    BorderColor = "#7FBDD2",
+                    Fill = FillingMode.Disabled
+                };
+                IDataset<int> blDataset = new LineDataset<int>(rkiDatenBl.Values)
+                {
+                    Label = bundesland.BlAttribute.Bundesland,
+                    BackgroundColor = "#F35C58",
+                    BorderColor = "#F35C58",
+                    Fill = FillingMode.Disabled
+                };
+
+                config = new LineConfig
+                {
+                    Options = new LineOptions
+                    {
+                        Title = new OptionsTitle
+                        {
+                            Display = true,
+                            Text = "Entwicklung der 7-Tage-Fallzahlen"
+                        },
+                        Tooltips = new Tooltips
+                        {
+                            Mode = InteractionMode.Nearest,
+                            Intersect = true
+                        },
+                        Hover = new Hover
+                        {
+                            Mode = InteractionMode.Nearest,
+                            Intersect = true
+                        },
+                        Scales = new Scales
+                        {
+                            XAxes = new List<CartesianAxis>
+{
+                            new CategoryAxis
+                            {
+                                 ScaleLabel = new ScaleLabel
+                                {
+                                    LabelString = "Datum"
+                                }
+                            }
+                        },
+                            YAxes = new List<CartesianAxis>
+ {
+                            new LinearCartesianAxis
+                            {
+                                Ticks = new LinearCartesianTicks
+                                {
+                                    BeginAtZero = true
+                                }
+                            }
+                     }
+                        }
+                    }
+                };
+
+                foreach (var datum in rkiDatenBl.Keys)
+                {
+                    config.Data.Labels.Add(datum);
+                }
+                config.Data.Datasets.Add(blDataset);
+                config.Data.Datasets.Add(lkDataset);
+            }
+            chartStatus = true;
+        }
+        else
+        {
+            IList<IDataset> datasets = config.Data.Datasets;
+            datasets.Clear();
+            Dictionary<string, int> rkiDatenLkDSort = GetLKDataForChart(landkreis.LandkreisName);
+            Dictionary<string, int> rkiDatenBlSort = GetBLDataForChart(bundesland.BlAttribute.Bundesland, rkiDatenLkDSort);
+
+            IDataset<int> blDataset = new LineDataset<int>(rkiDatenBlSort.Values)
+            {
+                Label = bundesland.BlAttribute.Bundesland,
+                BackgroundColor = "#F35C58",
+                BorderColor = "#F35C58",
+                Fill = FillingMode.Disabled
+            };
+            IDataset<int> lkDataset2 = new LineDataset<int>(rkiDatenLkDSort.Values)
+            {
+                Label = landkreis.LandkreisName,
+                BackgroundColor = "#4AA0CA",
+                BorderColor = "#7FBDD2",
+                Fill = FillingMode.Disabled
+            };
+
+            config.Data.Datasets.Add(blDataset);
+            config.Data.Datasets.Add(lkDataset2);
+            _chart.Update();
+
+        }
+    }
 }

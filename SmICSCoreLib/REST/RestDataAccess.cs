@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SmICSCoreLib.AQL;
+using SmICSCoreLib.Factories;
 
 namespace SmICSCoreLib.REST
 {
@@ -15,7 +16,6 @@ namespace SmICSCoreLib.REST
     {
         private RestClientConnector _client;
         private ILogger<RestDataAccess> _logger;
-
         public RestDataAccess(ILogger<RestDataAccess> logger, RestClientConnector client)
         {
             _client = client;
@@ -84,6 +84,13 @@ namespace SmICSCoreLib.REST
             return  _client.Client.PostAsync(OpenehrConfig.openehrEndpoint + restPath, GetEHRStatus(Namespace, ID));
         }
 
+        public void SetAuthenticationHeader(string token)
+        {
+            if (token != "NoToken")
+            {
+                _client.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Split(" ")[1]);
+            }
+        }
         #region private Methods
         private HttpContent GetHttpContentADL(string xml)
         {

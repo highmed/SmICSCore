@@ -1,23 +1,27 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SmICSCoreLib.AQL.PatientInformation;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Labordaten;
-using SmICSCoreLib.AQL.PatientInformation.Symptome;
-using SmICSCoreLib.AQL.Contact_Nth_Network;
-using SmICSCoreLib.AQL.Lab;
-using SmICSCoreLib.AQL.Lab.EpiKurve;
+using SmICSCoreLib.Factories.PatientMovement;
+using SmICSCoreLib.Factories.Lab.ViroLabData;
+using SmICSCoreLib.Factories.Symptome;
+using SmICSCoreLib.Factories.Vaccination;
+using SmICSCoreLib.Factories.ContactNetwork;
+using SmICSCoreLib.Factories.EpiCurve;
 using SmICSCoreLib.REST;
-using SmICSCoreLib.AQL.Algorithm;
-using SmICSCoreLib.AQL.Algorithm.NEC;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
-using SmICSCoreLib.AQL.Patient_Stay;
-using SmICSCoreLib.AQL.Patient_Stay.Stationary;
-using SmICSCoreLib.AQL.Patient_Stay.Count;
-using SmICSCoreLib.AQL.Patient_Stay.Cases;
-using SmICSCoreLib.AQL.Patient_Stay.WeekCase;
-using SmICSCoreLib.AQL.MiBi.WardOverview;
-using SmICSCoreLib.AQL.PatientInformation.PatientData;
-using SmICSCoreLib.AQL.MiBi;
+using SmICSCoreLib.Factories.NEC;
+using SmICSCoreLib.Factories.Lab.MibiLabData;
+using SmICSCoreLib.Factories.PatientStay;
+using SmICSCoreLib.Factories.PatientStay.Stationary;
+using SmICSCoreLib.Factories.PatientStay.Count;
+using SmICSCoreLib.Factories.Employees;
+using SmICSCoreLib.Factories.Employees.PersInfoInfecCtrl;
+using SmICSCoreLib.Factories.Employees.ContactTracing;
+using SmICSCoreLib.Factories.Employees.PersonData;
+using SmICSCoreLib.Factories.InfectionSituation;
+using SmICSCoreLib.Factories.RKIConfig;
+using SmICSCoreLib.Factories.OutbreakDetection;
+using SmICSCoreLib.OutbreakDetection;
+using SmICSCoreLib.Factories.MiBi.WardOverview;
+using SmICSCoreLib.Factories.PatientInformation.PatientData;
+using SmICSCoreLib.Factories.MiBi;
 
 namespace SmICS
 {
@@ -29,12 +33,12 @@ namespace SmICS
             services.AddSingleton<IRestDataAccess, RestDataAccess>();
 
             services.AddTransient<IPatientMovementFactory, PatientMovementFactory>();
-            services.AddTransient<IPatientLabordataFactory, PatientLabordataFactory>();
+            services.AddTransient<IViroLabDataFactory, ViroLabDataFactory>();
             services.AddTransient<IMibiPatientLaborDataFactory, MibiPatientLaborDataFactory>();
             services.AddTransient<ISymptomFactory, SymptomFactory>();
+            services.AddTransient<IVaccinationFactory, VaccinationFactory>();
             services.AddTransient<IPatientDataFactory, PatientDataFactory>();
             services.AddTransient<IAntibiogramFactory, AntibiogramFactory>();
-            services.AddTransient<IPatientInformation, PatientInformation>();
 
             services.AddTransient<IContactNetworkFactory, ContactNetworkFactory>();
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();
@@ -44,14 +48,21 @@ namespace SmICS
             services.AddTransient<INECResultDataFactory, NECResultDataFactory>();
             services.AddTransient<INECResultFileFactory, NECResultFileFactory>();
 
-            services.AddTransient<ILabData, LabData>();
-            services.AddSingleton<IAlgorithmData, AlgortihmData>();
+            services.AddTransient<IOutbreakDetectionParameterFactory, OutbreakDetectionParameterFactory>();
+            services.AddSingleton<OutbreakDetectionProxy>();
 
             services.AddTransient<IStationaryFactory, StationaryFactory>();
-            services.AddTransient<IPatinet_Stay, Patinet_Stay>();
+            services.AddTransient<IPatientStay, PatientStay>();
             services.AddTransient<ICountFactory, CountFactory>();
-            services.AddTransient<ICaseFactory, CaseFactory>();
-            services.AddTransient<IWeekCaseFactory, WeekCaseFactory>();
+
+            services.AddTransient<IInfectionSituationFactory, InfectionSituationFactory>();
+
+            services.AddTransient<IEmployeeInformation, EmployeeInformation>();
+            services.AddTransient<IContactTracingFactory, ContactTracingFactory>();
+            services.AddTransient<IPersInfoInfecCtrlFactory, PersInfoInfecCtrlFactory>();
+            services.AddTransient<IPersonDataFactory, PersonDataFactory>();
+
+            services.AddTransient<IRKILabDataFactory, RKILabDataFactory>();
 
             services.AddTransient<IWardOverviewFactory, WardOverviewFactory>();
 

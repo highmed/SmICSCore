@@ -1,11 +1,9 @@
-﻿using SmICSCoreLib.AQL.PatientInformation.Patient_Bewegung;
-using SmICSCoreLib.AQL.PatientInformation.Patient_Mibi_Labordaten;
-using SmICSCoreLib.AQL.General;
+﻿using SmICSCoreLib.Factories.General;
 using System.Collections.Generic;
-using SmICSCoreLib.AQL.PatientInformation.PatientMovement;
 using System.Linq;
-using System;
 using SmICSWebApp.Data.PatientView.Models;
+using SmICSCoreLib.Factories.PatientMovement;
+using SmICSCoreLib.Factories.Lab.MibiLabData;
 
 namespace SmICSWebApp.Data.PatientView
 {

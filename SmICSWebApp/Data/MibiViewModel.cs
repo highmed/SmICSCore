@@ -1,5 +1,5 @@
-﻿using SmICSCoreLib.AQL.MiBi.WardOverview;
-using SmICSCoreLib.AQL.PatientInformation.PatientData;
+﻿using SmICSCoreLib.Factories.MiBi.WardOverview;
+using SmICSCoreLib.Factories.PatientInformation.PatientData;
 
 namespace SmICSWebApp.Data
 {

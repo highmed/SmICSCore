@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SmICSCoreLib.AQL;
+using SmICSCoreLib.Factories;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
@@ -43,7 +43,7 @@ namespace SmICSCoreLib.Tests.TestData
             {
                 foreach(string id in templateIDs)
                 {
-                    if (id == "Stationärer Versorgungsfall" || id == "Patientenaufenthalt" || id == "Virologischer Befund")
+                    if (id == "Stationärer Versorgungsfall" || id == "Patientenaufenthalt" || id == "Virologischer Befund" || id == "Impfstatus" || id == "Symptom")
                     {
                         XmlDocument xmlDoc = new XmlDocument();
                         xmlDoc.Load(@"../../../../TestData/templates/" + id.Replace(" ", "_") + ".opt");
@@ -69,7 +69,7 @@ namespace SmICSCoreLib.Tests.TestData
         {
             JArray patientArray = new JArray();
             RestDataAccess _data = CreateDataAccess();
-            for (int i = 17; i <= 34; i++)
+            for (int i = 1; i <= 38; i++)
             {
                 JObject patientObj = new JObject();
                 string patientNo = i.ToString();
@@ -111,7 +111,7 @@ namespace SmICSCoreLib.Tests.TestData
         private string ExistsPatient(RestDataAccess _data, string patientNo)
         {
             List<Patient> patient = _data.AQLQuery<Patient>(AQLCatalog.GetEHRID(patientNo));
-            return patient != null ? patient[0].PatientID : null;
+            return patient != null ? patient[0].ID : null;
         }
 
         private RestDataAccess CreateDataAccess()
@@ -141,7 +141,7 @@ namespace SmICSCoreLib.Tests.TestData
 
         private class Patient
         {
-            public string PatientID { get; set; }
+            public string ID { get; set; }
         }
     }
 }
