@@ -38,7 +38,7 @@ namespace SmICSCoreLib.StatistikServices.CronJob
 
         private void InitiateOutbreakDetection()
         {
-            string path = @"./Resources/RKIConfig/RKIConfig.json"; //TODO: Für publish Version anpassen
+            string path = @"./Resources/OutbreakDetection/RKIConfig.json"; //TODO: Für publish Version anpassen
             List<RKIConfigTemplate> configs = JSONReader<RKIConfigTemplate>.Read(path);
 
             foreach (RKIConfigTemplate config in configs)
