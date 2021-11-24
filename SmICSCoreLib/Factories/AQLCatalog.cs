@@ -624,7 +624,13 @@ namespace SmICSCoreLib.Factories
 
         public static AQLQuery GetAllPatients(DateTime date)
         {
-            return new AQLQuery("GetAllPatients", $"Select e/ehr_status/subject/external_ref/id/value as PatientID FROM EHR e CONTAINS COMPOSITION c CONTAINS ADMIN_ENTRY u[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] WHERE c/name/value='Patientenaufenthalt' and u/data[at0001]/items[at0004]/value/value = '{date.ToString("yyyy-MM-dd")}'");
+            return new AQLQuery("GetAllPatients", $@"Select e/ehr_status/subject/external_ref/id/value as PatientID 
+                                                    FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
+                                                    CONTAINS (ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
+                                                    AND d[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
+                                                    WHERE c/name/value='Stationärer Versorgungsfall' 
+                                                    AND a/data[at0001]/items[at0071]/value/value <= '{date.ToString("yyyy-MM-dd")}' 
+                                                    AND NOT EXISTS d/data[at0001]/items[at0011]/value/value");
         }
         public static AQLQuery CasesWithResults(PatientListParameter patientList)
         {

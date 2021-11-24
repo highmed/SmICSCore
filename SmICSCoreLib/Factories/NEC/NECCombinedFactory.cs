@@ -6,6 +6,7 @@ using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace SmICSCoreLib.Factories.NEC
 {
@@ -25,30 +26,30 @@ namespace SmICSCoreLib.Factories.NEC
         public NECCombinedDataModel Process(DateTime date)
         {
             List<PatientModel> currentPatients = _restData.AQLQuery<PatientModel>(AQLCatalog.GetAllPatients(date));
+            List<NECRequestModel> currentData = new List<NECRequestModel>();
 
-            PatientListParameter patientParameter = PatientModelListToPatientListParameter(currentPatients);
-
-            List<LabDataModel> patLabs = _labFac.Process(patientParameter);
-            List<PatientMovementModel> patMovemenst = _movFac.Process(patientParameter);
-
-
-            NECCombinedDataModel data = new NECCombinedDataModel()
+            foreach (PatientModel pat in currentPatients)
             {
-                labdat = reduceToNECData(patLabs),
-                movementData = reduceToNECData(patMovemenst)
-            };
+                PatientListParameter patientParameter = PatientModelToPatientListParameter(pat);
+                List<LabDataModel> patLabs = _labFac.Process(patientParameter);
+                List<PatientMovementModel> patMovemenst = _movFac.Process(patientParameter);
+                patLabs.Where(l => l.ZeitpunktProbenentnahme =)
+                currentData = new NECRequestModel()
+                {
+                    labdat = reduceToNECData(patLabs),
+                    movementData = reduceToNECData(patMovemenst)
+                };
+            }
 
-            return data;
+
+            return currentData;
         }
 
-        private PatientListParameter PatientModelListToPatientListParameter(List<PatientModel> currentPatients)
+        private PatientListParameter PatientModelToPatientListParameter(PatientModel currentPatient)
         {
             PatientListParameter patientList = new PatientListParameter();
             patientList.patientList = new List<string>();
-            foreach (PatientModel patient in currentPatients)
-            {
-                patientList.patientList.Add(patient.PatientID);
-            }
+            patientList.patientList.Add(currentPatient.PatientID);
             return patientList;
         }
 
