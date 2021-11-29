@@ -7,44 +7,84 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using SmICSCoreLib.Factories.Lab.MibiLabData;
 
 namespace SmICSCoreLib.Factories.NEC
 {
     public class NECCombinedFactory : INECCombinedFactory
     {
         public IRestDataAccess _restData;
-        private IViroLabDataFactory _labFac;
+        private IMibiPatientLaborDataFactory _labFac;
         private IPatientMovementFactory _movFac;
 
-        public NECCombinedFactory(IRestDataAccess restData, IViroLabDataFactory labFac, IPatientMovementFactory movFac)
+        public NECCombinedFactory(IRestDataAccess restData, IMibiPatientLaborDataFactory labFac, IPatientMovementFactory movFac)
         {
             _restData = restData;
             _labFac = labFac;
             _movFac = movFac;
         }
 
-        public NECCombinedDataModel Process(DateTime date)
+        public List<NECPatientInformation> Process(DateTime date)
         {
-            List<PatientModel> currentPatients = _restData.AQLQuery<PatientModel>(AQLCatalog.GetAllPatients(date));
-            List<NECRequestModel> currentData = new List<NECRequestModel>();
+            List<PatientModel> currentPatients = GetCurrentPatients(date); 
+            List<NECPatientInformation> currentData = new List<NECPatientInformation>();
 
             foreach (PatientModel pat in currentPatients)
             {
+                Console.WriteLine(pat.PatientID);
                 PatientListParameter patientParameter = PatientModelToPatientListParameter(pat);
-                List<LabDataModel> patLabs = _labFac.Process(patientParameter);
-                List<PatientMovementModel> patMovemenst = _movFac.Process(patientParameter);
-                patLabs.Where(l => l.ZeitpunktProbenentnahme =)
-                currentData = new NECRequestModel()
+                List<MibiLabDataModel> patLabs = _labFac.Process(patientParameter);
+                List<PatientMovementModel> patMovements = _movFac.Process(patientParameter);
+                if (patMovements.Count != 0)
                 {
-                    labdat = reduceToNECData(patLabs),
-                    movementData = reduceToNECData(patMovemenst)
-                };
+                    patMovements = patMovements.Where(m => (m.Beginn.Date <= date.Date && m.Ende.Date >= date.Date)).ToList();
+                    patLabs = patLabs.Where(l => l.ZeitpunktProbenentnahme.Date == date.Date).ToList();
+
+                    currentData.Add(CombineMovementsWitLab(patMovements, patLabs));
+                }
             }
 
 
             return currentData;
         }
 
+        private NECPatientInformation CombineMovementsWitLab(List<PatientMovementModel> Movements, List<MibiLabDataModel> Labs)
+        {
+            NECPatientInformation patInfo = new NECPatientInformation();
+            patInfo.PatientInformation = new List<NECMovement>();
+
+            patInfo.PatientID = Movements[0].PatientID;
+
+            foreach (PatientMovementModel movement in Movements)
+            {
+                List<MibiLabDataModel> linkedLabs = Labs.Where(l => movement.Beginn < l.ZeitpunktProbenentnahme && movement.Ende >= l.ZeitpunktProbenentnahme).ToList();
+                patInfo.PatientInformation.Add(new NECMovement()
+                {
+                    Admission = movement.Beginn,
+                    Discharge = movement.Ende,
+                    Ward = movement.StationID,
+                    MovementType = movement.BewegungstypID,
+                    LabData = linkedLabs != null ? reduceToNECData(linkedLabs) : null
+                }); 
+            }
+            return patInfo;
+        }
+
+        private List<PatientModel> GetCurrentPatients(DateTime date)
+        {
+            List<PatientModel> admittedPatient = _restData.AQLQuery<PatientModel>(AQLCatalog.GetAllPatients(date));
+            List<PatientModel> dischargedPatient = _restData.AQLQuery<PatientModel>(AQLCatalog.GetAllPatientsDischarged(date));
+            if(admittedPatient == null)
+            {
+                return dischargedPatient;
+            }
+            else if(dischargedPatient == null)
+            {
+                return admittedPatient;
+            }
+            return admittedPatient.Concat(dischargedPatient).ToList();
+
+        }
         private PatientListParameter PatientModelToPatientListParameter(PatientModel currentPatient)
         {
             PatientListParameter patientList = new PatientListParameter();
@@ -53,35 +93,17 @@ namespace SmICSCoreLib.Factories.NEC
             return patientList;
         }
 
-        private List<NECPatientMovementDataModel> reduceToNECData(List<PatientMovementModel> patientMovements)
-        {
-            List<NECPatientMovementDataModel> necPatientData = new List<NECPatientMovementDataModel>();
-            foreach (PatientMovementModel patientMovement in patientMovements)
-            {
-                NECPatientMovementDataModel necPatientMovementData = new NECPatientMovementDataModel();
-                necPatientMovementData.PatientID = patientMovement.PatientID;
-                necPatientMovementData.Beginn = patientMovement.Beginn;
-                necPatientMovementData.Ende = patientMovement.Ende;
-                necPatientMovementData.StationID = patientMovement.StationID;
-                necPatientMovementData.BewegungstypID = patientMovement.BewegungstypID;
-
-                necPatientData.Add(necPatientMovementData);
-            }
-            return necPatientData;
-        }
-
-        private List<NECPatientLabDataModel> reduceToNECData(List<LabDataModel> patientLabDatas)
+        private List<NECPatientLabDataModel> reduceToNECData(List<MibiLabDataModel> patientLabDatas)
         {
             List<NECPatientLabDataModel> necPatientData = new List<NECPatientLabDataModel>();
-            foreach (LabDataModel patientLabData in patientLabDatas)
+            foreach (MibiLabDataModel patientLabData in patientLabDatas)
             {
                 NECPatientLabDataModel necPatientLabData = new NECPatientLabDataModel();
-                necPatientLabData.PatientID = patientLabData.PatientID;
-                necPatientLabData.Befund = patientLabData.Befund;
-                necPatientLabData.Befunddatum = patientLabData.Befunddatum.Value;
-                necPatientLabData.KeimID = patientLabData.KeimID;
+                necPatientLabData.Result = patientLabData.Befund;
+                necPatientLabData.ResultDate = patientLabData.Befunddatum;
+                necPatientLabData.Pathogen = patientLabData.KeimID;
                 necPatientLabData.MaterialID = patientLabData.MaterialID;
-                necPatientLabData.ZeitpunktProbeentnahme = patientLabData.ZeitpunktProbenentnahme;
+                necPatientLabData.SpecimenColletionDate = patientLabData.ZeitpunktProbenentnahme;
 
                 necPatientData.Add(necPatientLabData);
             }

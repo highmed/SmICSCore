@@ -435,7 +435,7 @@ namespace SmICSWebApp.Controllers
 
         [Route("NECDataRequest")]
         [HttpPost]
-        public ActionResult<NECCombinedDataModel> NEC([FromBody] DateTime date)
+        public ActionResult<List<NECPatientInformation>> NEC([FromBody] DateTime date)
         {
             try
             {

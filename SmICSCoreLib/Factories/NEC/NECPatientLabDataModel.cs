@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SmICSCoreLib.Factories.NEC
 {
     public class NECPatientLabDataModel
     {
-        public string PatientID { get; set; }
         public string MaterialID { get; set; }
-        public DateTime ZeitpunktProbeentnahme { get; set; }
-        public DateTime Befunddatum { get; set; }
-        public bool Befund { get; set; }
-        public string KeimID { get; set; }
+        public DateTime SpecimenColletionDate { get; set; }
+        public DateTime? ResultDate { get; set; }
+        public bool Result { get; set; }
+        public string Pathogen { get; set; }
     }
 }

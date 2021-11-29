@@ -621,16 +621,30 @@ namespace SmICSCoreLib.Factories
         }
 
         #region MiBi
-
+        /// <summary>
+        /// Returns all patients which admitted before or at the given date and was discharged at the given date
+        /// </summary>
+        public static AQLQuery GetAllPatientsDischarged(DateTime date)
+        {
+            return new AQLQuery("GetAllPatientsDischarged", $@"Select e/ehr_status/subject/external_ref/id/value as PatientID 
+                                                    FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
+                                                    CONTAINS (ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
+                                                    AND ADMIN_ENTRY d[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
+                                                    WHERE c/name/value='Stationärer Versorgungsfall' 
+                                                    AND a/data[at0001]/items[at0071]/value/value <= '{date.ToString("yyyy-MM-dd")}' 
+                                                    AND d/data[at0001]/items[at0011]/value/value >= '{date.ToString("yyyy-MM-dd")}'" );
+        }
+        /// <summary>
+        /// Returns all patients which admitted before or at the given date and still aren't discharged
+        /// </summary>
         public static AQLQuery GetAllPatients(DateTime date)
         {
             return new AQLQuery("GetAllPatients", $@"Select e/ehr_status/subject/external_ref/id/value as PatientID 
                                                     FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
-                                                    CONTAINS (ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
-                                                    AND d[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
+                                                    CONTAINS ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
                                                     WHERE c/name/value='Stationärer Versorgungsfall' 
                                                     AND a/data[at0001]/items[at0071]/value/value <= '{date.ToString("yyyy-MM-dd")}' 
-                                                    AND NOT EXISTS d/data[at0001]/items[at0011]/value/value");
+                                                    AND NOT EXISTS c/content[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]");
         }
         public static AQLQuery CasesWithResults(PatientListParameter patientList)
         {
