@@ -621,10 +621,30 @@ namespace SmICSCoreLib.Factories
         }
 
         #region MiBi
-
+        /// <summary>
+        /// Returns all patients which admitted before or at the given date and was discharged at the given date
+        /// </summary>
+        public static AQLQuery GetAllPatientsDischarged(DateTime date)
+        {
+            return new AQLQuery("GetAllPatientsDischarged", $@"Select e/ehr_status/subject/external_ref/id/value as PatientID 
+                                                    FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
+                                                    CONTAINS (ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
+                                                    AND ADMIN_ENTRY d[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
+                                                    WHERE c/name/value='Stationärer Versorgungsfall' 
+                                                    AND a/data[at0001]/items[at0071]/value/value <= '{date.ToString("yyyy-MM-dd")}' 
+                                                    AND d/data[at0001]/items[at0011]/value/value >= '{date.ToString("yyyy-MM-dd")}'" );
+        }
+        /// <summary>
+        /// Returns all patients which admitted before or at the given date and still aren't discharged
+        /// </summary>
         public static AQLQuery GetAllPatients(DateTime date)
         {
-            return new AQLQuery("GetAllPatients", $"Select e/ehr_status/subject/external_ref/id/value as PatientID FROM EHR e CONTAINS COMPOSITION c CONTAINS ADMIN_ENTRY u[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] WHERE c/name/value='Patientenaufenthalt' and u/data[at0001]/items[at0004]/value/value = '{date.ToString("yyyy-MM-dd")}'");
+            return new AQLQuery("GetAllPatients", $@"Select e/ehr_status/subject/external_ref/id/value as PatientID 
+                                                    FROM EHR e CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
+                                                    CONTAINS ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
+                                                    WHERE c/name/value='Stationärer Versorgungsfall' 
+                                                    AND a/data[at0001]/items[at0071]/value/value <= '{date.ToString("yyyy-MM-dd")}' 
+                                                    AND NOT EXISTS c/content[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]");
         }
         public static AQLQuery CasesWithResults(PatientListParameter patientList)
         {
@@ -680,9 +700,7 @@ namespace SmICSCoreLib.Factories
                                         CONTAINS CLUSTER b[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]) 
                                 where w/items[at0001]/name='Erregername' 
                                 and b/items[at0024]/name='Antibiotikum'   
-                                and e/ehr_status/subject/external_ref/id/value = '{ parameter.EhrID }' 
                                 and c/uid/value = '{ parameter.UID }' 
-                                and m/items[at0001]/value/value = '{ parameter.CaseID }' 
                                 and w/items[at0001]/value/value = '{ parameter.Pathogen }' 
                                 and w/items[at0027]/value/magnitude = '{ parameter.IsolatNo }'                                       
                                 order by b/items[at0024]/value/value asc");

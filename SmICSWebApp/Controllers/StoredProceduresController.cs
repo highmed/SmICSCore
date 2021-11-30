@@ -19,6 +19,7 @@ using SmICSCoreLib.StatistikDataModels;
 using SmICSCoreLib.Factories.InfectionSituation;
 using SmICSWebApp.Data.OutbreakDetection;
 using SmICSCoreLib.OutbreakDetection;
+using SmICSCoreLib.Factories.NEC;
 
 namespace SmICSWebApp.Controllers
 {
@@ -39,7 +40,8 @@ namespace SmICSWebApp.Controllers
         private readonly ISymptomFactory _symptomFac;
         private readonly IVaccinationFactory _vaccinationFac;
         private readonly OutbreakDetectionService _outbreakService;
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService)
+        private readonly INECCombinedFactory _necComboFac;
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService, INECCombinedFactory necComboFac)
         {
             _logger = logger;
             _contact = contact;
@@ -52,6 +54,7 @@ namespace SmICSWebApp.Controllers
             _symptomFac = symptomFac;
             _vaccinationFac = vaccinationFac;
             _outbreakService = outbreakService;
+            _necComboFac = necComboFac;
         }
 
         /// <summary></summary>
@@ -423,6 +426,20 @@ namespace SmICSWebApp.Controllers
             try
             {
                 return _outbreakService.GetsResultsInTimespan(outbreak);
+            }
+            catch (Exception e)
+            {
+                return ErrorHandling(e);
+            }
+        }
+
+        [Route("NECDataRequest")]
+        [HttpPost]
+        public ActionResult<List<NECPatientInformation>> NEC([FromBody] DateTime date)
+        {
+            try
+            {
+                return _necComboFac.Process(date);
             }
             catch (Exception e)
             {

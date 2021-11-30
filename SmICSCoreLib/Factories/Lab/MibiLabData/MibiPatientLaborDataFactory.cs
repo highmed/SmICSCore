@@ -95,11 +95,9 @@ namespace SmICSCoreLib.Factories.Lab.MibiLabData
                 MibiLabDataModel mibiLabData = new MibiLabDataModel(metaData, sampleData, pathogenData);
                 AntibiogramParameter antibiogramParameter = new AntibiogramParameter()
                 {
-                    CaseID = metaData.FallID,
                     Pathogen = pathogenData.KeimID,
                     LabID = sampleData.LabordatenID,
                     UID = metaData.UID,
-                    EhrID = metaData.PatientID,
                     IsolatNo = pathogenData.IsolatNo
                 };
                 mibiLabData.Antibiogram = _antibiogram.Process(antibiogramParameter);
