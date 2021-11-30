@@ -700,9 +700,7 @@ namespace SmICSCoreLib.Factories
                                         CONTAINS CLUSTER b[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]) 
                                 where w/items[at0001]/name='Erregername' 
                                 and b/items[at0024]/name='Antibiotikum'   
-                                and e/ehr_status/subject/external_ref/id/value = '{ parameter.EhrID }' 
                                 and c/uid/value = '{ parameter.UID }' 
-                                and m/items[at0001]/value/value = '{ parameter.CaseID }' 
                                 and w/items[at0001]/value/value = '{ parameter.Pathogen }' 
                                 and w/items[at0027]/value/magnitude = '{ parameter.IsolatNo }'                                       
                                 order by b/items[at0024]/value/value asc");

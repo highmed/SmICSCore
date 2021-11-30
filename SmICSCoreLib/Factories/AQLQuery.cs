@@ -1,16 +1,14 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-
-namespace SmICSCoreLib.Factories
+﻿namespace SmICSCoreLib.Factories
 {
     public class AQLQuery
     {
-        private string Query { get; }
-        public string Name { get; }
+        public string Query { get; set; }
+        public string Name { get; set; }
 
+        public AQLQuery()
+        {
+
+        }
         public AQLQuery(string name, string query)
         {
             Name = name;
