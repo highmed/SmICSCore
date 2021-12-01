@@ -29,7 +29,7 @@
                 <Field Horizontal="true">
                     <FieldLabel ColumnSize="ColumnSize.Is2">PatientID</FieldLabel>
                     <FieldBody ColumnSize="ColumnSize.Is10">
-                        <TextEdit Placeholder="Bitte geben Sie eine valide I-Zahl ein..." @bind-text="@PatientID" Autofocus="false" />
+                        <TextEdit Placeholder="Bitte geben Sie eine valide Patientenbezeichnung ein..." @bind-text="@PatientID" Autofocus="false" />
                     </FieldBody>
                 </Field>
                 <Field Margin="Margin.Is4.FromLeft">
@@ -47,11 +47,10 @@
 
     @if (patient == null)
     {
-        <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @PatientID</Heading> 
-    }else
+        <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @PatientID</Heading> }
+    else
     {
-        <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @patient.Name</Heading>
-    }
+        <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @patient.Name</Heading>}
 
     @if (patientViews != null)
     {
@@ -61,21 +60,7 @@
                 <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
                     <Heading Size="HeadingSize.Is6">
                         <Button Clicked="@(()=>c.Collapsed = !c.Collapsed)" Width="Width.Is100">
-                            @*<Fields Flex="Flex.AlignItems.Start">
-                                    <Field ColumnSize="ColumnSize.Is6">
-                                        <FieldLabel>Fallkennung:</FieldLabel>
-                                        <Span>@c.ID</Span>
-                                    </Field>
-                                    <Field ColumnSize="ColumnSize.Is3">
-                                        <FieldLabel>Status:</FieldLabel>
-                                        <Span>@c.ID</Span>
-                                    </Field>
-                                    <Field ColumnSize="ColumnSize.Is3">
-                                        <FieldLabel>Befunddatum:</FieldLabel>
-                                        <Span>@c.ID</Span>
-                                    </Field>
-                                </Fields>*@
-                            <Table Narrow="true">
+                            <Table Narrow="true" Margin="Margin.Is0.FromBottom">
                                 <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
                                     <TableRow>
                                         <TableHeaderCell>Fallkennung</TableHeaderCell>
@@ -101,63 +86,60 @@
                     </Heading>
                 </CollapseHeader>
                 <CollapseBody>
-                    @*<Span class="oi oi-fork" TextColor="TextColor.Info"></Span>
-                        <Card Margin="Margin.Is5.Is3.FromBottom.Is0.FromTop" Background="Background.Info" TextColor="TextColor.White" Padding="Padding.Is1">
-                            <CardBody Padding="Padding.Is0">
-                                <Field>
-                                    <FieldLabel>Auftrags-ID:</FieldLabel>
-                                    @c.ID
+                    <Card Border="Border.Is0" Margin="Margin.Is0">
+                        <CardBody Padding="Padding.Is0.Is2.FromLeft">
+                            <Fields Flex="Flex.AlignItems.Start">
+                                <Field Horizontal="true">
+                                    <Span class="oi oi-fork" TextColor="TextColor.Info" style="width:auto;"></Span>
+                                    <FieldBody Width="Width.Is50">
+                                        <CardTitle Size="5" TextColor="TextColor.Black50">Proben</CardTitle>
+                                    </FieldBody>
                                 </Field>
-                                <Field>
-                                    <FieldLabel>Empfängerstandort:</FieldLabel>
-                                    @c.ID
-                                </Field>
-                                <Field>
-                                    <FieldLabel>Anforderungen:</FieldLabel>
-                                    @c.ID
-                                </Field>
-                            </CardBody>
-                        </Card>*@
-
+                            </Fields>
+                        </CardBody>
+                    </Card>
                     @foreach (KeyValuePair<LabMetaData, LabData> dictEntry in patientViews[c])
                     {
                         <Collapse Visible="@dictEntry.Key.Collapsed">
                             <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
                                 <Heading Size="HeadingSize.Is6">
                                     <Button Clicked="@(()=>dictEntry.Key.Collapsed = !dictEntry.Key.Collapsed)" Width="Width.Is100">
-                                        <Fields Flex="Flex.AlignItems.Start">
-                                            <Field ColumnSize="ColumnSize.Is8">
-                                                <FieldLabel>Probenart:</FieldLabel>
-                                                <Span>@dictEntry.Value.Befund</Span>
-                                            </Field>
-                                            <Field ColumnSize="ColumnSize.Is3">
-                                                <FieldLabel>Labor-ID:</FieldLabel>
-                                                <Span>@dictEntry.Value.KeimID</Span>
-                                            </Field>
-                                        </Fields>
+                                        <Table Narrow="true" Margin="Margin.Is0.FromBottom">
+                                            <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
+                                                <TableRow>
+                                                    <TableHeaderCell>Probenart</TableHeaderCell>
+                                                    <TableHeaderCell>Labor-ID</TableHeaderCell>
+                                                    <TableHeaderCell>Zeitpunkt der Probeentnahme</TableHeaderCell>
+                                                    <TableHeaderCell>Zeitpunkt des Probeneingangs</TableHeaderCell>
+                                                    <TableHeaderCell>Körperstelle</TableHeaderCell>
+                                                    <TableHeaderCell>MLAB Bezeichnung</TableHeaderCell>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody Background="Background.White">
+                                                <TableRow>
+                                                    <TableRowCell></TableRowCell>
+                                                    <TableRowCell>@dictEntry.Value.KeimID</TableRowCell>
+                                                    <TableRowCell></TableRowCell>
+                                                    <TableRowCell></TableRowCell>
+                                                    <TableRowCell></TableRowCell>
+                                                    <TableRowCell></TableRowCell>
+                                                </TableRow>
+                                            </TableBody>
+                                        </Table>
                                     </Button>
                                 </Heading>
                             </CollapseHeader>
                             <CollapseBody>
-                                <Span class="oi oi-fork" TextColor="TextColor.Info"></Span>
-                                <Card Margin="Margin.Is5.Is3.FromBottom.Is0.FromTop" Background="Background.Info" TextColor="TextColor.White" Padding="Padding.Is1">
-                                    <CardBody Padding="Padding.Is0">
-                                        <Field>
-                                            <FieldLabel>Zeitpunkt der Probeentnahme:</FieldLabel>
-                                            @dictEntry.Key.ReportDate
-                                        </Field>
-                                        <Field>
-                                            <FieldLabel>Zeitpunkt des Probeneingangs:</FieldLabel>
-                                            @dictEntry.Key.ReportDate
-                                        </Field>
-                                        <Field>
-                                            <FieldLabel>Körperstelle:</FieldLabel>
-                                            @dictEntry.Value.KeimID
-                                        </Field>
-                                        <Field>
-                                            <FieldLabel>MLAB Bezeichnung:</FieldLabel>
-                                            @dictEntry.Value.KeimID
-                                        </Field>
+                                <Card Border="Border.Is0" Margin="Margin.Is0">
+                                    <CardBody Padding="Padding.Is0.Is2.FromLeft">
+                                        <Fields Flex="Flex.AlignItems.Start">
+                                            <Field Horizontal="true">
+                                                <Span class="oi oi-fork" TextColor="TextColor.Info" style="width:auto;"></Span>
+                                                <FieldBody Width="Width.Is50">
+                                                    <CardTitle Size="5" TextColor="TextColor.Black50">Erreger</CardTitle>
+                                                </FieldBody>
+                                            </Field>
+                                        </Fields>
                                     </CardBody>
                                 </Card>
                                 @foreach (Antibiogram ab in dictEntry.Value.Antibiogram)
@@ -166,40 +148,34 @@
                                         <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
                                             <Heading Size="HeadingSize.Is6">
                                                 <Button Clicked="@(()=>ab.Collapsed = !ab.Collapsed)" Width="Width.Is100">
-                                                    <Fields Flex="Flex.AlignItems.Start">
-                                                        <Field ColumnSize="ColumnSize.Is8">
-                                                            <FieldLabel>Erregername:</FieldLabel>
-                                                            <Span>@ab.Antibiotic</Span>
-                                                        </Field>
-                                                        <Field ColumnSize="ColumnSize.Is3">
-                                                            <FieldLabel>Zeitstempel:</FieldLabel>
-                                                            <Span></Span>
-                                                        </Field>
-                                                    </Fields>
+                                                    <Table Narrow="true" Margin="Margin.Is0.FromBottom">
+                                                        <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
+                                                            <TableRow>
+                                                                <TableHeaderCell>Name</TableHeaderCell>
+                                                                <TableHeaderCell>Nachweis</TableHeaderCell>
+                                                                <TableHeaderCell>Zeitstempel</TableHeaderCell>
+                                                                <TableHeaderCell>Häufigkeit</TableHeaderCell>
+                                                                <TableHeaderCell>Isolatnummer</TableHeaderCell>
+                                                            </TableRow>
+                                                        </TableHeader>
+                                                        <TableBody Background="Background.White">
+                                                            <TableRow>
+                                                                <TableRowCell></TableRowCell>
+                                                                <TableRowCell></TableRowCell>
+                                                                <TableRowCell>@dictEntry.Key.ReportDate</TableRowCell>
+                                                                <TableRowCell></TableRowCell>
+                                                                <TableRowCell></TableRowCell>
+                                                            </TableRow>
+                                                        </TableBody>
+                                                    </Table>
                                                 </Button>
                                             </Heading>
                                         </CollapseHeader>
                                         <CollapseBody>
-                                            <Span class="oi oi-fork" TextColor="TextColor.Info"></Span>
-                                            <Card Margin="Margin.Is5.Is3.FromBottom.Is0.FromTop" Background="Background.Info" TextColor="TextColor.White" Padding="Padding.Is1">
-                                                <CardBody Padding="Padding.Is0">
-                                                    <Field>
-                                                        <FieldLabel>Nachweis:</FieldLabel>
-                                                        @ab.Resistance
-                                                    </Field>
-                                                    <Field>
-                                                        <FieldLabel>Häufigkeit:</FieldLabel>
-                                                        @dictEntry.Key.ReportDate
-                                                    </Field>
-                                                    <Field>
-                                                        <FieldLabel>Isolatnummer:</FieldLabel>
-                                                        @ab.MinInhibitorConcentration
-                                                    </Field>
-                                                </CardBody>
-                                            </Card>
-                                            <Card Border="Border.Is0">
+                                            <Card Border="Border.Is0" Margin="Margin.Is0">
                                                 <CardBody>
-                                                    <CardTitle Size="5" TextColor="TextColor.Black50">Antibiogramm</CardTitle>
+                                                    <Span class="oi oi-beaker" TextColor="TextColor.Info" style="width:auto;"></Span>
+                                                    <CardTitle Size="5" TextColor="TextColor.Black50" Width="Width.Is50">Antibiogramm</CardTitle>
                                                     <CardText>
                                                         Antibiogrammzeit:
                                                     </CardText>
@@ -226,41 +202,39 @@
                                 }
                             </CollapseBody>
                         </Collapse>
-                     }
+                    }   
                 </CollapseBody>
             </Collapse>
-         }
-     }
+        }
+    }
 
 </div>
 
-@code {
-    [Parameter]
-    public string PatientID { get; set; }
+@code { [Parameter]
+            public string PatientID { get; set; }
 
-    private PatientData patient;
-    private PatientViewData patientViews;
+            private PatientData patient;
+            private PatientViewData patientViews;
 
-    protected override void OnParametersSet()
-    {
-        if (PatientID == "" || PatientID == null)
-        {
-            PatientID = "";
-        }
-    }
+            protected override void OnParametersSet()
+            {
+                if (PatientID == "" || PatientID == null)
+                {
+                    PatientID = "";
+                }
+            }
 
-    protected override void OnInitialized()
-    {
-        if (PatientID != "" || PatientID != null)
-        {
-            //patient = _patientData.Process(PatientID);
-            patientViews = _service.LoadData(PatientID);
-        }
-    }
+            protected override void OnInitialized()
+            {
+                if (PatientID != "" || PatientID != null)
+                {
+                    //patient = _patientData.Process(PatientID);
+                    patientViews = _service.LoadData(PatientID);
+                }
+            }
 
-    private void Submit()
-    {
-        //patient = _patientData.Process(PatientID);
-        patientViews = _service.LoadData(PatientID);
-    }
-}
+            private void Submit()
+            {
+                //patient = _patientData.Process(PatientID);
+                patientViews = _service.LoadData(PatientID);
+            } }
