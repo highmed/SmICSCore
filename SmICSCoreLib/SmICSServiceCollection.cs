@@ -22,6 +22,7 @@ using SmICSCoreLib.OutbreakDetection;
 using SmICSCoreLib.Factories.MiBi.WardOverview;
 using SmICSCoreLib.Factories.PatientInformation.PatientData;
 using SmICSCoreLib.Factories.MiBi;
+using SmICSCoreLib.Factories.MiBi.PatientView;
 
 namespace SmICS
 {
@@ -38,8 +39,10 @@ namespace SmICS
             services.AddTransient<ISymptomFactory, SymptomFactory>();
             services.AddTransient<IVaccinationFactory, VaccinationFactory>();
             services.AddTransient<IPatientDataFactory, PatientDataFactory>();
-            services.AddTransient<IAntibiogramFactory, AntibiogramFactory>();
-
+            services.AddScoped<IAntibiogramFactory, AntibiogramFactory>();
+            services.AddScoped<IPathogenFactory, PathogenFactory>();
+            services.AddScoped<ISpecimenFactory, SpecimenFactory>();
+            services.AddScoped<IMibiResultFactory, MibiResultFactory>();
             services.AddTransient<IContactNetworkFactory, ContactNetworkFactory>();
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();
 
