@@ -93,6 +93,29 @@ namespace SmICSCoreLib.Factories
                                 ORDER BY e/ehr_status/subject/external_ref/id/value ASC, h/data[at0001]/items[at0004]/value/value ASC");
         }
 
+        public static AQLQuery PatientStay(Patient patient)
+        {
+            return new AQLQuery("PatientStay", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
+                                i/items[at0001]/value/value as FallID,
+                                h/data[at0001]/items[at0004]/value/value as Beginn,
+                                h/data[at0001]/items[at0005]/value/value as Ende,
+                                h/data[at0001]/items[at0006]/value/value as Bewegungsart_l,
+                                s/items[at0027]/value/value as StationID,
+                                s/items[at0029]/value/value as Raum,
+                                f/items[at0024]/value/value as Fachabteilung,
+                                f/items[at0024]/value/defining_code/code_string as FachabteilungsID
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] 
+                                CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0]
+                                AND ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]
+                                CONTAINS (CLUSTER s[openEHR-EHR-CLUSTER.location.v1]
+                                AND CLUSTER f[openEHR-EHR-CLUSTER.organization.v0]))
+                                WHERE c/name/value = 'Patientenaufenthalt'
+                                AND i/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)'
+                                AND e/ehr_status/subject/external_ref/id/value = '{patient}'
+                                ORDER BY e/ehr_status/subject/external_ref/id/value ASC, h/data[at0001]/items[at0004]/value/value ASC");
+        }
+
         public static AQLQuery PatientStayFromStation(PatientListParameter patientList, string station, DateTime starttime, DateTime endtime)
         {
             return new AQLQuery("PatientStay", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
