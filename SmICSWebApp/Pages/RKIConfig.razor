@@ -137,7 +137,6 @@
     {
         dbService = new();
         await Task.Run(GetConfigs);
-        await Task.Run(GetConfigsTime);
     }
 
     public void GetConfigs()
@@ -145,23 +144,10 @@
         try
         {
             ConfigList = RKIConfigService.ShowValues(dbService);
-            //DB
         }
         catch
         {
-            throw new Exception($"Failed to GET Config data");
-        }
-    }
-
-    public void GetConfigsTime()
-    {
-        try
-        {
-            ZeitpunktList = RKIConfigService.GetTimeSet();
-        }
-        catch
-        {
-            throw new Exception($"Failed to GET Config data");
+            Console.WriteLine("Es sind noch keine Conig in DB vorhanden!");
         }
     }
 
@@ -169,7 +155,6 @@
     {
         try
         {
-
             if (RKIConfigForm.Count > 0)
             {
                 if (ZeitpunktList is null)
@@ -186,9 +171,11 @@
             RKIConfigForm.Where(x => x.Erreger == "SARS-CoV-2").ToList().ForEach(s => s.Erregerstatus = "virologisch");
             RKIConfigForm.Where(x => x.Erreger != "SARS-CoV-2").ToList().ForEach(s => s.Erregerstatus = "mikrobiologisch");
 
-            RKIConfigService.StoreRules(RKIConfigForm, ZeitpunktList, dbService);
-            //DB
-
+            foreach (var config in RKIConfigForm)
+            {
+                config.ID = Guid.NewGuid().ToString();
+                dbService.Insert<RKIConfigTemplate>(config);
+            }
 
             foreach (var item in RKIConfigForm)
             {
@@ -233,8 +220,7 @@
     private async Task DeleteReadyRules(RKIConfigTemplate item)
     {
         ConfigList.Remove(item);
-        //DB
-        RKIConfigService.RestoreRules(ConfigList, dbService);
+        RKIConfigService.RestoreRules(item.ID, dbService);
         await Task.Run(GetConfigs);
     }
 

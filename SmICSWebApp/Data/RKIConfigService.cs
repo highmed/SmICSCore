@@ -12,15 +12,12 @@ namespace SmICSWebApp.Data
 {
     public class RKIConfigService
     {
-        private readonly IRestDataAccess _restData;
         private readonly IRKILabDataFactory _labdata;
         private readonly IPatientMovementFactory _patientInformation;
-        //private readonly string path = @"./Resources/RKIConfig/RKIConfig.json";
         private readonly string path_time = @"./Resources/RKIConfig/RKIConfigTime.json";
 
-        public RKIConfigService(IRestDataAccess restData, IPatientMovementFactory patientInfo, IRKILabDataFactory labdata)
+        public RKIConfigService( IPatientMovementFactory patientInfo, IRKILabDataFactory labdata)
         {
-            _restData = restData;
             _patientInformation = patientInfo;
             _labdata = labdata;
         }
@@ -38,44 +35,22 @@ namespace SmICSWebApp.Data
             }
         }
 
-        //DB
         public void StoreRules(List<RKIConfigTemplate> storedValues, LabDataTimeModel zeitpunkt, DBService dbService)
         {
             try
             {
                 StoreTimeSet(zeitpunkt);
                 storedValues.Where(w => w.Erreger != null).ToList().ForEach(s => s.ErregerID = GetErregerList(s.Erreger));
-
-                //Testen ob er nur die neuen Configs speichert oder die ganze Liste nochmal
-                dbService.Insert((RKIConfigTemplate)storedValues.AsEnumerable());
-                //if (File.Exists(path) == false)
-                //{
-                //    string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
-                //    File.WriteAllText(path, json);
-                //}
-                //else
-                //{
-                //    string json = File.ReadAllText(path);
-
-                //    List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
-                //    newList.AddRange(storedValues);
-
-                //    string storeJson = JsonConvert.SerializeObject(newList.ToArray(), Formatting.Indented);
-                //    File.WriteAllText(path, storeJson);
-                //}
-
+                dbService.Insert((RKIConfigTemplate)storedValues.AsEnumerable());      
             }
             catch(Exception)
             {
-                throw new Exception($"Failed to store data");
+                Console.WriteLine("Es könnten keine Conig in DB gespeicher werden!");
             }
         }
 
-        //DB
         public List<RKIConfigTemplate> ShowValues(DBService dbService)
         {
-            //string json = File.ReadAllText(path);
-            //List<RKIConfigTemplate> newList = JsonConvert.DeserializeObject<List<RKIConfigTemplate>>(json);
             List<RKIConfigTemplate> newList = dbService.FindAll<RKIConfigTemplate>().ToList();
 
             if (newList != null)
@@ -88,22 +63,9 @@ namespace SmICSWebApp.Data
             }
         }
 
-        //DB
-        public void RestoreRules(List<RKIConfigTemplate> storedValues, DBService dbService)
+        public void RestoreRules(string Id, DBService dbService)
         {
-            try
-            {
-                storedValues.Where(w => w.Erreger != null).ToList().ForEach(s => s.ErregerID = GetErregerList(s.Erreger));
-
-                dbService.Insert((RKIConfigTemplate)storedValues.AsEnumerable());
-                //string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
-                //File.WriteAllText(path, json);
-
-            }
-            catch (Exception)
-            {
-                throw new Exception($"Failed to update data");
-            }
+            dbService.DeleteByAttribute<RKIConfigTemplate>("Id", Id);
         }
 
         public List<LabDataKeimReceiveModel> GetErregerList(string name)

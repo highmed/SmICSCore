@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using Cassandra.Mapping.Attributes;
 
 
 namespace SmICSCoreLib.Factories.RKIConfig
 {
     public class RKIConfigTemplate
     {
+        [PartitionKey]
+        [JsonProperty(PropertyName = "ID")]
+        public string ID { get; set; }
         [Required]
         public string Station { get; set; }
         public List<LabDataKeimReceiveModel> ErregerID { get; set; }
