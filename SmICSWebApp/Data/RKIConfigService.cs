@@ -14,9 +14,7 @@ namespace SmICSWebApp.Data
         private readonly IRKILabDataFactory _labdata;
         private readonly IPatientMovementFactory _patientInformation;
         private readonly string path = @"./Resources/OutbreakDetection/RKIConfig.json";
-        private readonly string path_time = @"./Resources/RKIConfig/RKIConfigTime.json";
         public RKIConfigService(IPatientMovementFactory patientInfo, IRKILabDataFactory labdata)
-        public RKIConfigService(IRestDataAccess restData, IPatientMovementFactory patientInfo, IRKILabDataFactory labdata)
         {
             _patientInformation = patientInfo;
             _labdata = labdata;
@@ -34,24 +32,10 @@ namespace SmICSWebApp.Data
                 return null;
             }
         }
-        public void StoreRules(List<RKIConfigTemplate> storedValues, LabDataTimeModel zeitpunkt, DBService dbService)
-        public void StoreRules(List<RKIConfigTemplate> storedValues, LabDataTimeModel zeitpunkt)
-        {
-            try
-            {
-                dbService.Insert((RKIConfigTemplate)storedValues.AsEnumerable());      
-            }
-            }
-            catch(Exception)
-            {
-                Console.WriteLine("Es könnten keine Conig in DB gespeicher werden!");
-            }
-        }
 
         public List<RKIConfigTemplate> ShowValues(DBService dbService)
+        { 
             List<RKIConfigTemplate> newList = dbService.FindAll<RKIConfigTemplate>().ToList();
-
-            if (newList != null)
             if(newList != null)
             {
                 return newList;

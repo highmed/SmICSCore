@@ -92,32 +92,20 @@ namespace SmICSWebApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
-            OpenehrConfig.openehrUser = "etltestuser";
-            OpenehrConfig.openehrPassword = "etltestuser#01";
-            OpenehrConfig.openehrAdaptor = "BETTER";
-
-            /*OpenehrConfig.openehrEndpoint = "https://172.0.0.1:8080/ehrbase/rest/openehr/v1";
-            OpenehrConfig.openehrUser = "test";
-            OpenehrConfig.openehrPassword = "test";
-            OpenehrConfig.openehrAdaptor = "STANDARD";*/
-
-            //OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
-            //OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
-            //OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
-
-            //DB Config
-            //DBConfig.DB_Url = Environment.GetEnvironmentVariable("DB_URL");
-            //DBConfig.DB_Keyspace = Environment.GetEnvironmentVariable("DB_KEYSPACE");
-            //DBConfig.DB_User = Environment.GetEnvironmentVariable("DB_User");
-            //DBConfig.DB_Password = Environment.GetEnvironmentVariable("DB_Password");
+            //OpenehrConfig.openehrEndpoint = "https://plri-highmed01.mh-hannover.local:8083/rest/openehr/v1";
+            //OpenehrConfig.openehrUser = "etltestuser";
+            //OpenehrConfig.openehrPassword = "etltestuser#01";
+            //OpenehrConfig.openehrAdaptor = "BETTER";
 
             DBConfig.DB_Url = "192.168.178.125";
             DBConfig.DB_Keyspace = "newkeyspace";
-            //DBConfig.DB_User = "cassandra";
-            //DBConfig.DB_Password = "cassandra";
             DBConfig.DB_User = "dba";
             DBConfig.DB_Password = "super";
+
+            //DBConfig.DB_Url = "cassandra";
+            //DBConfig.DB_Keyspace = "cassandra";
+            //DBConfig.DB_User = "cassandra";
+            //DBConfig.DB_Password = "cassandra";
             OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
             OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
             OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
