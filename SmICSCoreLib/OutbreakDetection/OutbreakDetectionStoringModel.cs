@@ -11,7 +11,7 @@ namespace SmICSCoreLib.OutbreakDetection
         [JsonProperty("Ausbruchswahrscheinlichkeit")]
         public double? Probability { get; set; }
 
-        [JsonProperty("p-Value")]
+        [JsonProperty("pValue")]
         public double? pValue { get; set; }
 
         [JsonProperty("Erregeranzahl")]
@@ -20,7 +20,7 @@ namespace SmICSCoreLib.OutbreakDetection
         [JsonProperty("Endemisches Niveau")]
         public double? EndemicNiveau { get; set; }
 
-        [JsonProperty("Epidemisches Nivea")]
+        [JsonProperty("Epidemisches Niveau")]
         public double? EpidemicNiveau { get; set; }
 
         [JsonProperty("Obergrenze")]
@@ -36,7 +36,7 @@ namespace SmICSCoreLib.OutbreakDetection
         public string? AlarmClassification { get; set; }
 
         [JsonProperty("Algorithmusergebnis enthaelt keine null-Werte")]
-        public bool HasNullValues { get; set; }
+        public bool HasNoNullValues { get; set; }
 
         [JsonProperty("Keine Warnungen zum Datenpunkt")]
         public bool HasWarnings { get; set; }

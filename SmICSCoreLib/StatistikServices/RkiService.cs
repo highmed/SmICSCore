@@ -296,8 +296,8 @@ namespace SmICSCoreLib.StatistikServices
                         try
                         {
                             bericht.GesamtImpfung = Convert.ToDouble(resultImpfung.Tables[1].Rows[20][2]).ToString("#,##");
-                            bericht.ErstImpfung = resultImpfung.Tables[1].Rows[20][5].ToString();
-                            bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[20][9].ToString();
+                            bericht.ErstImpfung = resultImpfung.Tables[1].Rows[20][6].ToString();
+                            bericht.ZweitImpfung = resultImpfung.Tables[1].Rows[20][11].ToString();
                             bericht.ImpfStatus = true;
                         }
                         catch (Exception)
@@ -479,7 +479,7 @@ namespace SmICSCoreLib.StatistikServices
                     farbe = "#FFFFFF";
                     return farbe;
                 }
-                //_logger.LogInformation("SetMapColor");
+                _logger.LogInformation("SetMapColor");
             }
             catch (Exception e)
             {
@@ -647,7 +647,7 @@ namespace SmICSCoreLib.StatistikServices
 
         public bool BLReportSerialize(string path)
         {
-            Report report = GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 1, 457);
+            Report report = GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 1, 547);
             try
             {
                 if (!Directory.Exists(path))
@@ -669,7 +669,7 @@ namespace SmICSCoreLib.StatistikServices
 
         public bool LKReportSerialize(string path)
         {
-            LKReportJson lKReportJson = GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 3, 263);
+            LKReportJson lKReportJson = GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 3, 353);
             try
             {
                 if (!Directory.Exists(path))

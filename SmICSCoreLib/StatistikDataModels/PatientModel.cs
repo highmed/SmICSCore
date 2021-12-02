@@ -53,5 +53,10 @@ namespace SmICSCoreLib.StatistikDataModels
             return obj is PatientModel patient &&
                    PatientID == patient.PatientID;
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

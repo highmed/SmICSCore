@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SmICSCoreLib.OutbreakDetection;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 
 namespace SmICSCoreLib.JSONFileStream
 {
@@ -14,7 +14,7 @@ namespace SmICSCoreLib.JSONFileStream
             using (StreamReader reader = new StreamReader(path))
             {
                 string json = reader.ReadToEnd();
-                return JsonSerializer.Deserialize<List<T>>(json);              
+                return System.Text.Json.JsonSerializer.Deserialize<List<T>>(json);
             }
         }
 
@@ -23,7 +23,7 @@ namespace SmICSCoreLib.JSONFileStream
             using (StreamReader reader = new StreamReader(path))
             {
                 string json = reader.ReadToEnd();
-                T obj = JsonSerializer.Deserialize<T>(json);
+                T obj = System.Text.Json.JsonSerializer.Deserialize<T>(json);
                 return obj;
             }
         }
@@ -33,7 +33,17 @@ namespace SmICSCoreLib.JSONFileStream
             using (StreamReader reader = new StreamReader(path))
             {
                 string json = reader.ReadToEnd();
-                return JsonSerializer.Deserialize<T>(json);
+                return System.Text.Json.JsonSerializer.Deserialize<T>(json);
+
+            }
+        }
+
+        public static T NewtonsoftReadSingle(string path)
+        {
+            using (StreamReader reader = new StreamReader(path))
+            {
+                string json = reader.ReadToEnd();
+                return JsonConvert.DeserializeObject<T>(json);
 
             }
         }
@@ -60,7 +70,7 @@ namespace SmICSCoreLib.JSONFileStream
                         CasesBelowUpperBounds = (int?)obj["Faelle unter der Obergrenze"][i],
                         CasesAboveUpperBounds = (int?)obj["Faelle ueber der Obergrenze"][i],
                         AlarmClassification = (string?)obj["Klassifikation der Alarmfaelle"][i],
-                        HasNullValues = (bool)obj["Algorithmusergebnis enthaelt keine null-Werte"][0]
+                        HasNoNullValues = (bool)obj["Algorithmusergebnis enthaelt keine null-Werte"][0]
                     });
                 }
             }

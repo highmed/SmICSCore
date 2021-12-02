@@ -137,6 +137,11 @@ namespace SmICSCoreLib.Factories.EpiCurve
                     DecrementOverallCount(patientInfections.InfectionWard);
                     DecrementOverallCount(COMPLETE_CLINIC);
                 }
+                else if(!patientInfections.IsInfected && flag.HasFlag())
+                {
+                    IncrementCounts(patientLocation.Ward);
+                    IncrementCounts(COMPLETE_CLINIC);
+                }
             }
             else
             {

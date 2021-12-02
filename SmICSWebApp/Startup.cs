@@ -18,6 +18,7 @@ using SmICSCoreLib.StatistikServices.CronJob;
 using SmICSCoreLib.StatistikServices;
 using SmICSCoreLib.Database;
 using SmICSCoreLib.Factories.RKIConfig;
+using SmICSWebApp.Data.OutbreakDetection;
 
 namespace SmICSWebApp
 {
@@ -65,16 +66,12 @@ namespace SmICSWebApp
             services.AddSingleton<JobUpdateRkidata>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
 
-            if (File.Exists(@"./Resources/RKIConfig/RKIConfigTime.json"))
-            {
-                LabDataTimeModel runtimeString = SmICSCoreLib.JSONFileStream.JSONReader<LabDataTimeModel>.ReadObject(@"./Resources/RKIConfig/RKIConfigTime.json");
-                string[] runtimeArr = runtimeString.Zeitpunkt.Split(":");
-                OpenehrConfig.OutbreakDetectionRuntime = runtimeArr[2] + " " + runtimeArr[1] + " " + runtimeArr[0] + " * * ?";
-            }
-            else
-            {
-                OpenehrConfig.OutbreakDetectionRuntime = null;
-            }
+            services.AddScoped<OutbreakDetectionService>();
+
+            OpenehrConfig.OutbreakDetectionRuntime = Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME");
+            Console.WriteLine("Transformed: OUTBREAK_DETECTION_TIME " + Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME") + "to CONFIG: " + OpenehrConfig.OutbreakDetectionRuntime);
+            string[] runtimeArr = OpenehrConfig.OutbreakDetectionRuntime.Split(":");
+            OpenehrConfig.OutbreakDetectionRuntime = runtimeArr[2] + " " + runtimeArr[1] + " " + runtimeArr[0] + " * * ?";
 
             services.AddSingleton<JobOutbreakDetection>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(),
@@ -121,6 +118,10 @@ namespace SmICSWebApp
             //DBConfig.DB_Password = "cassandra";
             DBConfig.DB_User = "dba";
             DBConfig.DB_Password = "super";
+            OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
+            OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
+            OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
+            OpenehrConfig.smicsVisuPort = Environment.GetEnvironmentVariable("SMICS_VISU_PORT");
 
             if (env.IsDevelopment())
             {

@@ -46,12 +46,16 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
             foreach (OutbreakDectectionPatient pat in patientList)
             {
                 List<OutbreakDetectionLabResult> labResult = _restData.AQLQuery<OutbreakDetectionLabResult>(AQLCatalog.GetPatientLabResultList(parameter, pat));
-                labResult = labResult.OrderBy(l => l.ResultDate).ToList();
-                OutbreakDetectionLabResult result = labResult.Where(l => l.ResultDate >= parameter.Starttime && l.Result == (int)SarsCovResult.POSITIVE).FirstOrDefault();
-                if (result != null)
+                if (labResult != null)
                 {
-                    FirstPositiveCounts[(int)(result.ResultDate - parameter.Starttime).TotalDays] += 1;
-                }
+                    labResult = labResult.OrderBy(l => l.ResultDate).ToList();
+                    OutbreakDetectionLabResult result = labResult.Where(l => l.ResultDate >= parameter.Starttime && l.Result == (int)SarsCovResult.POSITIVE).FirstOrDefault();
+                    if (result != null)
+                    {
+                        FirstPositiveCounts[(int)(result.ResultDate - parameter.Starttime).TotalDays] += 1;
+                    }
+                } 
+                //TODO: elseif
             }
 
             return FirstPositiveCounts;
@@ -62,7 +66,7 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
             int[] epochs = new int[(int)(parameter.Endtime - parameter.Starttime).TotalDays];
             int i = 0;
             DateTime referenceDate = new DateTime(1970, 1, 1);
-            for (DateTime date = parameter.Starttime; date < parameter.Endtime; date = date.AddDays(1.0))
+            for (DateTime date = parameter.Starttime.Date; date < parameter.Endtime.Date; date = date.AddDays(1.0))
             {
                 epochs[i] = (int)(date.Date - referenceDate.Date).TotalDays;
                 i += 1;

@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SmICSCoreLib.Factories.PatientStay.Count.ReceiveModel
 {
@@ -13,7 +11,7 @@ namespace SmICSCoreLib.Factories.PatientStay.Count.ReceiveModel
         [JsonProperty(PropertyName = "Fallkennung")]
         public string Fallkennung { get; set; }
 
-        [JsonProperty(PropertyName = "Zeitpunkt_des_Probeneingangs")]
-        public DateTime Zeitpunkt_des_Probeneingangs { get; set; }
+        [JsonProperty(PropertyName = "Zeitpunkt_der_Probenentnahme")]
+        public DateTime Zeitpunkt_der_Probenentnahme { get; set; }
     }
 }

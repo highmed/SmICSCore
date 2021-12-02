@@ -103,7 +103,11 @@ namespace SmICSCoreLib.Factories.PatientMovement
 
         private void addAdmissionObject(PatientStayModel patientStay, EpisodeOfCareModel episodeOfCare, List<PatientMovementModel> patientMovementList)
         {
-            if (!(episodeOfCare is null) && patientStay.Beginn == episodeOfCare.Beginn)
+            if(patientStay.Beginn == patientStay.Ende)
+            {
+                return;
+            }
+            else if (!(episodeOfCare is null) && patientStay.Beginn == episodeOfCare.Beginn)
             {
                 PatientMovementModel patientMovement = new PatientMovementModel(patientStay); ;
                 patientMovement.Ende = episodeOfCare.Beginn;
@@ -111,7 +115,6 @@ namespace SmICSCoreLib.Factories.PatientMovement
 
                 patientMovementList.Add(patientMovement);
             }
-
         }
         private void addDischargeObject(PatientStayModel patientStay, EpisodeOfCareModel episodeOfCare, List<PatientMovementModel> patientMovementList)
         {

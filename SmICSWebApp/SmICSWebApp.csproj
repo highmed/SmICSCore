@@ -8,7 +8,26 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CassandraCSharpDriver" Version="3.16.3" />
+    <Compile Remove="Resources\RKIConfig\**" />
+    <Content Remove="Resources\RKIConfig\**" />
+    <EmbeddedResource Remove="Resources\RKIConfig\**" />
+    <None Remove="Resources\RKIConfig\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-01.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-02.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-03.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-04.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-05.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-06.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-07.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-08.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-09.json" />
+    <Content Remove="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-10.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ChartJs.Blazor.Fork" Version="2.0.2" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
@@ -38,6 +57,19 @@
 
   <ItemGroup>
     <Folder Include="Resources\nec\json\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-01.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-02.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-03.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-04.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-05.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-06.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-07.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-08.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-09.json" />
+    <None Include="Resources\OutbreakDetection\SarsCov_Coronastation_4_Test\2021-01-10.json" />
   </ItemGroup>
   
   <ItemGroup>

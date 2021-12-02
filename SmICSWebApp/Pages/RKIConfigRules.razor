@@ -11,7 +11,7 @@
                 <label for="Station" class="tb-bez-header">Station</label>
             </div>
             <div>
-                <InputSelect @bind-Value="RKIConfigForm.Station" id="@ID">
+                <InputSelect @bind-Value="RKIConfigForm.Station" id="@ID" required>
                     <option selected="true" disabled="disabled" value="">Bitte wählen Sie aus</option>
                     <option value="Gesamtklink">Gesamtklink</option>
                     @if (StationList != null)
@@ -30,7 +30,7 @@
                 <label for="Erreger" class="tb-bez-header">Erreger</label>
             </div>
             <div>
-                <InputSelect @bind-Value="RKIConfigForm.Erreger" id="@ID">
+                <InputSelect @bind-Value="RKIConfigForm.Erreger" id="@ID" required>
                     <option selected disabled>Bitte wählen Sie aus</option>
                     <option value="MRSA" disabled>Methicillin-Resistant Staphylococcus aureus (MRSA)</option>
                     <option value="Klebsiella pneumoniae" disabled>Klebsiella pneumoniae</option>
@@ -46,7 +46,7 @@
                 <label for="Zeitraum" class="tb-bez-header">Zeitraum</label>
             </div>
             <div>
-                <InputSelect @bind-Value="RKIConfigForm.Zeitraum" id="@ID" @oninput=ZeitraumSelected>
+                <InputSelect @bind-Value="RKIConfigForm.Zeitraum" id="@ID" @oninput=ZeitraumSelected required>
                     <option selected="true" disabled="disabled" value=0>Bitte wählen Sie aus</option>
                     <option value=1>1 Woche</option>
                     <option value=2>2 Wochen</option>

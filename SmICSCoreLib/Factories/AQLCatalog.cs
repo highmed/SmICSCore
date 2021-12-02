@@ -267,7 +267,7 @@ namespace SmICSCoreLib.Factories
         }
         public static AQLQuery SamplesFromResult(MetaDataReceiveModel metaData)
         {
-            return new AQLQuery("SamplesFromResult", $@"SELECT b/items[at0029]/value/value as MaterialID
+            return new AQLQuery("SamplesFromResult", $@"SELECT b/items[at0029]/value/value as MaterialID,
                                 b/items[at0001]/value/id as LabordatenID,
                                 b/items[at0015]/value/value as ZeitpunktProbeentnahme,
                                 b/items[at0034]/value/value as ZeitpunktProbeneingang 
@@ -401,7 +401,8 @@ namespace SmICSCoreLib.Factories
                                 CONTAINS COMPOSITION c 
                                 CONTAINS OBSERVATION k[openEHR-EHR-OBSERVATION.symptom_sign.v0] 
                                 WHERE e/ehr_status/subject/external_ref/id/value ='{patientId}' 
-                                AND k/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value = '{datum.Date.ToString("yyyy-MM-dd")}' ");
+                                AND k/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value >= '{datum.Date.ToString("yyyy-MM-dd")}'
+                                AND k/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value < '{datum.Date.AddDays(1.0).ToString("yyyy-MM-dd")}'"); 
         }
        
         public static AQLQuery StayFromCase(string patientId, string fallId)
@@ -443,7 +444,7 @@ namespace SmICSCoreLib.Factories
         {          
             return new AQLQuery("CovidPat", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID, 
                                 i/items[at0001]/value/value as Fallkennung, 
-                                m/items[at0034]/value/value as Zeitpunkt_des_Probeneingangs 
+                                m/items[at0015]/value/value as Zeitpunkt_der_Probenentnahme
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] 
                                 AND OBSERVATION z[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
@@ -451,14 +452,14 @@ namespace SmICSCoreLib.Factories
                                 AND CLUSTER m [openEHR-EHR-CLUSTER.specimen.v1])) 
                                 WHERE a/items[at0001,'Nachweis']/value/defining_code/code_string='{nachweis}'
                                 AND a/items[at0024]/value/defining_code/code_string MATCHES {{'94500-6','94558-4', '94745-7'}} 
-                                ORDER BY Zeitpunkt_des_Probeneingangs ASC");
+                                ORDER BY m/items[at0015]/value/value ASC");
         }
 
         public static AQLQuery CovidPatByID(string nachweis, PatientListParameter patientList)
         {
             return new AQLQuery("CovidPat", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID, 
                                 i/items[at0001]/value/value as Fallkennung, 
-                                m/items[at0034]/value/value as Zeitpunkt_des_Probeneingangs 
+                                m/items[at0015]/value/value as Zeitpunkt_der_Probenentnahme
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] 
                                 AND OBSERVATION z[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
@@ -466,7 +467,7 @@ namespace SmICSCoreLib.Factories
                                 WHERE  a/items[at0001,'Nachweis']/value/defining_code/code_string='{nachweis}'
                                 AND e/ehr_status/subject/external_ref/id/value matches { patientList.ToAQLMatchString() } 
                                 AND a/items[at0024]/value/defining_code/code_string MATCHES {{'94500-6','94558-4', '94745-7'}} 
-                                ORDER BY Zeitpunkt_des_Probeneingangs ASC");
+                                ORDER BY m/items[at0015]/value/value ASC");
         }
 
         public static AQLQuery PatientBySymptom(string symptom)
@@ -663,7 +664,7 @@ namespace SmICSCoreLib.Factories
                                                         WHERE c/name/value ='Patientenaufenthalt' 
                                                         AND u/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)'
                                                         AND Ward = '{parameter.Ward}' 
-                                                        AND h/data[at0001]/items[at0004]/value/value <= '{parameter.Endtime.ToString("yyyy-MM-dd")}' 
+                                                        AND h/data[at0001]/items[at0004]/value/value < '{parameter.Endtime.ToString("yyyy-MM-dd")}' 
                                                         AND (h/data[at0001]/items[at0005]/value/value >= '{parameter.Starttime.ToString("yyyy-MM-dd")}' OR NOT EXISTS u/data[at0001]/items[at0005]/value/value)");
         }
 
