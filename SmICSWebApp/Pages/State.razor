@@ -454,9 +454,6 @@
         //await Task.Run(SetRKIData);
         await Task.Run(GetRKIData);
 
-        //Database Testing
-        //TestDB();
-
         if (status == false && standAktuell == true)
         {
             Logger.LogWarning("RKI-Daten stehen nicht zur Verfügung!");
@@ -511,8 +508,10 @@
                 todesfaelleVortag = bericht.TodesfaelleVortag;
                 inzidenz7Tage = bericht.Inzidenz7Tage;
 
-                //Datenbank Abfrage wegen inzidenz7TageVortag
-                inzidenz7TageVortag = bericht.Inzidenz7TageVortag;
+                string valueBlLast = "Bericht-" + datum.AddDays(-1).ToString("dd.MM.yyyy");
+                BerichtNew berichtLast = dbService.FindOneByAttribute<BerichtNew>("id", valueBlLast);
+                inzidenz7TageVortag = berichtLast.Inzidenz7Tage;
+
                 rWert7Tage = bericht.RWert7Tage;
                 rWert7TageVortag = bericht.RWert7TageVortag;
                 impfStatus = bericht.ImpfStatus;
@@ -564,8 +563,10 @@
                 todesfaelleVortag = lastBericht.TodesfaelleVortag;
                 inzidenz7Tage = lastBericht.Inzidenz7Tage;
 
-                //Datenbank Abfrage wegen inzidenz7TageVortag
-                inzidenz7TageVortag = lastBericht.Inzidenz7TageVortag;
+                string valueBlLast = "Bericht-" + datum.AddDays(-2).ToString("dd.MM.yyyy");
+                BerichtNew berichtLast = dbService.FindOneByAttribute<BerichtNew>("id", valueBlLast);
+                inzidenz7TageVortag = berichtLast.Inzidenz7Tage;
+
                 rWert7Tage = lastBericht.RWert7Tage;
                 rWert7TageVortag = lastBericht.RWert7TageVortag;
                 impfStatus = lastBericht.ImpfStatus;
@@ -581,8 +582,6 @@
                     }
                 }
 
-                //Datenbank Abfrage wegen inzidenz7TageVortag
-
                 inzidenzColor = rkiService.SetCaseColor(inzidenz7Tage, inzidenz7TageVortag);
                 rWertColor = rkiService.SetCaseColor(rWert7Tage, rWert7TageVortag);
                 Logger.LogInformation("LastBericht wurde erfolgreich heruntergeladen");
@@ -596,31 +595,6 @@
             standAktuell = false;
         }
 
-    }
-
-    //Test Methode to Insert a BlAttribute into Database
-    private void TestDB()
-    {
-
-        LandkreisNew[] landkreise = rkiService.GetLkFromBl("Niedersachsen");
-        //LandkreisNew[] landkreise = rkiService.GetLandkreise();
-
-        //BerichtNew bericht = rkiService.GetBerichtNew();
-
-
-        string url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile";
-        BundeslandNew[] bundeslands = rkiService.Bundeslaender(url);
-
-        //BundeslandNew[] bundeslander = rkiService.GetBundeslaender();
-
-
-        dbService.Insert<BundeslandNew>(bundeslands.First());
-
-        BundeslandNew bl = bundeslands.First();
-        bl.ID = "Baden-Württemberg-13.10.2021";
-        dbService.UpdateByAttribute(bl, "id", "Baden-Württemberg-13.10.2021");
-
-        IEnumerable<BundeslandNew> lbList = dbService.FindAllByAttribute<BundeslandNew>("bundesland", "Baden-Württemberg");
     }
 
 }

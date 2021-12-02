@@ -4,11 +4,13 @@
 @using SmICSCoreLib.StatistikServices
 @using System.ComponentModel.DataAnnotations
 @using System
+@using System.Data;
 @using System.IO;
 @using ChartJs.Blazor.LineChart
 @using SmICSCoreLib.JSONFileStream;
 @using Microsoft.Extensions.Logging
 @using SmICSCoreLib.Database
+@using System.Collections;
 @inject ILogger<Region> Logger
 @inject RkiService rkiService
 
@@ -115,10 +117,10 @@
                                                     <td>@bundeslandNew.Todesfaelle7BL</td>
                                                 </tr>
                                                 @*<tr>
-                                                    <th scope="row">Genesen</th>
-                                                    <td> k.A.</td>
-                                                    <td> k.A.</td>
-                                                </tr>*@
+                                                        <th scope="row">Genesen</th>
+                                                        <td> k.A.</td>
+                                                        <td> k.A.</td>
+                                                    </tr>*@
                                                 @*<tr>
                                                         <th scope="row">Nicht genesen</th>
                                                         <td> .k.A </td>
@@ -156,16 +158,11 @@
     private string stand;
     private string rValue;
     private string rWert7TageVortag;
-    private string lkDefult;
-    private string path;
-    private string rkipPath;
     private bool status;
     private bool chartStatus;
-
     private Chart _chart;
     private LineConfig config;
     private string ResourcesPath = "Resources/";
-    private string StatistikPath;
     private string RKIDataPath;
 
     private DateTime datum;
@@ -184,15 +181,16 @@
         data.bl = "Baden-Württemberg";
         data.gen = "Stuttgart";
 
-        StatistikPath = @"" + ResourcesPath + "statistik/json";
         RKIDataPath = @"" + ResourcesPath + "/Rkidata/";
 
         dbService = new();
         datum = DateTime.Now;
         value = datum.ToString("dd.MM.yyyy");
 
-
         await Task.Run(LoadRkiData);
+
+        //GetOldLkData("Hamburg", "SK Hamburg");
+        //GetOldBlData("Hamburg");
         GetChart();
 
         if (lkList == null && status == true)
@@ -203,17 +201,38 @@
         }
     }
 
+    private void SetRKIData()
+    {
+        try
+        {
+            LandkreisNew[] landkreise = rkiService.GetLandkreise();
+            if (landkreise != null)
+            {
+                foreach (var lk in landkreise)
+                {
+                    dbService.Insert<LandkreisNew>(lk);
+                }
+            }
+        }
+        catch (Exception)
+        {
+            Logger.LogWarning("DailyReport koennte nicht hochgeladen werden!");
+            status = true;
+        }
+    }
+
     private void LoadRkiData()
     {
         try
         {
-            string value = "Bericht-" + datum.ToString("dd.MM.yyyy");
-            bericht = dbService.FindOneByAttribute<BerichtNew>("id", value);
+            string valueBl = "Bericht-" + datum.ToString("dd.MM.yyyy");
+            bericht = dbService.FindOneByAttribute<BerichtNew>("id", valueBl);
             stand = bericht.Stand;
             rValue = bericht.RWert7Tage;
 
-            string valueBl = datum.ToString("dd.MM.yyyy");
-            IEnumerable<BundeslandNew> bls = dbService.FindAllByAttribute<BundeslandNew>("Stand", valueBl);
+            string value = datum.ToString("dd.MM.yyyy");
+
+            IEnumerable<BundeslandNew> bls = dbService.FindAllByAttribute<BundeslandNew>("Stand", value);
             blList = bls.ToList();
             foreach (var bl in blList)
             {
@@ -223,10 +242,16 @@
                 }
             }
 
-            string valueLk = datum.ToString("dd.MM.yyyy");
-            IEnumerable<LandkreisNew> lks = dbService.FindAllByAttributes<LandkreisNew>("Stand", valueLk, "bundesland", bundeslandNew.Bundesland);
-            lkList = lks.ToList();
-            landkreisNew = lkList.First();
+            IEnumerable<LandkreisNew> lks = dbService.FindAllByAttributes<LandkreisNew>("Stand", value, "bundesland", bundeslandNew.Bundesland);
+            lkList = lks.OrderBy(c => c.Stadt).ToList();
+            if (lks != null && lkList.Count != 0)
+            {
+                landkreisNew = lkList.First();
+            }
+            else
+            {
+                SetRKIData();
+            }
 
             Logger.LogInformation("DailyReport wurde erfolgreich heruntergeladen");
         }
@@ -248,7 +273,7 @@
         bundeslandNew = dbService.FindOneByAttributes<BundeslandNew>("id", valueBundeslandNew, "bundesland", data.bl);
 
         IEnumerable<LandkreisNew> lks = dbService.FindAllByAttributes<LandkreisNew>("Stand", value, "bundesland", data.bl);
-        lkList = lks.ToList();
+        lkList = lks.OrderBy(c => c.Stadt).ToList();
         landkreisNew = lkList.First();
         data.gen = landkreisNew.ToString();
 
@@ -277,36 +302,17 @@
         public string gen { get; set; }
     }
 
-    private Dictionary<string, int> GetLKDataForChart(string landkreis)
+    private Dictionary<string, int> GetLKDataForChart(string bundesland, string landkreis)
     {
         Dictionary<string, int> rkiDatenLk = new();
 
-        string filePath = @"" + RKIDataPath + "LKReport.json";
-
-        if (!File.Exists(filePath))
+        //Get Data from Database
+        List<LandkreisNew> lkList = GetOldLkData(bundesland, landkreis);
+        List<LandkreisNew> sortList = lkList.OrderBy(c => DateTime.Parse(c.Stand)).ToList();
+        foreach (var lk in sortList)
         {
-            Directory.CreateDirectory(path);
-            LKReportJson lKReport = rkiService.GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 3, 228);
-            string filename = ("LKReport");
-            JSONWriter.Write(lKReport, RKIDataPath, filename);
-        }
-        LKReportJson lKReportJson = rkiService.LKReportDeserialize(filePath);
-
-        foreach (var item in lKReportJson.LKReport)
-        {
-            if (item.LKName == landkreis)
-            {
-                foreach (var reportAttribute in item.LKReportAttribute)
-                {
-                    //if (reportAttribute.Datum.StartsWith("01") || reportAttribute.Datum.StartsWith("15")
-                    //    || reportAttribute.Datum.StartsWith("28"))
-                    if (reportAttribute.Datum.StartsWith("01"))
-                    {
-                        rkiDatenLk.Add(reportAttribute.Datum, reportAttribute.Fahlzahl);
-                    }
-                }
-
-            }
+            string faelle7Lk = lk.Faelle7Lk.Replace(".", string.Empty);
+            rkiDatenLk.Add(lk.Stand, Int32.Parse(faelle7Lk));
         }
 
         return rkiDatenLk;
@@ -316,33 +322,14 @@
     {
         Dictionary<string, int> rkiDatenBl = new();
 
-        string filePath = @"" + RKIDataPath + "BLReport.json";
-        if (!File.Exists(filePath))
+        //Get Data from Database
+        List<BundeslandNew> blList = GetOldBlData(bundesland);
+        List<BundeslandNew> sortList = blList.OrderBy(c => DateTime.Parse(c.Stand)).ToList();
+        foreach (var bl in sortList)
         {
-            Directory.CreateDirectory(path);
-            Report report = rkiService.GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 1, 422);
-            string filename = ("BLReport");
-            JSONWriter.Write(report, RKIDataPath, filename);
+            string faelle7BL = bl.Faelle7BL.Replace(".", string.Empty);
+            rkiDatenBl.Add(bl.Stand, Int32.Parse(faelle7BL));
         }
-        Report blReportJson = rkiService.BLReportDeserialize(filePath);
-
-        foreach (var item in blReportJson.BLReport)
-        {
-            if (item.BlName == bundesland)
-            {
-                foreach (var reportAttribute in item.BLReportAttribute)
-                {
-                    //if (reportAttribute.Datum.StartsWith("01") || reportAttribute.Datum.StartsWith("15")
-                    //    || reportAttribute.Datum.StartsWith("28"))
-                    if (reportAttribute.Datum.StartsWith("01"))
-                    {
-                        rkiDatenBl.Add(reportAttribute.Datum, reportAttribute.Fahlzahl);
-                    }
-                }
-
-            }
-        }
-
 
         foreach (var itemBl in rkiDatenBl)
         {
@@ -359,7 +346,7 @@
     {
         if (chartStatus == false)
         {
-            Dictionary<string, int> rkiDatenLk = GetLKDataForChart(landkreisNew.LandkreisName);
+            Dictionary<string, int> rkiDatenLk = GetLKDataForChart(bundeslandNew.Bundesland, landkreisNew.LandkreisName);
             Dictionary<string, int> rkiDatenBl = GetBLDataForChart(bundeslandNew.Bundesland, rkiDatenLk);
             if (rkiDatenLk != null)
             {
@@ -438,7 +425,7 @@
             IList<IDataset> datasets = config.Data.Datasets;
             datasets.Clear();
 
-            Dictionary<string, int> rkiDatenLkDSort = GetLKDataForChart(landkreisNew.LandkreisName);
+            Dictionary<string, int> rkiDatenLkDSort = GetLKDataForChart(bundeslandNew.Bundesland, landkreisNew.LandkreisName);
             Dictionary<string, int> rkiDatenBlSort = GetBLDataForChart(bundeslandNew.Bundesland, rkiDatenLkDSort);
 
             IDataset<int> blDataset = new LineDataset<int>(rkiDatenBlSort.Values)
@@ -460,6 +447,85 @@
             config.Data.Datasets.Add(lkDataset2);
             _chart.Update();
 
+        }
+    }
+
+    private List<BundeslandNew> GetOldBlData(string bl)
+    {
+        DateTime firstDate = DateTime.Parse("01.06.2020");
+        DateTime lastDate = DateTime.Now;
+        List<DateTime> dateList = new();
+        List<BundeslandNew> blNewList = new();
+        for (var day = firstDate.Date; day.Date <= lastDate.Date; day = day.AddDays(1))
+        {
+            if (day.ToString().StartsWith("01"))
+            {
+                dateList.Add(day);
+            }
+        }
+
+        IEnumerable<BundeslandNew> bls = dbService.FindAllByAttribute<BundeslandNew>("bundesland", bl);
+        foreach (var item in bls)
+        {
+            if (item.Stand.StartsWith("01"))
+            {
+                blNewList.Add(item);
+            }
+        }
+
+        if (blNewList.Count == dateList.Count)
+        {
+            return blNewList;
+        }
+        else
+        {
+            List<BundeslandNew> bundeslandNews = rkiService.LoadBlData();
+            foreach (var item in bundeslandNews)
+            {
+                dbService.Insert<BundeslandNew>(item);
+            }
+            IEnumerable<BundeslandNew> bundeslands = dbService.FindAllByAttribute<BundeslandNew>("bundesland", bl);
+            return bundeslands.ToList();
+        }
+    }
+
+    private List<LandkreisNew> GetOldLkData(string bl, string lk)
+    {
+        DateTime firstDate = DateTime.Parse("01.12.2020");
+        DateTime lastDate = DateTime.Now;
+        List<DateTime> dateList = new();
+        List<LandkreisNew> lkNewList = new();
+
+        for (var day = firstDate.Date; day.Date <= lastDate.Date; day = day.AddDays(1))
+        {
+            if (day.ToString().StartsWith("01"))
+            {
+                dateList.Add(day);
+            }
+        }
+
+        IEnumerable<LandkreisNew> lks = dbService.FindAllByAttribute<LandkreisNew>("landkreisname", lk);
+        foreach (var item in lks)
+        {
+            if (item.Stand.StartsWith("01"))
+            {
+                lkNewList.Add(item);
+            }
+        }
+
+        if (lkNewList.Count == dateList.Count)
+        {
+            return lkNewList;
+        }
+        else
+        {
+            List<LandkreisNew> landkreisNews = rkiService.LoadLkData(bl, lk);
+            foreach (var item in landkreisNews)
+            {
+                dbService.Insert<LandkreisNew>(item);
+            }
+            IEnumerable<LandkreisNew> landkreise = dbService.FindAllByAttribute<LandkreisNew>("landkreisname", lk);
+            return landkreise.ToList();
         }
     }
 }

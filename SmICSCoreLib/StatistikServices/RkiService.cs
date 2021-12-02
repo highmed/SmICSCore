@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using Microsoft.Extensions.Logging;
 using SmICSCoreLib.Database;
+using System.Collections.Generic;
 
 namespace SmICSCoreLib.StatistikServices
 {
@@ -600,8 +601,7 @@ namespace SmICSCoreLib.StatistikServices
                 if (result != null)
                 {
                     ArrayList reportArrayList = new();
-
-                    for (int i = zeileFahlahl; i <= 416; i++)
+                    for (int i = zeileFahlahl; i < 416; i++)
                     {
                         LKReport lkReportObj = new();
                         lkReportObj.LKName = result.Tables[tabelle].Rows[i][1].ToString();
@@ -937,6 +937,7 @@ namespace SmICSCoreLib.StatistikServices
                 return null;
             }
         }
+        
         public BerichtNew GetBerichtNew()
         {
             try
@@ -990,6 +991,7 @@ namespace SmICSCoreLib.StatistikServices
                 return null;
             }
         }
+        
         public BundeslandNew[] GetBundeslaender()
         {
             try
@@ -1046,6 +1048,7 @@ namespace SmICSCoreLib.StatistikServices
                 return null;
             }
         }
+       
         public LandkreisNew[] GetLkFromBl(string bundesland)
         {
             try
@@ -1080,6 +1083,94 @@ namespace SmICSCoreLib.StatistikServices
                 Console.WriteLine(e.Message);
                 return null;
             }
+        }
+
+        public List<BundeslandNew> LoadBlData()
+        {
+            //Get Data from Excel file
+            var result = GetDataSetFromLink("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile");
+            int columnsCount = result.Tables[2].Columns.Count;
+
+            Report report = GetBLReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 2, 2, 3, 1, columnsCount);
+
+            List<BundeslandNew> bundeslaender = new();    
+            List<BLReport> blReportList = new();
+            foreach (var blReport in report.BLReport)
+            {
+                BLReport newBlReport = new();
+                var BlAttributeArray = new List<BLReportAttribute>();
+                foreach (var blAttribute in blReport.BLReportAttribute)
+                {
+                    if (blAttribute.Datum.StartsWith("01"))
+                    {
+                        BlAttributeArray.Add(blAttribute);
+                    }
+                }
+                BLReportAttribute[] BlArray = BlAttributeArray.ToArray();
+                newBlReport.BLReportAttribute = BlArray;
+                newBlReport.BlName = blReport.BlName;
+                blReportList.Add(newBlReport);
+            }
+            foreach (var bl in blReportList)
+            {
+                foreach (var bLAttribute in bl.BLReportAttribute)
+                {
+                    BundeslandNew bundesland = new();
+                    bundesland.ID = bl.BlName + "-" + bLAttribute.Datum;
+                    bundesland.Bundesland = bl.BlName;
+                    bundesland.Faelle7BL = bLAttribute.Fahlzahl.ToString();
+                    bundesland.Stand = bLAttribute.Datum;
+                    bundeslaender.Add(bundesland);
+                }
+            }
+
+            return bundeslaender.OrderBy(c => c.Stand).ToList();
+        }
+
+        public List<LandkreisNew> LoadLkData(string blName, string lkName)
+        {
+            //Get Data from Excel file
+            var result = GetDataSetFromLink("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile");
+            int columnsCount = result.Tables[4].Columns.Count;
+
+            LKReportJson lKReportJson = GetLKReport("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab.xlsx?__blob=publicationFile", 4, 4, 5, 3, columnsCount);
+
+            List<LandkreisNew> landkreise = new();
+            List<LKReport> LKReportList = new();
+            foreach (var lkReport in lKReportJson.LKReport)
+            {
+                LKReport newLkReport = new();
+                var lkAttributeArray = new List<LKReportAttribute>();
+                foreach (var lkAttribute in lkReport.LKReportAttribute)
+                {
+                    if (lkAttribute.Datum.StartsWith("01"))
+                    {
+                        lkAttributeArray.Add(lkAttribute);
+                    }
+                }
+                LKReportAttribute[] lkArray = lkAttributeArray.ToArray();
+                newLkReport.LKReportAttribute = lkArray;
+                newLkReport.LKName = lkReport.LKName;
+                LKReportList.Add(newLkReport);
+            }
+
+            foreach (var lk in LKReportList)
+            {
+                if (lk.LKName == lkName)
+                {
+                    foreach(var lkAttribute in lk.LKReportAttribute)
+                    {
+                        LandkreisNew landkreis = new();
+                        landkreis.ID = lk.LKName + "-" + lkAttribute.Datum;
+                        landkreis.Bundesland = blName;
+                        landkreis.LandkreisName = lk.LKName;
+                        landkreis.Faelle7Lk = lkAttribute.Fahlzahl.ToString();
+                        landkreis.Stand = lkAttribute.Datum;
+                        landkreise.Add(landkreis);
+                    }
+                }
+            }
+            return landkreise.OrderBy(c => c.Stand).ToList();
         }
 
     }
