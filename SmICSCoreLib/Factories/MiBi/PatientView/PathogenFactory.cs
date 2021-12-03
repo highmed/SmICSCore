@@ -33,17 +33,18 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             return new AQLQuery()
             {
                 Name = "Pathogen - Mikrobiologischer Befunde",
-                Query = @$"SELECT u/items[at0001,'Erregername']/value as Name,
-                       u/items[at0024,'Nachweis?']/value as Result,
+                Query = @$"SELECT u/items[at0001,'Erregername']/value/value as Name,
+                       u/items[at0024,'Nachweis?']/value/value as Result,
                        b/items[at0003]/value as Rate,
-                       u/items[at0027,'Isolatnummer']/valu as IsolatNr
+                       u/items[at0027,'Isolatnummer']/value/magnitude as IsolatNr
                         FROM EHR e
                         CONTAINS COMPOSITION c
-                        CONTAINS CLUSTER u[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] 
-                        CONTAINS (CLUSTER b[openEHR-EHR-CLUSTER.erregerdetails.v1]) 
+                        CONTAINS OBSERVATION s[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]
+                        CONTAINS (CLUSTER u[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] 
+                        CONTAINS (CLUSTER b[openEHR-EHR-CLUSTER.erregerdetails.v1])) 
                         WHERE c/name/value='Mikrobiologischer Befund'
                         AND c/uid/value='{parameter.UID}'
-                        AND u/items[at0026,'Zugehörige Laborprobe']/value = '{parameter.LabID}'"
+                        AND u/items[at0026,'Zugehörige Laborprobe']/value/id = '{parameter.LabID}'"
             };
         }
     }

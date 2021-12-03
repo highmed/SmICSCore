@@ -54,7 +54,7 @@ namespace SmICSWebApp
             services.AddSingleton<SymptomService>();
             services.AddSingleton<EhrDataService>();
             services.AddScoped<MibiViewService>();
-            services.AddScoped<PatientViewService>();
+            //services.AddScoped<PatientViewService>();
 
             //AUTH - START 
 

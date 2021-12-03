@@ -32,11 +32,11 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             return new AQLQuery()
             {
                 Name = "Specimen - Mikrobiologischer Befund",
-                Query = @$"SELECT a/items[at0029]/value as Kind,
-                       a/items[at0001]/value as LabID,
-                       a/items[at0034]/value as SpecimenReceiptDate,
-                       o/items[at0001]/value as Location,
-                       a/items[at0015]/value as SpecimenCollectionDateTime
+                Query = @$"SELECT a/items[at0029]/value/value as Kind,
+                       a/items[at0001]/value/id as LabID,
+                       a/items[at0034]/value/value as SpecimenReceiptDate,
+                       o/items[at0001]/value/value as Location,
+                       a/items[at0015]/value/value as SpecimenCollectionDateTime
                         FROM EHR e
                         CONTAINS COMPOSITION c
                         CONTAINS CLUSTER a[openEHR-EHR-CLUSTER.specimen.v1] 

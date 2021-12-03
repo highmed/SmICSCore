@@ -5,11 +5,11 @@
 @using Blazorise;
 @using SmICSCoreLib.Factories.PatientInformation.PatientData;
 @using SmICSCoreLib.Factories.MiBi;
-@using SmICSWebApp.Data.PatientView;
-@using SmICSWebApp.Data.PatientView.Models;
+@using SmICSCoreLib.Factories.MiBi.PatientView;
+@using SmICSCoreLib.Factories.General;
 
 @inject IPatientDataFactory _patientData;
-@inject PatientViewService _service;
+@inject IMibiResultFactory _mibiData;
 
 <Card Border="Border.Is0" Padding="Padding.Is2.FromLeft">
     <CardBody Padding="Padding.Is0.FromTop">
@@ -52,14 +52,14 @@
     {
         <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @patient.Name</Heading>}
 
-    @if (patientViews != null)
+    @if (patientResults != null)
     {
-        @foreach (Case c in patientViews.Keys)
+        @foreach (MiBiResult c in patientResults)
         {
-            <Collapse Visible="@c.Collapsed" Margin="Margin.Is5.Is0.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromLeft">
+            <Collapse Visible="@Collapsed" Margin="Margin.Is5.Is0.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromLeft">
                 <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
                     <Heading Size="HeadingSize.Is6">
-                        <Button Clicked="@(()=>c.Collapsed = !c.Collapsed)" Width="Width.Is100">
+                        <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
                             <Table Narrow="true" Margin="Margin.Is0.FromBottom">
                                 <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
                                     <TableRow>
@@ -73,12 +73,12 @@
                                 </TableHeader>
                                 <TableBody Background="Background.White">
                                     <TableRow>
-                                        <TableRowCell>@c.ID</TableRowCell>
-                                        <TableRowCell></TableRowCell>
-                                        <TableRowCell></TableRowCell>
-                                        <TableRowCell></TableRowCell>
-                                        <TableRowCell></TableRowCell>
-                                        <TableRowCell></TableRowCell>
+                                        <TableRowCell>@c.CaseID</TableRowCell>
+                                        <TableRowCell>@c.Status</TableRowCell>
+                                        <TableRowCell>@c.ResultDateTime</TableRowCell>
+                                        <TableRowCell>@c.OrderID</TableRowCell>
+                                        <TableRowCell>@c.Sender</TableRowCell>
+                                        <TableRowCell>@c.Requirements</TableRowCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>
@@ -98,12 +98,12 @@
                             </Fields>
                         </CardBody>
                     </Card>
-                    @foreach (KeyValuePair<LabMetaData, LabData> dictEntry in patientViews[c])
+                    @foreach (Specimen m in c.Specimens)
                     {
-                        <Collapse Visible="@dictEntry.Key.Collapsed">
+                        <Collapse Visible="@Collapsed">
                             <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
                                 <Heading Size="HeadingSize.Is6">
-                                    <Button Clicked="@(()=>dictEntry.Key.Collapsed = !dictEntry.Key.Collapsed)" Width="Width.Is100">
+                                    <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
                                         <Table Narrow="true" Margin="Margin.Is0.FromBottom">
                                             <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
                                                 <TableRow>
@@ -112,17 +112,15 @@
                                                     <TableHeaderCell>Zeitpunkt der Probeentnahme</TableHeaderCell>
                                                     <TableHeaderCell>Zeitpunkt des Probeneingangs</TableHeaderCell>
                                                     <TableHeaderCell>Körperstelle</TableHeaderCell>
-                                                    <TableHeaderCell>MLAB Bezeichnung</TableHeaderCell>
                                                 </TableRow>
                                             </TableHeader>
                                             <TableBody Background="Background.White">
                                                 <TableRow>
-                                                    <TableRowCell></TableRowCell>
-                                                    <TableRowCell>@dictEntry.Value.KeimID</TableRowCell>
-                                                    <TableRowCell></TableRowCell>
-                                                    <TableRowCell></TableRowCell>
-                                                    <TableRowCell></TableRowCell>
-                                                    <TableRowCell></TableRowCell>
+                                                    <TableRowCell>@m.Kind</TableRowCell>
+                                                    <TableRowCell>@m.LabID</TableRowCell>
+                                                    <TableRowCell>@m.SpecimenCollectionDateTime</TableRowCell>
+                                                    <TableRowCell>@m.SpecimenReceiptDate</TableRowCell>
+                                                    <TableRowCell>@m.Location</TableRowCell>
                                                 </TableRow>
                                             </TableBody>
                                         </Table>
@@ -142,12 +140,12 @@
                                         </Fields>
                                     </CardBody>
                                 </Card>
-                                @foreach (Antibiogram ab in dictEntry.Value.Antibiogram)
+                                @foreach (Pathogen p in m.Pathogens)
                                 {
-                                    <Collapse Visible="@ab.Collapsed">
+                                    <Collapse Visible="@Collapsed">
                                         <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
                                             <Heading Size="HeadingSize.Is6">
-                                                <Button Clicked="@(()=>ab.Collapsed = !ab.Collapsed)" Width="Width.Is100">
+                                                <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
                                                     <Table Narrow="true" Margin="Margin.Is0.FromBottom">
                                                         <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
                                                             <TableRow>
@@ -160,11 +158,11 @@
                                                         </TableHeader>
                                                         <TableBody Background="Background.White">
                                                             <TableRow>
-                                                                <TableRowCell></TableRowCell>
-                                                                <TableRowCell></TableRowCell>
-                                                                <TableRowCell>@dictEntry.Key.ReportDate</TableRowCell>
-                                                                <TableRowCell></TableRowCell>
-                                                                <TableRowCell></TableRowCell>
+                                                                <TableRowCell>@p.Name</TableRowCell>
+                                                                <TableRowCell>@p.Result</TableRowCell>
+                                                                <TableRowCell>@p.Timestamp</TableRowCell>
+                                                                <TableRowCell>@p.Rate</TableRowCell>
+                                                                <TableRowCell>@p.IsolatNr</TableRowCell>
                                                             </TableRow>
                                                         </TableBody>
                                                     </Table>
@@ -172,31 +170,37 @@
                                             </Heading>
                                         </CollapseHeader>
                                         <CollapseBody>
-                                            <Card Border="Border.Is0" Margin="Margin.Is0">
-                                                <CardBody>
-                                                    <Span class="oi oi-beaker" TextColor="TextColor.Info" style="width:auto;"></Span>
-                                                    <CardTitle Size="5" TextColor="TextColor.Black50" Width="Width.Is50">Antibiogramm</CardTitle>
-                                                    <CardText>
-                                                        Antibiogrammzeit:
-                                                    </CardText>
-                                                </CardBody>
-                                                <Table Narrow="true">
-                                                    <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
-                                                        <TableRow>
-                                                            <TableHeaderCell>Antibiotikum</TableHeaderCell>
-                                                            <TableHeaderCell>Resistenz</TableHeaderCell>
-                                                            <TableHeaderCell>MHK</TableHeaderCell>
-                                                        </TableRow>
-                                                    </TableHeader>
-                                                    <TableBody>
-                                                        <TableRow>
-                                                            <TableRowCell></TableRowCell>
-                                                            <TableRowCell></TableRowCell>
-                                                            <TableRowCell></TableRowCell>
-                                                        </TableRow>
-                                                    </TableBody>
-                                                </Table>
-                                            </Card>
+                                            @if (p.Antibiograms != null)
+                                            {
+                                                @foreach (Antibiogram ab in p.Antibiograms)
+                                                {
+                                                    <Card Border="Border.Is0" Margin="Margin.Is0">
+                                                        <CardBody>
+                                                            <Span class="oi oi-beaker" TextColor="TextColor.Info" style="width:auto;"></Span>
+                                                            <CardTitle Size="5" TextColor="TextColor.Black50" Width="Width.Is50">Antibiogramm</CardTitle>
+                                                            <CardText>
+                                                                Antibiogrammzeit:&nbsp;
+                                                            </CardText>
+                                                        </CardBody>
+                                                        <Table Narrow="true">
+                                                            <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
+                                                                <TableRow>
+                                                                    <TableHeaderCell>Antibiotikum</TableHeaderCell>
+                                                                    <TableHeaderCell>Resistenz</TableHeaderCell>
+                                                                    <TableHeaderCell>MHK</TableHeaderCell>
+                                                                </TableRow>
+                                                            </TableHeader>
+                                                            <TableBody>
+                                                                <TableRow>
+                                                                    <TableRowCell>@ab.Antibiotic</TableRowCell>
+                                                                    <TableRowCell>@ab.Resistance</TableRowCell>
+                                                                    <TableRowCell>@ab.MinInhibitorConcentration</TableRowCell>
+                                                                </TableRow>
+                                                            </TableBody>
+                                                        </Table>
+                                                    </Card>
+                                                }
+                                            }
                                         </CollapseBody>
                                     </Collapse>
                                 }
@@ -211,30 +215,35 @@
 </div>
 
 @code { [Parameter]
-            public string PatientID { get; set; }
+    public string PatientID { get; set; }
 
-            private PatientData patient;
-            private PatientViewData patientViews;
+    private Patient selectedPatient = new Patient();
+    private PatientData patient;
+    private List<MiBiResult> patientResults;
+    private bool Collapsed { get; set; } = false;
 
-            protected override void OnParametersSet()
-            {
-                if (PatientID == "" || PatientID == null)
-                {
-                    PatientID = "";
-                }
-            }
+    protected override void OnParametersSet()
+    {
+        if (PatientID == "" || PatientID == null)
+        {
+            PatientID = "";
+        }
+    }
 
-            protected override void OnInitialized()
-            {
-                if (PatientID != "" || PatientID != null)
-                {
-                    //patient = _patientData.Process(PatientID);
-                    patientViews = _service.LoadData(PatientID);
-                }
-            }
+    protected override void OnInitialized()
+    {
+        if (PatientID != "" || PatientID != null)
+        {
+            //patient = _patientData.Process(PatientID);
+            //patientViews = _service.LoadData(PatientID);
+        }
+    }
 
-            private void Submit()
-            {
-                //patient = _patientData.Process(PatientID);
-                patientViews = _service.LoadData(PatientID);
-            } }
+    private void Submit()
+    {
+        //patient = _patientData.Process(PatientID);
+        //patientViews = _service.LoadData(PatientID);
+        selectedPatient.PatientID = PatientID;
+        patientResults = _mibiData.Process(selectedPatient);
+    }
+}
