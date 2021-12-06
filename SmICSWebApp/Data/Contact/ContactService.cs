@@ -15,7 +15,7 @@ namespace SmICSWebApp.Data.Contact
 
         public void LoadContactData(Patient patient)
         {
-
+            _contactFac.Process();
         }
         
 
