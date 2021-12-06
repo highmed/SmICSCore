@@ -8,29 +8,42 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
 {
     public class MibiResultFactory : IMibiResultFactory
     {
-        public IRestDataAccess _restDataAccess { get; set; }
+        public IRestDataAccess RestDataAccess { get; set; }
+
         private readonly ISpecimenFactory _specimenFac;
 
         public MibiResultFactory(IRestDataAccess restDataAccess, ISpecimenFactory specimenFac)
         {
-            _restDataAccess = restDataAccess;
+            RestDataAccess = restDataAccess;
             _specimenFac = specimenFac;
         }
 
         public List<MiBiResult> Process(Patient patient)
         {
-            List<MiBiResult> results = _restDataAccess.AQLQuery<MiBiResult>(MetaDataQuery(patient));
-            foreach (MiBiResult result in results)
+            List<MiBiResult> results = new List<MiBiResult>();
+            List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
+            foreach(Case c in cases)
             {
-                SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID };
-                result.Specimens = _specimenFac.Process(parameter);
-                result.Requirements = _restDataAccess.AQLQuery<Requirement>(RequirementQuery(parameter as RequirementParameter));
-                result.Sender = _restDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, patient.PatientID)).FirstOrDefault();
+                List<MiBiResult> tmpResult = Process(c);
+                results.AddRange(tmpResult);
             }
             return results;
         }
 
-        private AQLQuery MetaDataQuery(Patient patient)
+        public List<MiBiResult> Process(Case Case)
+        {
+            List<MiBiResult> results = RestDataAccess.AQLQuery<MiBiResult>(MetaDataQuery(Case));
+            foreach (MiBiResult result in results)
+            {
+                SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID };
+                result.Specimens = _specimenFac.Process(parameter);
+                result.Requirements = RestDataAccess.AQLQuery<Requirement>(RequirementQuery(parameter as RequirementParameter));
+                result.Sender = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID)).FirstOrDefault();
+            }
+            return results;
+        }
+
+        private AQLQuery MetaDataQuery(Case Case)
         {
             return new AQLQuery()
             {
@@ -45,7 +58,8 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                         CONTAINS COMPOSITION t[openEHR-EHR-COMPOSITION.report-result.v1]
                         CONTAINS (CLUSTER v[openEHR-EHR-CLUSTER.case_identification.v0] 
                         AND OBSERVATION d[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]) 
-                        WHERE e/ehr_status/subject/external_ref/id/value='{patient.PatientID}'"
+                        WHERE e/ehr_status/subject/external_ref/id/value='{Case.PatientID}
+                        AND v/items[at0001]/value as CaseID = '{Case.CaseID}'"
             };
         }
 

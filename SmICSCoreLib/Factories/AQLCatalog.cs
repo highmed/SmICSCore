@@ -21,6 +21,25 @@ namespace SmICSCoreLib.Factories
                                 WHERE e/ehr_status/subject/external_ref/id/value='{subjectID}' 
                                 AND e/ehr_status/subject/external_ref/namespace='SmICSTests'");
         }
+        /// <summary>
+        /// AQL Query for all Cases of given patient ordered by admission date in ascending order (earliest admission first).
+        /// </summary>
+        /// <param name="patient"></param>
+        public static AQLQuery Cases(Patient patient)
+        {
+            return new AQLQuery
+            {
+                Name = "Aufnahme - Stationärer Versorgungsfall",
+                Query = $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID, 
+                        c/context/other_context[at0001]/items[at0003]/value/value as CaseID 
+                        FROM EHR e 
+                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
+                        CONTAINS ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
+                        WHERE c/name/value = 'Stationärer Versorgungsfall' 
+                        AND e/ehr_status/subject/external_ref/id/value = '{ patient.PatientID }' 
+                        ORDER BY p/data[at0001]/items[at0071]/value/value ASC'"
+            };
+        }
 
         public static AQLQuery ContactPatientWards(ContactParameter parameter)
         {

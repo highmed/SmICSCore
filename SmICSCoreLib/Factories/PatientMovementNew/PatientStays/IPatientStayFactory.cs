@@ -2,12 +2,12 @@
 using SmICSCoreLib.REST;
 using System.Collections.Generic;
 
-namespace SmICSCoreLib.Factories.MiBi.Contact
+namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
 {
-    public interface IContactFactory
+    public interface IPatientStayFactory
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        List<Contact> Process(ContactParameter parameter);
+        List<PatientStay> Process(Case Case);
     }
 }

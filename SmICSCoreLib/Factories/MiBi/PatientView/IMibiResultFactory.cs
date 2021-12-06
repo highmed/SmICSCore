@@ -6,8 +6,9 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
 {
     public interface IMibiResultFactory
     {
-        IRestDataAccess _restDataAccess { get; set; }
+        IRestDataAccess RestDataAccess { get; set; }
 
         List<MiBiResult> Process(Patient patient);
+        List<MiBiResult> Process(Case Case);
     }
 }
