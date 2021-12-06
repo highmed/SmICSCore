@@ -21,7 +21,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             {
                 foreach (Specimen specimen in specimens)
                 {
-                    PathogenParameter parameter = specimenParameter as PathogenParameter;
+                    PathogenParameter parameter =  new PathogenParameter(specimenParameter);
                     parameter.LabID = specimen.LabID;
 
                     specimen.Pathogens = _pathogegFac.Process(parameter);

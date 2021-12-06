@@ -21,7 +21,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             {
                 foreach (Pathogen pathogen in pathogens)
                 {
-                    AntibiogramParameter parameter = pathogenParameter as AntibiogramParameter;
+                    AntibiogramParameter parameter = new AntibiogramParameter(pathogenParameter);
                     parameter.IsolatNo = pathogen.IsolatNr;
                     parameter.Pathogen = pathogen.Name;
 
