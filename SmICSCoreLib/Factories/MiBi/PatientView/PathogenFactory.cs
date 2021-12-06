@@ -38,7 +38,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             {
                 Name = "Pathogen - Mikrobiologischer Befunde",
                 Query = @$"SELECT u/items[at0001,'Erregername']/value/value as Name,
-                       u/items[at0024,'Nachweis?']/value/value as Result,
+                       u/items[at0024,'Nachweis?']/value/value as ResultString,
                        b/items[at0003]/value as Rate,
                        u/items[at0027,'Isolatnummer']/value/magnitude as IsolatNr
                         FROM EHR e
