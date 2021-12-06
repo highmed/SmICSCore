@@ -10,7 +10,7 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
 {
     public class ContactFactory : IContactFactory
     {
-        Dictionary<Case, Hospitalization> hospitalizations;
+        public List<Hospitalization> Hospitalizations { get; private set; }
         List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays;
         public IRestDataAccess RestDataAccess { get; set; }
         private readonly IHospitalizationFactory _hospitalizationFac;
@@ -24,14 +24,14 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
             _wardOverviewFac = wardOverviewFac;
         }
 
-        public Dictionary<Hospitalization, List<Case>> Process(Case parameter)
+        public Dictionary<Hospitalization, List<Case>> Process(Patient parameter)
         {
             Dictionary<Hospitalization, List<Case>> contacts = new Dictionary<Hospitalization, List<Case>>();
-            List<Hospitalization> hospitalizations = _hospitalizationFac.Process(parameter as Patient);
+            Hospitalizations = _hospitalizationFac.Process(parameter as Patient);
 
-            hospitalizations.ForEach(h => contacts.Add(h, null));
+            Hospitalizations.ForEach(h => contacts.Add(h, null));
 
-            patientStays = _patientStayFac.Process(parameter);
+            patientStays = _patientStayFac.Process(Hospitalizations.Last());
 
             foreach (SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay patientStay in patientStays)
             {
@@ -44,7 +44,7 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
 
                 List<Case> casesOnWard = _wardOverviewFac.Processm(wardOverviewParameter);
 
-                Hospitalization hospitalization = hospitalizations.Where(h => h.CaseID == patientStay.CaseID).FirstOrDefault();
+                Hospitalization hospitalization = Hospitalizations.Where(h => h.CaseID == patientStay.CaseID).FirstOrDefault();
                 if (contacts[hospitalization] == null)
                 {
                     contacts[hospitalization] = casesOnWard;
@@ -57,6 +57,10 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
             return contacts;
         }
 
+        public List<Case> Process(Hospitalization hospitalization)
+        {
+
+        }
 
     }
 }
