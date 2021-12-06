@@ -12,19 +12,25 @@ namespace SmICSCoreLib.Factories.MiBi.WardOverview
 {
     public class WardOverviewFactory : IWardOverviewFactory
     {
-        private IRestDataAccess _rest;
+        public IRestDataAccess RestDataAccess { get; private set; }
         private IMibiPatientLaborDataFactory _mibiLab;
         private ILogger<WardOverviewFactory> _logger;
         public WardOverviewFactory(IRestDataAccess rest, ILogger<WardOverviewFactory> logger, IMibiPatientLaborDataFactory mibiLab)
         {
             _logger = logger;
-            _rest = rest;
+            RestDataAccess = rest;
             _mibiLab = mibiLab;
+        }
+
+        public List<Case> Processm(WardOverviewParameters parameter)
+        {
+            List<Case> cases = RestDataAccess.AQLQuery<Case>(PatientsOnWardQuery(parameter));
+            return cases;
         }
 
         public List<WardOverviewModel> Process(WardOverviewParameters parameters)
         {
-            List<Patient> patients = GetAllPatientsOnWardInTimeSpan(parameters);
+            List<Case> patients = GetAllPatientsOnWardInTimeSpan(parameters);
             Dictionary<Patient, Dictionary<bool, List<MibiLabDataModel>>> labDataForPatients = GetAllLabResults(parameters, patients);
             List<WardOverviewModel> wardOverview = GetWardOverwievInformation(parameters, labDataForPatients);
             return wardOverview;
@@ -37,7 +43,7 @@ namespace SmICSCoreLib.Factories.MiBi.WardOverview
             {
                 return null;
             }
-            foreach (Patient patient in labDataForPatients.Keys)
+            foreach (Case patient in labDataForPatients.Keys)
             {
                 MibiLabDataModel labDataWithinTime = null;
                 WardOverviewModel wardOverview = new WardOverviewModel();
@@ -72,9 +78,9 @@ namespace SmICSCoreLib.Factories.MiBi.WardOverview
             return wardOverviews;
         }
 
-        private bool IsResultFromParameterWard(MibiLabDataModel labDataWithinTime, WardOverviewParameters parameters, Patient patient)
+        private bool IsResultFromParameterWard(MibiLabDataModel labDataWithinTime, WardOverviewParameters parameters, Case patient)
         {
-            PatientLocation location = _rest.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(labDataWithinTime.ZeitpunktProbenentnahme, patient.PatientID)).FirstOrDefault() ?? null;
+            PatientLocation location = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(labDataWithinTime.ZeitpunktProbenentnahme, patient.PatientID)).FirstOrDefault() ?? null;
             if (location != null && parameters.Ward == location.Ward)
             {
                 return true;
@@ -85,7 +91,7 @@ namespace SmICSCoreLib.Factories.MiBi.WardOverview
         private EpisodeOfCareModel getCurrentAdmission(MibiLabDataModel labDataWithinTime, Patient patient)
         {
             EpsiodeOfCareParameter episodeOfCare = new EpsiodeOfCareParameter() { PatientID = patient.PatientID, CaseID = labDataWithinTime.CaseID };
-            EpisodeOfCareModel admission = _rest.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCare))[0];
+            EpisodeOfCareModel admission = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCare))[0];
             return admission;
         }
 
@@ -154,14 +160,38 @@ namespace SmICSCoreLib.Factories.MiBi.WardOverview
             return null;
         }
 
-        private List<Patient> GetAllPatientsOnWardInTimeSpan(WardOverviewParameters parameters)
+        private List<Case> GetAllPatientsOnWardInTimeSpan(WardOverviewParameters parameters)
         {
-            List<Patient> patients = _rest.AQLQuery<Patient>(AQLCatalog.PatientsOnWard(parameters));
+            List<Case> patients = RestDataAccess.AQLQuery<Case>(PatientsOnWardQuery(parameters));
             if (patients != null)
             {
                 return patients;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Returns all patients on given ward where the admission is greater equal than the given start and less equal than the given end. 
+        /// </summary>
+        /// <param name="parameter"></param>
+        private AQLQuery PatientsOnWardQuery(WardOverviewParameters parameter)
+        {
+            return new AQLQuery()
+            {
+                Name = "PatientsOnWard",
+                Query = $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
+                        i/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value/value as CaseID
+                        FROM EHR e 
+                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] 
+                        CONTAINS (CLUSTER u[openEHR-EHR-CLUSTER.case_identification.v0] 
+                        AND ADMIN_ENTRY u[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] 
+                        CONTAINS (CLUSTER a[openEHR-EHR-CLUSTER.location.v1]
+                        AND CLUSTER o[openEHR-EHR-CLUSTER.organization.v0]))
+                        WHERE c/name/value = 'Patientenaufenthalt' 
+                        AND a/items[at0027]/value/value = '{parameter.Ward}' 
+                        AND u/data[at0001]/items[at0004]/value/value >= '{ parameter.Start.ToString("yyyy-MM-dd") }'
+                        AND u/data[at0001]/items[at0004]/value/value <= '{ parameter.End.ToString("yyyy-MM-dd") }'"
+            };
         }
     }
 }
