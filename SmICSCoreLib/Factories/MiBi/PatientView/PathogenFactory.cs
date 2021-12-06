@@ -17,15 +17,19 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         public List<Pathogen> Process(PathogenParameter pathogenParameter)
         {
             List<Pathogen> pathogens = RestDataAccess.AQLQuery<Pathogen>(PathogenQuery(pathogenParameter));
-            foreach (Pathogen pathogen in pathogens)
+            if (pathogenParameter != null)
             {
-                AntibiogramParameter parameter = pathogenParameter as AntibiogramParameter;
-                parameter.IsolatNo = pathogen.IsolatNr;
-                parameter.Pathogen = pathogen.Name;
+                foreach (Pathogen pathogen in pathogens)
+                {
+                    AntibiogramParameter parameter = pathogenParameter as AntibiogramParameter;
+                    parameter.IsolatNo = pathogen.IsolatNr;
+                    parameter.Pathogen = pathogen.Name;
 
-                pathogen.Antibiograms = _antibiogramFac.Process(parameter);
+                    pathogen.Antibiograms = _antibiogramFac.Process(parameter);
+                }
+                return pathogens;
             }
-            return pathogens;
+            return null;
         }
 
         private AQLQuery PathogenQuery(PathogenParameter parameter)

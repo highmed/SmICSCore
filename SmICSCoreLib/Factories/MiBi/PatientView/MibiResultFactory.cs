@@ -20,14 +20,18 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         public List<MiBiResult> Process(Patient patient)
         {
             List<MiBiResult> results = _restDataAccess.AQLQuery<MiBiResult>(MetaDataQuery(patient));
-            foreach (MiBiResult result in results)
+            if (results != null)
             {
-                SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID };
-                result.Specimens = _specimenFac.Process(parameter);
-                result.Requirements = _restDataAccess.AQLQuery<Requirement>(RequirementQuery(parameter as RequirementParameter));
-                result.Sender = _restDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, patient.PatientID)).FirstOrDefault();
+                foreach (MiBiResult result in results)
+                {
+                    SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID };
+                    result.Specimens = _specimenFac.Process(parameter);
+                    result.Requirements = _restDataAccess.AQLQuery<Requirement>(RequirementQuery(parameter as RequirementParameter));
+                    result.Sender = _restDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, patient.PatientID)).FirstOrDefault();
+                }
+                return results;
             }
-            return results;
+            return null;
         }
 
         private AQLQuery MetaDataQuery(Patient patient)
