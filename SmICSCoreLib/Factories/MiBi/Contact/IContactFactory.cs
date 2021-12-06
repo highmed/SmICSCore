@@ -9,6 +9,7 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        Dictionary<Hospitalization, List<Case>> Process(Case parameter);
+        List<PatientLocation> Process(Hospitalization hospitalization);
+  
     }
 }

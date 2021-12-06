@@ -6,6 +6,6 @@ namespace SmICSCoreLib.Factories.MiBi.WardOverview
     public interface IWardOverviewFactory
     {
         List<WardOverviewModel> Process(WardOverviewParameters parameters);
-        List<Case> Processm(WardOverviewParameters parameter);
+        List<PatientLocation> Processm(WardOverviewParameters parameter);
     }
 }

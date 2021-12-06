@@ -160,9 +160,10 @@ namespace SmICSCoreLib.Factories.MiBi.WardOverview
             return null;
         }
 
-        private List<Case> GetAllPatientsOnWardInTimeSpan(WardOverviewParameters parameters)
+        //TODO: Check if you can use PatientLocation from Generel (Is PatientLocation able to inherit from Case)
+        private List<PatientLocation> GetAllPatientsOnWardInTimeSpan(WardOverviewParameters parameters)
         {
-            List<Case> patients = RestDataAccess.AQLQuery<Case>(PatientsOnWardQuery(parameters));
+            List<PatientLocation> patients = RestDataAccess.AQLQuery<PatientLocation>(PatientsOnWardQuery(parameters));
             if (patients != null)
             {
                 return patients;
@@ -180,7 +181,9 @@ namespace SmICSCoreLib.Factories.MiBi.WardOverview
             {
                 Name = "PatientsOnWard",
                 Query = $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
-                        i/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value/value as CaseID
+                        i/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value/value as CaseID,
+                        u/data[at0001]/items[openEHR-EHR-CLUSTER.location.v1]/items[at0027]/value/value as Ward, 
+                        u/data[at0001]/items[openEHR-EHR-CLUSTER.location.v1]/items[at0029]/value/value as Room
                         FROM EHR e 
                         CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] 
                         CONTAINS (CLUSTER u[openEHR-EHR-CLUSTER.case_identification.v0] 
