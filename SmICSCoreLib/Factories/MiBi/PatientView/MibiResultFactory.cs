@@ -39,14 +39,13 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             return new AQLQuery()
             {
                 Name = "Meta Daten - Mikrobiologischer Befund",
-                Query = @$"SELECT v/items[at0001]/value as CaseID,
-                        t/context/other_context[at0001]/items[at0005]/value as Status,
+                Query = @$"SELECT v/items[at0001]/value/value as CaseID,
+                        c/context/other_context[at0001]/items[at0005]/value/value as Status,
                         d/data[at0001]/events[at0002]/time/value as ResultDateTime,
                         d/protocol[at0004]/items[at0094]/items[at0063]/value/id as OrderID,
                         c/uid/value as UID
                         FROM EHR e
                         CONTAINS COMPOSITION c
-                        CONTAINS COMPOSITION t[openEHR-EHR-COMPOSITION.report-result.v1]
                         CONTAINS (CLUSTER v[openEHR-EHR-CLUSTER.case_identification.v0] 
                         AND OBSERVATION d[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]) 
                         WHERE e/ehr_status/subject/external_ref/id/value='{patient.PatientID}'"
