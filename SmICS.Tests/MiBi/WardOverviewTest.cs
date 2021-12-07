@@ -15,7 +15,7 @@ namespace SmICSFactory.Tests.MiBi
     {
         [Theory]
         [ClassData(typeof(WardOverviewTestData))]
-        public void ProcessTest(WardOverviewParameters parameter)
+        public void ProcessTest(WardOverviewParameter parameter)
         {
             RestDataAccess _data = TestConnection.Initialize();
 
@@ -42,7 +42,7 @@ namespace SmICSFactory.Tests.MiBi
             {
                 //List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
                 yield return new object[] { 
-                    new WardOverviewParameters 
+                    new WardOverviewParameter 
                     {
                         Ward = "47",
                         MRE = "MRSA",

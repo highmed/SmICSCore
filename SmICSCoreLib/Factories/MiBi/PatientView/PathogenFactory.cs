@@ -30,7 +30,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
 
         private AQLQuery PathogenQuery(PathogenParameter parameter)
         {
-            return new AQLQuery()
+            AQLQuery query = new AQLQuery()
             {
                 Name = "Pathogen - Mikrobiologischer Befunde",
                 Query = @$"SELECT u/items[at0001,'Erregername']/value as Name,
@@ -45,6 +45,11 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                         AND c/uid/value='{parameter.UID}'
                         AND u/items[at0026,'Zugehörige Laborprobe']/value = '{parameter.LabID}'"
             };
+            if(!string.IsNullOrEmpty(parameter.Name))
+            {
+                query.Query += $" AND u/items[at0024,'Nachweis?']/value/value = '{ parameter.Name }'";
+            }
+            return query;
         }
     }
 }

@@ -6,5 +6,10 @@ namespace SmICSCoreLib.Factories.General
     {
         [JsonProperty(PropertyName = "FallID")]
         public string CaseID { get; set; }
+        public Case() : base() {}
+        public Case(Case Case) : base (Case)
+        {
+            CaseID = Case.CaseID;
+        }
     }
 }

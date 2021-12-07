@@ -1,5 +1,6 @@
 ﻿using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.MiBi.PatientView;
+using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.REST;
 using System;
@@ -20,7 +21,7 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             _hospitalizationFac = hospitalizationFac;
         }
 
-        public SortedList<Hospitalization, Dictionary<string, InfectionStatus>> Process(Patient patient)
+        public SortedList<Hospitalization, Dictionary<string, InfectionStatus>> Process(Patient patient, PathogenParameter pathogen = null)
         {
             List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
             SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionInformationByCase = new SortedList<Hospitalization, Dictionary<string, InfectionStatus>>(new HospitalizationComparer());
@@ -28,7 +29,7 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             foreach (Case c in cases)
             {
                 Hospitalization hospitalization = _hospitalizationFac.Process(c);
-                List<MiBiResult> results = _mibiResultFac.Process(c);
+                List<MiBiResult> results = _mibiResultFac.Process(c, pathogen);
 
                 Dictionary<string, InfectionStatus> infectionInformation = new Dictionary<string, InfectionStatus>();
 

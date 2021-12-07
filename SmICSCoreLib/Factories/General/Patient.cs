@@ -6,5 +6,13 @@ namespace SmICSCoreLib.Factories.General
     {
         [JsonProperty(PropertyName = "PatientID")]
         public string PatientID { get; set; }
+        public Patient()
+        {
+
+        }
+        public Patient(Patient patient)
+        {
+            PatientID = patient.PatientID;
+        }
     }
 }

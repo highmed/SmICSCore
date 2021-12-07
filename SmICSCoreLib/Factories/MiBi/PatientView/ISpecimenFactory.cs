@@ -8,6 +8,6 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
     {
         IRestDataAccess _restDataAccess { get; set; }
 
-        List<Specimen> Process(SpecimenParameter parameter);
+        List<Specimen> Process(SpecimenParameter parameter, PathogenParameter pathogen = null);
     }
 }

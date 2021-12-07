@@ -18,7 +18,7 @@ namespace SmICSWebApp.Data
             _mibi = mibi;
         }
 
-        public List<MibiViewModel> GetData(WardOverviewParameters parameter)
+        public List<MibiViewModel> GetData(WardOverviewParameter parameter)
         {
             List<MibiViewModel> mibiViews = new List<MibiViewModel>();
             List<WardOverviewModel> overviewData = _mibi.Process(parameter);

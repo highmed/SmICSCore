@@ -14,12 +14,21 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             _pathogegFac = pathogegFac;
         }
 
-        public List<Specimen> Process(SpecimenParameter specimenParameter)
+        public List<Specimen> Process(SpecimenParameter specimenParameter, PathogenParameter pathogen = null)
         {
             List<Specimen> specimens = _restDataAccess.AQLQuery<Specimen>(SpecimenQuery(specimenParameter));
             foreach (Specimen specimen in specimens)
             {
-                PathogenParameter parameter = specimenParameter as PathogenParameter;
+                PathogenParameter parameter;
+                if (pathogen == null)
+                {
+                    parameter = specimenParameter as PathogenParameter;
+                }
+                else
+                {
+                    parameter = new PathogenParameter(pathogen);
+                    parameter.Name = pathogen.Name;
+                }
                 parameter.LabID = specimen.LabID;
 
                 specimen.Pathogens = _pathogegFac.Process(parameter);

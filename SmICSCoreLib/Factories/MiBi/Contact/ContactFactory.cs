@@ -22,9 +22,9 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
             _wardOverviewFac = wardOverviewFac;
         }
 
-        public Dictionary<Hospitalization, List<Case>> Process(Patient parameter)
+        public Dictionary<Hospitalization, List<PatientLocation>> Process(Patient parameter)
         {
-            Dictionary<Hospitalization, List<Case>> contacts = new Dictionary<Hospitalization, List<Case>>();
+            Dictionary<Hospitalization, List<PatientLocation>> contacts = new Dictionary<Hospitalization, List<PatientLocation>>();
 
             List<Hospitalization> Hospitalizations = _hospitalizationFac.Process(parameter as Patient);
             Hospitalizations.ForEach(h => contacts.Add(h, null));
@@ -32,7 +32,7 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
             Hospitalization hospitalization = Hospitalizations.Last();
 
             List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays = _patientStayFac.Process(hospitalization);
-            List<Case> contactCases = DetermineContacts(Hospitalizations.Last());
+            List<PatientLocation> contactCases = DetermineContacts(Hospitalizations.Last());
              
             if (contacts[hospitalization] == null)
             {
@@ -53,7 +53,7 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
             List<PatientLocation> cases = new List<PatientLocation>();
             foreach (SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay patientStay in patientStays)
             {
-                WardOverviewParameters wardOverviewParameter = new WardOverviewParameters
+                WardOverviewParameter wardOverviewParameter = new WardOverviewParameter
                 {
                     Ward = patientStay.Ward,
                     Start = patientStay.Admission,

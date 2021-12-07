@@ -18,25 +18,25 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             _specimenFac = specimenFac;
         }
 
-        public List<MiBiResult> Process(Patient patient)
+        public List<MiBiResult> Process(Patient patient, PathogenParameter pathogen = null)
         {
             List<MiBiResult> results = new List<MiBiResult>();
             List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
             foreach(Case c in cases)
             {
-                List<MiBiResult> tmpResult = Process(c);
+                List<MiBiResult> tmpResult = Process(c, pathogen);
                 results.AddRange(tmpResult);
             }
             return results;
         }
 
-        public List<MiBiResult> Process(Case Case)
+        public List<MiBiResult> Process(Case Case, PathogenParameter pathogen = null)
         {
             List<MiBiResult> results = RestDataAccess.AQLQuery<MiBiResult>(MetaDataQuery(Case));
             foreach (MiBiResult result in results)
             {
                 SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID };
-                result.Specimens = _specimenFac.Process(parameter);
+                result.Specimens = _specimenFac.Process(parameter, pathogen);
                 result.Requirements = RestDataAccess.AQLQuery<Requirement>(RequirementQuery(parameter as RequirementParameter));
                 result.Sender = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID)).FirstOrDefault();
             }
