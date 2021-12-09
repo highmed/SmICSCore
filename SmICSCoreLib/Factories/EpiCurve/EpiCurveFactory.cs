@@ -62,7 +62,7 @@ namespace SmICSCoreLib.Factories.EpiCurve
             _logger.LogDebug("Flag - Query Paramters: Datum: {Date} \r PathogenList: {pathogens}", date.ToString(), parameter.PathogenCodesToAqlMatchString());
             List<FlagTimeModel> flagTimes = RestDataAccess.AQLQuery<FlagTimeModel>(AQLCatalog.LaborEpiCurve(date, parameter));
 
-            if (flagTimes == null)
+            if (flagTimes == null || flagTimes.Count == 0)
             {
                 AddToEpiCurveToSortedDict(date);
                 return;
@@ -87,7 +87,7 @@ namespace SmICSCoreLib.Factories.EpiCurve
                 List<PatientLocation> patientLocations = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(flag.Datum, flag.PatientID));
 
                 PatientLocation patientLocation = null;
-                if (patientLocations == null)
+                if (patientLocations == null || patientLocatations.Count == 0)
                 {
                     _logger.LogDebug("PatientLocation - Query Response Count: {LocationCount}", null);
                     patientLocation = new PatientLocation() { Ward = "ohne Stationsangabe", Departement = "0000" };
