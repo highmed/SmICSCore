@@ -3,6 +3,7 @@ using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.PatientMovement.ReceiveModels;
 using SmICSCoreLib.REST;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 
@@ -71,7 +72,7 @@ namespace SmICSCoreLib.Factories.PatientMovement
                 transformToPatientMovementData(patientStay, episodeOfCare, patientMovementList);
             }
 
-            return patientMovementList;
+            return patientMovementList.Distinct().ToList();
         }
 
         private void transformToPatientMovementData(PatientStayModel patientStay, EpisodeOfCareModel episodeOfCare, List<PatientMovementModel> patientMovementList)
