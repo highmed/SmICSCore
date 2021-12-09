@@ -15,7 +15,7 @@ namespace SmICSWebApp.Data.WardOverview
         private readonly InfectionStatusFactory _infectionStatusFac;
         private readonly IHospitalizationFactory _hospitalizationFac;
         private readonly IPatientStayFactory _patientStayFac;
-        private readonly IMibiResultFactory _labDataFac;
+        private readonly ILabResultFactory _labDataFac;
         public WardOverviewService(IWardOverviewFactory wardOverFac, InfectionStatusFactory infectionStatusFac, IHospitalizationFactory hospitalizationFac, IPatientStayFactory patientStayFac)
         {
             _wardOverFac = wardOverFac;

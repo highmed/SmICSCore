@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace SmICSCoreLib.Factories.MiBi.PatientView
 {
-    public interface IMibiResultFactory
+    public interface ILabResultFactory
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        List<MiBiResult> Process(Patient patient, PathogenParameter pathogen = null);
-        List<MiBiResult> Process(Case Case, PathogenParameter pathogen = null);
+        List<LabResult> Process(Patient patient, PathogenParameter pathogen = null);
+        List<LabResult> Process(Case Case, PathogenParameter pathogen = null);
     }
 }

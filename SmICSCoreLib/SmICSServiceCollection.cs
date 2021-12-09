@@ -42,7 +42,7 @@ namespace SmICS
             services.AddScoped<IAntibiogramFactory, AntibiogramFactory>();
             services.AddScoped<IPathogenFactory, PathogenFactory>();
             services.AddScoped<ISpecimenFactory, SpecimenFactory>();
-            services.AddScoped<IMibiResultFactory, MibiResultFactory>();
+            services.AddScoped<ILabResultFactory, LabResultFactory>();
             services.AddTransient<IContactNetworkFactory, ContactNetworkFactory>();
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();
 

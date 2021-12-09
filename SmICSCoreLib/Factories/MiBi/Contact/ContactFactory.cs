@@ -60,7 +60,7 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
                     End = patientStay.Discharge
                 };
 
-                List<PatientLocation> casesOnWard = _wardOverviewFac.Processm(wardOverviewParameter);
+                List<PatientLocation> casesOnWard = _wardOverviewFac.Process(wardOverviewParameter);
                 cases.AddRange(casesOnWard);
             }
 

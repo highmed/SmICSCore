@@ -42,10 +42,10 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             {
                 Name = "Specimen - Mikrobiologischer Befund",
                 Query = @$"SELECT a/items[at0029]/value as Kind,
-                       a/items[at0001]/value as LabID,
-                       a/items[at0034]/value as SpecimenReceiptDate,
-                       o/items[at0001]/value as Location,
-                       a/items[at0015]/value as SpecimenCollectionDateTime
+                        a/items[at0001]/value as LabID,
+                        a/items[at0034]/value as SpecimenReceiptDate,
+                        o/items[at0001]/value as Location,
+                        a/items[at0015]/value as SpecimenCollectionDateTime,
                         FROM EHR e
                         CONTAINS COMPOSITION c
                         CONTAINS CLUSTER a[openEHR-EHR-CLUSTER.specimen.v1] 

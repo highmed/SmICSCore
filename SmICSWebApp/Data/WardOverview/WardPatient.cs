@@ -16,6 +16,6 @@ namespace SmICSWebApp.Data.WardOverview
         public InfectionStatus InfectionStatus { get; set; }
         public PatientStay CurrentStay { get; set; }
         public Hospitalization Hospitalization { get; set; }
-        public List<MiBiResult> LabData { get; set; }
+        public List<LabResult> LabData { get; set; }
     }
 }

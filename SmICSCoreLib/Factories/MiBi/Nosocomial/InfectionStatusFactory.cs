@@ -11,10 +11,10 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
     public class InfectionStatusFactory
     {
         public IRestDataAccess RestDataAccess { get; set; }
-        private readonly IMibiResultFactory _mibiResultFac;
+        private readonly ILabResultFactory _mibiResultFac;
         private readonly IHospitalizationFactory _hospitalizationFac;
 
-        public InfectionStatusFactory(IRestDataAccess restDataAccess, IMibiResultFactory mibiResultFac, IHospitalizationFactory hospitalizationFac)
+        public InfectionStatusFactory(IRestDataAccess restDataAccess, ILabResultFactory mibiResultFac, IHospitalizationFactory hospitalizationFac)
         {
             RestDataAccess = restDataAccess;
             _mibiResultFac = mibiResultFac;
@@ -29,7 +29,7 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             foreach (Case c in cases)
             {
                 Hospitalization hospitalization = _hospitalizationFac.Process(c);
-                List<MiBiResult> results = _mibiResultFac.Process(c, pathogen);
+                List<LabResult> results = _mibiResultFac.Process(c, pathogen);
 
                 Dictionary<string, InfectionStatus> infectionInformation = new Dictionary<string, InfectionStatus>();
 
@@ -39,9 +39,9 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             }
             return infectionInformationByCase;
         }
-        private void DetermineInfectionInformation(ref Dictionary<string, InfectionStatus> infectionInformation, List<MiBiResult> results, Hospitalization hospitalization, SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionInformationByCase)
+        private void DetermineInfectionInformation(ref Dictionary<string, InfectionStatus> infectionInformation, List<LabResult> results, Hospitalization hospitalization, SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionInformationByCase)
         {
-            foreach (MiBiResult result in results)
+            foreach (LabResult result in results)
             {
                 foreach (Specimen specimen in result.Specimens)
                 {

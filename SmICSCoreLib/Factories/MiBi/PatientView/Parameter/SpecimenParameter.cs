@@ -1,4 +1,6 @@
-﻿namespace SmICSCoreLib.Factories.MiBi.PatientView.Parameter
+﻿using SmICSCoreLib.Factories.General;
+
+namespace SmICSCoreLib.Factories.MiBi.PatientView.Parameter
 {
     public class SpecimenParameter
     {

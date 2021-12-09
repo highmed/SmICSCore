@@ -1,39 +1,40 @@
 ﻿using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.REST;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SmICSCoreLib.Factories.MiBi.PatientView
 {
-    public class MibiResultFactory : IMibiResultFactory
+    public class LabResultFactory : ILabResultFactory
     {
         public IRestDataAccess RestDataAccess { get; set; }
 
         private readonly ISpecimenFactory _specimenFac;
-
-        public MibiResultFactory(IRestDataAccess restDataAccess, ISpecimenFactory specimenFac)
+        private MedicalField medicalField;
+        public LabResultFactory(IRestDataAccess restDataAccess, ISpecimenFactory specimenFac)
         {
             RestDataAccess = restDataAccess;
             _specimenFac = specimenFac;
         }
 
-        public List<MiBiResult> Process(Patient patient, PathogenParameter pathogen = null)
+        public List<LabResult> Process(Patient patient, PathogenParameter pathogen = null)
         {
-            List<MiBiResult> results = new List<MiBiResult>();
+            List<LabResult> results = new List<LabResult>();
             List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
             foreach(Case c in cases)
             {
-                List<MiBiResult> tmpResult = Process(c, pathogen);
+                List<LabResult> tmpResult = Process(c, pathogen);
                 results.AddRange(tmpResult);
             }
             return results;
         }
 
-        public List<MiBiResult> Process(Case Case, PathogenParameter pathogen = null)
-        {
-            List<MiBiResult> results = RestDataAccess.AQLQuery<MiBiResult>(MetaDataQuery(Case));
-            foreach (MiBiResult result in results)
+        public List<LabResult> Process(Case Case, PathogenParameter pathogen = null)
+        { 
+            List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case));
+            foreach (LabResult result in results)
             {
                 SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID };
                 result.Specimens = _specimenFac.Process(parameter, pathogen);
@@ -45,20 +46,23 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
 
         private AQLQuery MetaDataQuery(Case Case)
         {
+            
             return new AQLQuery()
             {
-                Name = "Meta Daten - Mikrobiologischer Befund",
-                Query = @$"SELECT v/items[at0001]/value as CaseID,
+                Name = $"Meta Daten - {medicalField}",
+                Query = @$"SELECT v/items[at0001]/+value as CaseID,
                         t/context/other_context[at0001]/items[at0005]/value as Status,
                         d/data[at0001]/events[at0002]/time/value as ResultDateTime,
                         d/protocol[at0004]/items[at0094]/items[at0063]/value/id as OrderID,
+                        l/data[at0001]/events[at0002]/data[at0003]/items[at0101]/value/value as Comment,
                         c/uid/value as UID
                         FROM EHR e
                         CONTAINS COMPOSITION c
                         CONTAINS COMPOSITION t[openEHR-EHR-COMPOSITION.report-result.v1]
                         CONTAINS (CLUSTER v[openEHR-EHR-CLUSTER.case_identification.v0] 
                         AND OBSERVATION d[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]) 
-                        WHERE e/ehr_status/subject/external_ref/id/value='{Case.PatientID}
+                        WHERE c/name/value = '{medicalField}' 
+                        e/ehr_status/subject/external_ref/id/value='{Case.PatientID}'
                         AND v/items[at0001]/value as CaseID = '{Case.CaseID}'"
             };
         }
@@ -67,7 +71,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         {
             return new AQLQuery()
             {
-                Name = "Anforderungen - Mikrobiologischer Befund",
+                Name = "Anforderungen",
                 Query = @$"SELECT DISTINCT
                         a/protocol[at0004]/items[at0094]/items[at0106]/value/value as Name
                         FROM EHR e
@@ -76,7 +80,6 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                         AND OBSERVATION a[openEHR-EHR-OBSERVATION.laboratory_test_result.v1])
                         WHERE c/uid/value = '{parameter.UID}'"
             };
-
         }
     }
 }
