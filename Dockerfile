@@ -29,17 +29,16 @@ COPY RKIAlgorithm/Statistik.dod.zip RKIAlgorithm/Statistik.dod.zip
 COPY RKIAlgorithm/Statistik.dod.tar.gz RKIAlgorithm/Statistik.dod.tar.gz
 COPY SmICSWebApp/Resources/RRuntime/R_Script_00010.R Resources/RRuntime/
 COPY pub/jranke.asc jranke.asc
+COPY pub/jranke2.asc jranke2.asc
 COPY SmICSWebApp/Resources/ Resources/
 
 RUN apt-get update 
 Run apt-get -y upgrade
-RUN apt-get -y install ca-certificates wget
-RUN apt-get -y install gnupg2 gnupg1
+RUN apt-get -y install ca-certificates wget gnupg2 gnupg1 software-properties-common apt-transport-https
 RUN apt-get -y install dirmngr --install-recommends
-RUN apt-get -y install software-properties-common
-RUN apt-get -y install apt-transport-https
 
 RUN apt-key add jranke.asc
+RUN apt-key add jranke2.asc
 
 RUN add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
 RUN apt-get update
