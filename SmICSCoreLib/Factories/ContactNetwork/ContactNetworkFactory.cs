@@ -66,7 +66,7 @@ namespace SmICSCoreLib.Factories.ContactNetwork
             ContactParameter parameter = patientStack.Pop();
             List<PatientWardModel> patientWardList = RestDataAccess.AQLQuery<PatientWardModel>(AQLCatalog.ContactPatientWards(parameter));
 
-            if (patientWardList is null)
+            if (patientWardList is null || patientWardList.Count == 0)
             {
                 _logger.LogDebug("ContactNetworkFactory.FindWardsQuery(): Found No Wards - ResultSet: NULL");
                 return;
