@@ -51,7 +51,7 @@ namespace SmICSCoreLib.Factories
                                 OR NOT EXISTS h/data[at0001]/items[at0005]/value/value)
                                 AND o/items[at0024]/value/defining_code/code_string = '{ parameter.Departement }' 
                                 AND l/items[at0027]/value/value = '{ parameter.WardID }' 
-                                ORDER BY h/data[at0001]/items[at0004]/value/value");
+                                ORDER BY h/data[at0001]/items[at0004]/value/value ASC");
         }
         public static AQLQuery ContactPatients_WithoutWardInformation(ContactPatientsParameter parameter)
         {
