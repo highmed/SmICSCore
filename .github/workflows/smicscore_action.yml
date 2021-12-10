@@ -1,0 +1,16 @@
+name: SmICSCore Action
+
+on:
+  push:
+    branches: [ cosurv_develop ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build SmICSCore Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
