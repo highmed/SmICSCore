@@ -26,7 +26,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                 {
                     SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID };
                     result.Specimens = _specimenFac.Process(parameter);
-                    result.Requirements = _restDataAccess.AQLQuery<Requirement>(RequirementQuery(parameter as RequirementParameter));
+                    result.Requirements = _restDataAccess.AQLQuery<Requirement>(RequirementQuery(parameter));
                     result.Sender = _restDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, patient.PatientID)).FirstOrDefault();
                 }
                 return results;
@@ -52,7 +52,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             };
         }
 
-        private AQLQuery RequirementQuery(RequirementParameter parameter)
+        private AQLQuery RequirementQuery(SpecimenParameter parameter)
         {
             return new AQLQuery()
             {
