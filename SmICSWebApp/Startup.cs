@@ -38,14 +38,14 @@ namespace SmICSWebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddLogging();
-            services.AddSingleton<RkiService>();            
+            services.AddSingleton<RkiService>();
             services.AddSingleton<SymptomService>();
             services.AddSingleton<EhrDataService>();
-            
+
             //AUTH - START 
 
             //AUTH - ENDE
-            
+
             services.AddSmICSLibrary();
             //CronJob GetReport
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
