@@ -3,6 +3,7 @@ using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.PatientMovement.ReceiveModels;
 using SmICSCoreLib.REST;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 
@@ -56,7 +57,7 @@ namespace SmICSCoreLib.Factories.PatientMovement
 
                     List<EpisodeOfCareModel> episodeOfCareList = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParam));
                     List<EpisodeOfCareModel> discharges = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParam));
-                    if (!(episodeOfCareList is null))
+                    if (!(episodeOfCareList is null) && episodeOfCareList.Count > 0)
                     {
                         //result.First because there can be just one admission/discharge timestamp for each case
                         episodeOfCare = episodeOfCareList[0];
@@ -71,7 +72,7 @@ namespace SmICSCoreLib.Factories.PatientMovement
                 transformToPatientMovementData(patientStay, episodeOfCare, patientMovementList);
             }
 
-            return patientMovementList;
+            return patientMovementList.Distinct().ToList();
         }
 
         private void transformToPatientMovementData(PatientStayModel patientStay, EpisodeOfCareModel episodeOfCare, List<PatientMovementModel> patientMovementList)
