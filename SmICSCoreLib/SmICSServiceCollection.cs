@@ -22,10 +22,10 @@ using SmICSCoreLib.OutbreakDetection;
 using SmICSCoreLib.Factories.PatientInformation.PatientData;
 using SmICSCoreLib.Factories.MiBi;
 using SmICSCoreLib.Factories.MiBi.PatientView;
-using SmICSCoreLib.Factories.MiBi.Contact;
-using SmICSCoreLib.Factories.PatientMovementNew;
-using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 using SmICSCoreLib.Factories.MiBi.Nosocomial;
+using SmICSCoreLib.Factories.MiBi.Contact;
+using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
+using SmICSCoreLib.Factories.PatientMovementNew;
 
 namespace SmICS
 {
@@ -42,7 +42,6 @@ namespace SmICS
             services.AddTransient<ISymptomFactory, SymptomFactory>();
             services.AddTransient<IVaccinationFactory, VaccinationFactory>();
             services.AddTransient<IPatientDataFactory, PatientDataFactory>();
-
             #region New MiBi Services
             //Could replace some old factories
             services.AddScoped<IHospitalizationFactory, HospitalizationFactory>();
@@ -54,7 +53,6 @@ namespace SmICS
             services.AddScoped<IContactFactory, ContactFactory>();
             services.AddScoped<InfectionStatusFactory>();
             #endregion
-
             services.AddTransient<IContactNetworkFactory, ContactNetworkFactory>();
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();
 

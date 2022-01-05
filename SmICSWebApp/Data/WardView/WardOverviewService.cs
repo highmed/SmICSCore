@@ -29,12 +29,12 @@ namespace SmICSWebApp.Data.WardView
             List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays = _stayFac.Process(parameter);
             if (patientStays != null)
             {
-                List<SmICSCoreLib.Factories.General.Patient> patients = new List<SmICSCoreLib.Factories.General.Patient>();
-                patientStays.ForEach(patient => patients.Add(patient));
+                List<Case> cases = new List<Case>();
+                patientStays.ForEach(c => cases.Add(c));
 
-                foreach (Case c in patients)
+                foreach (Case c in cases)
                 {
-                    PathogenParameter pathogenParameter = new PathogenParameter { Name = parameter.Pathogen };
+                    PathogenParameter pathogenParameter = new PathogenParameter() { Name = parameter.Pathogen };
                     InfectionStatus infectionStatus = _infectionStatusFac.Process(c, pathogenParameter).Last().Value[parameter.Pathogen];
                     WardOverview overview = new WardOverview();
                     overview.InfectionStatus = infectionStatus;

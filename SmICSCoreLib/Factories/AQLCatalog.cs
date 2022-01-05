@@ -36,7 +36,7 @@ namespace SmICSCoreLib.Factories
                         CONTAINS ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
                         WHERE c/name/value = 'Stationärer Versorgungsfall' 
                         AND e/ehr_status/subject/external_ref/id/value = '{ patient.PatientID }' 
-                        ORDER BY p/data[at0001]/items[at0071]/value/value ASC'"
+                        ORDER BY p/data[at0001]/items[at0071]/value/value ASC"
             };
         }
 

@@ -5,13 +5,14 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView.Parameter
 {
     public class PathogenParameter : SpecimenParameter
     {
+        private string _name;
         public string Name { get
             {
-                return Name;
+                return _name;
             }
             set
             {
-                Name = value;
+                _name = value;
                 MedicalField = GetResultType(value);
             } 
         }

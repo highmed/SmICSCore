@@ -21,7 +21,7 @@ using SmICSCoreLib.StatistikServices.CronJob;
 using SmICSCoreLib.StatistikServices;
 using SmICSWebApp.Data.OutbreakDetection;
 using SmICSWebApp.Data.PatientView;
-using SmICSWebApp.Data.Contact;
+using SmICSWebApp.Data.WardView;
 
 namespace SmICSWebApp
 {
@@ -54,8 +54,8 @@ namespace SmICSWebApp
             services.AddSingleton<RkiService>();
             services.AddSingleton<SymptomService>();
             services.AddSingleton<EhrDataService>();
+            services.AddScoped<WardOverviewService>();
             services.AddScoped<PatientViewService>();
-            services.AddScoped<ContactService>();
 
             //AUTH - START 
 

@@ -17,13 +17,12 @@
         <EditForm Model="@parameter" OnValidSubmit="@Submit">
             <label for="stationDropdown" class="mr-1">Station</label>
             <select id="stationDropdow" class="col-2 mr-2" @bind="@parameter.Ward">
-                <option>Station 1</option>
-                <option>Station 2</option>
-                <option>Station 3</option>
+                <option value="" selected disabled hidden>Bitte wählen</option>
                 <option>47</option>
             </select>
             <label for="pathogenDropdown" class="mr-1">Erreger</label>
             <select id="pathogenDropdown" class="col-1 mr-2" @bind="@parameter.Pathogen">
+                <option value="" selected disabled hidden>Bitte wählen</option>
                 <option>MRSA</option>
                 <option>3 MRGN</option>
                 <option>4 MRGN</option>
