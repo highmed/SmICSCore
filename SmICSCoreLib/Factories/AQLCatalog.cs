@@ -5,7 +5,6 @@ using SmICSCoreLib.Factories.PatientMovement;
 using System;
 using SmICSCoreLib.Factories.OutbreakDetection;
 using SmICSCoreLib.Factories.OutbreakDetection.ReceiveModel;
-using SmICSCoreLib.Factories.MiBi.WardOverview;
 using SmICSCoreLib.Factories.Lab.MibiLabdata.ReceiveModel;
 using SmICSCoreLib.Factories.MiBi;
 
@@ -709,20 +708,6 @@ namespace SmICSCoreLib.Factories
         public static AQLQuery PathogensFromResult(MetaDataReceiveModel metaData, SampleReceiveModel sampleData)
         {
             return new AQLQuery("PathogensFromResult", $"SELECT distinct d/items[at0001]/value/value as KeimID, d/items[at0027]/value/magnitude as IsolatNo, d/items[at0024]/value/value as Befund, z/items[at0018]/value/value as MREKlasse, d/items[at0003]/value/value as Befundkommentar FROM EHR e CONTAINS COMPOSITION c CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] and OBSERVATION j[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] CONTAINS (CLUSTER q[openEHR-EHR-CLUSTER.specimen.v1] and CLUSTER p[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] CONTAINS CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] CONTAINS CLUSTER z[openEHR-EHR-CLUSTER.erregerdetails.v1])) WHERE d/items[at0001]/name/value = 'Erregername' and d/items[at0024]/name/value='Nachweis?' and d/items[at0027]/name/value = 'Isolatnummer' and e/ehr_status/subject/external_ref/id/value = '{ metaData.PatientID }' and c/uid/value = '{ metaData.UID }' and i/items[at0001]/value/value = '{ metaData.FallID }' and q/items[at0001]/value/id = '{ sampleData.LabordatenID }'");
-        }
-
-        public static AQLQuery PatientsOnWard(WardOverviewParameter parameter)
-        {
-            return new AQLQuery("PatientsOnWard", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID
-                                FROM EHR e 
-                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] 
-                                CONTAINS ADMIN_ENTRY u[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] 
-                                CONTAINS (CLUSTER a[openEHR-EHR-CLUSTER.location.v1]
-                                and CLUSTER o[openEHR-EHR-CLUSTER.organization.v0])
-                                WHERE c/name/value = 'Patientenaufenthalt' 
-                                and a/items[at0027]/value/value = '{parameter.Ward}' 
-                                and u/data[at0001]/items[at0004]/value/value >= '{ parameter.Start.ToString("yyyy-MM-dd") }'
-                                and u/data[at0001]/items[at0004]/value/value <= '{ parameter.End.ToString("yyyy-MM-dd") }'");
         }
 
         public static AQLQuery AntibiogramFromPathogen(AntibiogramParameter parameter)

@@ -33,16 +33,16 @@ namespace SmICSDataGenerator.Tests.PatientInformationTests
             for (int i = 0; i < actual.Count; i++)
             {
                 Assert.Equal(expected[i].PatientID, actual[i].PatientID);
-                Assert.Equal(expected[i].FallID, actual[i].FallID);
+                Assert.Equal(expected[i].CaseID, actual[i].CaseID);
                 Assert.Equal(expected[i].Befund, actual[i].Befund);
-                Assert.Equal(expected[i].Befunddatum.ToUniversalTime().ToString("s"), actual[i].Befunddatum.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].Befunddatum.Value.ToUniversalTime().ToString("s"), actual[i].Befunddatum.Value.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].Befundkommentar, actual[i].Befundkommentar);
                 Assert.Equal(expected[i].KeimID, actual[i].KeimID);
                 Assert.Equal(expected[i].LabordatenID, actual[i].LabordatenID);
                 Assert.Equal(expected[i].MaterialID, actual[i].MaterialID);
                 Assert.Equal(expected[i].Material_l, actual[i].Material_l);
                 Assert.Equal(expected[i].ProbeID, actual[i].ProbeID);
-                Assert.Equal(expected[i].ZeitpunktProbeneingang.Value.ToUniversalTime().ToString("s"), actual[i].ZeitpunktProbeneingang.Value.ToUniversalTime().ToString("s"));
+                Assert.Equal(expected[i].ZeitpunktProbeneingang.ToUniversalTime().ToString("s"), actual[i].ZeitpunktProbeneingang.ToUniversalTime().ToString("s"));
                 Assert.Equal(expected[i].ZeitpunktProbenentnahme.ToUniversalTime().ToString("s"), actual[i].ZeitpunktProbenentnahme.ToUniversalTime().ToString("s"));
                 //Assert.Equal(expected[i].Fachabteilung, actual[i].Fachabteilung); --> Exisitiert noch nicht, muss aber eingebunden werden
             }

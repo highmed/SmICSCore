@@ -1,5 +1,6 @@
 ﻿using SmICSCoreLib.Factories.MiBi.Nosocomial;
 using SmICSCoreLib.Factories.MiBi.PatientView;
+using SmICSCoreLib.Factories.PatientInformation.PatientData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace SmICSWebApp.Data.WardView
         public InfectionStatus InfectionStatus { get; set; }
         public SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay PatientStay { get; set; }
         public List<LabResult> LabData { get; set; }
+        public PatientData PatientData { get; set; }
 
         public DateTime GetLastWardLabResultDate(DateTime Start, DateTime End)
         {
@@ -48,12 +50,12 @@ namespace SmICSWebApp.Data.WardView
             return last;
         }
 
-        public DateTime GetLastLabResultDate(DateTime Start, DateTime End)
+        public DateTime GetLastLabResultDate()
         {
             DateTime last = DateTime.MinValue;
             foreach (LabResult labResult in LabData)
             {
-                DateTime tmp = labResult.Specimens.OrderBy(s => s.SpecimenCollectionDateTime).Where(s => s.SpecimenCollectionDateTime >= Start && s.SpecimenCollectionDateTime <= End).Last().SpecimenCollectionDateTime;
+                DateTime tmp = labResult.Specimens.OrderBy(s => s.SpecimenCollectionDateTime).Last().SpecimenCollectionDateTime;
                 if (last < tmp)
                 {
                     last = tmp;

@@ -31,11 +31,10 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                 }
                 parameter.LabID = specimen.LabID;
 
-                    specimen.Pathogens = _pathogegFac.Process(parameter);
-                }
-                return specimens;
+                specimen.Pathogens = _pathogegFac.Process(parameter);
+                
             }
-            return null;
+            return specimens;
         }
 
         private AQLQuery SpecimenQuery(SpecimenParameter parameter)

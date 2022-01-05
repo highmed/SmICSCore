@@ -91,9 +91,9 @@
                                     <td></td>
                                     <td></td>
                                 }
-                                <td class="text-center">@item.</td>
-                                <td class="text-center">@item.LabData.Nosokomial</td>
-                                <td class="text-center">@item.LabData.Last()</td>
+                                <td class="text-center">@item.GetLastWardLabResultDate(parameter.Start, parameter.End).ToString("yyyy-MM-dd")</td>
+                                <td class="text-center">@item.GetFirstWardLabResultDate(@item.PatientStay.Admission, @item.PatientStay.Discharge).ToString("yyyy-MM-dd")</td>
+                                <td class="text-center">@item.GetLastLabResultDate().ToString("yyyy-MM-dd")</td>
                             </tr>
                         }
                     </tbody>
@@ -181,5 +181,22 @@
         {
             _chart.Data.Labels.Add(date.ToString("dd.MM"));
         }
+    }
+
+    private void OnContextClick(ItemClickEventArgs e)
+    {
+        Console.WriteLine($"Item Clicked => Menu: {e.ContextMenuId}, MenuTarget: {e.ContextMenuTargetId}, IsCanceled: {e.IsCanceled}, MenuItem: {e.MenuItemElement}, MouseEvent: {e.MouseEvent}");
+    }
+
+    private bool HasPatientData()
+    {
+        foreach (WardOverview vm in data)
+        {
+            if (vm.PatientData != null)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

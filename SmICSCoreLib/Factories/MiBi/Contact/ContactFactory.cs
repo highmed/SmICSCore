@@ -1,5 +1,4 @@
 ﻿using SmICSCoreLib.Factories.General;
-using SmICSCoreLib.Factories.MiBi.WardOverview;
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 using SmICSCoreLib.REST;

@@ -9,7 +9,7 @@
 @using SmICSCoreLib.Factories.General;
 
 @inject IPatientDataFactory _patientData;
-@inject IMibiResultFactory _mibiData;
+@inject ILabResultFactory _labData;
 
 <Card Border="Border.Is0" Padding="Padding.Is2.FromLeft">
     <CardBody Padding="Padding.Is0.FromTop">
@@ -54,7 +54,7 @@
 
     @if (patientResults != null)
     {
-        @foreach (MiBiResult c in patientResults)
+        @foreach (LabResult c in patientResults)
         {
             <Collapse Visible="@Collapsed" Margin="Margin.Is5.Is0.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromLeft">
                 <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
@@ -219,7 +219,7 @@
 
     private Patient selectedPatient = new Patient();
     private PatientData patient;
-    private List<MiBiResult> patientResults;
+    private List<LabResult> patientResults;
     private bool Collapsed { get; set; } = false;
 
     protected override void OnParametersSet()
@@ -244,6 +244,6 @@
         //patient = _patientData.Process(PatientID);
         //patientViews = _service.LoadData(PatientID);
         selectedPatient.PatientID = PatientID;
-        patientResults = _mibiData.Process(selectedPatient);
+        patientResults = _labData.Process(selectedPatient);
     }
 }

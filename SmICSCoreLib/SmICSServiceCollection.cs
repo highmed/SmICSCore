@@ -19,7 +19,6 @@ using SmICSCoreLib.Factories.InfectionSituation;
 using SmICSCoreLib.Factories.RKIConfig;
 using SmICSCoreLib.Factories.OutbreakDetection;
 using SmICSCoreLib.OutbreakDetection;
-using SmICSCoreLib.Factories.MiBi.WardOverview;
 using SmICSCoreLib.Factories.PatientInformation.PatientData;
 using SmICSCoreLib.Factories.MiBi;
 using SmICSCoreLib.Factories.MiBi.PatientView;
@@ -79,8 +78,6 @@ namespace SmICS
             services.AddTransient<IPersonDataFactory, PersonDataFactory>();
 
             services.AddTransient<IRKILabDataFactory, RKILabDataFactory>();
-
-            services.AddTransient<IWardOverviewFactory, WardOverviewFactory>();
 
             return services;
         }
