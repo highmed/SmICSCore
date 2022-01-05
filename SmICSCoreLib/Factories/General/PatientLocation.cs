@@ -6,6 +6,7 @@ namespace SmICSCoreLib.Factories.General
         public string Ward { get; set; }
         public string Departement { get; set; }
         public string Room { get; set; }
+         
         public override bool Equals(object obj)
         {
             if (obj is PatientLocation)

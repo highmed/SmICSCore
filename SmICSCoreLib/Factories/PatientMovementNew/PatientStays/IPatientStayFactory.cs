@@ -9,5 +9,6 @@ namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
         IRestDataAccess RestDataAccess { get; set; }
 
         List<PatientStay> Process(Case Case);
+        List<PatientStay> Process(WardParameter wardParameter);
     }
 }

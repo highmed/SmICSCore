@@ -13,26 +13,24 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
         public IRestDataAccess RestDataAccess { get; set; }
         private readonly IHospitalizationFactory _hospitalizationFac;
         private readonly IPatientStayFactory _patientStayFac;
-        readonly IWardOverviewFactory _wardOverviewFac;
-        public ContactFactory(IRestDataAccess restDataAccess, IHospitalizationFactory hospitalizationFac, IPatientStayFactory patientStayFac, IWardOverviewFactory wardOverviewFac)
+        public ContactFactory(IRestDataAccess restDataAccess, IHospitalizationFactory hospitalizationFac, IPatientStayFactory patientStayFac)
         {
             RestDataAccess = restDataAccess;
             _hospitalizationFac = hospitalizationFac;
             _patientStayFac = patientStayFac;
-            _wardOverviewFac = wardOverviewFac;
         }
 
-        public Dictionary<Hospitalization, List<PatientLocation>> Process(Patient parameter)
+        public Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>> Process(Patient parameter)
         {
-            Dictionary<Hospitalization, List<PatientLocation>> contacts = new Dictionary<Hospitalization, List<PatientLocation>>();
+            Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>> contacts = new Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>>();
 
             List<Hospitalization> Hospitalizations = _hospitalizationFac.Process(parameter as Patient);
             Hospitalizations.ForEach(h => contacts.Add(h, null));
 
             Hospitalization hospitalization = Hospitalizations.Last();
 
-            List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays = _patientStayFac.Process(hospitalization);
-            List<PatientLocation> contactCases = DetermineContacts(Hospitalizations.Last());
+            List<PatientMovementNew.PatientStays.PatientStay> patientStays = _patientStayFac.Process(hospitalization);
+            List<PatientMovementNew.PatientStays.PatientStay> contactCases = DetermineContacts(Hospitalizations.Last());
              
             if (contacts[hospitalization] == null)
             {
@@ -42,25 +40,25 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
             return contacts;
         }
 
-        public List<PatientLocation> Process(Hospitalization hospitalization)
+        public List<PatientMovementNew.PatientStays.PatientStay> Process(Hospitalization hospitalization)
         {
            return DetermineContacts(hospitalization);
         }
 
-        private List<PatientLocation> DetermineContacts(Hospitalization hospitalization)
+        private List<PatientMovementNew.PatientStays.PatientStay> DetermineContacts(Hospitalization hospitalization)
         {
-            List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays = _patientStayFac.Process(hospitalization);
-            List<PatientLocation> cases = new List<PatientLocation>();
-            foreach (SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay patientStay in patientStays)
+            List<PatientMovementNew.PatientStays.PatientStay> patientStays = _patientStayFac.Process(hospitalization);
+            List<PatientMovementNew.PatientStays.PatientStay> cases = new List<PatientMovementNew.PatientStays.PatientStay>();
+            foreach (PatientMovementNew.PatientStays.PatientStay patientStay in patientStays)
             {
-                WardOverviewParameter wardOverviewParameter = new WardOverviewParameter
+                WardParameter wardParameter = new WardParameter
                 {
                     Ward = patientStay.Ward,
                     Start = patientStay.Admission,
                     End = patientStay.Discharge
                 };
 
-                List<PatientLocation> casesOnWard = _wardOverviewFac.Process(wardOverviewParameter);
+                List<PatientMovementNew.PatientStays.PatientStay> casesOnWard = _patientStayFac.Process(wardParameter);
                 cases.AddRange(casesOnWard);
             }
 

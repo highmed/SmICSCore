@@ -23,6 +23,10 @@ using SmICSCoreLib.Factories.MiBi.WardOverview;
 using SmICSCoreLib.Factories.PatientInformation.PatientData;
 using SmICSCoreLib.Factories.MiBi;
 using SmICSCoreLib.Factories.MiBi.PatientView;
+using SmICSCoreLib.Factories.MiBi.Contact;
+using SmICSCoreLib.Factories.PatientMovementNew;
+using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
+using SmICSCoreLib.Factories.MiBi.Nosocomial;
 
 namespace SmICS
 {
@@ -39,10 +43,19 @@ namespace SmICS
             services.AddTransient<ISymptomFactory, SymptomFactory>();
             services.AddTransient<IVaccinationFactory, VaccinationFactory>();
             services.AddTransient<IPatientDataFactory, PatientDataFactory>();
+
+            #region New MiBi Services
+            //Could replace some old factories
+            services.AddScoped<IHospitalizationFactory, HospitalizationFactory>();
+            services.AddScoped<IPatientStayFactory, PatientStayFactory>();
             services.AddScoped<IAntibiogramFactory, AntibiogramFactory>();
             services.AddScoped<IPathogenFactory, PathogenFactory>();
             services.AddScoped<ISpecimenFactory, SpecimenFactory>();
             services.AddScoped<ILabResultFactory, LabResultFactory>();
+            services.AddScoped<IContactFactory, ContactFactory>();
+            services.AddScoped<InfectionStatusFactory>();
+            #endregion
+
             services.AddTransient<IContactNetworkFactory, ContactNetworkFactory>();
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();
 
@@ -55,7 +68,7 @@ namespace SmICS
             services.AddSingleton<OutbreakDetectionProxy>();
 
             services.AddTransient<IStationaryFactory, StationaryFactory>();
-            services.AddTransient<IPatientStay, PatientStay>();
+            services.AddTransient<SmICSCoreLib.Factories.PatientStay.IPatientStay, SmICSCoreLib.Factories.PatientStay.PatientStay>();
             services.AddTransient<ICountFactory, CountFactory>();
 
             services.AddTransient<IInfectionSituationFactory, InfectionSituationFactory>();

@@ -11,6 +11,7 @@ namespace SmICSWebApp.Data.Contact
         public ContactRoot()
         {
         }
+        public Hospitalization CurrentHospitalization { get; set; }  
         public List<Hospitalization> Hospitalizations { get; set; }
         public Dictionary<Hospitalization, InfectionStatus> InfectionStatus { get; set; }
         public Dictionary<Hospitalization, List<PatientStay>> PatientStays { get; set; }

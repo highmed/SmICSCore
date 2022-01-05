@@ -1,0 +1,77 @@
+﻿@page "/Contact/contact"
+
+@using SmICSWebApp.Data.Contact
+
+@inject ContactService _contactService
+
+<input type="text" /> <button type="button" @onclick="GetContacts"><i class="oi-magnifying-glass"></i></button>
+
+@if(root != null)
+{   
+    <div class="float-start">
+        Vorheriger Fall
+    </div>
+    <div class="float-start">
+    <h2 class="text-center">@PatientID</h2>
+    <h3 class="text-center">Fall: @root.CurrentHospitalization.CaseID</h3>
+    <h3 class="text-center">Zeitraum: @root.CurrentHospitalization.Admission.Date.ToString("yyyy-MM-dd") + (@root.CurrentHospitalization.Discharge.Date.HasValue ? (" - " + @root.CurrentHospitalization.Discharge.Date.Value.ToString("yyyy-MM-dd") : " - "))</h3>
+    </div>
+    <div class="float-start">
+        Anpassen
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Kontaktpatient</th>
+                <th>Raum</th>
+                <th>Station</th>
+                <th>Fachabteilung</th>
+                <th>Kontaktzeitraum</th>
+            </tr>
+        </thead>
+        <tbody>
+
+    @foreach(Data.Contact.Contact contact in root.Contacts[root.CurrentHospitalization])
+    {
+        <tr>
+            <td>
+                @if(contact.InfectionStatus.Nosocomial)
+                {
+                    <span class="text-danger">@contact.PatientID</span>
+                }
+                else if(contact.InfectionStatus.Known)
+                {
+                    <span class="text-warning">@contact.PatientID</span>
+                }
+                @contact.PatientID
+            </td>
+            <td>
+                (@contact.RoomContact ? @contact.PatientLocation.Room : "")
+            </td>
+            <td>
+                (@contact.RoomContact ? @contact.PatientLocation.Room : "")
+            </td>
+            <td>
+                (@contact.DepartementContact ? @contact.PatientLocation.Departement : "")
+            </td>
+            <td>
+                @contact.ContactStart - (@contact.ContactEnd.HasValue ? @contact.ContactEnd.Value : "")
+            </td>
+        </tr>
+    }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public string PatientID { get; set; }
+
+    private ContactRoot root = null;
+
+    private void GetContacts()
+    {
+        root = _contactService.LoadContactData(new SmICSCoreLib.Factories.General.Patient() { PatientID = PatientID});
+    }
+}
