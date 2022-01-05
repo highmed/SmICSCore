@@ -19,17 +19,21 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         public List<Pathogen> Process(PathogenParameter pathogenParameter)
         {
             List<Pathogen> pathogens = RestDataAccess.AQLQuery<Pathogen>(PathogenQuery(pathogenParameter));
-            if (pathogenParameter.MedicalField == MedicalField.MICROBIOLOGY)
+            if (pathogenParameter != null)
             {
-                foreach (Pathogen pathogen in pathogens)
+                if (pathogenParameter.MedicalField == MedicalField.MICROBIOLOGY)
                 {
-                    AntibiogramParameter parameter = pathogenParameter as AntibiogramParameter;
-                    parameter.IsolatNo = pathogen.IsolatNr;
-                    parameter.Pathogen = pathogen.Name;
-                    pathogen.Antibiograms = _antibiogramFac.Process(parameter);
+                    foreach (Pathogen pathogen in pathogens)
+                    {
+                        AntibiogramParameter parameter = pathogenParameter as AntibiogramParameter;
+                        parameter.IsolatNo = pathogen.IsolatNr;
+                        parameter.Pathogen = pathogen.Name;
+                        pathogen.Antibiograms = _antibiogramFac.Process(parameter);
+                    }
                 }
+                return pathogens;
             }
-            return pathogens;
+            return null;
         }
 
 
@@ -65,7 +69,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                     {
                         //Needs to be edited
                         Name = "Pathogen",
-                        Query = @$"SELECT u/items[at0001,'Erregername']/value as Name,
+                        Query = @$"SELECT u/items[at0001,'Erregername']/value/value as Name,
                                 u/items[at0024,'Nachweis?']/value/value as Result,
                                 b/items[at0001,'Quantitatives Ergebnis']/value/magnitude as Rate,
                                 b/items[at0001,'Quantitatives Ergebnis']/value/units as Unit,
@@ -76,7 +80,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                                 CONTAINS (CLUSTER b[openEHR-EHR-CLUSTER.erregerdetails.v1]) 
                                 WHERE c/name/value='{parameter.MedicalField}'
                                 AND c/uid/value='{parameter.UID}'
-                                AND u/items[at0026,'Zugehörige Laborprobe']/value = '{parameter.LabID}'"
+                                AND u/items[at0026,'Zugehörige Laborprobe']/value/id = '{parameter.LabID}'"
                     };
                     if (!string.IsNullOrEmpty(parameter.Name))
                     {

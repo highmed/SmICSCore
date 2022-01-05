@@ -31,9 +31,11 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                 }
                 parameter.LabID = specimen.LabID;
 
-                specimen.Pathogens = _pathogegFac.Process(parameter);
+                    specimen.Pathogens = _pathogegFac.Process(parameter);
+                }
+                return specimens;
             }
-            return specimens;
+            return null;
         }
 
         private AQLQuery SpecimenQuery(SpecimenParameter parameter)
@@ -42,10 +44,10 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             {
                 Name = "Specimen - Mikrobiologischer Befund",
                 Query = @$"SELECT a/items[at0029]/value/value as Kind,
-                        a/items[at0001]/value/value as LabID,
-                        a/items[at0034]/value/value as SpecimenReceiptDate,
-                        o/items[at0001]/value/value as Location,
-                        a/items[at0015]/value/value as SpecimenCollectionDateTime,
+                       a/items[at0001]/value/id as LabID,
+                       a/items[at0034]/value/value as SpecimenReceiptDate,
+                       o/items[at0001]/value/value as Location,
+                       a/items[at0015]/value/value as SpecimenCollectionDateTime
                         FROM EHR e
                         CONTAINS COMPOSITION c
                         CONTAINS CLUSTER a[openEHR-EHR-CLUSTER.specimen.v1] 
