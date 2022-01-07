@@ -36,6 +36,10 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             return null;
         }
 
+        /*As prototypic organisms, methicillin-resistant S.aureus (MRSA) and carbapenem-resistant bacteria (CPB:
+Klebsiella pneumoniae, E.coli, and Acinetobacter baumannii complex; for which mandatory reporting is
+implemented) will be monitored first as a proof of principle, followed by methicillin-susceptible S.aureus
+(MSSA).*/
 
         private AQLQuery PathogenQuery(PathogenParameter parameter)
         {
@@ -46,11 +50,12 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                     query = new AQLQuery()
                     {
                         Name = "Pathogen - Mikrobiologischer Befunde",
-                        Query = @$"SELECT u/items[at0001,'Erregername']/value as Name,
-                        u/items[at0024,'Nachweis?']/value as Result,
-                        b/items[at0003]/value as Rate,
-                        u/items[at0027,'Isolatnummer']/valu as IsolatNr,
-                        {parameter.MedicalField} as MedicalField,
+                        Query = @$"SELECT u/items[at0001,'Erregername']/value/value as Name,
+                        u/items[at0001,'Erregername']/value/defining_code/code_string as ID,
+                        u/items[at0024,'Nachweis?']/value/value as Result,
+                        b/items[at0003]/value/value as Rate,
+                        u/items[at0027,'Isolatnummer']/value/magnitude as IsolatNr,
+                        {parameter.MedicalField} as MedicalField
                         FROM EHR e
                         CONTAINS COMPOSITION c
                         CONTAINS CLUSTER u[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] 
@@ -69,8 +74,9 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                     {
                         //Needs to be edited
                         Name = "Pathogen",
-                        Query = @$"SELECT u/items[at0001,'Erregername']/value/value as Name,
-                                u/items[at0024,'Nachweis?']/value/value as Result,
+                        Query = @$"SELECT u/items[at0024]/value/value/value/value as Name,
+                                u/items[at0024]/value/defining_code/code_string as ID,
+                                u/items[at0001,'Nachweis']/value/defining_code/code_string as Result,
                                 b/items[at0001,'Quantitatives Ergebnis']/value/magnitude as Rate,
                                 b/items[at0001,'Quantitatives Ergebnis']/value/units as Unit,
                                 {parameter.MedicalField} as MedicalField

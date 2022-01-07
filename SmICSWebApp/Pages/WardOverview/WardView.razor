@@ -21,13 +21,11 @@
                 <option>47</option>
             </select>
             <label for="pathogenDropdown" class="mr-1">Erreger</label>
-            <select id="pathogenDropdown" class="col-1 mr-2" @bind="@parameter.Pathogen">
-                <option value="" selected disabled hidden>Bitte wählen</option>
-                <option>MRSA</option>
-                <option>3 MRGN</option>
-                <option>4 MRGN</option>
-                <option>VRE </option>
-            </select>
+            <input type="text" list="pathogenList" class="col-1 mr-2" @bind="@parameter.Pathogen" id="pathogenDropdown">
+                <datalist id="pathogenList">
+                    <option>Staphylokokkus Aureus</option>
+                    <option>Entrokokken</option>
+                </datalist>
             <label for="startdate" class="mr-1">Start</label>
             <InputDate id="startdate" class="col-1 mr-2" @bind-Value="parameter.Start" />
             <label for="enddate" class="mr-1">Ende</label>

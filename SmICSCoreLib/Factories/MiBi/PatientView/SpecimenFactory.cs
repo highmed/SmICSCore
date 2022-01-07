@@ -41,7 +41,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         {
             return new AQLQuery()
             {
-                Name = "Specimen - Mikrobiologischer Befund",
+                Name = "Specimen",
                 Query = @$"SELECT a/items[at0029]/value/value as Kind,
                        a/items[at0001]/value/id as LabID,
                        a/items[at0034]/value/value as SpecimenReceiptDate,
@@ -51,8 +51,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                         CONTAINS COMPOSITION c
                         CONTAINS CLUSTER a[openEHR-EHR-CLUSTER.specimen.v1] 
                         CONTAINS (CLUSTER o[openEHR-EHR-CLUSTER.anatomical_location.v1]) 
-                        WHERE c/name/value='Mikrobiologischer Befund'
-                        AND c/uid/value='{parameter.UID}'
+                        WHERE c/uid/value='{parameter.UID}'
                         ORDER BY a/items[at0034]/value/value ASC"
             };
         }

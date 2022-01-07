@@ -7,33 +7,44 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
     public class Pathogen
     {
         private const string NACHWEIS = "Nachweis";
+        private const string DETECTED = "260373001";
         public string Name { get; set; }
+        public string ID { get; set; }
         public bool Result {
             get
             {
-                return ResultString == NACHWEIS ? true : false;
+                if (MedicalField == MedicalField.MICROBIOLOGY)
+                {
+                    return ResultString == NACHWEIS ? true : false;
+                }
+                else
+                {
+                    return ResultString == DETECTED ? true : false;
+                }
             }
         }
         public string ResultString { private get; set; }
         public DateTime Timestamp { get; set; }
+        private string _rate;
         public string Rate
         {
             get
             {
                 if (MedicalField.VIROLOGY == MedicalField)
                 {
-                    return Rate + " " + Unit;
+                    return _rate + " " + Unit;
                 }
-                return Rate;
+                return _rate;
             }
             set
             {
-                Rate = value;
+                _rate = value;
             }
         }
         public string IsolatNr { get; set; }
         public List<Antibiogram> Antibiograms { get; set; }
         private string Unit { get; set; }
         public MedicalField MedicalField { get; private set; }
+
     }
 }

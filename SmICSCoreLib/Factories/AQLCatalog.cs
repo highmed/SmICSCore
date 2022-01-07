@@ -710,28 +710,7 @@ namespace SmICSCoreLib.Factories
             return new AQLQuery("PathogensFromResult", $"SELECT distinct d/items[at0001]/value/value as KeimID, d/items[at0027]/value/magnitude as IsolatNo, d/items[at0024]/value/value as Befund, z/items[at0018]/value/value as MREKlasse, d/items[at0003]/value/value as Befundkommentar FROM EHR e CONTAINS COMPOSITION c CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] and OBSERVATION j[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] CONTAINS (CLUSTER q[openEHR-EHR-CLUSTER.specimen.v1] and CLUSTER p[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] CONTAINS CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] CONTAINS CLUSTER z[openEHR-EHR-CLUSTER.erregerdetails.v1])) WHERE d/items[at0001]/name/value = 'Erregername' and d/items[at0024]/name/value='Nachweis?' and d/items[at0027]/name/value = 'Isolatnummer' and e/ehr_status/subject/external_ref/id/value = '{ metaData.PatientID }' and c/uid/value = '{ metaData.UID }' and i/items[at0001]/value/value = '{ metaData.FallID }' and q/items[at0001]/value/id = '{ sampleData.LabordatenID }'");
         }
 
-        public static AQLQuery AntibiogramFromPathogen(AntibiogramParameter parameter)
-        {
-            return new AQLQuery("AntibiogramFromPathogen", @$"SELECT b/items[at0024]/value/value as Antibiotic,
-                                b/items[at0004]/value/defining_code/code_string as Resistance,
-                                b/items[at0001]/value/magnitude as MinInhibitorConcentration,
-                                b/items[at0001]/value/units as MICUnit
-                                FROM EHR e
-                                CONTAINS COMPOSITION c
-                                contains 
-                                    (CLUSTER m[openEHR-EHR-CLUSTER.case_identification.v0] 
-                                    and OBSERVATION j[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
-                                        CONTAINS CLUSTER w[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] 
-                                        CONTAINS CLUSTER z[openEHR-EHR-CLUSTER.erregerdetails.v1] 
-                                        CONTAINS CLUSTER u[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] 
-                                        CONTAINS CLUSTER b[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]) 
-                                where w/items[at0001]/name='Erregername' 
-                                and b/items[at0024]/name='Antibiotikum'   
-                                and c/uid/value = '{ parameter.UID }' 
-                                and w/items[at0001]/value/value = '{ parameter.Pathogen }' 
-                                and w/items[at0027]/value/magnitude = '{ parameter.IsolatNo }'                                       
-                                order by b/items[at0024]/value/value asc");
-        }
+        
 
         #endregion
     }

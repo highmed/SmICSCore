@@ -3,11 +3,8 @@ using SmICSCoreLib.Factories.MiBi.Nosocomial;
 using SmICSCoreLib.Factories.MiBi.PatientView;
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmICSWebApp.Data.WardView
 {
