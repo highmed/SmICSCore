@@ -12,7 +12,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         public IRestDataAccess RestDataAccess { get; set; }
 
         private readonly ISpecimenFactory _specimenFac;
-        private MedicalField medicalField;
+        private string medicalField;
         public LabResultFactory(IRestDataAccess restDataAccess, ISpecimenFactory specimenFac)
         {
             RestDataAccess = restDataAccess;
@@ -33,37 +33,35 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
 
         public List<LabResult> Process(Case Case, PathogenParameter pathogen = null)
         { 
-            List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case));
+            List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case, pathogen));
             foreach (LabResult result in results)
             {
                 SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID };
                 result.Specimens = _specimenFac.Process(parameter, pathogen);
-                result.Requirements = RestDataAccess.AQLQuery<Requirement>(RequirementQuery(parameter as RequirementParameter));
+                result.Requirements = RestDataAccess.AQLQuery<Requirement>(RequirementQuery(new RequirementParameter(parameter)));
                 result.Sender = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID)).FirstOrDefault();
             }
             return results;
         }
 
-        private AQLQuery MetaDataQuery(Case Case)
+        private AQLQuery MetaDataQuery(Case Case, PathogenParameter pathogen)
         {
             
             return new AQLQuery()
             {
-                Name = $"Meta Daten - {medicalField}",
-                Query = @$"SELECT v/items[at0001]/+value as CaseID,
-                        t/context/other_context[at0001]/items[at0005]/value as Status,
+                Name = $"Meta Daten - {pathogen.MedicalField}",
+                Query = @$"SELECT v/items[at0001]/value/value as CaseID,
+                        c/context/other_context[at0001]/items[at0005]/value/value as Status,
                         d/data[at0001]/events[at0002]/time/value as ResultDateTime,
                         d/protocol[at0004]/items[at0094]/items[at0063]/value/id as OrderID,
-                        l/data[at0001]/events[at0002]/data[at0003]/items[at0101]/value/value as Comment,
                         c/uid/value as UID
                         FROM EHR e
-                        CONTAINS COMPOSITION c
-                        CONTAINS COMPOSITION t[openEHR-EHR-COMPOSITION.report-result.v1]
+                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
                         CONTAINS (CLUSTER v[openEHR-EHR-CLUSTER.case_identification.v0] 
                         AND OBSERVATION d[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]) 
-                        WHERE c/name/value = '{medicalField}' 
-                        e/ehr_status/subject/external_ref/id/value='{Case.PatientID}'
-                        AND v/items[at0001]/value as CaseID = '{Case.CaseID}'
+                        WHERE c/name/value = '{pathogen.MedicalField}' 
+                        AND e/ehr_status/subject/external_ref/id/value='{Case.PatientID}'
+                        AND v/items[at0001]/value='{Case.CaseID}'
                         ORDER BY d/protocol[at0004]/items[at0094]/items[at0063]/value/id ASC"
             };
         }

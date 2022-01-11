@@ -1,5 +1,4 @@
-﻿using SmICSCoreLib.Factories.General;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace SmICSCoreLib.Factories.MiBi.PatientView
@@ -13,7 +12,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         public bool Result {
             get
             {
-                if (MedicalField == MedicalField.MICROBIOLOGY)
+                if (MedicalField == SmICSCoreLib.Factories.General.MedicalField.MICROBIOLOGY)
                 {
                     return ResultString == NACHWEIS ? true : false;
                 }
@@ -30,7 +29,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         {
             get
             {
-                if (MedicalField.VIROLOGY == MedicalField)
+                if (SmICSCoreLib.Factories.General.MedicalField.VIROLOGY == MedicalField)
                 {
                     return _rate + " " + Unit;
                 }
@@ -44,7 +43,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         public string IsolatNr { get; set; }
         public List<Antibiogram> Antibiograms { get; set; }
         private string Unit { get; set; }
-        public MedicalField MedicalField { get; private set; }
+        public string MedicalField { get; private set; }
 
     }
 }

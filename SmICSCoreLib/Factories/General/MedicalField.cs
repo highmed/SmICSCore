@@ -2,11 +2,11 @@
 
 namespace SmICSCoreLib.Factories.General
 {
-    public enum MedicalField
+    public class MedicalField
     {
-        [EnumMember(Value = "Mikrobiologischer Befund")]
-        MICROBIOLOGY,
-        [EnumMember(Value = "Virologischer Befund")] 
-        VIROLOGY
+
+        public const string MICROBIOLOGY = "Mikrobiologischer Befund";
+        
+        public const string VIROLOGY = "Virologischer Befund";
     }
 }

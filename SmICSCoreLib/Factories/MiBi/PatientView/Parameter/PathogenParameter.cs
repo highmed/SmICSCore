@@ -1,5 +1,4 @@
-﻿using SmICSCoreLib.Factories.General;
-using System;
+﻿using System;
 
 namespace SmICSCoreLib.Factories.MiBi.PatientView.Parameter
 {
@@ -24,18 +23,18 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView.Parameter
         {
             LabID = parameter.LabID;
         }
-        public MedicalField MedicalField { get; private set; }
+        public string MedicalField { get; private set; }
 
-        private MedicalField GetResultType(string pathogenName)
+        private string GetResultType(string pathogenName)
         {
             if (!string.IsNullOrEmpty(pathogenName))
             {
                 switch (pathogenName)
                 {
                     case "Sars-Cov-2":
-                        return MedicalField.VIROLOGY;
+                        return SmICSCoreLib.Factories.General.MedicalField.VIROLOGY;
                     default:
-                        return MedicalField.MICROBIOLOGY;
+                        return SmICSCoreLib.Factories.General.MedicalField.MICROBIOLOGY;
                 }
             }
             throw new ArgumentNullException("Missing PathogenParameter");

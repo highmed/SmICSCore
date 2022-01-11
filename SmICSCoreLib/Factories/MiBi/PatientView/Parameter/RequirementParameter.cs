@@ -1,6 +1,9 @@
 ﻿namespace SmICSCoreLib.Factories.MiBi.PatientView.Parameter
 {
-    internal class RequirementParameter : SpecimenParameter
+    public  class RequirementParameter : SpecimenParameter
     {
+        public RequirementParameter() { }
+        public RequirementParameter(SpecimenParameter parameter) : base(parameter) { }
+        public RequirementParameter(RequirementParameter parameter) : base(parameter){ }
     }
 }

@@ -41,29 +41,38 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
         }
         private void DetermineInfectionInformation(ref Dictionary<string, InfectionStatus> infectionInformation, List<LabResult> results, Hospitalization hospitalization, SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionInformationByCase)
         {
-            foreach (LabResult result in results)
+            if (results != null)
             {
-                foreach (Specimen specimen in result.Specimens)
+                foreach (LabResult result in results)
                 {
-                    TimeSpan timespan = hospitalization.Admission.Date - specimen.SpecimenCollectionDateTime;
-                    foreach (Pathogen pathogen in specimen.Pathogens)
+                    if (result.Specimens != null)
                     {
-                        int threshold = GetNosocomialThreshold(pathogen);
-                        if (pathogen.Result && timespan.Days < threshold)
+                        foreach (Specimen specimen in result.Specimens)
                         {
-                            AddInfectionInformation(ref infectionInformation, pathogen);
-                        }
-                        else if (pathogen.Result && timespan.Days >= threshold)
-                        {
-                            bool hasFoundOldStatus = HasOldKnownCase(ref infectionInformation, pathogen, infectionInformationByCase);
-                            if (!hasFoundOldStatus)
+                            if (specimen.Pathogens != null)
                             {
-                                AddInfectionInformation(ref infectionInformation, pathogen);
+                                TimeSpan timespan = hospitalization.Admission.Date - specimen.SpecimenCollectionDateTime;
+                                foreach (Pathogen pathogen in specimen.Pathogens)
+                                {
+                                    int threshold = GetNosocomialThreshold(pathogen);
+                                    if (pathogen.Result && timespan.Days < threshold)
+                                    {
+                                        AddInfectionInformation(ref infectionInformation, pathogen, true, false);
+                                    }
+                                    else if (pathogen.Result && timespan.Days >= threshold)
+                                    {
+                                        bool hasFoundOldStatus = HasOldKnownCase(ref infectionInformation, pathogen, infectionInformationByCase);
+                                        if (!hasFoundOldStatus)
+                                        {
+                                            AddInfectionInformation(ref infectionInformation, pathogen, false, true, specimen.SpecimenCollectionDateTime); 
+                                        }
+                                    }
+                                    else if (!pathogen.Result)
+                                    {
+                                        HasOldKnownCase(ref infectionInformation, pathogen, infectionInformationByCase);
+                                    }
+                                }
                             }
-                        }
-                        else if (!pathogen.Result)
-                        {
-                            HasOldKnownCase(ref infectionInformation, pathogen, infectionInformationByCase);
                         }
                     }
                 }
@@ -77,16 +86,16 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                 {
                     if (infectionInformationByCase[hospi][pathogen.Name].Nosocomial || infectionInformationByCase[hospi][pathogen.Name].Known)
                     {
-                        AddInfectionInformation(ref infectionInformation, pathogen);
+                        AddInfectionInformation(ref infectionInformation, pathogen, true, false);
                         return true;
                     }
                 }
             }
             return false;
         }
-        private void AddInfectionInformation(ref Dictionary<string, InfectionStatus> infectionInformation, Pathogen pathogen)
+        private void AddInfectionInformation(ref Dictionary<string, InfectionStatus> infectionInformation, Pathogen pathogen, bool known, bool nosocomial, DateTime? nosocomialData = null)
         {
-            InfectionStatus infection = new InfectionStatus() { Known = false, Nosocomial = true };
+            InfectionStatus infection = new InfectionStatus() { Known = false, Nosocomial = nosocomial, NosocomialDate = nosocomialData };
             if (!infectionInformation.ContainsKey(pathogen.Name))
             {
                 infectionInformation.Add(pathogen.Name, infection);
