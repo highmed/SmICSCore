@@ -1,5 +1,6 @@
 ﻿using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.REST;
+using System;
 using System.Collections.Generic;
 
 namespace SmICSCoreLib.Factories.MiBi.PatientView
@@ -32,7 +33,16 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                 specimen.Pathogens = _pathogegFac.Process(pathogen);
                 
             }
+            if(pathogen != null)
+            {
+                CleanSpecimenWithoutPathogen(ref specimens);
+            }
             return specimens;
+        }
+
+        private void CleanSpecimenWithoutPathogen(ref List<Specimen> specimens)
+        {
+            specimens.RemoveAll(sp => sp.Pathogens == null);
         }
 
         private AQLQuery SpecimenQuery(SpecimenParameter parameter)

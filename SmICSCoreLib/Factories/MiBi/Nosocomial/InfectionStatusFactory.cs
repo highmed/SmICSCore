@@ -1,14 +1,17 @@
-﻿using SmICSCoreLib.Factories.General;
+﻿using Newtonsoft.Json;
+using RulesEngine.Models;
+using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.MiBi.PatientView;
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace SmICSCoreLib.Factories.MiBi.Nosocomial
 {
-    public class InfectionStatusFactory
+    public class InfectionStatusFactory : IInfectionStatusFactory
     {
         public IRestDataAccess RestDataAccess { get; set; }
         private readonly ILabResultFactory _mibiResultFac;
@@ -21,17 +24,17 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             _hospitalizationFac = hospitalizationFac;
         }
 
-        public SortedList<Hospitalization, Dictionary<string, InfectionStatus>> Process(Patient patient, PathogenParameter pathogen = null)
+        public SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, PathogenParameter pathogen = null)
         {
             List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
-            SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionInformationByCase = new SortedList<Hospitalization, Dictionary<string, InfectionStatus>>(new HospitalizationComparer());
+            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase = new SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>(new HospitalizationComparer());
 
             foreach (Case c in cases)
             {
                 Hospitalization hospitalization = _hospitalizationFac.Process(c);
                 List<LabResult> results = _mibiResultFac.Process(c, pathogen);
 
-                Dictionary<string, InfectionStatus> infectionInformation = new Dictionary<string, InfectionStatus>();
+                Dictionary<string, Dictionary<string, InfectionStatus>>infectionInformation = new Dictionary<string, Dictionary<string, InfectionStatus>>();
 
                 DetermineInfectionInformation(ref infectionInformation, results, hospitalization, infectionInformationByCase);
                 infectionInformationByCase.Add(hospitalization, infectionInformation);
@@ -39,7 +42,7 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             }
             return infectionInformationByCase;
         }
-        private void DetermineInfectionInformation(ref Dictionary<string, InfectionStatus> infectionInformation, List<LabResult> results, Hospitalization hospitalization, SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionInformationByCase)
+        private void DetermineInfectionInformation(ref Dictionary<string, Dictionary<string, InfectionStatus>> infectionInformation, List<LabResult> results, Hospitalization hospitalization, SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase)
         {
             if (results != null)
             {
@@ -55,22 +58,28 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                                 foreach (Pathogen pathogen in specimen.Pathogens)
                                 {
                                     int threshold = GetNosocomialThreshold(pathogen);
-                                    if (pathogen.Result && timespan.Days < threshold)
+                                    List<string> resistances = Rules.GetResistances(pathogen);
+                                    
+                                    foreach (string res in resistances)
                                     {
-                                        AddInfectionInformation(ref infectionInformation, pathogen, true, false);
-                                    }
-                                    else if (pathogen.Result && timespan.Days >= threshold)
-                                    {
-                                        bool hasFoundOldStatus = HasOldKnownCase(ref infectionInformation, pathogen, infectionInformationByCase);
-                                        if (!hasFoundOldStatus)
+                                        if (pathogen.Result && timespan.Days < threshold)
                                         {
-                                            AddInfectionInformation(ref infectionInformation, pathogen, false, true, specimen.SpecimenCollectionDateTime); 
+                                            new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res };
                                         }
+                                        else if (pathogen.Result && timespan.Days >= threshold)
+                                        {
+                                            bool hasFoundOldStatus = HasOldKnownCase(pathogen, res, infectionInformationByCase);
+                                            if (!hasFoundOldStatus)
+                                            {
+                                                new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = true, Known = false, NosocomialDate = specimen.SpecimenCollectionDateTime, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res };
+                                            }
+                                            else
+                                            {
+                                                new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res };
+                                            }
+                                        }                                       
                                     }
-                                    else if (!pathogen.Result)
-                                    {
-                                        HasOldKnownCase(ref infectionInformation, pathogen, infectionInformationByCase);
-                                    }
+                                    SetHealingValue(infectionInformation[pathogen.Name], pathogen.Result, resistances);
                                 }
                             }
                         }
@@ -78,15 +87,37 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                 }
             }
         }
-        private bool HasOldKnownCase(ref Dictionary<string, InfectionStatus> infectionInformation, Pathogen pathogen, SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionInformationByCase)
+
+        private void SetHealingValue(Dictionary<string, InfectionStatus> infectionByResistance, bool result, List<string> resistances)
+        {
+            if (result == true && infectionByResistance.ContainsKey("I") && !resistances.Contains("I"))
+            {
+                infectionByResistance["I"].ConsecutiveNegativeCounter++;
+            }
+            if (result == true && infectionByResistance.ContainsKey("R") && !resistances.Contains("R"))
+            {
+                infectionByResistance["R"].ConsecutiveNegativeCounter++;
+            }
+            if (result == true && infectionByResistance.ContainsKey("S") && !resistances.Contains("S"))
+            {
+                infectionByResistance["S"].ConsecutiveNegativeCounter++;
+            }
+            if (result == false)
+            {
+                infectionByResistance["I"].ConsecutiveNegativeCounter++;
+                infectionByResistance["R"].ConsecutiveNegativeCounter++;
+                infectionByResistance["S"].ConsecutiveNegativeCounter++;
+            }
+        }
+
+        private bool HasOldKnownCase(Pathogen pathogen, string resistance, SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase)
         {
             foreach (Hospitalization hospi in infectionInformationByCase.Keys)
             {
                 if (infectionInformationByCase[hospi].ContainsKey(pathogen.Name))
                 {
-                    if (infectionInformationByCase[hospi][pathogen.Name].Nosocomial || infectionInformationByCase[hospi][pathogen.Name].Known)
+                    if ((infectionInformationByCase[hospi][pathogen.Name][resistance].Nosocomial || infectionInformationByCase[hospi][pathogen.Name][resistance].Known) && infectionInformationByCase[hospi][pathogen.Name][resistance].Healed)
                     {
-                        AddInfectionInformation(ref infectionInformation, pathogen, true, false);
                         return true;
                     }
                 }
@@ -103,7 +134,7 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
         }
         private int GetNosocomialThreshold(Pathogen pathogen)
         {
-            
+
             string pathogenName = pathogen.Name.ToLower().Replace(" ", "");
 
             //Needs a saving possibility for different nosocomial thresholds

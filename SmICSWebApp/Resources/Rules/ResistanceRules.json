@@ -1,0 +1,23 @@
+[
+  {
+    "WorkflowName": "Resistance",
+    "Rules": [
+      {
+        "RuleName": "MRSA",
+        "SuccessEvent": "R",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input.Name == \"Staphylococcus Aureus\" AND input.Antibiograms.Where(antibiotigram => antibiotigram.Antibiotic == \"Oxacilin\" && antibiotigram == \"R\")"
+      },
+      {
+        "RuleName": "MSSA",
+        "SuccessEvent": "S",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input.Name == \"Staphylococcus Aureus\" AND input.Antibiograms.Where(antibiotigram => antibiotigram.Antibiotic == \"Oxacilin\" && antibiotigram == \"S\")"
+      }
+    ]
+  }
+]

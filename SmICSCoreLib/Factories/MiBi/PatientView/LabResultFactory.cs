@@ -12,7 +12,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         public IRestDataAccess RestDataAccess { get; set; }
 
         private readonly ISpecimenFactory _specimenFac;
-        private string medicalField;
+
         public LabResultFactory(IRestDataAccess restDataAccess, ISpecimenFactory specimenFac)
         {
             RestDataAccess = restDataAccess;
@@ -32,8 +32,13 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         }
 
         public List<LabResult> Process(Case Case, PathogenParameter pathogen = null)
-        { 
-            List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case, pathogen));
+        {
+            List<UID> uids = null;
+            if (pathogen != null)
+            {
+                uids = RestDataAccess.AQLQuery<UID>(GetPathogenCompositionsUIDs(Case, pathogen));
+            }
+            List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case, pathogen, uids));
             foreach (LabResult result in results)
             {
                 SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID };
@@ -44,9 +49,29 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             return results;
         }
 
-        private AQLQuery MetaDataQuery(Case Case, PathogenParameter pathogen)
+        private AQLQuery GetPathogenCompositionsUIDs(Case Case, PathogenParameter pathogen)
         {
-            
+            return new AQLQuery()
+            {
+                Name = $"LabDataUID - {pathogen.MedicalField}",
+                Query = @$"SELECT DISTINCT c/uid/value as ID
+                            FROM EHR e
+                            CONTAINS COMPOSITION c
+                            CONTAINS CLUSTER m[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] 
+                            WHERE c/name/value='{pathogen.MedicalField}'
+                            and m/items[at0001]/name/value = 'Erregername'
+                            and m/items[at0001]/value/value = '{pathogen.Name}'
+                            and e/ehr_status/subject/external_ref/id/value='{Case.PatientID}'"
+            };
+        }
+
+        private AQLQuery MetaDataQuery(Case Case, PathogenParameter pathogen, List<UID> UIDs = null)
+        {
+            string uidMatch = "";
+            if(UIDs != null)
+            {
+                uidMatch = " AND c/uid/value MATCHES {'" + string.Join("','", UIDs.Select(u => u.ID).ToString()) + "'} ";
+            }
             return new AQLQuery()
             {
                 Name = $"Meta Daten - {pathogen.MedicalField}",
@@ -62,6 +87,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                         WHERE c/name/value = '{pathogen.MedicalField}' 
                         AND e/ehr_status/subject/external_ref/id/value='{Case.PatientID}'
                         AND v/items[at0001]/value='{Case.CaseID}'
+                        {uidMatch}
                         ORDER BY d/protocol[at0004]/items[at0094]/items[at0063]/value/id ASC"
             };
         }
