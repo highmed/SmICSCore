@@ -1,12 +1,13 @@
 ﻿using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.MiBi.Nosocomial;
 using System;
+using System.Collections.Generic;
 
 namespace SmICSWebApp.Data.Contact
 {
     public class Contact : Case
     {
-        public InfectionStatus InfectionStatus { get; set; }
+        public Dictionary<string, InfectionStatus> InfectionStatus { get; set; }
         public SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay PatientLocation { get; internal set; }
         public DateTime ContactStart { get; set; }
         public DateTime? ContactEnd { get; set; }

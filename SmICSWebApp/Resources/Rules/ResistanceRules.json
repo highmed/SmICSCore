@@ -8,7 +8,7 @@
         "ErrorMessage": "One or more adjust rules failed.",
         "ErrorType": "Error",
         "RuleExpressionType": "LambdaExpression",
-        "Expression": "input.Name == \"Staphylococcus Aureus\" AND input.Antibiograms.Where(antibiotigram => antibiotigram.Antibiotic == \"Oxacilin\" && antibiotigram == \"R\")"
+        "Expression": "input.Name == \"Staphylococcus aureus\" && input.Antibiograms.Any(antibiotigram => antibiotigram.Antibiotic == \"Oxacillin\" && antibiotigram.Resistance == \"R\")"
       },
       {
         "RuleName": "MSSA",
@@ -16,7 +16,7 @@
         "ErrorMessage": "One or more adjust rules failed.",
         "ErrorType": "Error",
         "RuleExpressionType": "LambdaExpression",
-        "Expression": "input.Name == \"Staphylococcus Aureus\" AND input.Antibiograms.Where(antibiotigram => antibiotigram.Antibiotic == \"Oxacilin\" && antibiotigram == \"S\")"
+        "Expression": "input.Name == \"Staphylococcus aureus\" && input.Antibiograms.Any(antibiotigram => antibiotigram.Antibiotic == \"Oxacillin\" && antibiotigram.Resistance == \"S\")"
       }
     ]
   }

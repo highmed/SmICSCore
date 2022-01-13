@@ -35,7 +35,7 @@ namespace SmICSWebApp.Data.WardView
                 foreach (Case c in cases)
                 {
                     PathogenParameter pathogenParameter = new PathogenParameter() { Name = parameter.Pathogen };
-                    InfectionStatus infectionStatus = _infectionStatusFac.Process(c, pathogenParameter).Last().Value.ContainsKey(parameter.Pathogen) ? _infectionStatusFac.Process(c, pathogenParameter).Last().Value[parameter.Pathogen] : null;
+                    Dictionary<string, InfectionStatus> infectionStatus = _infectionStatusFac.Process(c, pathogenParameter).Last().Value.ContainsKey(parameter.Pathogen) ? _infectionStatusFac.Process(c, pathogenParameter).Last().Value[parameter.Pathogen] : null;
                     WardOverview overview = new WardOverview();
                     overview.InfectionStatus = infectionStatus;
                     overview.PatientStay = patientStays.Where(stay => stay.PatientID == c.PatientID).FirstOrDefault();
@@ -62,11 +62,11 @@ namespace SmICSWebApp.Data.WardView
 
             foreach (WardOverview overview in wardOverviews)
             {
-                if(overview.InfectionStatus != null && overview.InfectionStatus.Nosocomial)
+                if(overview.InfectionStatus != null && overview.InfectionStatus.Values.Any(x => x.Nosocomial))
                 {
-                    chartEntries["Nosokomial"][overview.] += 1;
+                    chartEntries["Nosokomial"][overview.PatientStay.Admission] += 1;
                 } 
-                else if(overview.InfectionStatus != null && overview.InfectionStatus.Known)
+                else if(overview.InfectionStatus != null && overview.InfectionStatus.Values.Any(x => x.Known))
                 {
                     chartEntries["Known"][overview.PatientStay.Admission] += 1;
                 }

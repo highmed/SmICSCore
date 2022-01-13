@@ -11,5 +11,14 @@ namespace SmICSCoreLib.Factories.General
         {
             CaseID = Case.CaseID;
         }
+
+        public bool Equals(Case other)
+        {
+            if(base.Equals(other))
+            {
+                return CaseID == other.CaseID;
+            }
+            return false;
+        }
     }
 }

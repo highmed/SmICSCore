@@ -14,5 +14,14 @@ namespace SmICSCoreLib.Factories.General
         {
             PatientID = patient.PatientID;
         }
+
+        public bool Equals(Patient other)
+        {
+            if(other != null)
+            {
+                return PatientID == other.PatientID;
+            }
+            return false;
+        }
     }
 }

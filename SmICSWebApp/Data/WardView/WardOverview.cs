@@ -9,7 +9,7 @@ namespace SmICSWebApp.Data.WardView
 {
     public class WardOverview
     {
-        public InfectionStatus InfectionStatus { get; set; }
+        public Dictionary<string, InfectionStatus> InfectionStatus { get; set; }
         public SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay PatientStay { get; set; }
         public List<LabResult> LabData { get; set; }
         public PatientData PatientData { get; set; }

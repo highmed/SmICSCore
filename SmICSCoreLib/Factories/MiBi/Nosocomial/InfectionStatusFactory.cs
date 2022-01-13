@@ -1,13 +1,10 @@
-﻿using Newtonsoft.Json;
-using RulesEngine.Models;
-using SmICSCoreLib.Factories.General;
+﻿using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.MiBi.PatientView;
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace SmICSCoreLib.Factories.MiBi.Nosocomial
 {
@@ -54,32 +51,36 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                         {
                             if (specimen.Pathogens != null)
                             {
-                                TimeSpan timespan = hospitalization.Admission.Date - specimen.SpecimenCollectionDateTime;
+                                TimeSpan timespan = specimen.SpecimenCollectionDateTime - hospitalization.Admission.Date;
                                 foreach (Pathogen pathogen in specimen.Pathogens)
                                 {
                                     int threshold = GetNosocomialThreshold(pathogen);
                                     List<string> resistances = Rules.GetResistances(pathogen);
-                                    
-                                    foreach (string res in resistances)
+                                    if (resistances != null)
                                     {
-                                        if (pathogen.Result && timespan.Days < threshold)
+                                        infectionInformation[pathogen.Name] = new Dictionary<string, InfectionStatus>();
+
+                                        foreach (string res in resistances)
                                         {
-                                            new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res };
+                                            if (pathogen.Result && timespan.Days < threshold)
+                                            {
+                                                infectionInformation[pathogen.Name].Add(res, new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res });
+                                            }
+                                            else if (pathogen.Result && timespan.Days >= threshold)
+                                            {
+                                                bool hasFoundOldStatus = HasOldKnownCase(pathogen, res, infectionInformationByCase);
+                                                if (!hasFoundOldStatus)
+                                                {
+                                                    infectionInformation[pathogen.Name].Add(res, new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = true, Known = false, NosocomialDate = specimen.SpecimenCollectionDateTime, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res });
+                                                }
+                                                else
+                                                {
+                                                    infectionInformation[pathogen.Name].Add(res, new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res });
+                                                }
+                                            }
                                         }
-                                        else if (pathogen.Result && timespan.Days >= threshold)
-                                        {
-                                            bool hasFoundOldStatus = HasOldKnownCase(pathogen, res, infectionInformationByCase);
-                                            if (!hasFoundOldStatus)
-                                            {
-                                                new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = true, Known = false, NosocomialDate = specimen.SpecimenCollectionDateTime, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res };
-                                            }
-                                            else
-                                            {
-                                                new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res };
-                                            }
-                                        }                                       
+                                        SetHealingValue(infectionInformation[pathogen.Name], pathogen.Result, resistances);
                                     }
-                                    SetHealingValue(infectionInformation[pathogen.Name], pathogen.Result, resistances);
                                 }
                             }
                         }

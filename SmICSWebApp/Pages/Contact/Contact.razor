@@ -36,11 +36,11 @@
     {
         <tr>
             <td>
-                @if(contact.InfectionStatus.Nosocomial)
+                @if(contact.InfectionStatus.Values.Any(x => x.Nosocomial))
                 {
                     <span class="text-danger">@contact.PatientID</span>
                 }
-                else if(contact.InfectionStatus.Known)
+                else if(contact.InfectionStatus.Values.Any(x => x.Known))
                 {
                     <span class="text-warning">@contact.PatientID</span>
                 }

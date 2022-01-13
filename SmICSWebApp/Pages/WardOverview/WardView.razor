@@ -70,11 +70,11 @@
                                 </ContextMenu>
 
                                 <ContextMenuTrigger MenuId="@item.PatientStay.PatientID">
-                                    @if (item.InfectionStatus != null && item.InfectionStatus.Nosocomial)
+                                    @if (item.InfectionStatus != null && item.InfectionStatus.Values.Any(x => x.Nosocomial))
                                     {
                                         <span class="text-danger"> @item.PatientStay.PatientID</span>
                                     }
-                                    else if (item.InfectionStatus != null && item.InfectionStatus.Known)
+                                    else if (item.InfectionStatus != null && item.InfectionStatus.Values.Any(x => x.Known))
                                     {
                                         <span class="text-warning"> @item.PatientStay.PatientID</span>
                                     }

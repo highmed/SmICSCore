@@ -10,6 +10,6 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        SortedList<Hospitalization, Dictionary<string, InfectionStatus>> Process(Patient patient, PathogenParameter pathogen = null);
+        SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, PathogenParameter pathogen = null);
     }
 }

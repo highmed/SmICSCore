@@ -70,7 +70,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             string uidMatch = "";
             if(UIDs != null)
             {
-                uidMatch = " AND c/uid/value MATCHES {'" + string.Join("','", UIDs.Select(u => u.ID).ToString()) + "'} ";
+                uidMatch = " AND c/uid/value MATCHES {'" + string.Join("','", UIDs.Select(u => u.ID)) + "'} ";
             }
             return new AQLQuery()
             {
