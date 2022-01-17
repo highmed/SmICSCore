@@ -34,6 +34,10 @@ namespace SmICSWebApp.Data.WardView
 
                 foreach (Case c in cases)
                 {
+                    if(c.PatientID == "Patient103")
+                    {
+                        Console.WriteLine("");
+                    }
                     PathogenParameter pathogenParameter = new PathogenParameter() { Name = parameter.Pathogen };
                     Dictionary<string, InfectionStatus> infectionStatus = _infectionStatusFac.Process(c, pathogenParameter).Last().Value.ContainsKey(parameter.Pathogen) ? _infectionStatusFac.Process(c, pathogenParameter).Last().Value[parameter.Pathogen] : null;
                     WardOverview overview = new WardOverview();
@@ -53,7 +57,7 @@ namespace SmICSWebApp.Data.WardView
 
             chartEntries.Add("Nosokomial", new SortedDictionary<DateTime, int>());
             chartEntries.Add("Known", new SortedDictionary<DateTime, int>());
-
+            chartEntries.Add("Stress", new SortedDictionary<DateTime, int>());
             for (DateTime date = parameter.Start.Date; date <= parameter.End.Date; date = date.AddDays(1.0))
             {
                 chartEntries["Nosokomial"].Add(date, 0);
@@ -62,14 +66,27 @@ namespace SmICSWebApp.Data.WardView
 
             foreach (WardOverview overview in wardOverviews)
             {
-                if(overview.InfectionStatus != null && overview.InfectionStatus.Values.Any(x => x.Nosocomial))
+                if(overview.InfectionStatus != null && overview.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate > overview.PatientStay.Admission && (overview.PatientStay.Discharge.HasValue ? x.NosocomialDate <= overview.PatientStay.Discharge : true)))
                 {
-                    chartEntries["Nosokomial"][overview.PatientStay.Admission] += 1;
+                    DateTime infectionDate = overview.InfectionStatus.Values.Where(inf => inf.Nosocomial).OrderBy(inf => inf.NosocomialDate).Select(inf => inf.NosocomialDate).First().Value;
+                    chartEntries["Nosokomial"][infectionDate.Date] += 1;
                 } 
-                else if(overview.InfectionStatus != null && overview.InfectionStatus.Values.Any(x => x.Known))
+                else if(overview.InfectionStatus != null && (overview.InfectionStatus.Values.Any(x => x.Known) || overview.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate < overview.PatientStay.Admission)))
                 {
-                    chartEntries["Known"][overview.PatientStay.Admission] += 1;
+                    chartEntries["Known"][overview.PatientStay.Admission.Date] += 1;
                 }
+            }
+
+            for (DateTime date = parameter.Start.Date; date <= parameter.End.Date; date = date.AddDays(1.0))
+            {
+                int stress = chartEntries["Nosokomial"][date] + chartEntries["Known"][date];
+                if (date.Date > parameter.Start.Date)
+                {
+                    stress += chartEntries["Stress"][date.Date.AddDays(-1.0)];
+                    int stressRelease = wardOverviews.Count(ward => ward.PatientStay.Discharge.HasValue && ward.PatientStay.Discharge.Value.Date.AddDays(-1.0) == date.Date.AddDays(-1.0));
+                    stress -= stressRelease;
+                }
+                chartEntries["Stress"].Add(date, stress);
             }
             return chartEntries;
         }

@@ -8,8 +8,8 @@ namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
         private const string TRANSFER = "Wechsel";
         private const string PROCEDURE = "Behandlung";
 
-        public DateTime Discharge { get; set; }
         public DateTime Admission { get; set; }
+        public DateTime? Discharge { get; set; }
         public MovementType MovementType { get; set; }
         public string MovementTypeName
         {

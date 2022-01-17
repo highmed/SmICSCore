@@ -1,0 +1,49 @@
+﻿@using SmICSCoreLib.Factories.PatientMovementNew.PatientStays
+@using SmICSWebApp.Data.WardView
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">Patient</th>
+            <th class="text-center">Resistenz</th>
+            @if (HasPatientData())
+            {
+                <th>Name</th>
+                <th>Geburtstag</th>
+                <th>Sex</th>
+            }
+            <th class="text-center">1.Positiver</th>
+            <th class="text-center">1.Stationstest</th>
+            <th class="text-center">letzter Stationstest</th>
+            <th class="text-center">Aktueller Test</th>
+            <th class="text-center">Stationsaufnahme</th>
+            <th class="text-center">Stationsentlassung</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (WardOverview item in WardOverviewData)
+        {
+            <WardTableRow WardOverview="item" WardParameter="Parameter" />
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public List<WardOverview> WardOverviewData { get; set; }
+
+    [Parameter]
+    public WardParameter Parameter { get; set; }
+
+    private bool HasPatientData()
+    {
+        foreach (WardOverview vm in WardOverviewData)
+        {
+            if (vm.PatientData != null)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+}

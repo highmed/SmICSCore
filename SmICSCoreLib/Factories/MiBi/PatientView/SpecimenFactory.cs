@@ -31,18 +31,8 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                 pathogen.LabID = specimen.LabID;
 
                 specimen.Pathogens = _pathogegFac.Process(pathogen);
-                
-            }
-            if(pathogen != null)
-            {
-                CleanSpecimenWithoutPathogen(ref specimens);
             }
             return specimens;
-        }
-
-        private void CleanSpecimenWithoutPathogen(ref List<Specimen> specimens)
-        {
-            specimens.RemoveAll(sp => sp.Pathogens == null);
         }
 
         private AQLQuery SpecimenQuery(SpecimenParameter parameter)

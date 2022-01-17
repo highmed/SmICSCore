@@ -1,0 +1,15 @@
+﻿<td class="text-center">
+    @if (Date.HasValue)
+    {
+        @Date.Value.ToString("yyyy-MM-dd")
+    }
+    else
+    {
+        <span>-</span>
+    }
+</td>
+
+@code {
+    [Parameter]
+    public DateTime? Date { get; set; }
+}

@@ -56,7 +56,11 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                                 {
                                     int threshold = GetNosocomialThreshold(pathogen);
                                     List<string> resistances = Rules.GetResistances(pathogen);
-                                    if (resistances != null)
+                                    if (resistances == null)
+                                    {
+                                        infectionInformation[pathogen.Name].Add("normal", new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = false, Known = false, NosocomialDate = null, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = "normal", LabID = specimen.LabID });
+                                    }
+                                    else
                                     {
                                         infectionInformation[pathogen.Name] = new Dictionary<string, InfectionStatus>();
 
@@ -64,18 +68,18 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                                         {
                                             if (pathogen.Result && timespan.Days < threshold)
                                             {
-                                                infectionInformation[pathogen.Name].Add(res, new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res });
+                                                infectionInformation[pathogen.Name].Add(res, new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res, LabID = specimen.LabID });
                                             }
                                             else if (pathogen.Result && timespan.Days >= threshold)
                                             {
                                                 bool hasFoundOldStatus = HasOldKnownCase(pathogen, res, infectionInformationByCase);
                                                 if (!hasFoundOldStatus)
                                                 {
-                                                    infectionInformation[pathogen.Name].Add(res, new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = true, Known = false, NosocomialDate = specimen.SpecimenCollectionDateTime, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res });
+                                                    infectionInformation[pathogen.Name].Add(res, new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = true, Known = false, NosocomialDate = specimen.SpecimenCollectionDateTime, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res, LabID = specimen.LabID });
                                                 }
                                                 else
                                                 {
-                                                    infectionInformation[pathogen.Name].Add(res, new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res });
+                                                    infectionInformation[pathogen.Name].Add(res, new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = true, ConsecutiveNegativeCounter = 0, Resistance = res, LabID = specimen.LabID });
                                                 }
                                             }
                                         }
@@ -91,23 +95,16 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
 
         private void SetHealingValue(Dictionary<string, InfectionStatus> infectionByResistance, bool result, List<string> resistances)
         {
-            if (result == true && infectionByResistance.ContainsKey("I") && !resistances.Contains("I"))
+            foreach (string mre in infectionByResistance.Keys)
             {
-                infectionByResistance["I"].ConsecutiveNegativeCounter++;
-            }
-            if (result == true && infectionByResistance.ContainsKey("R") && !resistances.Contains("R"))
-            {
-                infectionByResistance["R"].ConsecutiveNegativeCounter++;
-            }
-            if (result == true && infectionByResistance.ContainsKey("S") && !resistances.Contains("S"))
-            {
-                infectionByResistance["S"].ConsecutiveNegativeCounter++;
-            }
-            if (result == false)
-            {
-                infectionByResistance["I"].ConsecutiveNegativeCounter++;
-                infectionByResistance["R"].ConsecutiveNegativeCounter++;
-                infectionByResistance["S"].ConsecutiveNegativeCounter++;
+                if (result == true && !resistances.Contains(mre))
+                {
+                    infectionByResistance[mre].ConsecutiveNegativeCounter++;
+                }
+                else if (result == false)
+                {
+                    infectionByResistance[mre].ConsecutiveNegativeCounter++;
+                }
             }
         }
 
@@ -125,17 +122,9 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             }
             return false;
         }
-        private void AddInfectionInformation(ref Dictionary<string, InfectionStatus> infectionInformation, Pathogen pathogen, bool known, bool nosocomial, DateTime? nosocomialData = null)
-        {
-            InfectionStatus infection = new InfectionStatus() { Known = false, Nosocomial = nosocomial, NosocomialDate = nosocomialData };
-            if (!infectionInformation.ContainsKey(pathogen.Name))
-            {
-                infectionInformation.Add(pathogen.Name, infection);
-            }
-        }
+
         private int GetNosocomialThreshold(Pathogen pathogen)
         {
-
             string pathogenName = pathogen.Name.ToLower().Replace(" ", "");
 
             //Needs a saving possibility for different nosocomial thresholds
@@ -147,7 +136,7 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
     {
         public int Compare(Hospitalization x, Hospitalization y)
         {
-            return y.Admission.Date.CompareTo(x.Admission.Date);
+            return x.Admission.Date.CompareTo(y.Admission.Date);
         }
     }
 }

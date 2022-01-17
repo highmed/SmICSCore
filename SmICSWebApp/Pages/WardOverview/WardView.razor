@@ -12,208 +12,174 @@
 
 @inject WardOverviewService _service
 
-<div class="card">
-    <div class="card-body">
-        <EditForm Model="@parameter" OnValidSubmit="@Submit">
-            <label for="stationDropdown" class="mr-1">Station</label>
-            <select id="stationDropdow" class="col-2 mr-2" @bind="@parameter.Ward">
-                <option value="" selected disabled hidden>Bitte wählen</option>
-                <option>47</option>
-            </select>
-            <label for="pathogenDropdown" class="mr-1">Erreger</label>
-            <input type="text" list="pathogenList" class="col-1 mr-2" @bind="@parameter.Pathogen" id="pathogenDropdown">
-                <datalist id="pathogenList">
-                    <option>Staphylococcus aureus</option>
-                    <option>Entrokokken</option>
-                </datalist>
-            <label for="startdate" class="mr-1">Start</label>
-            <InputDate id="startdate" class="col-1 mr-2" @bind-Value="parameter.Start" />
-            <label for="enddate" class="mr-1">Ende</label>
-            <InputDate id="enddate" class="col-1 mr-2" @bind-Value="parameter.End" />
-            <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button>
+    <div class="container">
+        <div class="fixed-top" style="margin-top: 6.5rem">
+            <div class="card">
+                <div class="card-body">
+                    <EditForm Model="@parameter" OnValidSubmit="@Submit">
+                        <label for="stationDropdown" class="mr-1">Station</label>
+                        <select id="stationDropdow" class="col-2 mr-2" @bind="@parameter.Ward">
+                            <option value="" selected disabled hidden>Bitte wählen</option>
+                            <option>47</option>
+                        </select>
+                        <label for="pathogenDropdown" class="mr-1">Erreger</label>
+                        <input type="text" list="pathogenList" class="col-1 mr-2" @bind="@parameter.Pathogen" id="pathogenDropdown">
+                        <datalist id="pathogenList">
+                            <option>Staphylococcus aureus</option>
+                            <option>Entrokokken</option>
+                        </datalist>
+                        <label for="startdate" class="mr-1">Start</label>
+                        <InputDate id="startdate" class="col-1 mr-2" @bind-Value="parameter.Start" />
+                        <label for="enddate" class="mr-1">Ende</label>
+                        <InputDate id="enddate" class="col-1 mr-2" @bind-Value="parameter.End" />
+                        <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button>
 
-        </EditForm>
-    </div>
-</div>
-
-@if (data != null)
-{
-            
-<div class="row">
-    <div class="card w-50">
-        <div class="card-body">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th class="text-center">Patient</th>
-                        @if (HasPatientData())
-                        {
-                            <th>Name</th>
-                            <th>Geburtstag</th>
-                            <th>Sex</th>
-                        }
-                        <th class="text-center">1. Positiver</th>
-                        <th class="text-center">1.Stationstest</th>
-                        <th class="text-center">letzter Stationstest</th>
-                        <th class="text-center">Aktueller Test</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (WardOverview item in data)
-                    {
-                        <tr>
-                            <td class="text-center">
-
-                                <ContextMenu Id="@item.PatientStay.PatientID">
-                                    <Item OnClick="@OnContextClick"><a href="/patient/@(item.PatientStay.PatientID)">Patientenansicht</a></Item>
-                                    <Item OnClick="@OnContextClick"><a href="/contact/@(item.PatientStay.PatientID)"> Kontakte </a> </Item>
-                                </ContextMenu>
-
-                                <ContextMenuTrigger MenuId="@item.PatientStay.PatientID">
-                                    @if (item.InfectionStatus != null && item.InfectionStatus.Values.Any(x => x.Nosocomial))
-                                    {
-                                        <span class="text-danger"> @item.PatientStay.PatientID</span>
-                                    }
-                                    else if (item.InfectionStatus != null && item.InfectionStatus.Values.Any(x => x.Known))
-                                    {
-                                        <span class="text-warning"> @item.PatientStay.PatientID</span>
-                                    }
-                                    else
-                                    {
-                                        @item.PatientStay.PatientID
-                                    }
-                                </ContextMenuTrigger>
-                            </td>
-                            @if (item.PatientData != null)
-                            {
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            }
-                            <td class="text-center">@item.GetFirstWardLabResultDate(@item.PatientStay.Admission, @item.PatientStay.Discharge).ToString("yyyy-MM-dd")</td>
-                            <td class="text-center">@item.GetFirstWardLabResultDate(@item.PatientStay.Admission, @item.PatientStay.Discharge).ToString("yyyy-MM-dd")</td>
-                            <td class="text-center">@item.GetLastWardLabResultDate(parameter.Start, parameter.End).ToString("yyyy-MM-dd")</td>
-                            <td class="text-center">@item.GetLastLabResultDate().ToString("yyyy-MM-dd")</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                    </EditForm>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="card w-50">
-        <div class="card-body">
-            <Chart Config="_chart"></Chart>
-        </div>
-    </div>
-</div>
-
-    
-}
- 
-
-
-@code {
-    private WardParameter parameter = new WardParameter();
-
-    private List<WardOverview> data = null;
-    private Dictionary<string, SortedDictionary<DateTime, int>> chartEntries = null;
-
-    private BarConfig _chart;
-
-    private bool isLoading = false;
-    private void Submit()
-    {
-        isLoading = true;
-        data = _service.GetData(parameter);
-        chartEntries = _service.GetChartEntries(parameter);
-
-        _chart = new BarConfig
-        {
-            Options = new BarOptions
+            @if (data != null)
             {
-                Responsive = true,
-                Title = new OptionsTitle
+
+                <div class="row">
+                    <div class="card w-50">
+                        <div class="card-header">
+                            <b>Patientenanzahl:</b> @data.Count
+                        </div>
+                        <div class="card-body">
+                            <WardTable WardOverviewData="data" Parameter="parameter" />
+                        </div>
+                    </div>
+                    <div class="card w-50">
+                        <div class="card-body">
+                            <div>
+                                <Chart Config="_chart" />
+                            </div>
+                            <div>
+                                <Chart Config="_accumChart" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            }
+    </div>
+
+
+    @code {
+        private WardParameter parameter = new WardParameter();
+
+        private List<WardOverview> data = null;
+        private Dictionary<string, SortedDictionary<DateTime, int>> chartEntries = null;
+
+        private BarConfig _chart;
+        private BarConfig _accumChart;
+
+        private bool isLoading = false;
+        private void Submit()
+        {
+            isLoading = true;
+            data = _service.GetData(parameter);
+            chartEntries = _service.GetChartEntries(parameter);
+
+            _chart = EpiCurveConfig("Epidemiologische Kurve der Station: " + parameter.Ward, "Neue Fälle");
+            _accumChart = EpiCurveConfig("", "Last der Station");
+
+            IDataset<int> Nosocomial = new BarDataset<int>()
+            {
+                Label = "Nosokomial",
+                BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Red)
+            };
+
+            IDataset<int> Known = new BarDataset<int>()
+            {
+                Label = "Bekannt",
+                BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue)
+            };
+
+            IDataset<int> Stress = new BarDataset<int>()
+            {
+                Label = "Last",
+                BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.DarkGray)
+            };
+
+            GetXAxisLabels();
+            _chart.Data.Datasets.Add(Nosocomial);
+            _chart.Data.Datasets.Add(Known);
+            _accumChart.Data.Datasets.Add(Stress);
+
+            FillDataset(Nosocomial, chartEntries["Nosokomial"]);
+            FillDataset(Known, chartEntries["Known"]);
+            FillDataset(Stress, chartEntries["Stress"]);
+
+        }
+
+
+
+        private void GetXAxisLabels()
+        {
+            for (DateTime date = parameter.Start.Date; date <= parameter.End.Date; date = date.AddDays(1.0))
+            {
+                _chart.Data.Labels.Add(date.ToString("dd.MM"));
+                _accumChart.Data.Labels.Add(date.ToString("dd.MM"));
+            }
+        }
+
+        private void FillDataset(IDataset<int> dataset, SortedDictionary<DateTime, int> FillValues)
+        {
+            foreach (KeyValuePair<DateTime, int> kvp in FillValues)
+            {
+                dataset.Add(kvp.Value);
+            }
+        }
+
+        private BarConfig EpiCurveConfig(string title, string yAxisLabel)
+        {
+            return new BarConfig
+            {
+                Options = new BarOptions
                 {
-                    Display = true,
-                    Text = "Epidemiologische Kurve der Station: " + parameter.Ward
-                },
-                Scales = new BarScales
-                {
-                    XAxes = new List<CartesianAxis>
-                {
+                    Responsive = true,
+                    Title = new OptionsTitle
+                    {
+                        Display = true,
+                        Text = title
+                    },
+                    Scales = new BarScales
+                    {
+                        XAxes = new List<CartesianAxis>
+                        {
                         new BarCategoryAxis
                         {
                             Stacked = true
                         }
                     },
-                    YAxes = new List<CartesianAxis>
-                {
+                        YAxes = new List<CartesianAxis>
+                        {
                         new BarLinearCartesianAxis
                         {
-                            Stacked = true
+                            Stacked = true,
+                            ScaleLabel = new ScaleLabel
+                            {
+                                LabelString = yAxisLabel,
+                                Display = true
+                            },
+                            Ticks = new LinearCartesianTicks
+                            {
+                                StepSize = 1,
+                                BeginAtZero = true,
+                                Min = 0
+                            }
                         }
                     }
-                },
-                Tooltips = new Tooltips
-                {
-                    Mode = InteractionMode.Index,
-                    Intersect = false
-                },
-            }
-        };
-
-        IDataset<int> Nosocomial = new BarDataset<int>()
-        {
-            Label = "Nosokomial",
-            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Red)
-        };
-
-        IDataset<int> Known = new BarDataset<int>()
-        {
-            Label = "Bekannt",
-            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Yellow)
-        };
-        GetXAxisLabels();
-        _chart.Data.Datasets.Add(Nosocomial);
-        _chart.Data.Datasets.Add(Known);
-
-        FillDataset(Nosocomial, chartEntries["Nosokomial"]);
-        FillDataset(Known, chartEntries["Known"]);
-    }
-
-
-
-    private void GetXAxisLabels()
-    {
-        for (DateTime date = parameter.Start.Date; date <= parameter.End.Date; date = date.AddDays(1.0))
-        {
-            _chart.Data.Labels.Add(date.ToString("dd.MM"));
+                    },
+                    Tooltips = new Tooltips
+                    {
+                        Mode = InteractionMode.Index,
+                        Intersect = false
+                    },
+                }
+            };
         }
     }
-
-    private void FillDataset(IDataset<int> dataset, SortedDictionary<DateTime, int> FillValues)
-    {
-        foreach (KeyValuePair<DateTime, int> kvp in FillValues)
-        {
-            dataset.Add(kvp.Value);
-        }
-    }
-
-    private void OnContextClick(ItemClickEventArgs e)
-    {
-        Console.WriteLine($"Item Clicked => Menu: {e.ContextMenuId}, MenuTarget: {e.ContextMenuTargetId}, IsCanceled: {e.IsCanceled}, MenuItem: {e.MenuItemElement}, MouseEvent: {e.MouseEvent}");
-    }
-
-    private bool HasPatientData()
-    {
-        foreach (WardOverview vm in data)
-        {
-            if (vm.PatientData != null)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-}

@@ -14,7 +14,7 @@ namespace SmICSWebApp.Data.WardView
         public List<LabResult> LabData { get; set; }
         public PatientData PatientData { get; set; }
 
-        public DateTime GetLastWardLabResultDate(DateTime Start, DateTime End)
+        public DateTime? GetLastWardLabResultDate(DateTime Start, DateTime End)
         {
             DateTime last = DateTime.MinValue;
             foreach(LabResult labResult in LabData)
@@ -29,10 +29,10 @@ namespace SmICSWebApp.Data.WardView
                 }
 
             }
-            return last;
+            return last == DateTime.MinValue ? null : last;
         }
 
-        public DateTime GetFirstWardLabResultDate(DateTime Start, DateTime End)
+        public DateTime? GetFirstWardLabResultDate(DateTime Start, DateTime End)
         {
             DateTime last = DateTime.MaxValue;
             foreach (LabResult labResult in LabData)
@@ -47,10 +47,32 @@ namespace SmICSWebApp.Data.WardView
                 }
 
             }
-            return last;
+            return last == DateTime.MaxValue ? null : last;
         }
 
-        public DateTime GetLastLabResultDate()
+        public DateTime? GetFirstPositveLabResultDate()
+        {
+            DateTime last = DateTime.MaxValue;
+            foreach (LabResult labResult in LabData)
+            {
+                if (labResult.Sender.Ward == PatientStay.Ward)
+                {
+                    DateTime? tmp = labResult.Specimens.
+                        OrderBy(s => s.SpecimenCollectionDateTime).
+                        Where(s => s.Pathogens.Any(p => p.Result)).
+                        Select(s => s.SpecimenCollectionDateTime).
+                        FirstOrDefault();
+                    if (tmp.HasValue && last > tmp.Value)
+                    {
+                        last = tmp.Value;
+                    }
+                }
+
+            }
+            return last == DateTime.MaxValue ? null : last;
+        }
+
+        public DateTime? GetLastLabResultDate()
         {
             DateTime last = DateTime.MinValue;
             foreach (LabResult labResult in LabData)
@@ -61,7 +83,7 @@ namespace SmICSWebApp.Data.WardView
                     last = tmp;
                 }
             }
-            return last;
+            return last == DateTime.MinValue ? null : last;
         }
     }
 }

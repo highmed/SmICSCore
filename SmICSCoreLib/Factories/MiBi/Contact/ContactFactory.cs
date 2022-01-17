@@ -54,7 +54,7 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
                 {
                     Ward = patientStay.Ward,
                     Start = patientStay.Admission,
-                    End = patientStay.Discharge
+                    End = patientStay.Discharge.Value
                 };
 
                 List<PatientMovementNew.PatientStays.PatientStay> casesOnWard = _patientStayFac.Process(wardParameter);

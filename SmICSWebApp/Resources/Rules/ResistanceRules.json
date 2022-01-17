@@ -4,7 +4,7 @@
     "Rules": [
       {
         "RuleName": "MRSA",
-        "SuccessEvent": "R",
+        "SuccessEvent": "MRSA",
         "ErrorMessage": "One or more adjust rules failed.",
         "ErrorType": "Error",
         "RuleExpressionType": "LambdaExpression",
@@ -12,11 +12,35 @@
       },
       {
         "RuleName": "MSSA",
-        "SuccessEvent": "S",
+        "SuccessEvent": "MSSA",
         "ErrorMessage": "One or more adjust rules failed.",
         "ErrorType": "Error",
         "RuleExpressionType": "LambdaExpression",
         "Expression": "input.Name == \"Staphylococcus aureus\" && input.Antibiograms.Any(antibiotigram => antibiotigram.Antibiotic == \"Oxacillin\" && antibiotigram.Resistance == \"S\")"
+      },
+      {
+        "RuleName": "3MRGN (Enterobacterales + Acinetobacter baumanmii)",
+        "SuccessEvent": "3MRGN",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "(input.Name == \" Escherichia coli\" || input.Name == \"Acinetobacter baumannii\") && input.Antibiograms.Any(antibiotigram => (antibiotigram.Antibiotic == \"Piperacillin\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Cefotaxim\" || antibiotigram.Antibiotic == \"Ceftazidim\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Imipenem\" || antibiotigram.Antibiotic == \"Meropenem\" && antibiotigram.Resistance == \"S\" || antibiotigram.Resistance == \"I\") && (antibiotigram.Antibiotic == \"Ciprofloxacin\" && antibiotigram.Resistance == \"R\"))"
+      },
+      {
+        "RuleName": "4MRGN (Enterobacterales + Acinetobacter baumanmii + Pseudomonas aeruginosa A)",
+        "SuccessEvent": "4MRGN",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "(input.Name == \" Escherichia coli\" || input.Name == \"Acinetobacter baumannii\" || input.Name == \"Pseudomonas aeruginosa \") && input.Antibiograms.Any(antibiotigram => (antibiotigram.Antibiotic == \"Piperacillin\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Cefotaxim\" || antibiotigram.Antibiotic == \"Ceftazidim\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Imipenem\" || antibiotigram.Antibiotic == \"Meropenem\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Ciprofloxacin\" && antibiotigram.Resistance == \"R\"))"
+      },
+      {
+        "RuleName": "3MRGN (Pseudomonas aeruginosa)",
+        "SuccessEvent": "3MRGN",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "(input.Name == \"Pseudomonas aeruginosa \" && input.Antibiograms.Count((antibiotigram => (antibiotigram.Antibiotic == \"Piperacillin\" == \"R\") || (antibiotigram.Antibiotic == \"Cefotaxim\" || antibiotigram.Antibiotic == \"Ceftazidim\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Imipenem\" || antibiotigram.Antibiotic == \"Meropenem\" && antibiotigram.Resistance == \"R\" ) && (antibiotigram.Antibiotic == \"Ciprofloxacin\" && antibiotigram.Resistance == \"R\") == 3)"
       }
     ]
   }

@@ -43,11 +43,17 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             {
                 SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID };
                 result.Specimens = _specimenFac.Process(parameter, pathogen);
+                result.Specimens.RemoveAll(spec => spec.Pathogens == null);
                 result.Requirements = RestDataAccess.AQLQuery<Requirement>(RequirementQuery(new RequirementParameter(parameter)));
-                result.Sender = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID)).FirstOrDefault();
+                if(result.Specimens.Count > 0)
+                {
+                    result.Sender = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID)).FirstOrDefault();
+                }
             }
+            results.RemoveAll(lab => lab.Specimens.Count == 0);
             return results;
         }
+
 
         private AQLQuery GetPathogenCompositionsUIDs(Case Case, PathogenParameter pathogen)
         {
