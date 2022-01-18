@@ -12,38 +12,64 @@
                 <th>Geburtstag</th>
                 <th>Sex</th>
             }
-            <th class="text-center">1.Positiver</th>
-            <th class="text-center">1.Stationstest</th>
-            <th class="text-center">letzter Stationstest</th>
-            <th class="text-center">Aktueller Test</th>
-            <th class="text-center">Stationsaufnahme</th>
-            <th class="text-center">Stationsentlassung</th>
+            <th class="text-center">
+                1.Positiver
+                <i class="oi oi-elevator" @onclick="() => Sort(p => p.FirstWardPositiveResult)"></i>
+            </th>
+            <th class="text-center">1.Stationstest <i class="oi oi-elevator" @onclick="() => Sort(p => p.FirstWardPositiveResult)"></i></th>
+            <th class="text-center">letzter Stationstest <i class="oi oi-elevator" @onclick="() => Sort(p => p.LastWardResult)"></i></th>
+            <th class="text-center">Aktueller Test <i class="oi oi-elevator" @onclick="() => Sort(p => p.CurrentResult)"></i></th>
+            <th class="text-center">Stationsaufnahme <i class="oi oi-elevator" @onclick="() => Sort(p => p.Admission)"></i></th>
+            <th class="text-center">Stationsentlassung <i class="oi oi-elevator" @onclick="() => Sort(p => p.Discharge)"></i></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (WardOverview item in WardOverviewData)
+        @foreach (WardPatient patient in WardPatients)
         {
-            <WardTableRow WardOverview="item" WardParameter="Parameter" />
+            <WardTableRow Patient="patient" WardParameter="Parameter" />
         }
     </tbody>
 </table>
 
 @code {
     [Parameter]
-    public List<WardOverview> WardOverviewData { get; set; }
+    public List<WardPatient> WardPatients { get; set; }
 
     [Parameter]
     public WardParameter Parameter { get; set; }
 
+    private Func<WardPatient, IComparable> Prop;
+    private bool IsMinSorted = false;
+
     private bool HasPatientData()
     {
-        foreach (WardOverview vm in WardOverviewData)
+        foreach (WardPatient patient in WardPatients)
         {
-            if (vm.PatientData != null)
+            if (patient.PatientData != null)
             {
                 return true;
             }
         }
         return false;
+    }
+
+    private void Sort(Func<WardPatient, IComparable> getProp)
+    {
+        Console.WriteLine(Prop == getProp);
+        if (WardPatients != null && WardPatients.Count > 0 && (Prop != getProp || !(Prop == getProp && IsMinSorted)))
+        {
+            Prop = getProp;
+            IsMinSorted = true;
+            WardPatients = WardPatients
+            .OrderBy(x => getProp(x))
+            .ToList();
+        }
+        else
+        {
+            IsMinSorted = false;
+            WardPatients = WardPatients
+            .OrderByDescending(x => getProp(x))
+            .ToList();
+        }
     }
 }

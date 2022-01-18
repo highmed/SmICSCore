@@ -4,23 +4,23 @@
 <tr>
     <td class="text-center">
 
-        <ContextMenu Id="@WardOverview.PatientStay.PatientID">
-            <Item OnClick="@OnContextClick"><a href="/patient/@(WardOverview.PatientStay.PatientID)">Patientenansicht</a></Item>
-            <Item OnClick="@OnContextClick"><a href="/contact/@(WardOverview.PatientStay.PatientID)"> Kontakte </a> </Item>
+        <ContextMenu Id="@Patient.PatientID">
+            <Item OnClick="@OnContextClick"><a href="/patient/@(Patient.PatientID)">Patientenansicht</a></Item>
+            <Item OnClick="@OnContextClick"><a href="/contact/@(Patient.PatientID)"> Kontakte </a> </Item>
         </ContextMenu>
 
-        <ContextMenuTrigger MenuId="@WardOverview.PatientStay.PatientID">
+        <ContextMenuTrigger MenuId="@Patient.PatientID">
             @if (_nosocomial)
             {
-                <span class="text-danger"> @WardOverview.PatientStay.PatientID</span>
+                <span class="text-danger"> @Patient.PatientID</span>
             }
             else if (_known)
             {
-                <span class="text-primary"> @WardOverview.PatientStay.PatientID</span>
+                <span class="text-primary"> @Patient.PatientID</span>
             }
             else
             {
-                @WardOverview.PatientStay.PatientID
+                @Patient.PatientID
             }
         </ContextMenuTrigger>
     </td>
@@ -28,35 +28,35 @@
         @if (_nosocomial)
         {
             <span class="text-danger">
-                @string.Join("/", WardOverview.InfectionStatus.Values.Where(x => x.Nosocomial).Select(x => x.Resistance))
+                @string.Join("/", Patient.InfectionStatus.Values.Where(x => x.Nosocomial).Select(x => x.Resistance))
             </span>
         }
         @if (_known)
         {
             <span class="text-primary">
-                @string.Join("/", WardOverview.InfectionStatus.Values.Where(x => x.Known || (WardOverview.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate < WardOverview.PatientStay.Admission))).Select(x => x.Resistance))
+                @string.Join("/", Patient.InfectionStatus.Values.Where(x => x.Known || (Patient.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate < Patient.Admission))).Select(x => x.Resistance))
             </span>
         }
     </td>
-    @if (WardOverview.PatientData != null)
+    @if (Patient.PatientData != null)
     {
         <td></td>
         <td></td>
         <td></td>
         <td></td>
     }
-    <WardTableDateCell Date="WardOverview.GetFirstPositveLabResultDate()" />
-    <WardTableDateCell Date="WardOverview.GetFirstWardLabResultDate(WardOverview.PatientStay.Admission, WardOverview.PatientStay.Discharge.Value)" />
-    <WardTableDateCell Date=" WardOverview.GetLastWardLabResultDate(WardParameter.Start, WardParameter.End)" />
-    <WardTableDateCell Date=" WardOverview.GetLastLabResultDate()" />
-    <WardTableDateCell Date="WardOverview.PatientStay.Admission" />
-    <WardTableDateCell Date="WardOverview.PatientStay.Discharge" />
+    <WardTableDateCell Date="@Patient.FirstPositiveResult" />
+    <WardTableDateCell Date="@Patient.FirstWardPositiveResult" />
+    <WardTableDateCell Date="@Patient.LastWardResult" />
+    <WardTableDateCell Date="@Patient.CurrentResult" />
+    <WardTableDateCell Date="@Patient.Admission" />
+    <WardTableDateCell Date="@Patient.Discharge" />
 </tr>
 
 @code {
 
     [Parameter]
-    public WardOverview WardOverview { get; set; }
+    public WardPatient Patient { get; set; }
 
     [Parameter]
     public WardParameter WardParameter { get; set; }
@@ -66,13 +66,13 @@
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {
-        parameters.TryGetValue<WardOverview>("WardOverview", out WardOverview overview);
+        parameters.TryGetValue<WardPatient>("WardOverview", out WardPatient overview);
         parameters.TryGetValue<WardParameter>("WardParameter", out WardParameter parameter);
 
         await base.SetParametersAsync(parameters);
 
-        _nosocomial = WardOverview.InfectionStatus != null && WardOverview.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate > WardOverview.PatientStay.Admission && (WardOverview.PatientStay.Discharge.HasValue ? x.NosocomialDate <= WardOverview.PatientStay.Discharge : true));
-        _known = WardOverview.InfectionStatus != null && (WardOverview.InfectionStatus.Values.Any(x => x.Known) || WardOverview.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate < WardOverview.PatientStay.Admission));
+        _nosocomial = Patient.InfectionStatus != null && Patient.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate > Patient.Admission && (Patient.Discharge.HasValue ? x.NosocomialDate <= Patient.Discharge : true));
+        _known = Patient.InfectionStatus != null && (Patient.InfectionStatus.Values.Any(x => x.Known) || Patient.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate < Patient.Admission));
     }
 
 

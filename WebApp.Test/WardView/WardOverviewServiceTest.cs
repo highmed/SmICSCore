@@ -34,7 +34,7 @@ namespace WebApp.Test.WardView
                 infectFac, 
                 labFac);
 
-            List<WardOverview> views = service.GetData(parameter);
+            List<WardPatient> views = service.GetData(parameter);
             Assert.Equal(222, views.Count);
         }
 

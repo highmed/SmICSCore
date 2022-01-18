@@ -43,5 +43,26 @@
         "Expression": "(input.Name == \"Pseudomonas aeruginosa \" && input.Antibiograms.Count((antibiotigram => (antibiotigram.Antibiotic == \"Piperacillin\" == \"R\") || (antibiotigram.Antibiotic == \"Cefotaxim\" || antibiotigram.Antibiotic == \"Ceftazidim\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Imipenem\" || antibiotigram.Antibiotic == \"Meropenem\" && antibiotigram.Resistance == \"R\" ) && (antibiotigram.Antibiotic == \"Ciprofloxacin\" && antibiotigram.Resistance == \"R\") == 3)"
       }
     ]
+  },
+  {
+    "WorkflowName": "MREClassByPathogen",
+    "Rules": [
+      {
+        "RuleName": "MRSA",
+        "SuccessEvent": "MRSA",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input == \"Staphylococcus aureus\""
+      },
+      {
+        "RuleName": "MSSA",
+        "SuccessEvent": "MSSA",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input == \"Staphylococcus aureus\""
+      }
+    ]
   }
 ]
