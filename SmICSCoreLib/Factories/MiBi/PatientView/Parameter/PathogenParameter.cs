@@ -22,8 +22,12 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView.Parameter
         public PathogenParameter(PathogenParameter parameter) : base(parameter) 
         {
             LabID = parameter.LabID;
+            MedicalField = parameter.MedicalField;
         }
-        public string MedicalField { get; private set; }
+        public PathogenParameter(SpecimenParameter parameter, string medicalField) : base(parameter) 
+        {
+            MedicalField = medicalField;
+        }
 
         private string GetResultType(string pathogenName)
         {

@@ -21,16 +21,32 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             _hospitalizationFac = hospitalizationFac;
         }
 
-        public SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, PathogenParameter pathogen = null)
+        public SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, string MedicalField)
+        {
+           return Process(patient, MedicalField, null);
+        }
+        public SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, PathogenParameter pathogen)
+        {
+            return Process(patient, null, pathogen);
+        }
+
+        private SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, string MedicalField = null, PathogenParameter pathogen = null)
         {
             List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
             SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase = new SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>(new HospitalizationComparer());
 
             foreach (Case c in cases)
             {
+                List<LabResult> results = null;
                 Hospitalization hospitalization = _hospitalizationFac.Process(c);
-                List<LabResult> results = _mibiResultFac.Process(c, pathogen);
-
+                if (MedicalField == null)
+                {
+                    results = _mibiResultFac.Process(c,  pathogen);
+                }
+                else if (pathogen == null)
+                {
+                    results = _mibiResultFac.Process(c, MedicalField);
+                }
                 Dictionary<string, Dictionary<string, InfectionStatus>>infectionInformation = new Dictionary<string, Dictionary<string, InfectionStatus>>();
 
                 DetermineInfectionInformation(ref infectionInformation, results, hospitalization, infectionInformationByCase);

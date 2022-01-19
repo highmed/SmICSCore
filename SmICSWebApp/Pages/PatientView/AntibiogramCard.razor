@@ -1,0 +1,33 @@
+﻿@using Blazorise;
+@using SmICSCoreLib.Factories.MiBi;
+ 
+<Card Border="Border.Is0" Margin="Margin.Is0">
+    <CardBody>
+        <Span class="oi oi-beaker" TextColor="TextColor.Info" style="width:auto;"></Span>
+        <CardTitle Size="5" TextColor="TextColor.Black50" Width="Width.Is50">Antibiogramm</CardTitle>
+        <CardText>
+            Antibiogrammzeit:&nbsp;
+        </CardText>
+    </CardBody>
+    <Table Narrow="true">
+        <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
+            <TableRow>
+                <TableHeaderCell>Antibiotikum</TableHeaderCell>
+                <TableHeaderCell>Resistenz</TableHeaderCell>
+                <TableHeaderCell>MHK</TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            <TableRow>
+                <TableRowCell>@ab.Antibiotic</TableRowCell>
+                <TableRowCell>@ab.Resistance</TableRowCell>
+                <TableRowCell>@ab.MinInhibitorConcentration</TableRowCell>
+            </TableRow>
+        </TableBody>
+    </Table>
+</Card>
+
+@code {
+    [Parameter]
+    public Antibiogram ab { get; set; }
+}

@@ -1,0 +1,210 @@
+﻿@using Blazorise;
+@using SmICSCoreLib.Factories.MiBi.PatientView;
+@using SmICSCoreLib.Factories.PatientMovementNew; 
+
+
+<Collapse Visible="@Collapsed" Margin="Margin.Is5.Is0.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromLeft">
+    <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
+        <Heading Size="HeadingSize.Is6">
+            <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fallkennung</th>
+                            <th>Aufnahme</th>
+                            <th>Entlassung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Hospitalization.Key.CaseID</td>
+                            <td>@Hospitalization.Key.Admission.Date.Date.ToString("yyyy-MM-dd")</td>
+                            <td>(@Hospitalization.Key.Discharge.Date.HasValue ? Hospitalization.Key.Discharge.Date.Value.Date.ToString("yyyy-MM-dd") : "-")</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </Button>
+        </Heading>
+    </CollapseHeader>
+    <CollapseBody>
+        <Card Border="Border.Is0" Margin="Margin.Is0">
+            <CardBody Padding="Padding.Is0.Is2.FromLeft">
+                <Fields Flex="Flex.AlignItems.Start">
+                    <Field Horizontal="true">
+                        <Span class="oi oi-fork" TextColor="TextColor.Info" style="width:auto;"></Span>
+                        <FieldBody Width="Width.Is50">
+                            <CardTitle Size="5" TextColor="TextColor.Black50">Proben</CardTitle>
+                        </FieldBody>
+                    </Field>
+                </Fields>
+            </CardBody>
+        </Card>
+        @foreach(LabResult labResult in Hospitalization.Value)
+                    {
+
+                    }
+    </CollapseBody>
+</Collapse>
+
+
+
+    <Collapse Visible="@Collapsed" Margin="Margin.Is5.Is0.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromLeft">
+        <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
+            <Heading Size="HeadingSize.Is6">
+                <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
+                    <Table Narrow="true" Margin="Margin.Is0.FromBottom">
+                        <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
+                            <TableRow>
+                                <TableHeaderCell>Fallkennung</TableHeaderCell>
+                                <TableHeaderCell>Status</TableHeaderCell>
+                                <TableHeaderCell>Befundzeit</TableHeaderCell>
+                                <TableHeaderCell>Auftrags-ID</TableHeaderCell>
+                                <TableHeaderCell>Empfängerstandort</TableHeaderCell>
+                                <TableHeaderCell>Anforderungen</TableHeaderCell>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody Background="Background.White">
+                            <TableRow>
+                                <TableRowCell>@Hospitalization.Value.CaseID</TableRowCell>
+                                <TableRowCell>@c.Status</TableRowCell>
+                                <TableRowCell>@c.ResultDateTime</TableRowCell>
+                                <TableRowCell>@c.OrderID</TableRowCell>
+                                <TableRowCell>@c.Sender</TableRowCell>
+                                <TableRowCell>@c.Requirements</TableRowCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </Button>
+            </Heading>
+        </CollapseHeader>
+        <CollapseBody>
+            <Card Border="Border.Is0" Margin="Margin.Is0">
+                <CardBody Padding="Padding.Is0.Is2.FromLeft">
+                    <Fields Flex="Flex.AlignItems.Start">
+                        <Field Horizontal="true">
+                            <Span class="oi oi-fork" TextColor="TextColor.Info" style="width:auto;"></Span>
+                            <FieldBody Width="Width.Is50">
+                                <CardTitle Size="5" TextColor="TextColor.Black50">Proben</CardTitle>
+                            </FieldBody>
+                        </Field>
+                    </Fields>
+                </CardBody>
+            </Card>
+            @foreach (Specimen m in c.Specimens)
+            {
+                <Collapse Visible="@Collapsed">
+                    <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
+                        <Heading Size="HeadingSize.Is6">
+                            <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
+                                <Table Narrow="true" Margin="Margin.Is0.FromBottom">
+                                    <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
+                                        <TableRow>
+                                            <TableHeaderCell>Probenart</TableHeaderCell>
+                                            <TableHeaderCell>Labor-ID</TableHeaderCell>
+                                            <TableHeaderCell>Zeitpunkt der Probeentnahme</TableHeaderCell>
+                                            <TableHeaderCell>Zeitpunkt des Probeneingangs</TableHeaderCell>
+                                            <TableHeaderCell>Körperstelle</TableHeaderCell>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody Background="Background.White">
+                                        <TableRow>
+                                            <TableRowCell>@m.Kind</TableRowCell>
+                                            <TableRowCell>@m.LabID</TableRowCell>
+                                            <TableRowCell>@m.SpecimenCollectionDateTime</TableRowCell>
+                                            <TableRowCell>@m.SpecimenReceiptDate</TableRowCell>
+                                            <TableRowCell>@m.Location</TableRowCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </Button>
+                        </Heading>
+                    </CollapseHeader>
+                    <CollapseBody>
+                        <Card Border="Border.Is0" Margin="Margin.Is0">
+                            <CardBody Padding="Padding.Is0.Is2.FromLeft">
+                                <Fields Flex="Flex.AlignItems.Start">
+                                    <Field Horizontal="true">
+                                        <Span class="oi oi-fork" TextColor="TextColor.Info" style="width:auto;"></Span>
+                                        <FieldBody Width="Width.Is50">
+                                            <CardTitle Size="5" TextColor="TextColor.Black50">Erreger</CardTitle>
+                                        </FieldBody>
+                                    </Field>
+                                </Fields>
+                            </CardBody>
+                        </Card>
+                        @foreach (Pathogen p in m.Pathogens)
+                        {
+                            <Collapse Visible="@Collapsed">
+                                <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
+                                    <Heading Size="HeadingSize.Is6">
+                                        <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
+                                            <Table Narrow="true" Margin="Margin.Is0.FromBottom">
+                                                <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
+                                                    <TableRow>
+                                                        <TableHeaderCell>Name</TableHeaderCell>
+                                                        <TableHeaderCell>Nachweis</TableHeaderCell>
+                                                        <TableHeaderCell>Zeitstempel</TableHeaderCell>
+                                                        <TableHeaderCell>Häufigkeit</TableHeaderCell>
+                                                        <TableHeaderCell>Isolatnummer</TableHeaderCell>
+                                                    </TableRow>
+                                                </TableHeader>
+                                                <TableBody Background="Background.White">
+                                                    <TableRow>
+                                                        <TableRowCell>@p.Name</TableRowCell>
+                                                        <TableRowCell>@p.Result</TableRowCell>
+                                                        <TableRowCell>@p.Timestamp</TableRowCell>
+                                                        <TableRowCell>@p.Rate</TableRowCell>
+                                                        <TableRowCell>@p.IsolatNr</TableRowCell>
+                                                    </TableRow>
+                                                </TableBody>
+                                            </Table>
+                                        </Button>
+                                    </Heading>
+                                </CollapseHeader>
+                                <CollapseBody>
+                                    @if (p.Antibiograms != null)
+                                    {
+                                        @foreach (Antibiogram ab in p.Antibiograms)
+                                        {
+                                            <Card Border="Border.Is0" Margin="Margin.Is0">
+                                                <CardBody>
+                                                    <Span class="oi oi-beaker" TextColor="TextColor.Info" style="width:auto;"></Span>
+                                                    <CardTitle Size="5" TextColor="TextColor.Black50" Width="Width.Is50">Antibiogramm</CardTitle>
+                                                    <CardText>
+                                                        Antibiogrammzeit:&nbsp;
+                                                    </CardText>
+                                                </CardBody>
+                                                <Table Narrow="true">
+                                                    <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
+                                                        <TableRow>
+                                                            <TableHeaderCell>Antibiotikum</TableHeaderCell>
+                                                            <TableHeaderCell>Resistenz</TableHeaderCell>
+                                                            <TableHeaderCell>MHK</TableHeaderCell>
+                                                        </TableRow>
+                                                    </TableHeader>
+                                                    <TableBody>
+                                                        <TableRow>
+                                                            <TableRowCell>@ab.Antibiotic</TableRowCell>
+                                                            <TableRowCell>@ab.Resistance</TableRowCell>
+                                                            <TableRowCell>@ab.MinInhibitorConcentration</TableRowCell>
+                                                        </TableRow>
+                                                    </TableBody>
+                                                </Table>
+                                            </Card>
+                                        }
+                                    }
+                                </CollapseBody>
+                            </Collapse>
+                        }
+                    </CollapseBody>
+                </Collapse>
+            }
+        </CollapseBody>
+    </Collapse>
+
+    @code {
+        [Parameter]
+        public KeyValuePair<Hospitalization, List<LabResult>> Hospitalization { get; set; }
+
+        private bool Collapsed;
+    }

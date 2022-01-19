@@ -1,12 +1,11 @@
 ﻿@page "/patient"
 @page "/patient/{PatientID}"
 
-@using Blazorise;
+
 @using SmICSCoreLib.Factories.PatientInformation.PatientData;
 @using SmICSCoreLib.Factories.MiBi;
 @using SmICSCoreLib.Factories.MiBi.PatientView;
 @using SmICSCoreLib.Factories.General;
-@using SmICSWebApp.Pages.PatientView.Hospitalization;
 
 @inject IPatientDataFactory _patientData;
 @inject ILabResultFactory _labData;
@@ -54,21 +53,20 @@
 
     @if (patientResults != null)
     {
-        @foreach (KeyValuePair<Hospitalization, List<LabResult>> hosp in patientHistory)
+        @foreach (LabResult c in patientResults)
         {
-            <HospitalizationCard Hospitalization="hosp"/>       
+            
         }
     }
 
 </div>
 
-@code { 
-    [Parameter]
+@code { [Parameter]
     public string PatientID { get; set; }
 
     private Patient selectedPatient = new Patient();
     private PatientData patient;
-    private SortedDictionary<Hospitalization, List<LabResult>> patientHistory;
+    private List<LabResult> patientResults;
     private bool Collapsed { get; set; } = false;
 
     protected override void OnParametersSet()
@@ -90,8 +88,9 @@
 
     private void Submit()
     {
-       
+        //patient = _patientData.Process(PatientID);
+        //patientViews = _service.LoadData(PatientID);
         selectedPatient.PatientID = PatientID;
-        patientHistory = _labData.Process(selectedPatient, MedicalField.MICROBIOLOGY);
+        patientResults = _labData.Process(selectedPatient, MedicalField.MICROBIOLOGY);
     }
 }

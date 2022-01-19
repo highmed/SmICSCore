@@ -1,0 +1,55 @@
+﻿@using Blazorise;
+@using SmICSCoreLib.Factories.MiBi.PatientView;
+
+<Collapse Visible="@Collapsed">
+    <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
+        <Heading Size="HeadingSize.Is6">
+            <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
+                <Table Narrow="true" Margin="Margin.Is0.FromBottom">
+                    <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
+                        <TableRow>
+                            <TableHeaderCell>Probenart</TableHeaderCell>
+                            <TableHeaderCell>Labor-ID</TableHeaderCell>
+                            <TableHeaderCell>Zeitpunkt der Probeentnahme</TableHeaderCell>
+                            <TableHeaderCell>Zeitpunkt des Probeneingangs</TableHeaderCell>
+                            <TableHeaderCell>Körperstelle</TableHeaderCell>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody Background="Background.White">
+                        <TableRow>
+                            <TableRowCell>@Specimen.Kind</TableRowCell>
+                            <TableRowCell>@Specimen.LabID</TableRowCell>
+                            <TableRowCell>@Specimen.SpecimenCollectionDateTime</TableRowCell>
+                            <TableRowCell>@Specimen.SpecimenReceiptDate</TableRowCell>
+                            <TableRowCell>@Specimen.Location</TableRowCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </Button>
+        </Heading>
+    </CollapseHeader>
+    <CollapseBody>
+        <Card Border="Border.Is0" Margin="Margin.Is0">
+            <CardBody Padding="Padding.Is0.Is2.FromLeft">
+                <Fields Flex="Flex.AlignItems.Start">
+                    <Field Horizontal="true">
+                        <Span class="oi oi-fork" TextColor="TextColor.Info" style="width:auto;"></Span>
+                        <FieldBody Width="Width.Is50">
+                            <CardTitle Size="5" TextColor="TextColor.Black50">Erreger</CardTitle>
+                        </FieldBody>
+                    </Field>
+                </Fields>
+            </CardBody>
+        </Card>
+        @foreach (Pathogen p in v.Pathogens)
+        {
+        }
+    </CollapseBody>
+</Collapse>
+
+@code {
+    [Parameter]
+    public Specimen Specimen { get; set; }
+
+    private bool Collapsed;
+}

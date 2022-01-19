@@ -1,5 +1,6 @@
 ﻿using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.MiBi.PatientView;
+using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using System.Collections.Generic;
 
 namespace SmICSWebApp.Data.MedicalFinding
@@ -13,10 +14,10 @@ namespace SmICSWebApp.Data.MedicalFinding
             _resultFac = resultFac;
         }
 
-        public List<VisuLabResult> GetMedicalFinding(SmICSCoreLib.Factories.General.Patient patient)
+        public List<VisuLabResult> GetMedicalFinding(SmICSCoreLib.Factories.General.Patient patient, PathogenParameter pathogen)
         {
             List<VisuLabResult> labResults = new List<VisuLabResult>();
-            List<LabResult> results = _resultFac.Process(patient);
+            List<LabResult> results = _resultFac.Process(patient, pathogen);
             if (results != null)
             {
                 foreach (LabResult result in results)

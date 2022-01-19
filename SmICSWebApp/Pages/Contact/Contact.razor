@@ -1,6 +1,7 @@
 ﻿@page "/contact"
 
 @using SmICSWebApp.Data.Contact
+@using SmICSCoreLib.Factories.General
 
 @inject ContactService _contactService
 
@@ -72,6 +73,6 @@
 
     private void GetContacts()
     {
-        root = _contactService.LoadContactData(new SmICSCoreLib.Factories.General.Patient() { PatientID = PatientID});
+        root = _contactService.LoadContactData(new SmICSCoreLib.Factories.General.Patient() { PatientID = PatientID}, MedicalField.MICROBIOLOGY);
     }
 }

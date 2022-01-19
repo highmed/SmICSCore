@@ -1,0 +1,45 @@
+﻿@using Blazorise;
+@using SmICSCoreLib.Factories.MiBi.PatientView;
+@using SmICSCoreLib.Factories.MiBi;
+
+<Collapse Visible="@Collapsed">
+    <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
+        <Heading Size="HeadingSize.Is6">
+            <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
+                <Table Narrow="true" Margin="Margin.Is0.FromBottom">
+                    <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
+                        <TableRow>
+                            <TableHeaderCell>Name</TableHeaderCell>
+                            <TableHeaderCell>Nachweis</TableHeaderCell>
+                            <TableHeaderCell>Zeitstempel</TableHeaderCell>
+                            <TableHeaderCell>Häufigkeit</TableHeaderCell>
+                            <TableHeaderCell>Isolatnummer</TableHeaderCell>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody Background="Background.White">
+                        <TableRow>
+                            <TableRowCell>@Pathogen.Name</TableRowCell>
+                            <TableRowCell>@Pathogen.Result</TableRowCell>
+                            <TableRowCell>@Pathogen.Timestamp</TableRowCell>
+                            <TableRowCell>@Pathogen.Rate</TableRowCell>
+                            <TableRowCell>@Pathogen.IsolatNr</TableRowCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </Button>
+        </Heading>
+    </CollapseHeader>
+    <CollapseBody>
+        @if (Pathogen.Antibiograms != null)
+        {
+            @foreach (Antibiogram ab in Pathogen.Antibiograms)
+            {
+            }
+        }
+    </CollapseBody>
+</Collapse>
+@code {
+    [Parameter]
+    public Pathogen Pathogen { get; set; }
+    private bool Collapsed;
+}

@@ -9,7 +9,7 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
     public interface IInfectionStatusFactory
     {
         IRestDataAccess RestDataAccess { get; set; }
-
-        SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, PathogenParameter pathogen = null);
+        SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, string MedicalField);
+        SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, PathogenParameter pathogen);
     }
 }

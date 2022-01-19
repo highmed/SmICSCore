@@ -1,66 +1,32 @@
 ﻿using SmICSCoreLib.Factories.General;
+using SmICSCoreLib.Factories.MiBi.PatientView;
+using SmICSCoreLib.Factories.PatientMovementNew;
 using System.Collections.Generic;
 using System.Linq;
-using SmICSWebApp.Data.PatientView.Models;
-using SmICSCoreLib.Factories.PatientMovement;
-using SmICSCoreLib.Factories.Lab.MibiLabData;
 
 namespace SmICSWebApp.Data.PatientView
 {
     public class PatientViewService
     {
-        private readonly IPatientMovementFactory _move;
+        private readonly ILabResultFactory _labDataFac;
+        private readonly IHospitalizationFactory _hospFac;
 
-        private readonly IMibiPatientLaborDataFactory _mibi;
-
-        public PatientViewService(IPatientMovementFactory move, IMibiPatientLaborDataFactory mibi)
+        public PatientViewService(ILabResultFactory labDataFac, IHospitalizationFactory hospFac)
         {
-            _move = move;
-            _mibi = mibi;
-        }
-        public PatientViewData LoadData(string PatientID)
-        {
-            PatientListParameter param = new PatientListParameter { patientList = new List<string> { PatientID } };
-            List<PatientMovementModel> _movements = GetOrderedMovements(param);
-            PatientViewData data = GetCasesDictionary(_movements);
-            List<MibiLabDataModel> _labData = GetOrderedLabData(param);
-            GetLabDataToCaseID(_labData, _movements, data);
-
-            return data;
+            _labDataFac = labDataFac;
+            _hospFac = hospFac;
         }
 
-        #region LoadData Functions
-        private PatientViewData GetCasesDictionary(List<PatientMovementModel> _movements)
+        public SortedDictionary<Hospitalization, List<LabResult>> GetData(SmICSCoreLib.Factories.General.Patient patient)
         {
-            List<string> cases = _movements.Where(m => m.BewegungstypID == 1).Select(m => m.FallID).ToList();
-            PatientViewData casesDict = new PatientViewData();
-            foreach(string _case in cases)
+            SortedDictionary<Hospitalization, List<LabResult>> patientHistory = new SortedDictionary<Hospitalization, List<LabResult>>();
+            List<Hospitalization> hospitalizations = _hospFac.Process(patient).OrderByDescending(h => h.Admission.Date).ToList();
+            foreach(Hospitalization hosp in hospitalizations)
             {
-                casesDict.Add(new Models.Case { ID = _case }, new LabDataCollection());
+                List<LabResult> labs = _labDataFac.Process(hosp, MedicalField.MICROBIOLOGY).OrderByDescending(l => l.Specimens.Min(s => s.SpecimenCollectionDateTime)).ToList();
+                patientHistory.Add(hosp, labs);
             }
-            return casesDict;
+            return patientHistory;
         }
-        private void GetLabDataToCaseID(List<MibiLabDataModel> _labData, List<PatientMovementModel> _movements, PatientViewData data)
-        { 
-            foreach(MibiLabDataModel ld in _labData)
-            {
-                PatientMovementModel associatedMovement = _movements.Where(m => m.Beginn <= ld.ZeitpunktProbenentnahme && m.Ende >= ld.ZeitpunktProbenentnahme).FirstOrDefault();
-                
-                Models.LabData patView = new Models.LabData(ld, associatedMovement);
-                data[patView.CaseID].Add(new LabMetaData { ReportDate = patView.ZeitpunktProbenentnahme }, patView);
-
-            }
-        }
-
-        private List<PatientMovementModel> GetOrderedMovements(PatientListParameter param)
-        {
-            return _move.Process(param).OrderBy(m => m.FallID).ThenBy(m => m.BewegungstypID).ThenBy(m => m.Beginn).ToList();
-        }
-
-        private List<MibiLabDataModel> GetOrderedLabData(PatientListParameter param)
-        {
-            return _mibi.Process(param).OrderBy(l => l.CaseID).ThenBy(l => l.ZeitpunktProbenentnahme).ToList();
-        }
-        #endregion
     }
 }

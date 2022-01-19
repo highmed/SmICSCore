@@ -1,5 +1,4 @@
-﻿using SmICSCoreLib.Factories.General;
-using SmICSCoreLib.Factories.MiBi.Contact;
+﻿using SmICSCoreLib.Factories.MiBi.Contact;
 using SmICSCoreLib.Factories.MiBi.Nosocomial;
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
@@ -14,7 +13,6 @@ namespace SmICSWebApp.Data.Contact
         private readonly IContactFactory _contactFac;
         private readonly InfectionStatusFactory _infectionStatusFac;
         private readonly IHospitalizationFactory _hospitalizationFac;
-
         public ContactService(IContactFactory contactFac, InfectionStatusFactory infectionStatusFac, IHospitalizationFactory hospitalizationFac)
         {
             _contactFac = contactFac;
@@ -22,11 +20,11 @@ namespace SmICSWebApp.Data.Contact
             _hospitalizationFac = hospitalizationFac;
         }
 
-        public ContactRoot LoadContactData(SmICSCoreLib.Factories.General.Patient patient)
+        public ContactRoot LoadContactData(SmICSCoreLib.Factories.General.Patient patient, string MedicalField)
         {
             List<Hospitalization> hospitalizations = _hospitalizationFac.Process(patient);
             Hospitalization latestHospitalization = hospitalizations.Last();
-            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus =_infectionStatusFac.Process(patient);
+            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus =_infectionStatusFac.Process(patient, MedicalField);
             List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _contactFac.Process(latestHospitalization);
             ContactRoot rootContact = new ContactRoot()
             {
@@ -39,25 +37,25 @@ namespace SmICSWebApp.Data.Contact
             
             infectionStatus.Clear();
 
-            MergeInfectionStatusAndContactCases(ref rootContact, latestHospitalization, contactLocations);
+            MergeInfectionStatusAndContactCases(ref rootContact, latestHospitalization, contactLocations, MedicalField);
            
             return rootContact;
         }
 
-        public void GetPreviousHospitalizationContacts(ref ContactRoot rootContact, Hospitalization hospitalization)
+        public void GetPreviousHospitalizationContacts(ref ContactRoot rootContact, Hospitalization hospitalization, string MedicalField)
         {
-            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus = _infectionStatusFac.Process(hospitalization);
+            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus = _infectionStatusFac.Process(hospitalization, MedicalField);
             List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _contactFac.Process(hospitalization);
             rootContact.AddHospitalization(hospitalization, infectionStatus[hospitalization]["pathogen"], null, null);
-            MergeInfectionStatusAndContactCases(ref rootContact, hospitalization, contactLocations);
+            MergeInfectionStatusAndContactCases(ref rootContact, hospitalization, contactLocations, MedicalField);
         }
 
-        private void MergeInfectionStatusAndContactCases(ref ContactRoot rootContact, Hospitalization hospitalization, List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations) 
+        private void MergeInfectionStatusAndContactCases(ref ContactRoot rootContact, Hospitalization hospitalization, List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations, string MedicalField) 
         {
             List<Contact> contacts = new List<Contact>();
             foreach(SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay patLoc in contactLocations)
             {
-                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus = _infectionStatusFac.Process(patLoc);
+                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus = _infectionStatusFac.Process(patLoc, MedicalField);
                 SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay rootStay = rootContact.PatientStays[hospitalization].
                     Where(stay => 
                     stay.Admission <= patLoc.Discharge && 

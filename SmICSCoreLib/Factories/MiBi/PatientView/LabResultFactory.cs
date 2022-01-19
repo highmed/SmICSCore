@@ -19,33 +19,55 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             _specimenFac = specimenFac;
         }
 
-        public List<LabResult> Process(Patient patient, PathogenParameter pathogen = null)
+        public List<LabResult> Process(Patient patient, PathogenParameter pathogen)
         {
             List<LabResult> results = new List<LabResult>();
             List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
             foreach(Case c in cases)
             {
-                List<LabResult> tmpResult = Process(c, pathogen);
+                List<LabResult> tmpResult = Process(c, pathogen.MedicalField, pathogen);
                 results.AddRange(tmpResult);
             }
             return results;
         }
 
-        public List<LabResult> Process(Case Case, PathogenParameter pathogen = null)
+        public List<LabResult> Process(Patient patient, string MedicalField)
+        {
+            List<LabResult> results = new List<LabResult>();
+            List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
+            foreach (Case c in cases)
+            {
+                List<LabResult> tmpResult = Process(c, MedicalField);
+                results.AddRange(tmpResult);
+            }
+            return results;
+        }
+
+        public List<LabResult> Process(Case Case, string MedicalField)
+        {
+            return Process(Case, MedicalField, null);
+        }
+
+        public List<LabResult> Process(Case Case, PathogenParameter pathogen)
+        {
+            return Process(Case, pathogen.MedicalField, pathogen);
+        }
+
+        private List<LabResult> Process(Case Case, string MedicalField, PathogenParameter pathogen = null)
         {
             List<UID> uids = null;
             if (pathogen != null)
             {
                 uids = RestDataAccess.AQLQuery<UID>(GetPathogenCompositionsUIDs(Case, pathogen));
             }
-            List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case, pathogen, uids));
+            List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case, MedicalField, uids));
             foreach (LabResult result in results)
             {
-                SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID };
+                SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID, MedicalField = MedicalField};
                 result.Specimens = _specimenFac.Process(parameter, pathogen);
                 result.Specimens.RemoveAll(spec => spec.Pathogens == null);
                 result.Requirements = RestDataAccess.AQLQuery<Requirement>(RequirementQuery(new RequirementParameter(parameter)));
-                if(result.Specimens.Count > 0)
+                if (result.Specimens.Count > 0)
                 {
                     result.Sender = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID)).FirstOrDefault();
                 }
@@ -71,7 +93,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             };
         }
 
-        private AQLQuery MetaDataQuery(Case Case, PathogenParameter pathogen, List<UID> UIDs = null)
+        private AQLQuery MetaDataQuery(Case Case, string MedicalField , List<UID> UIDs = null)
         {
             string uidMatch = "";
             if(UIDs != null)
@@ -80,7 +102,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             }
             return new AQLQuery()
             {
-                Name = $"Meta Daten - {pathogen.MedicalField}",
+                Name = $"Meta Daten - {MedicalField}",
                 Query = @$"SELECT v/items[at0001]/value/value as CaseID,
                         c/context/other_context[at0001]/items[at0005]/value/value as Status,
                         d/data[at0001]/events[at0002]/time/value as ResultDateTime,
@@ -90,7 +112,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                         CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
                         CONTAINS (CLUSTER v[openEHR-EHR-CLUSTER.case_identification.v0] 
                         AND OBSERVATION d[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]) 
-                        WHERE c/name/value = '{pathogen.MedicalField}' 
+                        WHERE c/name/value = '{MedicalField}' 
                         AND e/ehr_status/subject/external_ref/id/value='{Case.PatientID}'
                         AND v/items[at0001]/value='{Case.CaseID}'
                         {uidMatch}

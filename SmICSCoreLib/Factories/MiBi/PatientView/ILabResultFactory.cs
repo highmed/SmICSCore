@@ -9,7 +9,9 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        List<LabResult> Process(Patient patient, PathogenParameter pathogen = null);
-        List<LabResult> Process(Case Case, PathogenParameter pathogen = null);
+        List<LabResult> Process(Case Case, string MedicalField);
+        List<LabResult> Process(Case Case, PathogenParameter pathogen);
+        List<LabResult> Process(Patient patient, string MedicalField);
+        List<LabResult> Process(Patient patient, PathogenParameter pathogen);
     }
 }

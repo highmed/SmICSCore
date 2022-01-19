@@ -1,0 +1,55 @@
+﻿@using Blazorise;
+@using SmICSCoreLib.Factories.MiBi.PatientView;@using SmICSCoreLib.Factories.MiBi.PatientView;
+
+<Collapse Visible="@Collapsed" Margin="Margin.Is5.Is0.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromLeft">
+    <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
+        <Heading Size="HeadingSize.Is6">
+            <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
+                <Table Narrow="true" Margin="Margin.Is0.FromBottom">
+                    <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
+                        <TableRow>
+                            <TableHeaderCell>Status</TableHeaderCell>
+                            <TableHeaderCell>Befundzeit</TableHeaderCell>
+                            <TableHeaderCell>Auftrags-ID</TableHeaderCell>
+                            <TableHeaderCell>Empfängerstandort</TableHeaderCell>
+                            <TableHeaderCell>Anforderungen</TableHeaderCell>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody Background="Background.White">
+                        <TableRow>
+                            <TableRowCell>@LabResult.Status</TableRowCell>
+                            <TableRowCell>@LabResult.ResultDateTime</TableRowCell>
+                            <TableRowCell>@LabResult.OrderID</TableRowCell>
+                            <TableRowCell>@LabResult.Sender</TableRowCell>
+                            <TableRowCell>@LabResult.Requirements</TableRowCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </Button>
+        </Heading>
+    </CollapseHeader>
+    <CollapseBody>
+        <Card Border="Border.Is0" Margin="Margin.Is0">
+            <CardBody Padding="Padding.Is0.Is2.FromLeft">
+                <Fields Flex="Flex.AlignItems.Start">
+                    <Field Horizontal="true">
+                        <Span class="oi oi-fork" TextColor="TextColor.Info" style="width:auto;"></Span>
+                        <FieldBody Width="Width.Is50">
+                            <CardTitle Size="5" TextColor="TextColor.Black50">Proben</CardTitle>
+                        </FieldBody>
+                    </Field>
+                </Fields>
+            </CardBody>
+        </Card>
+        @foreach (Specimen m in LabResult.Specimens)
+        {
+
+        }
+    </CollapseBody>
+ </Collapse>
+
+    @code {
+        [Parameter]
+        public LabResult LabResult { get; set; }
+        private bool Collapsed;
+    }
