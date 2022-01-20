@@ -22,6 +22,7 @@ using SmICSCoreLib.StatistikServices;
 using SmICSWebApp.Data.OutbreakDetection;
 using SmICSWebApp.Data.PatientView;
 using SmICSWebApp.Data.WardView;
+using SmICSWebApp.Data.Contact;
 
 namespace SmICSWebApp
 {
@@ -56,6 +57,7 @@ namespace SmICSWebApp
             services.AddSingleton<EhrDataService>();
             services.AddScoped<WardOverviewService>();
             services.AddScoped<PatientViewService>();
+            services.AddScoped<ContactService>();
 
             //AUTH - START 
 

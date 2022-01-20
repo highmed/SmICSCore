@@ -34,5 +34,6 @@ namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
         public string Departement { get; set; }
         public string DepartementID { get; set; }
         public string Room { get; set; }
+        public string StayingReason { get; set; }
     }
 }

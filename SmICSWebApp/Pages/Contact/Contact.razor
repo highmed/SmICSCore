@@ -5,74 +5,111 @@
 
 @inject ContactService _contactService
 
-<input type="text" /> <button type="button" @onclick="GetContacts"><i class="oi-magnifying-glass"></i></button>
+<div class="container-fluid">
+    <div class="row">
+        <div class="card">
+            <div ="card-body">
+                <EditForm Model="@contact" OnValidSubmit="@Submit">
+                    <label for="patID">PatientID:</label>
+                    <input type="text" @bind="contact.PatientID" id="patID" />
+                    <label for="pathogen">Pathogen:</label>
+                    <input type="text" id="pathogen" list="pathogenList" @bind="contact.Pathogen" />
+                    <datalist id="pathogenList">
+                        <option>Staphylococcus aureus</option>
+                    </datalist>
+                    <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button>
+                </EditForm>
+            </div>
+        </div>
+    </div>
 
-@if(root != null)
-{   
-    <div class="float-start">
-        Vorheriger Fall
-    </div>
-    <div class="float-start">
-    <h2 class="text-center">@PatientID</h2>
-    <h3 class="text-center">Fall: @root.CurrentHospitalization.CaseID</h3>
-    <h3 class="text-center">Zeitraum: @root.CurrentHospitalization.Admission.Date.ToString("yyyy-MM-dd") + (@root.CurrentHospitalization.Discharge.Date.HasValue ? (" - " + @root.CurrentHospitalization.Discharge.Date.Value.ToString("yyyy-MM-dd") : " - "))</h3>
-    </div>
-    <div class="float-start">
-        Anpassen
-    </div>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Kontaktpatient</th>
-                <th>Raum</th>
-                <th>Station</th>
-                <th>Fachabteilung</th>
-                <th>Kontaktzeitraum</th>
-            </tr>
-        </thead>
-        <tbody>
-
-    @foreach(Data.Contact.Contact contact in root.Contacts[root.CurrentHospitalization])
+    @if (root != null)
     {
-        <tr>
-            <td>
-                @if(contact.InfectionStatus.Values.Any(x => x.Nosocomial))
-                {
-                    <span class="text-danger">@contact.PatientID</span>
-                }
-                else if(contact.InfectionStatus.Values.Any(x => x.Known))
-                {
-                    <span class="text-warning">@contact.PatientID</span>
-                }
-                @contact.PatientID
-            </td>
-            <td>
-                (@contact.RoomContact ? @contact.PatientLocation.Room : "")
-            </td>
-            <td>
-                (@contact.RoomContact ? @contact.PatientLocation.Room : "")
-            </td>
-            <td>
-                (@contact.DepartementContact ? @contact.PatientLocation.Departement : "")
-            </td>
-            <td>
-                @contact.ContactStart - (@contact.ContactEnd.HasValue ? @contact.ContactEnd.Value : "")
-            </td>
-        </tr>
+        <div class="row">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-2">
+                            Vorheriger Fall
+                        </div>
+                        <div class="col-8">
+                            <h2 class="text-center">@contact.PatientID</h2>
+                            <h4 class="text-center">Fall: @root.CurrentHospitalization.CaseID</h4>
+                            <h4 class="text-center">Zeitraum: @root.CurrentHospitalization.Admission.Date.ToString("yyyy-MM-dd") - @(root.CurrentHospitalization.Discharge.Date.HasValue ? (root.CurrentHospitalization.Discharge.Date.Value.ToString("yyyy-MM-dd")) : null)</h4>
+                        </div>
+                        <div class="col-2">
+                            Anpassen
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <div class="col-8">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Kontaktpatient</th>
+                                        <th class="text-center">Raum</th>
+                                        <th class="text-center">Station</th>
+                                        <th class="text-center">Fachabteilung</th>
+                                        <th class="text-center">Kontaktzeitraum</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (Data.Contact.Contact contact in root.Contacts[root.CurrentHospitalization])
+                                    {
+                                        <tr>
+                                            <td class="text-center">
+                                                @if (contact.InfectionStatus.Values.Any(x => x.Nosocomial))
+                                                {
+                                                    <span class="text-danger">@contact.PatientID</span>
+                                                }
+                                                else if (contact.InfectionStatus.Values.Any(x => x.Known))
+                                                {
+                                                    <span class="text-primary">@contact.PatientID</span>
+                                                }
+                                                else
+                                                {
+                                                    @contact.PatientID
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                @(contact.RoomContact ? contact.PatientLocation.Room : "")
+                                            </td>
+                                            <td>
+                                                @(contact.WardContact ? contact.PatientLocation.Ward : "")
+                                            </td>
+                                            <td class="text-center">
+                                                @(contact.DepartementContact ? contact.PatientLocation.Departement : "")
+                                            </td>
+                                            <td class="text-center">
+                                                @contact.ContactStart - @(contact.ContactEnd.HasValue ? contact.ContactEnd.Value : "")
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            </div>
+                            <div class="col-2"></div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        
     }
-        </tbody>
-    </table>
-}
+</div>
 
 @code {
     [Parameter]
-    public string PatientID { get; set; }
+    public ContactParameter contact { get; set; } = new ContactParameter();
 
     private ContactRoot root = null;
 
-    private void GetContacts()
+    private void Submit()
     {
-        root = _contactService.LoadContactData(new SmICSCoreLib.Factories.General.Patient() { PatientID = PatientID}, MedicalField.MICROBIOLOGY);
+        root = _contactService.LoadContactData(contact);
     }
+
 }

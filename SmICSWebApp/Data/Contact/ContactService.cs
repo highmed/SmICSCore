@@ -1,5 +1,6 @@
 ﻿using SmICSCoreLib.Factories.MiBi.Contact;
 using SmICSCoreLib.Factories.MiBi.Nosocomial;
+using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 using System;
@@ -20,42 +21,44 @@ namespace SmICSWebApp.Data.Contact
             _hospitalizationFac = hospitalizationFac;
         }
 
-        public ContactRoot LoadContactData(SmICSCoreLib.Factories.General.Patient patient, string MedicalField)
+        public ContactRoot LoadContactData(ContactParameter parameter)
         {
-            List<Hospitalization> hospitalizations = _hospitalizationFac.Process(patient);
+            List<Hospitalization> hospitalizations = _hospitalizationFac.Process(parameter);
             Hospitalization latestHospitalization = hospitalizations.Last();
-            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus =_infectionStatusFac.Process(patient, MedicalField);
+            PathogenParameter pathogenParameter = new PathogenParameter() { Name = parameter.Pathogen };
+            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus =_infectionStatusFac.Process(parameter, pathogenParameter);
             List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _contactFac.Process(latestHospitalization);
             ContactRoot rootContact = new ContactRoot()
             {
                 CurrentHospitalization = latestHospitalization,
                 Hospitalizations = hospitalizations,
-                InfectionStatus = new Dictionary<Hospitalization, Dictionary<string, InfectionStatus>> { { latestHospitalization, infectionStatus[latestHospitalization]["pathogen"] } },
-                PatientStays = new Dictionary<Hospitalization, List<PatientStay>> { { latestHospitalization, null } },
+                InfectionStatus = new Dictionary<Hospitalization, Dictionary<string, InfectionStatus>> { { latestHospitalization, infectionStatus[latestHospitalization][parameter.Pathogen] } },
+                PatientStays = new Dictionary<Hospitalization, List<PatientStay>> { { latestHospitalization, contactLocations } },
                 Contacts = new Dictionary<Hospitalization, List<Contact>> { { latestHospitalization, null } }
             }; 
             
             infectionStatus.Clear();
 
-            MergeInfectionStatusAndContactCases(ref rootContact, latestHospitalization, contactLocations, MedicalField);
+            MergeInfectionStatusAndContactCases(ref rootContact, latestHospitalization, contactLocations, pathogenParameter);
            
             return rootContact;
         }
 
-        public void GetPreviousHospitalizationContacts(ref ContactRoot rootContact, Hospitalization hospitalization, string MedicalField)
+        public void GetPreviousHospitalizationContacts(ref ContactRoot rootContact, Hospitalization hospitalization, ContactParameter parameter)
         {
-            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus = _infectionStatusFac.Process(hospitalization, MedicalField);
+            PathogenParameter pathogenParameter = new PathogenParameter() { Name = parameter.Pathogen };
+            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus = _infectionStatusFac.Process(hospitalization, pathogenParameter);
             List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _contactFac.Process(hospitalization);
-            rootContact.AddHospitalization(hospitalization, infectionStatus[hospitalization]["pathogen"], null, null);
-            MergeInfectionStatusAndContactCases(ref rootContact, hospitalization, contactLocations, MedicalField);
+            rootContact.AddHospitalization(hospitalization, infectionStatus[hospitalization][pathogenParameter.Name], null, null);
+            MergeInfectionStatusAndContactCases(ref rootContact, hospitalization, contactLocations, pathogenParameter);
         }
 
-        private void MergeInfectionStatusAndContactCases(ref ContactRoot rootContact, Hospitalization hospitalization, List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations, string MedicalField) 
+        private void MergeInfectionStatusAndContactCases(ref ContactRoot rootContact, Hospitalization hospitalization, List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations, PathogenParameter pathogenParameter)
         {
             List<Contact> contacts = new List<Contact>();
             foreach(SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay patLoc in contactLocations)
             {
-                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus = _infectionStatusFac.Process(patLoc, MedicalField);
+                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus = _infectionStatusFac.Process(patLoc, pathogenParameter);
                 SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay rootStay = rootContact.PatientStays[hospitalization].
                     Where(stay => 
                     stay.Admission <= patLoc.Discharge && 
@@ -64,7 +67,9 @@ namespace SmICSWebApp.Data.Contact
                     FirstOrDefault();
                 Contact contact = new Contact
                 {
-                    InfectionStatus = infectionStatus.First().Value["pathogen"],
+                    PatientID = patLoc.PatientID,
+                    CaseID = patLoc.CaseID,
+                    InfectionStatus = infectionStatus.First().Value[pathogenParameter.Name],
                     PatientLocation = patLoc,
                     ContactStart = rootStay.Admission >= patLoc.Admission ? rootStay.Admission : patLoc.Admission,
                     ContactEnd = rootStay.Discharge <= patLoc.Discharge ? rootStay.Discharge : patLoc.Discharge,
