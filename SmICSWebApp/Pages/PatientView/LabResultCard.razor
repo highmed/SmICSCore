@@ -1,7 +1,7 @@
 ﻿@using Blazorise;
-@using SmICSCoreLib.Factories.MiBi.PatientView;@using SmICSCoreLib.Factories.MiBi.PatientView;
+@using SmICSCoreLib.Factories.MiBi.PatientView;
 
-<Collapse Visible="@Collapsed" Margin="Margin.Is5.Is0.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromLeft">
+<Collapse Visible="@Collapsed">
     <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
         <Heading Size="HeadingSize.Is6">
             <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
@@ -20,8 +20,8 @@
                             <TableRowCell>@LabResult.Status</TableRowCell>
                             <TableRowCell>@LabResult.ResultDateTime</TableRowCell>
                             <TableRowCell>@LabResult.OrderID</TableRowCell>
-                            <TableRowCell>@LabResult.Sender</TableRowCell>
-                            <TableRowCell>@LabResult.Requirements</TableRowCell>
+                            <TableRowCell>@LabResult.Sender.Ward</TableRowCell>
+                            <TableRowCell>@LabResult.Requirement</TableRowCell>
                         </TableRow>
                     </TableBody>
                 </Table>
@@ -43,13 +43,14 @@
         </Card>
         @foreach (Specimen m in LabResult.Specimens)
         {
-
+            <SmICSWebApp.Data.PatienView.SpecimenCard Specimen="m" />
         }
     </CollapseBody>
- </Collapse>
+</Collapse>
 
-    @code {
-        [Parameter]
-        public LabResult LabResult { get; set; }
-        private bool Collapsed;
-    }
+@code {
+    [Parameter]
+    public LabResult LabResult { get; set; }
+
+    private bool Collapsed;
+}

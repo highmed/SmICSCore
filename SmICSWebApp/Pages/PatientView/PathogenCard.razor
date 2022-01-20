@@ -1,6 +1,5 @@
 ﻿@using Blazorise;
 @using SmICSCoreLib.Factories.MiBi.PatientView;
-@using SmICSCoreLib.Factories.MiBi;
 
 <Collapse Visible="@Collapsed">
     <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
@@ -32,9 +31,7 @@
     <CollapseBody>
         @if (Pathogen.Antibiograms != null)
         {
-            @foreach (Antibiogram ab in Pathogen.Antibiograms)
-            {
-            }
+            <AntibiogramCard Antibiograms="Pathogen.Antibiograms"/>
         }
     </CollapseBody>
 </Collapse>

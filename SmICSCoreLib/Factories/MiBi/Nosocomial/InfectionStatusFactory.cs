@@ -33,7 +33,7 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
         private SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, string MedicalField = null, PathogenParameter pathogen = null)
         {
             List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
-            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase = new SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>(new HospitalizationComparer());
+            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase = new SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>();
 
             foreach (Case c in cases)
             {
@@ -146,13 +146,5 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             //Needs a saving possibility for different nosocomial thresholds
             return 3;
         }
-    }
-
-    internal class HospitalizationComparer : IComparer<Hospitalization>
-    {
-        public int Compare(Hospitalization x, Hospitalization y)
-        {
-            return x.Admission.Date.CompareTo(y.Admission.Date);
-        }
-    }
+    }    
 }

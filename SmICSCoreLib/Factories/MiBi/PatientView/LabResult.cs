@@ -11,7 +11,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         public DateTime ResultDateTime { get; set; }
         public string OrderID { get; set; }
         public PatientLocation Sender { get; set; }
-        public List<Requirement> Requirements { get; set; }
+        public string Requirement { get; set; }
         public List<Specimen> Specimens { get; set; }
         public string UID { get; set; }
         public object Comment { get; set; }

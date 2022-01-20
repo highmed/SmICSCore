@@ -66,7 +66,6 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                 SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID, MedicalField = MedicalField};
                 result.Specimens = _specimenFac.Process(parameter, pathogen);
                 result.Specimens.RemoveAll(spec => spec.Pathogens == null);
-                result.Requirements = RestDataAccess.AQLQuery<Requirement>(RequirementQuery(new RequirementParameter(parameter)));
                 if (result.Specimens.Count > 0)
                 {
                     result.Sender = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID)).FirstOrDefault();
@@ -107,6 +106,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                         c/context/other_context[at0001]/items[at0005]/value/value as Status,
                         d/data[at0001]/events[at0002]/time/value as ResultDateTime,
                         d/protocol[at0004]/items[at0094]/items[at0063]/value/id as OrderID,
+                        d/protocol[at0004]/items[at0094]/items[at0106]/value/value as Requirement,
                         c/uid/value as UID
                         FROM EHR e
                         CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
@@ -117,21 +117,6 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                         AND v/items[at0001]/value='{Case.CaseID}'
                         {uidMatch}
                         ORDER BY d/protocol[at0004]/items[at0094]/items[at0063]/value/id ASC"
-            };
-        }
-
-        private AQLQuery RequirementQuery(RequirementParameter parameter)
-        {
-            return new AQLQuery()
-            {
-                Name = "Anforderungen",
-                Query = @$"SELECT DISTINCT
-                        a/protocol[at0004]/items[at0094]/items[at0106]/value/value as Name
-                        FROM EHR e
-                        CONTAINS COMPOSITION c
-                        CONTAINS (CLUSTER m[openEHR-EHR-CLUSTER.case_identification.v0] 
-                        AND OBSERVATION a[openEHR-EHR-OBSERVATION.laboratory_test_result.v1])
-                        WHERE c/uid/value = '{parameter.UID}'"
             };
         }
     }

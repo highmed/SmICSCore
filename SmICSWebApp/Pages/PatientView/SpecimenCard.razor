@@ -1,4 +1,6 @@
-﻿@using Blazorise;
+﻿@namespace SmICSWebApp.Data.PatienView
+
+@using Blazorise;
 @using SmICSCoreLib.Factories.MiBi.PatientView;
 
 <Collapse Visible="@Collapsed">
@@ -41,8 +43,9 @@
                 </Fields>
             </CardBody>
         </Card>
-        @foreach (Pathogen p in v.Pathogens)
+        @foreach (Pathogen p in Specimen.Pathogens)
         {
+            <SmICSWebApp.Pages.PatientView.PathogenCard Pathogen="p" />
         }
     </CollapseBody>
 </Collapse>

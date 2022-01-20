@@ -1,0 +1,55 @@
+﻿@using Blazorise;
+@using SmICSCoreLib.Factories.MiBi.PatientView;
+@using SmICSCoreLib.Factories.PatientMovementNew;
+
+
+<Collapse Visible="@Collapsed" Margin="Margin.Is5.Is0.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromLeft">
+    <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
+        <Heading Size="HeadingSize.Is6">
+            <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
+                <Table Narrow="true" Margin="Margin.Is0.FromBottom">
+                    <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
+                        <TableRow>
+                            <TableHeaderCell>Fallkennung</TableHeaderCell>
+                            <TableHeaderCell>Aufnahme</TableHeaderCell>
+                            <TableHeaderCell>Entlassung-ID</TableHeaderCell>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody Background="Background.White">
+                        <TableRow>
+                            <TableRowCell>@Hospitalization.Key.CaseID</TableRowCell>
+                            <TableRowCell>@Hospitalization.Key.Admission.Date.Date.ToString("yyyy-MM-dd")</TableRowCell>
+                            <TableRowCell>@(Hospitalization.Key.Discharge.Date.HasValue ? Hospitalization.Key.Discharge.Date.Value.Date.ToString("yyyy-MM-dd") : "-")</TableRowCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </Button>
+        </Heading>
+    </CollapseHeader>
+    <CollapseBody>
+        <Card Border="Border.Is0" Margin="Margin.Is0">
+            <CardBody Padding="Padding.Is0.Is2.FromLeft">
+                <Fields Flex="Flex.AlignItems.Start">
+                    <Field Horizontal="true">
+                        <Span class="oi oi-fork" TextColor="TextColor.Info" style="width:auto;"></Span>
+                        <FieldBody Width="Width.Is50">
+                            <CardTitle Size="5" TextColor="TextColor.Black50">Befund</CardTitle>
+                        </FieldBody>
+                    </Field>
+                </Fields>
+            </CardBody>
+        </Card>
+        @foreach (LabResult labResult in Hospitalization.Value)
+        {
+            <LabResultCard LabResult="labResult" />
+        }
+    </CollapseBody>
+</Collapse>
+
+
+@code {
+    [Parameter]
+    public KeyValuePair<Hospitalization, List<LabResult>> Hospitalization { get; set; }
+
+    private bool Collapsed;
+}

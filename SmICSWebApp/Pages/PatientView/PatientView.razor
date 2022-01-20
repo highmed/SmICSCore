@@ -1,16 +1,16 @@
 ﻿@page "/patient"
 @page "/patient/{PatientID}"
 
-
+@using Blazorise;
 @using SmICSCoreLib.Factories.PatientInformation.PatientData;
-@using SmICSCoreLib.Factories.MiBi;
+@using SmICSCoreLib.Factories.PatientMovementNew
 @using SmICSCoreLib.Factories.MiBi.PatientView;
 @using SmICSCoreLib.Factories.General;
+@using SmICSWebApp.Data.PatientView;
 
 @inject IPatientDataFactory _patientData;
-@inject ILabResultFactory _labData;
-
-<Card Border="Border.Is0" Padding="Padding.Is2.FromLeft">
+@inject PatientViewService  _service;
+<!--<Card Border="Border.Is0" Padding="Padding.Is2.FromLeft">
     <CardBody Padding="Padding.Is0.FromTop">
         <CardTitle TextColor="TextColor.Dark">
             <h1 class="welcome-header-patient">Patientenansicht</h1>
@@ -20,7 +20,7 @@
             Hier könnte Ihr Text stehen!
         </CardText>
     </CardBody>
-</Card>
+</Card>-->
 <div style="margin-left: 2%; margin-right: 2%;">
     <Card Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromLeft">
         <CardBody Padding="Padding.Is2" Background="Background.Light" Class="box-style">
@@ -46,27 +46,30 @@
 
     @if (patient == null)
     {
-        <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @PatientID</Heading> }
+        <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @PatientID</Heading> 
+    }
     else
     {
-        <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @patient.Name</Heading>}
+        <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @patient.Name</Heading>
+    }
 
     @if (patientResults != null)
     {
-        @foreach (LabResult c in patientResults)
+        @foreach (KeyValuePair<Hospitalization, List<LabResult>> kvp in patientResults)
         {
-            
+            <HospitalizationCard Hospitalization="kvp" />
         }
     }
 
 </div>
 
-@code { [Parameter]
+@code {
+    [Parameter]
     public string PatientID { get; set; }
 
     private Patient selectedPatient = new Patient();
     private PatientData patient;
-    private List<LabResult> patientResults;
+    private SortedDictionary<Hospitalization, List<LabResult>> patientResults;
     private bool Collapsed { get; set; } = false;
 
     protected override void OnParametersSet()
@@ -91,6 +94,6 @@
         //patient = _patientData.Process(PatientID);
         //patientViews = _service.LoadData(PatientID);
         selectedPatient.PatientID = PatientID;
-        patientResults = _labData.Process(selectedPatient, MedicalField.MICROBIOLOGY);
+        patientResults = _service.GetData(selectedPatient);
     }
 }

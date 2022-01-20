@@ -18,16 +18,15 @@
             </TableRow>
         </TableHeader>
         <TableBody>
-            <TableRow>
-                <TableRowCell>@ab.Antibiotic</TableRowCell>
-                <TableRowCell>@ab.Resistance</TableRowCell>
-                <TableRowCell>@ab.MinInhibitorConcentration</TableRowCell>
-            </TableRow>
+            @foreach(Antibiogram ab in Antibiograms)
+            {
+                <AntibiogramTableRow Antibiogram="ab" />
+            }
         </TableBody>
     </Table>
 </Card>
 
 @code {
     [Parameter]
-    public Antibiogram ab { get; set; }
+    public List<Antibiogram> Antibiograms { get; set; }
 }

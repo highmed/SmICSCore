@@ -1,0 +1,12 @@
+﻿@using Blazorise;
+@using SmICSCoreLib.Factories.MiBi;
+<TableRow>
+    <TableRowCell>@Antibiogram.Antibiotic</TableRowCell>
+    <TableRowCell>@Antibiogram.Resistance</TableRowCell>
+    <TableRowCell>@Antibiogram.MinInhibitorConcentration</TableRowCell>
+</TableRow>
+
+@code {
+    [Parameter]
+    public Antibiogram Antibiogram { get; set; }
+}

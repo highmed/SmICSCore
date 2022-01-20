@@ -23,7 +23,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             }
         }
         public string ResultString { private get; set; }
-        public DateTime Timestamp { get; set; }
+        public DateTime? Timestamp { get; set; }
         private string _rate;
         public string Rate
         {
