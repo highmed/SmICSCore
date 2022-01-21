@@ -16,5 +16,6 @@ namespace SmICSWebApp.Data.WardView
         public Dictionary<string, InfectionStatus> InfectionStatus { get; internal set; }
         public PatientData PatientData { get; internal set; }
         public string PatientID { get; internal set; }
+        public string Pathogen { get; internal set; }
     }
 }

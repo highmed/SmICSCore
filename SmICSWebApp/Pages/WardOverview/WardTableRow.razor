@@ -6,7 +6,7 @@
 
         <ContextMenu Id="@Patient.PatientID">
             <Item OnClick="@OnContextClick"><a href="/patient/@(Patient.PatientID)">Patientenansicht</a></Item>
-            <Item OnClick="@OnContextClick"><a href="/contact/@(Patient.PatientID)"> Kontakte </a> </Item>
+            <Item OnClick="@OnContextClick"><a href="/contact/@(Patient.PatientID)/@(Patient.Pathogen)"> Kontakte </a> </Item>
         </ContextMenu>
 
         <ContextMenuTrigger MenuId="@Patient.PatientID">

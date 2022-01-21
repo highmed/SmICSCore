@@ -30,6 +30,13 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             return Process(patient, null, pathogen);
         }
 
+        public SortedList<Hospitalization, InfectionStatus> Process(Patient patient, PathogenParameter pathogen, string Resistence)
+        {
+            SortedList<Hospitalization, InfectionStatus> retVal = 
+            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = Process(patient, null, pathogen);
+            
+        }
+
         private SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, string MedicalField = null, PathogenParameter pathogen = null)
         {
             List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
@@ -55,6 +62,7 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             }
             return infectionInformationByCase;
         }
+
         private void DetermineInfectionInformation(ref Dictionary<string, Dictionary<string, InfectionStatus>> infectionInformation, List<LabResult> results, Hospitalization hospitalization, SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase)
         {
             if (results != null)

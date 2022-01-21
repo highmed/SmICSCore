@@ -44,13 +44,25 @@ namespace SmICSWebApp.Data.Contact
             return rootContact;
         }
 
-        public void GetPreviousHospitalizationContacts(ref ContactRoot rootContact, Hospitalization hospitalization, ContactParameter parameter)
+        public void GetPreviousHospitalizationContacts(ref ContactRoot rootContact, ContactParameter parameter)
         {
-            PathogenParameter pathogenParameter = new PathogenParameter() { Name = parameter.Pathogen };
-            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus = _infectionStatusFac.Process(hospitalization, pathogenParameter);
-            List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _contactFac.Process(hospitalization);
-            rootContact.AddHospitalization(hospitalization, infectionStatus[hospitalization][pathogenParameter.Name], null, null);
-            MergeInfectionStatusAndContactCases(ref rootContact, hospitalization, contactLocations, pathogenParameter);
+            int index = rootContact.Hospitalizations.IndexOf(rootContact.CurrentHospitalization);
+            Hospitalization prevHospitalization = rootContact.Hospitalizations[index - 1];
+            if (rootContact.Contacts[prevHospitalization] is null)
+            {
+                PathogenParameter pathogenParameter = new PathogenParameter() { Name = parameter.Pathogen };
+                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus = _infectionStatusFac.Process(prevHospitalization, pathogenParameter);
+                List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _contactFac.Process(prevHospitalization);
+                rootContact.AddHospitalization(prevHospitalization, infectionStatus[prevHospitalization][pathogenParameter.Name], null, null);
+                MergeInfectionStatusAndContactCases(ref rootContact, prevHospitalization, contactLocations, pathogenParameter);
+            }
+            rootContact.CurrentHospitalization = prevHospitalization;
+        }
+
+        public List<string> GetFilter(string pathogen)
+        {
+            List<string> filter = Rules.GetPossibleMREClasses(pathogen);
+            return filter;
         }
 
         private void MergeInfectionStatusAndContactCases(ref ContactRoot rootContact, Hospitalization hospitalization, List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations, PathogenParameter pathogenParameter)
@@ -58,26 +70,30 @@ namespace SmICSWebApp.Data.Contact
             List<Contact> contacts = new List<Contact>();
             foreach(SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay patLoc in contactLocations)
             {
-                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus = _infectionStatusFac.Process(patLoc, pathogenParameter);
-                SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay rootStay = rootContact.PatientStays[hospitalization].
-                    Where(stay => 
-                    stay.Admission <= patLoc.Discharge && 
-                    stay.Discharge >= stay.Admission && 
-                    patLoc.Ward == stay.Ward).
-                    FirstOrDefault();
-                Contact contact = new Contact
+                if (patLoc.PatientID != rootContact.Hospitalizations.Last().PatientID)
                 {
-                    PatientID = patLoc.PatientID,
-                    CaseID = patLoc.CaseID,
-                    InfectionStatus = infectionStatus.First().Value[pathogenParameter.Name],
-                    PatientLocation = patLoc,
-                    ContactStart = rootStay.Admission >= patLoc.Admission ? rootStay.Admission : patLoc.Admission,
-                    ContactEnd = rootStay.Discharge <= patLoc.Discharge ? rootStay.Discharge : patLoc.Discharge,
-                    RoomContact = rootStay.Room != null && rootStay.Room == patLoc.Room ? true : false,
-                    WardContact = rootStay.Ward != null && rootStay.Ward == patLoc.Ward ? true : false,
-                    DepartementContact = rootStay.DepartementID != null && rootStay.DepartementID == patLoc.DepartementID ? true : false
-                };
-                contacts.Add(contact);
+                    SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionStatus = _infectionStatusFac.Process(patLoc, pathogenParameter);
+                    SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay rootStay = rootContact.PatientStays[hospitalization].
+                        Where(stay =>
+                        stay.Admission <= patLoc.Discharge &&
+                        stay.Discharge >= stay.Admission &&
+                        patLoc.Ward == stay.Ward).
+                        FirstOrDefault();
+                    Contact contact = new Contact
+                    {
+                        PatientID = patLoc.PatientID,
+                        CaseID = patLoc.CaseID,
+                        InfectionStatus = infectionStatus.First().Value[pathogenParameter.Name],
+                        PatientLocation = patLoc,
+                        ContactStart = rootStay.Admission >= patLoc.Admission ? rootStay.Admission : patLoc.Admission,
+                        ContactEnd = rootStay.Discharge <= patLoc.Discharge ? rootStay.Discharge : patLoc.Discharge,
+                        RoomContact = rootStay.Room != null && rootStay.Room == patLoc.Room ? true : false,
+                        WardContact = rootStay.Ward != null && rootStay.Ward == patLoc.Ward ? true : false,
+                        StatusDate = infectionStatus.First().Value.Values.Any(i => i.Known) ? _hospitalizationFac.Process(patLoc).Admission.Date : null;
+                        DepartementContact = rootStay.DepartementID != null && rootStay.DepartementID == patLoc.DepartementID ? true : false
+                    };
+                    contacts.Add(contact);
+                }
                 
             }
             rootContact.Contacts[hospitalization] = contacts;

@@ -16,7 +16,6 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView.Parameter
             } 
         }
         public string LabID { get; internal set; }
-
         public PathogenParameter() { }
         public PathogenParameter(SpecimenParameter parameter) : base(parameter) {}
         public PathogenParameter(PathogenParameter parameter) : base(parameter) 

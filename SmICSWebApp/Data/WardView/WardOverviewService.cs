@@ -37,6 +37,7 @@ namespace SmICSWebApp.Data.WardView
                     PathogenParameter pathogenParameter = new PathogenParameter() { Name = parameter.Pathogen };
                     Dictionary<string, InfectionStatus> infectionStatus = _infectionStatusFac.Process(c, pathogenParameter).Last().Value.ContainsKey(parameter.Pathogen) ? _infectionStatusFac.Process(c, pathogenParameter).Last().Value[parameter.Pathogen] : null;
                     WardPatient patient = new WardPatient();
+                    patient.Pathogen = parameter.Pathogen;
                     patient.InfectionStatus = infectionStatus;
                     PatientStay stay = patientStays.Where(stay => stay.PatientID == c.PatientID).FirstOrDefault();
                     patient.PatientID = stay.PatientID;
