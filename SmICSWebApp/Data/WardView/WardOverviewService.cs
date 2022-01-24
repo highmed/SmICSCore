@@ -2,6 +2,7 @@
 using SmICSCoreLib.Factories.MiBi.Nosocomial;
 using SmICSCoreLib.Factories.MiBi.PatientView;
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
+using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,8 @@ namespace SmICSWebApp.Data.WardView
                 foreach (Case c in cases)
                 {
                     PathogenParameter pathogenParameter = new PathogenParameter() { Name = parameter.Pathogen };
-                    Dictionary<string, InfectionStatus> infectionStatus = _infectionStatusFac.Process(c, pathogenParameter).Last().Value.ContainsKey(parameter.Pathogen) ? _infectionStatusFac.Process(c, pathogenParameter).Last().Value[parameter.Pathogen] : null;
+                    SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionStatusByCase = _infectionStatusFac.Process(c, pathogenParameter);
+                    Dictionary<string, InfectionStatus> infectionStatus = infectionStatusByCase.Count > 0 ? infectionStatusByCase.Last().Value : null; 
                     WardPatient patient = new WardPatient();
                     patient.Pathogen = parameter.Pathogen;
                     patient.InfectionStatus = infectionStatus;
