@@ -47,7 +47,10 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = Process(patient, null, pathogen);
             for(int i = 0; i < tmp.Keys.Count; i++)
             {
-                retVal.Add(tmp.Keys[i], tmp[tmp.Keys[i]][pathogen.Name][Resistence]);
+                if (tmp[tmp.Keys[i]].ContainsKey(pathogen.Name))
+                {
+                    retVal.Add(tmp.Keys[i], tmp[tmp.Keys[i]][pathogen.Name][Resistence]);
+                }
             }
             return retVal;
         }

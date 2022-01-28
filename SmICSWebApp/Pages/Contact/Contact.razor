@@ -65,13 +65,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body bottom-border">
                     <div class="row">
                         <div class="col-2">
                             <div id="mySidepanel" class="sidepanel @(Collapsed ? "open" : "close")">
-                                    <button type="button" class="btn btn-sm btn-outline-primary text-blue btn-top-right" hidden="@(!Collapsed)" @onclick="@(()=>Collapsed = !Collapsed)">
-                                        <i class="oi oi-arrow-left"></i>
-                                    </button>
+                                <button type="button" class="btn btn-sm btn-outline-primary text-blue btn-top-right" hidden="@(!Collapsed)" @onclick="@(()=>Collapsed = !Collapsed)">
+                                    <i class="oi oi-arrow-left"></i>
+                                </button>
                                 <EditForm Model="_filterParameter" OnSubmit="Filter">
                                     <div>
                                         <label class="fw-bold mb-1" for="resistanceFilter">Erreger:</label><br />
@@ -112,7 +112,18 @@
                         <div class="col-8">
                             <ContactTable Contacts="contacts" />
                         </div>
-                        <div class="col-2"></div>
+                        <div class="col-2">
+                            <div>
+                                <canvas width="20px" height="10px" style="border:1px solid #000000; background-color: red">
+                                </canvas>
+                                Nosokomial
+                            </div>
+                            <div>
+                                <canvas width="20px" height="10px" style="border:1px solid #000000;background-color: blue">
+                                </canvas>
+                                Bekannt
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -182,13 +193,17 @@
 
     private void GetPrevious()
     {
+        ResetFilter();
         _contactService.GetPreviousHospitalizationContacts(ref root, contact);
+        contacts = root.Contacts[root.CurrentHospitalization];
     }
 
     private void GetNext()
     {
+        ResetFilter();
         int index = root.Hospitalizations.IndexOf(root.CurrentHospitalization);
         root.CurrentHospitalization = root.Hospitalizations[index + 1];
+        contacts = root.Contacts[root.CurrentHospitalization];
     }
 
     private void GetFilter(ChangeEventArgs e)
@@ -207,23 +222,23 @@
         int con = _filterParameter.ContactOptions.IndexOf(_filterParameter.ContactDetail);
         switch (res)
         {
+            case 0:
+                break;
             case 1:
+                contacts = contacts.Where(c => c.InfectionStatus is not null && c.InfectionStatus.Infected).ToList();
                 break;
             case 2:
-                contacts = contacts.Where(c => c.InfectionStatus.Infected).ToList();
-                break;
-            case 3:
-                contacts = contacts.Where(c => (c.InfectionStatus.Nosocomial || c.InfectionStatus.Known) && !c.InfectionStatus.Healed).ToList();
+                contacts = contacts.Where(c => c.InfectionStatus is not null && (c.InfectionStatus.Nosocomial || c.InfectionStatus.Known) && !c.InfectionStatus.Healed).ToList();
                 break;
         }
         switch (con)
         {
-            case 1:
+            case 0:
                 break;
-            case 2:
+            case 1:
                 contacts = contacts.Where(c => c.WardContact).ToList();
                 break;
-            case 3:
+            case 2:
                 contacts = contacts.Where(c => c.RoomContact).ToList();
                 break;
         }

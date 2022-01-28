@@ -15,27 +15,33 @@
         {
             <tr>
                 <td class="text-center">
-                    @if (contact.InfectionStatus.Nosocomial)
+                    @if (contact.InfectionStatus is not null)
                     {
-                        <span class="text-danger">@contact.PatientID</span>
-                    }
-                    else if (contact.InfectionStatus.Known)
-                    {
-                        <span class="text-primary">@contact.PatientID</span>
+                        @if (contact.InfectionStatus.Nosocomial)
+                        {
+                            <span class="text-danger">@contact.PatientID</span>
+                        }
+                        else if (contact.InfectionStatus.Known)
+                        {
+                            <span class="text-primary">@contact.PatientID</span>
+                        }
                     }
                     else
                     {
                         @contact.PatientID
                     }
-                </td>
+                    </td>
                 <td class="text-center">
-                    @if (contact.InfectionStatus.Nosocomial)
+                    @if (contact.InfectionStatus is not null)
                     {
-                        @contact.InfectionStatus.NosocomialDate.Value.ToString("yyyy-MM-dd")
-                    }
-                    else if (contact.InfectionStatus.Known)
-                    {
-
+                        @if (contact.InfectionStatus.Nosocomial)
+                        {
+                            @contact.InfectionStatus.NosocomialDate.Value.ToString("yyyy-MM-dd")
+                        }
+                        else if (contact.InfectionStatus.Known)
+                        {
+                            @contact.StatusDate.Value.ToString("yyyy-MM-dd");
+                        }
                     }
                 </td>
                 <td class="text-center">

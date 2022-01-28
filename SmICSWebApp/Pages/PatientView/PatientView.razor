@@ -44,17 +44,21 @@
 
 <div style="margin-bottom:7.5em;">
 
-    @if (patient == null)
+    @if(Loading)
     {
-        <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @PatientID</Heading> 
-    }
-    else
-    {
-        <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @patient.Name</Heading>
+        <div class="spinner"></div>
     }
 
-    @if (patientResults != null)
+    else if (patientResults != null & !Loading)
     {
+        @if (patient == null)
+        {
+            <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @selectedPatient.PatientID</Heading>
+        }
+        else
+        {
+            <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @patient.Name</Heading>
+        }
         @foreach (KeyValuePair<Hospitalization, List<LabResult>> kvp in patientResults)
         {
             <HospitalizationCard Hospitalization="kvp" />
@@ -72,28 +76,23 @@
     private SortedDictionary<Hospitalization, List<LabResult>> patientResults;
     private bool Collapsed { get; set; } = false;
 
-    protected override void OnParametersSet()
-    {
-        if (PatientID == "" || PatientID == null)
-        {
-            PatientID = "";
-        }
-    }
+    private bool Loading = false;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        if (PatientID != "" || PatientID != null)
+        if (!string.IsNullOrEmpty(PatientID))
         {
-            //patient = _patientData.Process(PatientID);
-            //patientViews = _service.LoadData(PatientID);
+            Loading = true;
+            await Task.Run(Submit);
+            Loading = false;
         }
+        await base.OnInitializedAsync();
     }
 
     private void Submit()
     {
-        //patient = _patientData.Process(PatientID);
-        //patientViews = _service.LoadData(PatientID);
         selectedPatient.PatientID = PatientID;
         patientResults = _service.GetData(selectedPatient);
     }
 }
+
