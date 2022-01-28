@@ -1,0 +1,75 @@
+﻿.open {
+    width: 10% !important;
+    border-style: groove;
+    border-color: rgb(53,168,224);
+    border-radius: 0.5rem;
+    z-index: 1!important;
+}
+.close {
+    width: 0;
+}
+
+.btn-bottom-right {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+}
+
+.btn-bottom-left {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+}
+
+.btn-top-right {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+}
+
+.sidepanel {
+    height: 450px; /* Specify a height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: -1; /* Stay on top */
+    background-color: white; /* Black*/
+    overflow-x: hidden;
+    overflow-y: hidden; /* Disable horizontal scroll */
+    padding-top: 5px; /* Place content 60px from the top */
+    padding-left: 6px;
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidepanel */
+}
+
+    /* The sidepanel links */
+    .sidepanel a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        display: block;
+        transition: 0.3s;
+    }
+
+        /* When you mouse over the navigation links, change their color */
+        .sidepanel a:hover {
+ 
+        }
+
+    /* Position and style the close button (top right corner) */
+    .sidepanel .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+
+/* Style the button that is used to open the sidepanel */
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    padding: 10px 15px;
+    border: none;
+}
+
+    .openbtn:hover {
+        background-color: #444;
+    }
