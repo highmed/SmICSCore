@@ -6,28 +6,28 @@
 <Collapse Visible="@Collapsed">
     <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
         <Heading Size="HeadingSize.Is6">
-            <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
-                <Table Narrow="true" Margin="Margin.Is0.FromBottom">
-                    <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
-                        <TableRow>
-                            <TableHeaderCell>Probenart</TableHeaderCell>
-                            <TableHeaderCell>Labor-ID</TableHeaderCell>
-                            <TableHeaderCell>Zeitpunkt der Probeentnahme</TableHeaderCell>
-                            <TableHeaderCell>Zeitpunkt des Probeneingangs</TableHeaderCell>
-                            <TableHeaderCell>Körperstelle</TableHeaderCell>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody Background="Background.White">
-                        <TableRow>
-                            <TableRowCell>@Specimen.Kind</TableRowCell>
-                            <TableRowCell>@Specimen.LabID</TableRowCell>
-                            <TableRowCell>@Specimen.SpecimenCollectionDateTime</TableRowCell>
-                            <TableRowCell>@Specimen.SpecimenReceiptDate</TableRowCell>
-                            <TableRowCell>@Specimen.Location</TableRowCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </Button>
+            <button @onclick="@(()=>Collapsed = !Collapsed)" class="w-100">
+                <table class="table-sm mb-0 w-100">
+                    <thead class="th-bg-specimen border-bottom-0 text-white">
+                        <tr>
+                            <th>Probenart</th>
+                            <th>Labor-ID</th>
+                            <th>Zeitpunkt der Probeentnahme</th>
+                            <th>Zeitpunkt des Probeneingangs</th>
+                            <th>Körperstelle</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        <tr>
+                            <td>@Specimen.Kind</td>
+                            <td>@Specimen.LabID</td>
+                            <td>@Specimen.SpecimenCollectionDateTime</td>
+                            <td>@Specimen.SpecimenReceiptDate</td>
+                            <td>@Specimen.Location</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </button>
         </Heading>
     </CollapseHeader>
     <CollapseBody>

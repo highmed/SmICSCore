@@ -1,10 +1,10 @@
 ﻿@using Blazorise;
 @using SmICSCoreLib.Factories.MiBi;
-<TableRow>
-    <TableRowCell>@Antibiogram.Antibiotic</TableRowCell>
-    <TableRowCell>@Antibiogram.Resistance</TableRowCell>
-    <TableRowCell>@Antibiogram.MinInhibitorConcentration</TableRowCell>
-</TableRow>
+<tr>
+    <td>@Antibiogram.Antibiotic</td>
+    <td>@Antibiogram.Resistance</td>
+    <td>@Antibiogram.MinInhibitorConcentration</td>
+</tr>
 
 @code {
     [Parameter]

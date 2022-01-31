@@ -4,28 +4,28 @@
 <Collapse Visible="@Collapsed">
     <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
         <Heading Size="HeadingSize.Is6">
-            <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
-                <Table Narrow="true" Margin="Margin.Is0.FromBottom">
-                    <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
-                        <TableRow>
-                            <TableHeaderCell>Name</TableHeaderCell>
-                            <TableHeaderCell>Nachweis</TableHeaderCell>
-                            <TableHeaderCell>Zeitstempel</TableHeaderCell>
-                            <TableHeaderCell>Häufigkeit</TableHeaderCell>
-                            <TableHeaderCell>Isolatnummer</TableHeaderCell>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody Background="Background.White">
-                        <TableRow>
-                            <TableRowCell>@Pathogen.Name</TableRowCell>
-                            <TableRowCell>@Pathogen.Result</TableRowCell>
-                            <TableRowCell>@Pathogen.Timestamp</TableRowCell>
-                            <TableRowCell>@Pathogen.Rate</TableRowCell>
-                            <TableRowCell>@Pathogen.IsolatNr</TableRowCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </Button>
+            <button @onclick = "@(() => Collapsed = !Collapsed)" class="w-100">
+                <table class="table-sm w-100 mb-0">
+                    <thead class="th-bg-pathogen border-bottom-0 text-white">
+                        <tr>
+                            <th>Name</th>
+                            <th>Nachweis</th>
+                            <th>Zeitstempel</th>
+                            <th>Häufigkeit</th>
+                            <th>Isolatnummer</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        <tr>
+                            <td>@Pathogen.Name</td>
+                            <td>@Pathogen.Result</td>
+                            <td>@Pathogen.Timestamp</td>
+                            <td>@Pathogen.Rate</td>
+                            <td>@Pathogen.IsolatNr</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </button>
         </Heading>
     </CollapseHeader>
     <CollapseBody>

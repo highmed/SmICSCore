@@ -7,22 +7,22 @@
     <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
         <Heading Size="HeadingSize.Is6">
             <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
-                <Table Narrow="true" Margin="Margin.Is0.FromBottom">
-                    <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
-                        <TableRow>
-                            <TableHeaderCell>Fallkennung</TableHeaderCell>
-                            <TableHeaderCell>Aufnahme</TableHeaderCell>
-                            <TableHeaderCell>Entlassung-ID</TableHeaderCell>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody Background="Background.White">
-                        <TableRow>
-                            <TableRowCell>@Hospitalization.Key.CaseID</TableRowCell>
-                            <TableRowCell>@Hospitalization.Key.Admission.Date.Date.ToString("yyyy-MM-dd")</TableRowCell>
-                            <TableRowCell>@(Hospitalization.Key.Discharge.Date.HasValue ? Hospitalization.Key.Discharge.Date.Value.Date.ToString("yyyy-MM-dd") : "-")</TableRowCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
+                <table class="table-sm w-100 mb-0">
+                    <thead class="table-header-background text-white border-bottom-0">
+                        <tr>
+                            <th>Fallkennung</th>
+                            <th>Aufnahme</th>
+                            <th>Entlassung-ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Hospitalization.Key.CaseID</td>
+                            <td>@Hospitalization.Key.Admission.Date.Date.ToString("yyyy-MM-dd")</td>
+                            <td>@(Hospitalization.Key.Discharge.Date.HasValue ? Hospitalization.Key.Discharge.Date.Value.Date.ToString("yyyy-MM-dd") : "-")</td>
+                        </tr>
+                    </tbody>
+                </table>
             </Button>
         </Heading>
     </CollapseHeader>

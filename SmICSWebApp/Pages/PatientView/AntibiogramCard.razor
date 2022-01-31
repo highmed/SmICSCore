@@ -9,21 +9,21 @@
             Antibiogrammzeit:&nbsp;
         </CardText>
     </CardBody>
-    <Table Narrow="true">
-        <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
-            <TableRow>
-                <TableHeaderCell>Antibiotikum</TableHeaderCell>
-                <TableHeaderCell>Resistenz</TableHeaderCell>
-                <TableHeaderCell>MHK</TableHeaderCell>
-            </TableRow>
-        </TableHeader>
-        <TableBody>
+    <table class="table-sm">
+        <thead class="th-bg-antibiogram border-bottom-0 text-white">
+            <tr>
+                <th>Antibiotikum</th>
+                <th>Resistenz</th>
+                <th>MHK</th>
+            </tr>
+        </thead>
+        <tbody>
             @foreach(Antibiogram ab in Antibiograms)
             {
                 <AntibiogramTableRow Antibiogram="ab" />
             }
-        </TableBody>
-    </Table>
+        </tbody>
+    </table>
 </Card>
 
 @code {

@@ -4,28 +4,28 @@
 <Collapse Visible="@Collapsed">
     <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
         <Heading Size="HeadingSize.Is6">
-            <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
-                <Table Narrow="true" Margin="Margin.Is0.FromBottom">
-                    <TableHeader Background="Background.Info" Border="Border.Is0.OnBottom" TextColor="TextColor.White">
-                        <TableRow>
-                            <TableHeaderCell>Status</TableHeaderCell>
-                            <TableHeaderCell>Befundzeit</TableHeaderCell>
-                            <TableHeaderCell>Auftrags-ID</TableHeaderCell>
-                            <TableHeaderCell>Empfängerstandort</TableHeaderCell>
-                            <TableHeaderCell>Anforderungen</TableHeaderCell>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody Background="Background.White">
-                        <TableRow>
-                            <TableRowCell>@LabResult.Status</TableRowCell>
-                            <TableRowCell>@LabResult.ResultDateTime</TableRowCell>
-                            <TableRowCell>@LabResult.OrderID</TableRowCell>
-                            <TableRowCell>@LabResult.Sender.Ward</TableRowCell>
-                            <TableRowCell>@LabResult.Requirement</TableRowCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </Button>
+            <button @onclick="@(()=>Collapsed = !Collapsed)" class="w-100">
+                <table class="table-sm mb-0 w-100">
+                    <thead class="th-lab-bg border-bottom-0 text-white">
+                        <tr>
+                            <th>Status</th>
+                            <th>Befundzeit</th>
+                            <th>Auftrags-ID</th>
+                            <th>Empfängerstandort</th>
+                            <th>Anforderungen</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        <tr>
+                            <td>@LabResult.Status</td>
+                            <td>@LabResult.ResultDateTime</td>
+                            <td>@LabResult.OrderID</td>
+                            <td>@LabResult.Sender.Ward</td>
+                            <td>@LabResult.Requirement</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </button>
         </Heading>
     </CollapseHeader>
     <CollapseBody>

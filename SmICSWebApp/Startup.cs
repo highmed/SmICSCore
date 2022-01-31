@@ -114,6 +114,8 @@ namespace SmICSWebApp
             //OpenehrConfig.smicsVisuPort = Environment.GetEnvironmentVariable("SMICS_VISU_PORT");
 
             OpenehrConfig.openehrEndpoint = "http://plri-highmed01.mh-hannover.local:8081/rest/openehr/v1";
+            //OpenehrConfig.openehrUser = "smics";
+            //OpenehrConfig.openehrPassword = "b+KzsSFD?cgdW2UA";
             OpenehrConfig.openehrUser = "etltestuser";
             OpenehrConfig.openehrPassword = "etltestuser#01";
             OpenehrConfig.smicsVisuPort = "3231";
