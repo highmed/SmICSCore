@@ -7,11 +7,15 @@
 @using ChartJs.Blazor.Common.Enums
 @using ChartJs.Blazor.Util
 
-@using SmICSCoreLib.Factories.PatientMovementNew.PatientStays
-@using SmICSWebApp.Data.WardView
+@using SmICSCoreLib.Factories.MenuList;
+@using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
+@using SmICSWebApp.Data.WardView;
 
-@inject WardOverviewService _service
-
+@inject WardOverviewService _service;
+@inject IMenuListFactory _menuService;
+ 
+@if (_wardMenuEntries is not null)
+{
 <div class="container-fluid">
     <div class="row">
         <div class="card">
@@ -20,7 +24,10 @@
                     <label for="stationDropdown" class="mr-1">Station</label>
                     <select id="stationDropdow" class="col-2 mr-2" @bind="@parameter.Ward">
                         <option value="" selected disabled hidden>Bitte wählen</option>
-                        <option>47</option>
+                        @foreach (WardMenuEntry entry in _wardMenuEntries)
+                        {
+                            <option value="@entry.ID">@entry.ID</option>
+                        }
                     </select>
                     <label for="pathogenDropdown" class="mr-1">Erreger</label>
                     <input type="text" list="pathogenList" class="col-1 mr-2" @bind="@parameter.Pathogen" id="pathogenDropdown">
@@ -38,11 +45,12 @@
             </div>
         </div>
     </div>
+
     @if (isLoading)
     {
         <div class="spinner"></div>
     }
-    else if(filteredData != null && chartEntries != null && _filterMRE != null && !isLoading)
+    else if (filteredData != null && chartEntries != null && _filterMRE != null && !isLoading)
     {
     <div class="row">
         <div class="card card-table">
@@ -88,7 +96,7 @@
 
     }
 </div>
-
+}
 
     @code {
         private WardParameter parameter = new WardParameter();
@@ -104,6 +112,8 @@
         private List<string> _filterMRE;
         private string _selectedMREFilter;
         private string _selectedNosokomialFilter;
+
+        private List<WardMenuEntry> _wardMenuEntries;
 
         private bool isLoading = false;
 
@@ -125,6 +135,17 @@
             BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.DarkGray)
         };
 
+        protected override Task OnInitializedAsync()
+        {
+            base.OnInitializedAsync();
+            return Task.Run(LoadMenu);
+        }
+
+        private void LoadMenu()
+        {
+            _wardMenuEntries = _menuService.Wards();
+        }
+
         private async Task Submit()
         {
             isLoading = true;
@@ -133,7 +154,7 @@
 
         }
 
-        private void LoadData()
+        private void LoadData() 
         {
             data = _service.GetData(parameter);
             filteredData = data;
@@ -152,7 +173,6 @@
             FillDataset(Known, chartEntries["Known"]);
             FillDataset(Stress, chartEntries["Stress"]);
         }
-
 
         private void GetXAxisLabels()
         {

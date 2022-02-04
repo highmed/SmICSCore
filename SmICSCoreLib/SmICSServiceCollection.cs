@@ -26,6 +26,7 @@ using SmICSCoreLib.Factories.MiBi.Nosocomial;
 using SmICSCoreLib.Factories.MiBi.Contact;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 using SmICSCoreLib.Factories.PatientMovementNew;
+using SmICSCoreLib.Factories.MenuList;
 
 namespace SmICS
 {
@@ -35,6 +36,8 @@ namespace SmICS
         {
             services.AddSingleton<RestClientConnector>();
             services.AddSingleton<IRestDataAccess, RestDataAccess>();
+
+            services.AddScoped<IMenuListFactory, MenuListFactory>();
 
             services.AddTransient<IPatientMovementFactory, PatientMovementFactory>();
             services.AddTransient<IViroLabDataFactory, ViroLabDataFactory>();

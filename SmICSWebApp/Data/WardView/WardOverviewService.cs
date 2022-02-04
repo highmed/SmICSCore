@@ -41,7 +41,8 @@ namespace SmICSWebApp.Data.WardView
                     WardPatient patient = new WardPatient();
                     patient.Pathogen = parameter.Pathogen;
                     patient.InfectionStatus = infectionStatus;
-                    PatientStay stay = patientStays.Where(stay => stay.PatientID == c.PatientID).FirstOrDefault();
+                    int entryCount = wardPatients.Where(w => w.PatientID == c.PatientID).Count();
+                    PatientStay stay = patientStays.Where(stay => stay.PatientID == c.PatientID).ElementAt(entryCount) ?? null;
                     patient.PatientID = stay.PatientID;
                     patient.Admission = stay.Admission;
                     patient.Discharge = stay.Discharge;
@@ -125,15 +126,15 @@ namespace SmICSWebApp.Data.WardView
                         Where(s => s.SpecimenCollectionDateTime >= patStay.Admission && (patStay.Discharge.HasValue ? s.SpecimenCollectionDateTime <= patStay.Discharge.Value : true)).
                         Select(s => s.SpecimenCollectionDateTime).
                         ToList();
-                    DateTime firstTmp = tmp.First();
-                    DateTime lastTmp = tmp.Last();
-                    if (last < lastTmp)
+                    DateTime? firstTmp = tmp.FirstOrDefault();
+                    DateTime? lastTmp = tmp.LastOrDefault();
+                    if (lastTmp.HasValue && last < lastTmp.Value)
                     {
-                        last = lastTmp;
+                        last = lastTmp.Value;
                     }
-                    if (first > firstTmp)
+                    if (firstTmp.HasValue && first > firstTmp.Value)
                     {
-                        first = firstTmp;
+                        first = firstTmp.Value;
                     }
                 }
 

@@ -135,6 +135,7 @@ namespace SmICSWebApp
 
             app.UseSwaggerUI(c =>
             {
+                c.DefaultModelsExpandDepth(-1);
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "AQL API");
             });
 
