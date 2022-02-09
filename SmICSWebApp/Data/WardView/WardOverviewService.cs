@@ -32,12 +32,12 @@ namespace SmICSWebApp.Data.WardView
             {
                 List<Case> cases = new List<Case>();
                 patientStays.ForEach(c => cases.Add(c));
-
+                cases = cases.Where(c => patientStays.Select(s => s.CaseID).Contains(c.CaseID)).ToList();
                 foreach (Case c in cases)
                 {
                     PathogenParameter pathogenParameter = new PathogenParameter() { Name = parameter.Pathogen };
                     SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionStatusByCase = _infectionStatusFac.Process(c, pathogenParameter);
-                    Dictionary<string, InfectionStatus> infectionStatus = infectionStatusByCase.Count > 0 ? infectionStatusByCase.Last().Value : null; 
+                    Dictionary<string, InfectionStatus> infectionStatus = infectionStatusByCase.Count > 0 ? infectionStatusByCase.Where(h => h.Key.CaseID == c.CaseID).First().Value : null; 
                     WardPatient patient = new WardPatient();
                     patient.Pathogen = parameter.Pathogen;
                     patient.InfectionStatus = infectionStatus;
@@ -149,11 +149,12 @@ namespace SmICSWebApp.Data.WardView
             {
                 if (labResult.Sender.Ward == patStay.Ward)
                 {
-                    DateTime? tmp = labResult.Specimens.
+                    IEnumerable<DateTime> dates = labResult.Specimens.
                         OrderBy(s => s.SpecimenCollectionDateTime).
                         Where(s => s.Pathogens.Any(p => p.Result)).
-                        Select(s => s.SpecimenCollectionDateTime).
-                        FirstOrDefault();
+                        Select(s => s.SpecimenCollectionDateTime);
+
+                    DateTime? tmp = dates.Count() > 0 ? dates.First() : null;
                     if (tmp.HasValue && last > tmp.Value)
                     {
                         last = tmp.Value;

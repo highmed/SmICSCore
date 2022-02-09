@@ -2,135 +2,142 @@
 @page "/contact/{PatientID}/{Pathogen}/{Resistence}"
 
 @using Blazorise;
-@using SmICSWebApp.Data.Contact
-@using SmICSCoreLib.Factories.General
+@using SmICSWebApp.Data.Contact;
+@using SmICSCoreLib.Factories.General;
+@using SmICSCoreLib.Factories.MenuList;
 
-@inject ContactService _contactService
+@inject ContactService _contactService;
+@inject IMenuListFactory _menuService;
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="card">
-            <div ="card-body">
-                <EditForm Model="@contact" OnValidSubmit="@Submit">
-                    <label for="patID">PatientID:</label>
-                    <input type="text" @bind="contact.PatientID" id="patID" />
-                    <label for="pathogen">Pathogen:</label>
-                    <input type="text" id="pathogen" list="pathogenList" @onchange="GetFilter" />
-                    <datalist id="pathogenList">
-                        <option>Staphylococcus aureus</option>
-
-                    </datalist>
-                    <label for="res">Resistenz:</label>
-                    <input type="text" id="res" list="resistanceList" @bind="contact.Resistence" />
-                    <datalist id="resistanceList">
-                        @if (_filterMRE is not null)
-                        {
-                            @foreach (string filter in _filterMRE)
-                            {
-                                <option value="@filter">@filter</option>
-                            }
-                        }
-                    </datalist>
-                    <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button>
-                </EditForm>
-            </div>
-        </div>
-    </div>
-    @if (Loading)
-    {
-        <div class="spinner"></div>
-    }
-    else if (root != null && !Loading)
-    {
+@if (_pathogenMenuEntries is not null)
+{
+    <div class="container-fluid">
         <div class="row">
             <div class="card">
-                <div class="card-header">
-                    <div class="row">
+                <div ="card-body">
+                    <EditForm Model="@contact" OnValidSubmit="@Submit">
+                        <label for="patID">PatientID:</label>
+                        <input type="text" @bind="contact.PatientID" id="patID" />
+                        <label for="pathogen">Pathogen:</label>
+                        <input type="text" id="pathogen" list="pathogenList" @onchange="GetFilter" />
+                        <datalist id="pathogenList">
+                            @foreach (PathogenMenuEntry entry in _pathogenMenuEntries)
+                            {
+                                <option value="@entry.Name">@entry.Name</option>
+                            }
+                        </datalist>
+                        <label for="res">Resistenz:</label>
+                        <input type="text" id="res" list="resistanceList" @bind="contact.Resistence" />
+                        <datalist id="resistanceList">
+                            @if (_filterMRE is not null)
+                            {
+                                @foreach (string filter in _filterMRE)
+                                {
+                                    <option value="@filter">@filter</option>
+                                }
+                            }
+                        </datalist>
+                        <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+        @if (Loading)
+        {
+            <div class="spinner"></div>
+        }
+        else if (root != null && !Loading)
+        {
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
                             <div class="col-2">
                                 @if (root.CurrentHospitalization != root.Hospitalizations.First())
-                                { 
+                                {
                                     <button type="button" class="btn btn-outline-light text-black" @onclick="GetPrevious"><i class="oi oi-chevron-left"></i> Vorheriger Fall</button>
                                 }
                             </div>
-                        <div class="col-8">
-                            <h2 class="text-center">@contact.PatientID</h2>
-                            <h4 class="text-center">Fall: @root.CurrentHospitalization.CaseID</h4>
-                            <h4 class="text-center">Zeitraum: @root.CurrentHospitalization.Admission.Date.ToString("yyyy-MM-dd") - @(root.CurrentHospitalization.Discharge.Date.HasValue ? (root.CurrentHospitalization.Discharge.Date.Value.ToString("yyyy-MM-dd")) : null)</h4>
-                        </div>
-                        <div class="col-2">
-                            @if (root.CurrentHospitalization != root.Hospitalizations.Last())
-                            {
-                                <button type="button" class="btn btn-outline-light text-black" @onclick="GetNext"><i class="oi oi-chevron-right"></i> Nächster Fall </button>
-                            }
+                            <div class="col-8">
+                                <h2 class="text-center">@contact.PatientID</h2>
+                                <h4 class="text-center">Fall: @root.CurrentHospitalization.CaseID</h4>
+                                <h4 class="text-center">Zeitraum: @root.CurrentHospitalization.Admission.Date.ToString("yyyy-MM-dd") - @(root.CurrentHospitalization.Discharge.Date.HasValue ? (root.CurrentHospitalization.Discharge.Date.Value.ToString("yyyy-MM-dd")) : null)</h4>
+                            </div>
+                            <div class="col-2">
+                                @if (root.CurrentHospitalization != root.Hospitalizations.Last())
+                                {
+                                    <button type="button" class="btn btn-outline-light text-black" @onclick="GetNext"><i class="oi oi-chevron-right"></i> Nächster Fall </button>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-body bottom-border">
-                    <div class="row">
-                        <div class="col-2">
-                            <div id="mySidepanel" class="sidepanel @(Collapsed ? "open" : "close")">
-                                <button type="button" class="btn btn-sm btn-outline-primary text-blue btn-top-right" hidden="@(!Collapsed)" @onclick="@(()=>Collapsed = !Collapsed)">
-                                    <i class="oi oi-arrow-left"></i>
-                                </button>
-                                <EditForm Model="_filterParameter" OnSubmit="Filter">
-                                    <div>
-                                        <label class="fw-bold mb-1" for="resistanceFilter">Erreger:</label><br />
-                                        <InputRadioGroup @bind-Value="_filterParameter.ResistenceDetail" id="resistanceFilter">
-                                            @foreach (string opt in _filterParameter.ResistanceOptions)
+                    <div class="card-body bottom-border">
+                        <div class="row">
+                            <div class="col-2">
+                                <div id="mySidepanel" class="sidepanel @(Collapsed ? "open" : "close")">
+                                    <button type="button" class="btn btn-sm btn-outline-primary text-blue btn-top-right" hidden="@(!Collapsed)" @onclick="@(() => Collapsed = !Collapsed)">
+                                        <i class="oi oi-arrow-left"></i>
+                                    </button>
+                                    <EditForm Model="_filterParameter" OnSubmit="Filter">
+                                        <div>
+                                            <label class="fw-bold mb-1" for="resistanceFilter">Erreger:</label><br />
+                                            <InputRadioGroup @bind-Value="_filterParameter.ResistenceDetail" id="resistanceFilter">
+                                                @foreach (string opt in _filterParameter.ResistanceOptions)
                                                 {
-                                                <div class="col">
-                                                    <InputRadio Value="opt" />@opt
-                                                </div>
+                                                    <div class="col">
+                                                        <InputRadio Value="opt" />@opt
+                                                    </div>
                                                 }
-                                        </InputRadioGroup>
-                                    </div>
-                                    <div class="mt-3">
-                                        <label for="contactFilter" class="fw-bold mb-1">Kontaktebene:</label><br />
-                                        <InputRadioGroup @bind-Value="_filterParameter.ContactDetail" id="contactFilter">
-                                            @foreach (string opt in _filterParameter.ContactOptions)
+                                            </InputRadioGroup>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="contactFilter" class="fw-bold mb-1">Kontaktebene:</label><br />
+                                            <InputRadioGroup @bind-Value="_filterParameter.ContactDetail" id="contactFilter">
+                                                @foreach (string opt in _filterParameter.ContactOptions)
                                                 {
-                                                <div class="col">
-                                                    <InputRadio Value="opt" />@opt
-                                                </div>
+                                                    <div class="col">
+                                                        <InputRadio Value="opt" />@opt
+                                                    </div>
                                                 }
-                                        </InputRadioGroup>
-                                    </div>
-                                    <div class="mt-3">
-                                        <label for="contactFilter" class="fw-bold mb-1">Zeitraum:</label><br />
-                                        <label class="mr-1">Min</label>
-                                        <InputDate @bind-Value="_filterParameter.StartDate" />
-                                        <br />
-                                        <label class="mr-1 mt-1">Max</label>
-                                        <InputDate @bind-Value="_filterParameter.EndDate" />
-                                    </div>
-                                    <button class="btn btn-outline-primary text-right text-blue btn-bottom-right" type="submit" hidden="@(!Collapsed)" @onclick="@(()=>Collapsed = !Collapsed)">Filter</button>
-                                    <button class="btn btn-outline-primary text-right text-blue btn-bottom-left" type="submit" hidden="@(!Collapsed)" @onclick="ResetFilter">Zurücksetzten</button>
-                                </EditForm>
+                                            </InputRadioGroup>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="contactFilter" class="fw-bold mb-1">Zeitraum:</label><br />
+                                            <label class="mr-1">Min</label>
+                                            <InputDate @bind-Value="_filterParameter.StartDate" />
+                                            <br />
+                                            <label class="mr-1 mt-1">Max</label>
+                                            <InputDate @bind-Value="_filterParameter.EndDate" />
+                                        </div>
+                                        <button class="btn btn-outline-primary text-right text-blue btn-bottom-right" type="submit" hidden="@(!Collapsed)" @onclick="@(() => Collapsed = !Collapsed)">Filter</button>
+                                        <button class="btn btn-outline-primary text-right text-blue btn-bottom-left" type="submit" hidden="@(!Collapsed)" @onclick="ResetFilter">Zurücksetzten</button>
+                                    </EditForm>
+                                </div>
+                                <button class="btn btn-outline-primary text-blue" @onclick="@(() => Collapsed = !Collapsed)"><i class="fa fa-filter"></i></button>
                             </div>
-                            <button class="btn btn-outline-primary text-blue" @onclick="@(()=>Collapsed = !Collapsed)"><i class="fa fa-filter"></i></button>
-                        </div>
-                        <div class="col-8">
-                            <ContactTable Contacts="contacts" />
-                        </div>
-                        <div class="col-2">
-                            <div>
-                                <canvas width="20px" height="10px" style="border:1px solid #000000; background-color: red">
-                                </canvas>
-                                Nosokomial
+                            <div class="col-8">
+                                <ContactTable Contacts="contacts" />
                             </div>
-                            <div>
-                                <canvas width="20px" height="10px" style="border:1px solid #000000;background-color: blue">
-                                </canvas>
-                                Bekannt
+                            <div class="col-2">
+                                <div>
+                                    <canvas width="20px" height="10px" style="border:1px solid #000000; background-color: red">
+                                    </canvas>
+                                    Nosokomial
+                                </div>
+                                <div>
+                                    <canvas width="20px" height="10px" style="border:1px solid #000000;background-color: blue">
+                                    </canvas>
+                                    Bekannt
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-    }
-</div>
+        }
+    </div>
+}
 
 @code {
     [Parameter]
@@ -151,6 +158,7 @@
 
     private List<string> _filterMRE;
 
+    private List<PathogenMenuEntry> _pathogenMenuEntries;
 
     private bool Collapsed = false;
     private FilterParameter _filterParameter;
@@ -184,11 +192,20 @@
             contact.Resistence = Resistence;
 
             Loading = true;
+            await Task.Run(LoadMenu);
             await Task.Run(Submit);
             Loading = false;
 
         }
-        await base.OnInitializedAsync(); ;
+        await base.OnInitializedAsync();
+        Loading = true;
+        await Task.Run(LoadMenu);
+        Loading = false;
+    }
+
+    private void LoadMenu()
+    {
+        _pathogenMenuEntries = _menuService.Pathogens();
     }
 
     private void GetPrevious()
@@ -242,11 +259,11 @@
                 contacts = contacts.Where(c => c.RoomContact).ToList();
                 break;
         }
-        if(_filterParameter.StartDate.HasValue)
+        if (_filterParameter.StartDate.HasValue)
         {
-            contacts = contacts.Where(c => _filterParameter.StartDate.Value.Date <= c.ContactStart.Date || (c.ContactEnd.HasValue && _filterParameter.StartDate.Value.Date <= c.ContactEnd.Value.Date )).ToList();
+            contacts = contacts.Where(c => _filterParameter.StartDate.Value.Date <= c.ContactStart.Date || (c.ContactEnd.HasValue && _filterParameter.StartDate.Value.Date <= c.ContactEnd.Value.Date)).ToList();
         }
-        if(_filterParameter.EndDate.HasValue)
+        if (_filterParameter.EndDate.HasValue)
         {
             contacts = contacts.Where(c => (c.ContactEnd.HasValue && _filterParameter.EndDate.Value.Date >= c.ContactEnd.Value.Date) || (_filterParameter.EndDate.Value.Date >= c.ContactStart.Date)).ToList();
         }
@@ -260,4 +277,4 @@
         _filterParameter.EndDate = null;
     }
 
-}
+    }

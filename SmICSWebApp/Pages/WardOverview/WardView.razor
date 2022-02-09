@@ -14,7 +14,7 @@
 @inject WardOverviewService _service;
 @inject IMenuListFactory _menuService;
  
-@if (_wardMenuEntries is not null)
+@if (_wardMenuEntries is not null && _pathogenMenuEntries is not null)
 {
 <div class="container-fluid">
     <div class="row">
@@ -32,11 +32,13 @@
                     <label for="pathogenDropdown" class="mr-1">Erreger</label>
                     <input type="text" list="pathogenList" class="col-1 mr-2" @bind="@parameter.Pathogen" id="pathogenDropdown">
                     <datalist id="pathogenList">
-                        <option>Staphylococcus aureus</option>
-                        <option>Entrokokken</option>
+                        @foreach (PathogenMenuEntry entry in _pathogenMenuEntries)
+                        {
+                            <option value="@entry.Name">@entry.Name</option>
+                        }
                     </datalist>
                     <label for="startdate" class="mr-1">Start</label>
-                    <InputDate id="startdate" class="col-1 mr-2" @bind-Value="parameter.Start" />
+                    <InputDate id="startdate" class="col-1 mr-2" @bind-Value="parameter.Start"/>
                     <label for="enddate" class="mr-1">Ende</label>
                     <InputDate id="enddate" class="col-1 mr-2" @bind-Value="parameter.End" />
                     <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button>
@@ -99,7 +101,7 @@
 }
 
     @code {
-        private WardParameter parameter = new WardParameter();
+        private WardParameter parameter = new WardParameter() { Start = DateTime.Now.AddDays(-7.0).Date, End = DateTime.Now.Date };
 
         private List<WardPatient> data = null;
         private List<WardPatient> filteredData = null;
@@ -114,6 +116,7 @@
         private string _selectedNosokomialFilter;
 
         private List<WardMenuEntry> _wardMenuEntries;
+        private List<PathogenMenuEntry> _pathogenMenuEntries;
 
         private bool isLoading = false;
 
@@ -144,6 +147,7 @@
         private void LoadMenu()
         {
             _wardMenuEntries = _menuService.Wards();
+            _pathogenMenuEntries = _menuService.Pathogens();
         }
 
         private async Task Submit()
@@ -154,7 +158,7 @@
 
         }
 
-        private void LoadData() 
+        private void LoadData()
         {
             data = _service.GetData(parameter);
             filteredData = data;
