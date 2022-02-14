@@ -40,7 +40,9 @@
         @if (_known)
         {
             <span class="text-primary">
-                @string.Join("/", Patient.InfectionStatus.Values.Where(x => x.Known || (Patient.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate < Patient.Admission))).Select(x => x.Resistance))
+                @string.Join("/", Patient.InfectionStatus.Values.
+               Where(x => x.Known || (Patient.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate < Patient.Admission))).
+               Where(x => x.Resistance != "normal").Select(x => x.Resistance))
             </span>
         }
     </td>

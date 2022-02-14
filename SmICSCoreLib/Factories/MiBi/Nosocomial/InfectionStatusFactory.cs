@@ -72,12 +72,13 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                 {
                     results = _mibiResultFac.Process(c, MedicalField);
                 }
+                results = results.OrderBy(l => l.Specimens.First().SpecimenCollectionDateTime).ToList();
                 Dictionary<string, Dictionary<string, InfectionStatus>>infectionInformation = new Dictionary<string, Dictionary<string, InfectionStatus>>();
 
                 DetermineInfectionInformation(ref infectionInformation, results, hospitalization, infectionInformationByCase);
                 infectionInformationByCase.Add(hospitalization, infectionInformation);
 
-            }
+            } 
             return infectionInformationByCase;
         }
 
@@ -110,14 +111,14 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
 
                                 foreach (string res in resistances)
                                 {
-                                    if (pathogen.Result && timespan.Days < threshold)
+                                    if (pathogen.Result && timespan.Days < (threshold - 1))
                                     {
                                         if (!infectionInformation[pathogen.Name].ContainsKey(res))
                                         {
                                             infectionInformation[pathogen.Name].Add(res, new InfectionStatus { Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = pathogen.Result, ConsecutiveNegativeCounter = 0, Resistance = res, LabID = specimen.LabID });
                                         }
                                     }
-                                    else if (pathogen.Result && timespan.Days >= threshold)
+                                    else if (pathogen.Result && timespan.Days >= (threshold - 1))
                                     {
                                         bool hasFoundOldStatus = HasOldKnownCase(pathogen, res, infectionInformationByCase);
                                         if (!hasFoundOldStatus)
@@ -136,29 +137,36 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                                         }
                                     }
                                 }
-                                SetHealingValue(infectionInformation[pathogen.Name], pathogen.Result, resistances);
                             }
+                            SetHealingValue(infectionInformation[pathogen.Name], pathogen.Result, resistances, specimen.SpecimenCollectionDateTime);
                         }                            
                     }
                 }
             }
-            else
-            {
-
-            }
         }
 
-        private void SetHealingValue(Dictionary<string, InfectionStatus> infectionByResistance, bool result, List<string> resistances)
+        private void SetHealingValue(Dictionary<string, InfectionStatus> infectionByResistance, bool result, List<string> resistances, DateTime specimenDate)
         {
             foreach (string mre in infectionByResistance.Keys)
             {
-                if (result == true && !resistances.Contains(mre))
+                if ((result == true && !resistances.Contains(mre)) || result == false)
                 {
                     infectionByResistance[mre].ConsecutiveNegativeCounter++;
+                    if(infectionByResistance[mre].ConsecutiveNegativeCounter == 3)
+                    {
+                        infectionByResistance[mre].Healed = true;
+                        infectionByResistance[mre].HealedDate = specimenDate;
+                        infectionByResistance[mre].ConsecutiveNegativeCounter = 0;
+                    }
                 }
-                else if (result == false)
+                if((result == true && resistances.Contains(mre)))
                 {
-                    infectionByResistance[mre].ConsecutiveNegativeCounter++;
+                    if(infectionByResistance[mre].Healed)
+                    {
+                        infectionByResistance[mre].Healed = false;
+                        //What happens if he is positive again?
+                    }
+                    infectionByResistance[mre].ConsecutiveNegativeCounter = 0;
                 }
             }
         }
@@ -169,7 +177,7 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             {
                 if (infectionInformationByCase[hospi].ContainsKey(pathogen.Name))
                 {
-                    if ((infectionInformationByCase[hospi][pathogen.Name][resistance].Nosocomial || infectionInformationByCase[hospi][pathogen.Name][resistance].Known) && infectionInformationByCase[hospi][pathogen.Name][resistance].Healed)
+                    if ((infectionInformationByCase[hospi][pathogen.Name][resistance].Nosocomial || infectionInformationByCase[hospi][pathogen.Name][resistance].Known) && !infectionInformationByCase[hospi][pathogen.Name][resistance].Healed)
                     {
                         return true;
                     }

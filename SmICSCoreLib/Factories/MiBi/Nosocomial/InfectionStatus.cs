@@ -10,6 +10,7 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
         public bool Infected { get; set; }
         public int ConsecutiveNegativeCounter { get; set; }
         public bool Healed { get; set; }
+        public DateTime? HealedDate { get; set; }
         public string Pathogen { get; set; }
         public string Resistance { get; set; }
         public string LabID { get; set; }

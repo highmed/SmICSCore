@@ -96,17 +96,53 @@ namespace SmICSWebApp.Data.WardView
             for (DateTime date = parameter.Start.Date; date <= parameter.End.Date; date = date.AddDays(1.0))
             {
                 int stress = chartEntries["Nosokomial"][date] + chartEntries["Known"][date];
-                if (date.Date > parameter.Start.Date)
-                {
-                    stress += chartEntries["Stress"][date.Date.AddDays(-1.0)];
-                    int stressRelease = wardPatients.Count(ward => ward.Discharge.HasValue && ward.Discharge.Value.Date.AddDays(-1.0) == date.Date.AddDays(-1.0));
-                    stress -= stressRelease;
-                }
                 chartEntries["Stress"].Add(date, stress);
+                if(date.Date > parameter.Start.Date)
+                {
+                    chartEntries["Stress"][date.Date] += chartEntries["Stress"][date.Date.AddDays(-1.0)];
+                }
             }
+
+            foreach (WardPatient patient in wardPatients)
+            {
+                if (string.IsNullOrEmpty(filterMRE) || (patient.InfectionStatus != null && patient.InfectionStatus.ContainsKey(filterMRE)))
+                {
+                    if (string.IsNullOrEmpty(filterMRE))
+                    {
+                        if (patient.InfectionStatus.Where(infection => infection.Value.Infected).All(infection => infection.Value.Healed))
+                        {
+                            DateTime latestHealedDate = patient.InfectionStatus.Max(infection => infection.Value.HealedDate.Value);
+                            if (chartEntries["Stress"].ContainsKey(latestHealedDate.Date))
+                            {
+                                DecrementSince(latestHealedDate, chartEntries["Stress"]);
+                                continue;
+                            }
+                        }
+                    }
+                    else if (patient.InfectionStatus != null && patient.InfectionStatus.ContainsKey(filterMRE))
+                    {
+                        if (patient.InfectionStatus[filterMRE].Healed && chartEntries["Stress"].ContainsKey(patient.InfectionStatus[filterMRE].HealedDate.Value.Date))
+                        {
+                            DecrementSince(patient.InfectionStatus[filterMRE].HealedDate.Value.Date, chartEntries["Stress"]);
+                            continue;
+                        }
+                    }
+                }
+                if (patient.Discharge.HasValue && chartEntries["Stress"].ContainsKey(patient.Discharge.Value.Date.AddDays(1.0)))
+                {
+                    DecrementSince(patient.Discharge.Value.Date.AddDays(1.0), chartEntries["Stress"]);
+                }
+            }      
             return chartEntries;
         }
 
+        private void DecrementSince(DateTime dt, SortedDictionary<DateTime, int> chartEntry)
+        {
+            for (DateTime date = dt.Date; date <= chartEntry.Keys.Last().Date; date = date.AddDays(1.0))
+            {
+                chartEntry[date.Date] -= 1;
+            }
+        }
         public List<string> GetFilter(WardParameter parameter)
         {
             List<string> filter = Rules.GetPossibleMREClasses(parameter.Pathogen);

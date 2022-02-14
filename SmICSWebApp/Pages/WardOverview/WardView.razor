@@ -120,23 +120,11 @@
 
         private bool isLoading = false;
 
-        IDataset<int> Nosocomial = new BarDataset<int>()
-        {
-            Label = "Nosokomial",
-            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Red)
-        };
+        private IDataset<int> Nosocomial;
 
-        IDataset<int> Known = new BarDataset<int>()
-        {
-            Label = "Bekannt",
-            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue)
-        };
+        private IDataset<int> Known;
 
-        IDataset<int> Stress = new BarDataset<int>()
-        {
-            Label = "Last",
-            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.DarkGray)
-        };
+        private IDataset<int> Stress;
 
         protected override Task OnInitializedAsync()
         {
@@ -167,6 +155,24 @@
 
             _chart = EpiCurveConfig("Epidemiologische Kurve der Station: " + parameter.Ward, "Neue Fälle");
             _accumChart = EpiCurveConfig("", "Last der Station");
+
+            Nosocomial = new BarDataset<int>()
+            {
+                Label = "Nosokomial",
+                BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Red)
+            };
+
+            Known = new BarDataset<int>()
+            {
+                Label = "Bekannt",
+                BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue)
+            };
+
+            Stress = new BarDataset<int>()
+            {
+                Label = "Last",
+                BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.DarkGray)
+            };
 
             GetXAxisLabels();
             _chart.Data.Datasets.Add(Nosocomial);
