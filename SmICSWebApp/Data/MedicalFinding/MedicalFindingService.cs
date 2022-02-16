@@ -43,17 +43,17 @@ namespace SmICSWebApp.Data.MedicalFinding
                         PatientID = result.PatientID,
                         SpecimenCollectionDateTime = specimen.SpecimenCollectionDateTime,
                         SpecimenReceiptDateTime = specimen.SpecimenReceiptDate,
-                        MaterialID = specimen.Kind,
+                        MaterialID = specimen.KindCode,
+                        Material = specimen.Kind,
                         Result = pathogen.Result,
+                        ResultText = pathogen.ResultText,
                         Pathogen = pathogen.Name,
+                        PathogenID = pathogen.ID,
                         ResultDate = result.ResultDateTime,
                         Comment = result.Comment,
+                        Quantity = pathogen.Rate
 
                     };
-                    if (pathogen.MedicalField == MedicalField.VIROLOGY)
-                    {
-                        labResult.Quantity = pathogen.Rate;  
-                    }
                     results.Add(labResult);
                 }
             }

@@ -34,7 +34,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView.Parameter
             {
                 switch (pathogenName)
                 {
-                    case "Sars-Cov-2":
+                    case "sars-cov-2":
                         return SmICSCoreLib.Factories.General.MedicalField.VIROLOGY;
                     default:
                         return SmICSCoreLib.Factories.General.MedicalField.MICROBIOLOGY;

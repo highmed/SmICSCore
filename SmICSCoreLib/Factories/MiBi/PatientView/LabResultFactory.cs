@@ -61,6 +61,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                 uids = RestDataAccess.AQLQuery<UID>(GetPathogenCompositionsUIDs(Case, pathogen));
             }
             List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case, MedicalField, uids));
+            // TODO: Abfangen von results == null
             foreach (LabResult result in results)
             {
                 SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID, MedicalField = MedicalField};
@@ -107,7 +108,8 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                         d/data[at0001]/events[at0002]/time/value as ResultDateTime,
                         d/protocol[at0004]/items[at0094]/items[at0063]/value/id as OrderID,
                         d/protocol[at0004]/items[at0094]/items[at0106]/value/value as Requirement,
-                        c/uid/value as UID
+                        c/uid/value as UID,
+                        e/ehr_status/subject/external_ref/id/value as PatientID
                         FROM EHR e
                         CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
                         CONTAINS (CLUSTER v[openEHR-EHR-CLUSTER.case_identification.v0] 

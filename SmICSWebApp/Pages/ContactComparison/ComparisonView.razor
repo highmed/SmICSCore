@@ -1,0 +1,21 @@
+﻿@page "/compare"
+
+@using SmICSWebApp.Data.ContactComparison;
+@inject ComparisonService _service; 
+
+<div>
+    <EditForm Model="patientList" OnSubmit="Submit"> 
+
+    </EditForm>
+</div>
+
+
+@code {
+
+    private List<string> patientList = new List<string>();
+
+    private void Submit()
+    {
+        _service.Compare();
+    }
+}

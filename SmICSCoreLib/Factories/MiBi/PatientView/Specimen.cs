@@ -7,6 +7,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
     public class Specimen
     {
         public string Kind { get; set; }
+        public string KindCode { get; set; }
         public string LabID { get; set; }
         public DateTime SpecimenCollectionDateTime { get; set; }
         public DateTime? SpecimenReceiptDate  { get; set; }

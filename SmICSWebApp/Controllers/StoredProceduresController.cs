@@ -20,6 +20,9 @@ using SmICSCoreLib.Factories.InfectionSituation;
 using SmICSWebApp.Data.OutbreakDetection;
 using SmICSCoreLib.OutbreakDetection;
 using SmICSCoreLib.Factories.NEC;
+using SmICSWebApp.Data.MedicalFinding;
+using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
+using SmICSWebApp.Data.PatientMovement;
 
 namespace SmICSWebApp.Controllers
 {
@@ -41,7 +44,9 @@ namespace SmICSWebApp.Controllers
         private readonly IVaccinationFactory _vaccinationFac;
         private readonly OutbreakDetectionService _outbreakService;
         private readonly INECCombinedFactory _necComboFac;
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService, INECCombinedFactory necComboFac)
+        private readonly MedicalFindingService _medicalFindingService;
+        private readonly PatientMovementService _movementService;
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService, INECCombinedFactory necComboFac, MedicalFindingService medicalFindingService, PatientMovementService movementService)
         {
             _logger = logger;
             _contact = contact;
@@ -55,6 +60,8 @@ namespace SmICSWebApp.Controllers
             _vaccinationFac = vaccinationFac;
             _outbreakService = outbreakService;
             _necComboFac = necComboFac;
+            _medicalFindingService = medicalFindingService;
+            _movementService = movementService;
         }
 
         /// <summary></summary>
@@ -107,6 +114,28 @@ namespace SmICSWebApp.Controllers
             }
         }
 
+        [Route("PatientLabData")]
+        [HttpPost]
+        public ActionResult<List<VisuLabResult>> PatientLabData([FromBody] PatientLabDataParameter parameter,[FromHeader(Name = "Authorization")] string token = "NoToken")
+        {
+            try
+            {
+                List<VisuLabResult> visuLabResults = new List<VisuLabResult>();
+                PathogenParameter pathogen = new PathogenParameter() { Name = parameter.Pathogen };
+                foreach(string pat in parameter.patientList)
+                {
+                    Patient patient = new Patient() { PatientID = pat };
+                    List<VisuLabResult> labs = _medicalFindingService.GetMedicalFinding(patient, pathogen);
+                    visuLabResults.AddRange(labs);
+                }
+                return visuLabResults;
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("CALLED PatientLabData:" + e.Message);
+                return ErrorHandling(e);
+            }
+        }
 
         /// <summary></summary>
         /// <remarks>
@@ -126,6 +155,31 @@ namespace SmICSWebApp.Controllers
             {
                 _patientMoveFac.RestDataAccess.SetAuthenticationHeader(token);
                 return _patientMoveFac.Process(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("CALLED Patient_Bewegung_Ps:" + e.Message);
+                return ErrorHandling(e);
+            }
+        }
+
+
+        [Route("Patient_Bewegung_Ps2")]
+        [HttpPost]
+        public ActionResult<List<VisuPatientMovement>> PatientMovements([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
+        {
+            _logger.LogInformation("CALLED Patient_Bewegung_Ps with parameters: \n\r PatientIDs: {patList}", parameter.ToAQLMatchString());
+
+            try
+            {
+                List<VisuPatientMovement> visuMovements = new List<VisuPatientMovement>();
+                foreach (string pat in parameter.patientList)
+                {
+                    Patient patient = new Patient() { PatientID = pat };
+                    List<VisuPatientMovement> movements = _movementService.GetPatientMovements(patient);
+                    visuMovements.AddRange(movements);
+                }
+                return visuMovements;
             }
             catch (Exception e)
             {

@@ -23,6 +23,8 @@ using SmICSWebApp.Data.OutbreakDetection;
 using SmICSWebApp.Data.PatientView;
 using SmICSWebApp.Data.WardView;
 using SmICSWebApp.Data.Contact;
+using SmICSWebApp.Data.MedicalFinding;
+using SmICSWebApp.Data.PatientMovement;
 
 namespace SmICSWebApp
 {
@@ -58,6 +60,8 @@ namespace SmICSWebApp
             services.AddScoped<WardOverviewService>();
             services.AddScoped<PatientViewService>();
             services.AddScoped<ContactService>();
+            services.AddScoped<MedicalFindingService>();
+            services.AddScoped<PatientMovementService>();
 
             //AUTH - START 
 

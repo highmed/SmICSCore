@@ -109,13 +109,17 @@ namespace SmICSWebApp.Data.WardView
                 {
                     if (string.IsNullOrEmpty(filterMRE))
                     {
-                        if (patient.InfectionStatus.Where(infection => infection.Value.Infected).All(infection => infection.Value.Healed))
+                        if (patient.InfectionStatus != null)
                         {
-                            DateTime latestHealedDate = patient.InfectionStatus.Max(infection => infection.Value.HealedDate.Value);
-                            if (chartEntries["Stress"].ContainsKey(latestHealedDate.Date))
+                            var dict = patient.InfectionStatus.Where(infection => infection.Value.Infected).ToList();
+                            if (dict.Count > 0 && dict.All(infection => infection.Value.Healed))
                             {
-                                DecrementSince(latestHealedDate, chartEntries["Stress"]);
-                                continue;
+                                DateTime latestHealedDate = patient.InfectionStatus.Max(infection => infection.Value.HealedDate.Value);
+                                if (chartEntries["Stress"].ContainsKey(latestHealedDate.Date))
+                                {
+                                    DecrementSince(latestHealedDate, chartEntries["Stress"]);
+                                    continue;
+                                }
                             }
                         }
                     }

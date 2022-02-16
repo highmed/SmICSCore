@@ -51,7 +51,8 @@ namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
                         AND a/items[at0027]/value/value = '{parameter.Ward}' 
                         AND u/data[at0001]/items[at0005]/value/value > '{ parameter.Start.ToString("yyyy-MM-dd") }'
                         AND (u/data[at0001]/items[at0004]/value/value < '{ parameter.End.AddDays(1.0).ToString("yyyy-MM-dd") }'
-                        OR NOT EXISTS u/data[at0001]/items[at0005])"
+                        OR NOT EXISTS u/data[at0001]/items[at0005]) 
+                        ORDER BY u/data[at0001]/items[at0004]/value/value ASC"
             };
         }
 

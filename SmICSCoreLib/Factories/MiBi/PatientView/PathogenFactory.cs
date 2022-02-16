@@ -53,6 +53,7 @@ implemented) will be monitored first as a proof of principle, followed by methic
                         Query = @$"SELECT u/items[at0001,'Erregername']/value/value as Name,
                         u/items[at0001,'Erregername']/value/defining_code/code_string as ID,
                         u/items[at0024,'Nachweis?']/value/value as ResultString,
+                        u/items[at0024,'Nachweis?']/value/value as ResultText,
                         b/items[at0003]/value/value as Rate,
                         u/items[at0027,'Isolatnummer']/value/magnitude as IsolatNr,
                         '{parameter.MedicalField}' as MedicalField
@@ -74,24 +75,20 @@ implemented) will be monitored first as a proof of principle, followed by methic
                     {
                         //Needs to be edited
                         Name = "Pathogen",
-                        Query = @$"SELECT u/items[at0024]/value/value/value/value as Name,
+                        Query = @$"SELECT u/items[at0024]/value/value as Name,
                                 u/items[at0024]/value/defining_code/code_string as ID,
                                 u/items[at0001,'Nachweis']/value/defining_code/code_string as ResultString,
-                                b/items[at0001,'Quantitatives Ergebnis']/value/magnitude as Rate,
-                                b/items[at0001,'Quantitatives Ergebnis']/value/units as Unit,
+                                u/items[at0001,'Nachweis']/value/value as ResultText,
+                                u/items[at0001,'Quantitatives Ergebnis']/value/magnitude as Rate,
+                                u/items[at0001,'Quantitatives Ergebnis']/value/units as Unit,
                                 '{parameter.MedicalField}' as MedicalField
                                 FROM EHR e
                                 CONTAINS COMPOSITION c
                                 CONTAINS CLUSTER u[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] 
-                                CONTAINS (CLUSTER b[openEHR-EHR-CLUSTER.erregerdetails.v1]) 
                                 WHERE c/name/value='{parameter.MedicalField}'
                                 AND c/uid/value='{parameter.UID}'
                                 AND u/items[at0026,'Zugehörige Laborprobe']/value/id = '{parameter.LabID}'"
                     };
-                    if (!string.IsNullOrEmpty(parameter.Name))
-                    {
-                        query.Query += $" AND u/items[at0024,'Nachweis?']/value/value = '{ parameter.Name }'";
-                    }
                     return query;
                 default:
                     throw new NotImplementedException();

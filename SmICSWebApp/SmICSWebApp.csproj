@@ -62,6 +62,7 @@
 
   <ItemGroup>
     <Folder Include="Resources\nec\json\" />
+    <Folder Include="Resources\db\" />
   </ItemGroup>
 
   <ItemGroup>

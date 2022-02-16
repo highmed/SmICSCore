@@ -41,6 +41,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             {
                 Name = "Specimen",
                 Query = @$"SELECT a/items[at0029]/value/value as Kind,
+                       a/items[at0029]/value/defining_code/code_string as KindCode,
                        a/items[at0001]/value/id as LabID,
                        a/items[at0034]/value/value as SpecimenReceiptDate,
                        o/items[at0001]/value/value as Location,

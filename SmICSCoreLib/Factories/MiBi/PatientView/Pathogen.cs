@@ -23,6 +23,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             }
         }
         public string ResultString { private get; set; }
+        public string ResultText { get; set; }
         public DateTime? Timestamp { get; set; }
         private string _rate;
         public string Rate
@@ -42,7 +43,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         }
         public string IsolatNr { get; set; }
         public List<Antibiogram> Antibiograms { get; set; }
-        private string Unit { get; set; }
+        public string Unit { private get; set; }
         public string MedicalField { get; private set; }
 
     }
