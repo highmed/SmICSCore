@@ -42,7 +42,7 @@ namespace WebApp.Test.Symptom
             Assert.Equal(expected.Values, actual.Values);            
         }
 
-        private PatientStay CreatePatientStay(IRestDataAccess rest)
+        private PatientStay CreatePatientStay(IFeasabilityFactory rest)
         {
             IStationaryFactory statFac = new StationaryFactory(rest);
             ICountFactory CountFac = new CountFactory(rest);

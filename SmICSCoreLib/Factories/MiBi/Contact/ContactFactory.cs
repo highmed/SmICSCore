@@ -58,7 +58,10 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
                 };
 
                 List<PatientMovementNew.PatientStays.PatientStay> casesOnWard = _patientStayFac.Process(wardParameter);
-                cases.AddRange(casesOnWard);
+                if (casesOnWard is not null)
+                {
+                    cases.AddRange(casesOnWard);
+                }
             }
 
             return cases;

@@ -29,14 +29,15 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
         public Hospitalization Process(Case Case)
         {
             Admission admission = RestDataAccess.AQLQuery<Admission>(AdmissionQuery(Case)).FirstOrDefault();
-            Discharge discharge = RestDataAccess.AQLQuery<Discharge>(DischargeQuery(Case)).FirstOrDefault();
+            var dischargeResponse = RestDataAccess.AQLQuery<Discharge>(DischargeQuery(Case));
+            Discharge discharge = dischargeResponse == null ? new Discharge() { Date = null } : dischargeResponse.FirstOrDefault();
 
             return new Hospitalization
             {
                 CaseID = Case.CaseID,
                 PatientID = Case.PatientID,
                 Admission = admission,
-                Discharge = discharge.Date.HasValue ? discharge : null
+                Discharge = discharge
             };
         }
 

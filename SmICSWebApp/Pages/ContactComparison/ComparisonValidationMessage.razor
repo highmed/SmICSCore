@@ -1,0 +1,32 @@
+﻿@using SmICSWebApp.Data.ContactComparison;
+<div class="card bg-danger text-white">
+    <div class="card-header"> Keine Valide Anfrage!</div>
+
+    <div class="card-body">
+        @if (MessageType == UnvalidMessageType.DOUBLED_ENTRIES)
+        {
+
+            <span>Doppelte Einträge:</span>
+
+        }
+        else if (MessageType == UnvalidMessageType.NOT_EXISTING)
+        {
+
+            <span>Nicht existierende Einträge:</span>
+
+        }
+        <ul>
+            @foreach (string entry in UnvalidEntries)
+            {
+                <li>@entry</li>
+            }
+        </ul>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public List<string> UnvalidEntries { get; set; }
+
+    [Parameter]
+    public UnvalidMessageType MessageType { get; set; }
+}

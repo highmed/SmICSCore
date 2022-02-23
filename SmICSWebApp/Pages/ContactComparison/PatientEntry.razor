@@ -1,0 +1,10 @@
+﻿<tr>
+    <td>
+        <input type="text" placeholder="PatientID" @bind="Patient.PatientID" />
+    </td>
+</tr>
+
+@code {
+    [Parameter]
+    public SmICSCoreLib.Factories.General.Patient Patient  { get; set; }
+}

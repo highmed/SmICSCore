@@ -27,6 +27,7 @@ using SmICSCoreLib.Factories.MiBi.Contact;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.MenuList;
+using SmICSCoreLib.Factories.Feasability;
 
 namespace SmICS
 {
@@ -35,7 +36,7 @@ namespace SmICS
         public static IServiceCollection AddSmICSLibrary(this IServiceCollection services)
         {
             services.AddSingleton<RestClientConnector>();
-            services.AddSingleton<IRestDataAccess, RestDataAccess>();
+            services.AddSingleton<SmICSCoreLib.REST.IRestDataAccess, RestDataAccess>();
 
             services.AddScoped<IMenuListFactory, MenuListFactory>();
 
@@ -79,7 +80,7 @@ namespace SmICS
             services.AddTransient<IPersonDataFactory, PersonDataFactory>();
 
             services.AddTransient<IRKILabDataFactory, RKILabDataFactory>();
-
+            services.AddSingleton<IFeasabilityFactory, FeasabilityFactory>();
             return services;
         }
     }

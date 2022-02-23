@@ -20,7 +20,7 @@ namespace SmICSDataGenerator.Tests.Contact_Network
 		[ClassData(typeof(ContactNetworkTestData))]
 		public void ProcessorTest(int degree, int ehrNo, int start_year, int start_month, int start_day, int end_year, int end_month, int end_day, int expectedResultSet)
 		{
-			IRestDataAccess _data = TestConnection.Initialize();
+			IFeasabilityFactory _data = TestConnection.Initialize();
 			List<PatientIDs> patient = SmICSCoreLib.JSONFileStream.JSONReader<PatientIDs>.Read(@"../../../../TestData/GeneratedEHRIDs.json");
 
 			ContactParameter contactParams = new ContactParameter()

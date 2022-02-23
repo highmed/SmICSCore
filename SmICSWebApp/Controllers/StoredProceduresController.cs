@@ -23,6 +23,7 @@ using SmICSCoreLib.Factories.NEC;
 using SmICSWebApp.Data.MedicalFinding;
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSWebApp.Data.PatientMovement;
+using SmICSWebApp.Data.ContactNetwork;
 
 namespace SmICSWebApp.Controllers
 {
@@ -46,7 +47,8 @@ namespace SmICSWebApp.Controllers
         private readonly INECCombinedFactory _necComboFac;
         private readonly MedicalFindingService _medicalFindingService;
         private readonly PatientMovementService _movementService;
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService, INECCombinedFactory necComboFac, MedicalFindingService medicalFindingService, PatientMovementService movementService)
+        private readonly ContactNetworkService _contactService;
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService, INECCombinedFactory necComboFac, MedicalFindingService medicalFindingService, PatientMovementService movementService, ContactNetworkService contactService)
         {
             _logger = logger;
             _contact = contact;
@@ -62,6 +64,7 @@ namespace SmICSWebApp.Controllers
             _necComboFac = necComboFac;
             _medicalFindingService = medicalFindingService;
             _movementService = movementService;
+            _contactService = contactService;
         }
 
         /// <summary></summary>
@@ -71,9 +74,9 @@ namespace SmICSWebApp.Controllers
         /// <param name="parameter"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        [Route("Contact_NthDegree_TTKP_Degree")]
+        /*[Route("Contact_NthDegree_TTKP_Degree")]
         [HttpPost]
-        public ActionResult<ContactModel> Contact_NthDegree_TTP_Degree([FromBody] ContactParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
+        public ActionResult<SmICSCoreLib.Factories.ContactNetwork.ContactModel> Contact_NthDegree_TTP_Degree([FromBody] ContactParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Contact_NthDegree_TTP_Degree with parameters: \n\r PatientID: {patID}\n\r Starttime: {start} \n\r Endtime: {end} \n\r Degree: {d} ", parameter.PatientID, parameter.Starttime, parameter.Endtime, parameter.Degree);
             try
@@ -81,6 +84,22 @@ namespace SmICSWebApp.Controllers
                 _contact.RestDataAccess.SetAuthenticationHeader(token);
                 System.Diagnostics.Debug.WriteLine("CALLED Contact_NthDegree_TTKP_Degree " + parameter.PatientID + " - " + parameter.Starttime + " - " + parameter.Endtime + " - " + parameter.Degree);
                 return _contact.Process(parameter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("CALLED Contact_NthDegree_TTP_Degree:" + e.Message);
+                return ErrorHandling(e);
+            }
+        }*/
+
+        [Route("ContactNetwork")]
+        [HttpPost]
+        public ActionResult<Data.ContactNetwork.ContactModel> ContactNetwork([FromBody] ContactNetworkParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
+        {
+            try
+            {
+                Data.ContactNetwork.ContactModel contacts = _contactService.GetContactNetwork(parameter);
+                return contacts;
             }
             catch (Exception e)
             {

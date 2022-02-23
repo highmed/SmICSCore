@@ -1,0 +1,42 @@
+﻿@using Blazorise
+@using SmICSWebApp.Data.ContactComparison;
+
+<Collapse Visible="@Collapsed">
+    <CollapseHeader>
+        <button type="button" @onclick="@(() => Collapsed = !Collapsed)" class="w-100">
+            <h6>@Contact.PatientA - @Contact.PatientB</h6>
+        </button>
+    </CollapseHeader>
+    <CollapseBody>
+        <table>
+            <thead>
+                <tr>
+                    <th>Zimmer</th>
+                    <th>Station</th>
+                    <th>Fachabteilung</th>
+                    <th>Kontaktbeginn</th>
+                    <th>Kontaktende</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (ContactPoint contactPoint in Contact.ContactLocations)
+                {
+                <tr>
+                    <td>@contactPoint.Room</td>
+                    <td>@contactPoint.Ward</td>
+                    <td>@contactPoint.Departement</td>
+                    <td>@contactPoint.Start</td>
+                    <td>@contactPoint.End</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </CollapseBody>
+</Collapse>
+
+@code {
+    [Parameter]
+    public ComparedContact Contact { get; set; }
+
+    private bool Collapsed = false;
+}

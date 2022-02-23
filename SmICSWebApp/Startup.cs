@@ -25,6 +25,8 @@ using SmICSWebApp.Data.WardView;
 using SmICSWebApp.Data.Contact;
 using SmICSWebApp.Data.MedicalFinding;
 using SmICSWebApp.Data.PatientMovement;
+using SmICSWebApp.Data.ContactNetwork;
+using SmICSWebApp.Data.ContactComparison;
 
 namespace SmICSWebApp
 {
@@ -62,6 +64,8 @@ namespace SmICSWebApp
             services.AddScoped<ContactService>();
             services.AddScoped<MedicalFindingService>();
             services.AddScoped<PatientMovementService>();
+            services.AddScoped<ContactNetworkService>();
+            services.AddScoped<ComparisonService>();
 
             //AUTH - START 
 
