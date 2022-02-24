@@ -72,7 +72,7 @@ namespace SmICSWebApp.Data.ContactNetwork
             foreach (VisuPatientMovement patientWard in PatientWardList)
             {
                 List<PatientStay> contactStays = _patStayFac.Process(new WardParameter() { Ward = patientWard.Ward, Start = patientWard.Admission, End = patientWard.Discharge });
-                if (contactStays == null)
+                if (contactStays is not null)
                 {
                     foreach (PatientStay contact in contactStays)
                     {
