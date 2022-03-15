@@ -7,5 +7,6 @@
         public int[] FitRange { get; set; }
         public int LookbackWeeks { get; set; }
         public string SavingDirectory { get; set; }
+        public string MedicalField { get; internal set; }
     }
 }

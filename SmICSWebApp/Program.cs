@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using SmICSCoreLib.DB;
+using SmICSCoreLib.DB.MenuItems;
 
 namespace SmICSWebApp
 {
@@ -19,6 +21,7 @@ namespace SmICSWebApp
             try
             {
                 Log.Information("SmICS Application Starting up");
+                ConfigureDatabase();
                 CreateHostBuilder(args).Build().Run();
             }
             catch(Exception e)
@@ -38,5 +41,12 @@ namespace SmICSWebApp
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+        private static void ConfigureDatabase()
+        {
+            IMenuItemDataAccess dbStartup = new MenuItemDataAccess(new DataAccess(new DapperContext()));
+            dbStartup.CreatePathogenTable();
+            dbStartup.CreateWardTable();
+        }
     }
 }

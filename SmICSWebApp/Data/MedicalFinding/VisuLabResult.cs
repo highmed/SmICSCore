@@ -11,7 +11,7 @@ namespace SmICSWebApp.Data.MedicalFinding
         [JsonProperty("Eingangsdatum")]
         public DateTime SpecimenCollectionDateTime { get; internal set; }
         [JsonProperty("ZeitpunktProbeneingang")]
-        public DateTime? SpecimenReceiptDateTime { get; internal set; }
+        public DateTime? SpecimenReceiptDateTime { get; internal set; } 
         [JsonProperty("Probenart")]
         public string MaterialID { get; internal set; }
         [JsonProperty("Material_l")]
@@ -30,5 +30,9 @@ namespace SmICSWebApp.Data.MedicalFinding
         public object Comment { get; internal set; }
         [JsonProperty("Quantity")]
         public string Quantity { get; internal set; }
+        [JsonProperty("Einheit")]
+        public string Unit { get; internal set; }
+        [JsonProperty("Bereich")]
+        public string Kind { get; internal set; }
     }
 }

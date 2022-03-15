@@ -19,7 +19,6 @@ using SmICSCoreLib.StatistikDataModels;
 using SmICSCoreLib.Factories.InfectionSituation;
 using SmICSWebApp.Data.OutbreakDetection;
 using SmICSCoreLib.OutbreakDetection;
-using SmICSCoreLib.Factories.NEC;
 using SmICSWebApp.Data.MedicalFinding;
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSWebApp.Data.PatientMovement;
@@ -44,11 +43,10 @@ namespace SmICSWebApp.Controllers
         private readonly ISymptomFactory _symptomFac;
         private readonly IVaccinationFactory _vaccinationFac;
         private readonly OutbreakDetectionService _outbreakService;
-        private readonly INECCombinedFactory _necComboFac;
         private readonly MedicalFindingService _medicalFindingService;
         private readonly PatientMovementService _movementService;
         private readonly ContactNetworkService _contactService;
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService, INECCombinedFactory necComboFac, MedicalFindingService medicalFindingService, PatientMovementService movementService, ContactNetworkService contactService)
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService, MedicalFindingService medicalFindingService, PatientMovementService movementService, ContactNetworkService contactService)
         {
             _logger = logger;
             _contact = contact;
@@ -61,7 +59,6 @@ namespace SmICSWebApp.Controllers
             _symptomFac = symptomFac;
             _vaccinationFac = vaccinationFac;
             _outbreakService = outbreakService;
-            _necComboFac = necComboFac;
             _medicalFindingService = medicalFindingService;
             _movementService = movementService;
             _contactService = contactService;
@@ -92,7 +89,7 @@ namespace SmICSWebApp.Controllers
             }
         }*/
 
-        [Route("ContactNetwork")]
+        [Route("Contact_NthDegree_TTKP_Degree")]
         [HttpPost]
         public ActionResult<Data.ContactNetwork.ContactModel> ContactNetwork([FromBody] ContactNetworkParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
@@ -116,7 +113,7 @@ namespace SmICSWebApp.Controllers
         /// <param name="parameter"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        [Route("Patient_Labordaten_Ps")]
+        /*[Route("Patient_Labordaten_Ps")]
         [HttpPost]
         public ActionResult<List<LabDataModel>> Patient_Labordaten_Ps([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
@@ -131,9 +128,9 @@ namespace SmICSWebApp.Controllers
                 _logger.LogWarning("CALLED Patient_Labordaten_Ps:" + e.Message);
                 return ErrorHandling(e);
             }
-        }
+        }*/
 
-        [Route("PatientLabData")]
+        [Route("Patient_Labordaten_Ps")]
         [HttpPost]
         public ActionResult<List<VisuLabResult>> PatientLabData([FromBody] PatientLabDataParameter parameter,[FromHeader(Name = "Authorization")] string token = "NoToken")
         {
@@ -164,7 +161,7 @@ namespace SmICSWebApp.Controllers
         /// <param name="parameter"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        [Route("Patient_Bewegung_Ps")]
+        /*[Route("Patient_Bewegung_Ps")]
         [HttpPost]
         public ActionResult<List<PatientMovementModel>> Patient_Bewegung_Ps([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
@@ -180,10 +177,10 @@ namespace SmICSWebApp.Controllers
                 _logger.LogWarning("CALLED Patient_Bewegung_Ps:" + e.Message);
                 return ErrorHandling(e);
             }
-        }
+        }*/
 
 
-        [Route("Patient_Bewegung_Ps2")]
+        [Route("Patient_Bewegung_Ps")]
         [HttpPost]
         public ActionResult<List<VisuPatientMovement>> PatientMovements([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
@@ -224,7 +221,7 @@ namespace SmICSWebApp.Controllers
 
             try
             {
-                EpiCurveParameter epiParams = new EpiCurveParameter() { Endtime = parameter.Endtime, Starttime = parameter.Starttime, PathogenCodes = new List<string>() { "94500-6", "94745-7", "94558-4" } };
+                EpiCurveParameter epiParams = new EpiCurveParameter() { Endtime = parameter.Endtime, Starttime = parameter.Starttime, PathogenCodes = new List<string>() { "94500-6", "94745-7", "94558-4" }, Pathogen = "sars-cov-2" };
                 _epiCurveFac.RestDataAccess.SetAuthenticationHeader(token);
                 return _epiCurveFac.Process(epiParams);
             }
@@ -499,20 +496,6 @@ namespace SmICSWebApp.Controllers
             try
             {
                 return _outbreakService.GetsResultsInTimespan(outbreak);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }
-
-        [Route("NECDataRequest")]
-        [HttpPost]
-        public ActionResult<List<NECPatientInformation>> NEC([FromBody] DateTime date)
-        {
-            try
-            {
-                return _necComboFac.Process(date);
             }
             catch (Exception e)
             {

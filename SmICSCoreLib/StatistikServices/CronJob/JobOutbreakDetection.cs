@@ -1,4 +1,5 @@
 ﻿using Quartz;
+using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.OutbreakDetection;
 using SmICSCoreLib.Factories.RKIConfig;
 using SmICSCoreLib.JSONFileStream;
@@ -46,15 +47,15 @@ namespace SmICSCoreLib.StatistikServices.CronJob
                 string savingFolder = GetSavingFolder(config);
                 savingFolder = "";
                 OutbreakDetectionParameter outbreakParam = ConfigToParam(config, savingFolder);
-                SmICSVersion version = config.Erregerstatus == "virologisch" ? SmICSVersion.VIROLOGY : SmICSVersion.MICROBIOLOGY;
-
+                outbreakParam.MedicalField = config.Erregerstatus == "virologisch" ? MedicalField.VIROLOGY : MedicalField.MICROBIOLOGY;
                 ProxyParameterModel parameter = new ProxyParameterModel()
                 {
-                    EpochsObserved = _paramFac.Process(outbreakParam, version),
+                    EpochsObserved = _paramFac.Process(outbreakParam),
                     SavingFolder = savingFolder,
                     SavingDirectory = Directory.GetCurrentDirectory(),
                     FitRange = GetFitRange(outbreakParam, savingFolder, Convert.ToInt32(config.Zeitraum)),
-                    LookbackWeeks = Convert.ToInt32(config.Zeitraum)
+                    LookbackWeeks = Convert.ToInt32(config.Zeitraum),
+                    MedicalField = outbreakParam.MedicalField
                 };
 
                 _proxy.Covid19Extension(parameter);
@@ -88,7 +89,6 @@ namespace SmICSCoreLib.StatistikServices.CronJob
             OutbreakDetectionParameter outbreakParam = new OutbreakDetectionParameter();
             if (config.Retro && !File.Exists(@"./Resources/OutbreakDetection/" + savingFolder + DateTime.Now.AddDays(-1.0).ToString("yyyy-MM-dd")))
             {
-
                 outbreakParam.Retro = true; 
             }
             else
@@ -99,7 +99,6 @@ namespace SmICSCoreLib.StatistikServices.CronJob
             outbreakParam.Endtime = DateTime.Now;
             outbreakParam.PathogenIDs = config.ErregerID.Select(k => k.KeimID).ToList();
             outbreakParam.Ward = config.Station;
-            
             return outbreakParam;
         }
     }

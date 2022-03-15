@@ -17,7 +17,7 @@ namespace SmICSCoreLib.OutbreakDetection
             string RResultFileName = parameter.SavingDirectory+"/Resources/RRuntime/Variables_for_Visualization.json";
 
             //Rscript.exe rscript00010.r pfad fitrange fitrange lookbackweek
-            string argumentString = RArgPath + " " + parameter.FitRange[0] + " " + parameter.FitRange[1] + " " + parameter.LookbackWeeks;
+            string argumentString = RArgPath + " " + parameter.FitRange[0] + " " + parameter.FitRange[1] + " " + parameter.LookbackWeeks + " " + parameter.MedicalField;
 
             GenerateTransferScript(parameter.EpochsObserved, parameter.SavingDirectory);
             ExternalProcess.Execute(RScript, RExecPath, argumentString);

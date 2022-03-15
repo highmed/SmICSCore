@@ -25,25 +25,11 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         public string ResultString { private get; set; }
         public string ResultText { get; set; }
         public DateTime? Timestamp { get; set; }
-        private string _rate;
-        public string Rate
-        {
-            get
-            {
-                if (SmICSCoreLib.Factories.General.MedicalField.VIROLOGY == MedicalField)
-                {
-                    return _rate + " " + Unit;
-                }
-                return _rate;
-            }
-            set
-            {
-                _rate = value;
-            }
-        }
+
+        public string Rate { get; set; }
         public string IsolatNr { get; set; }
         public List<Antibiogram> Antibiograms { get; set; }
-        public string Unit { private get; set; }
+        public string Unit { get; set; }
         public string MedicalField { get; private set; }
 
     }

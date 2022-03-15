@@ -60,7 +60,7 @@ namespace SmICSCoreLib.Factories.EpiCurve
         private void CreateDailyEntries(DateTime date, EpiCurveParameter parameter)
         {
             _logger.LogDebug("Flag - Query Paramters: Datum: {Date} \r PathogenList: {pathogens}", date.ToString(), parameter.PathogenCodesToAqlMatchString());
-            List<FlagTimeModel> flagTimes = RestDataAccess.AQLQuery<FlagTimeModel>(AQLCatalog.LaborEpiCurve(date, parameter));
+            List<FlagTimeModel> flagTimes = RestDataAccess.AQLQuery<FlagTimeModel>(LaborEpiCurve(date, parameter));
 
             if (flagTimes == null)
             {
@@ -223,8 +223,8 @@ namespace SmICSCoreLib.Factories.EpiCurve
         {
             return new EpiCurveModel()
             {
-                ErregerID = flag.VirusCode,
-                ErregerBEZL = flag.Virus,
+                ErregerID = flag.PathogenCode,
+                ErregerBEZL = flag.Pathogen,
                 Anzahl = 0,
                 anzahl_gesamt = 0,
                 Datum = date,
@@ -252,6 +252,84 @@ namespace SmICSCoreLib.Factories.EpiCurve
             };
         }
 
+        private AQLQuery LaborEpiCurve(DateTime date, EpiCurveParameter parameter)
+        {
+            if (parameter.MedicalField == MedicalField.VIROLOGY)
+            {
+                return new AQLQuery()
+                {
+                    Name = "LaborEpiCurve",
+                    Query = $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
+                        i/items[at0001]/value/value as FallID,
+                        d/items[at0001]/value/defining_code/code_string as Flag,
+                        d/items[at0024]/value/defining_code/code_string as PathogenCode,
+                        d/items[at0024]/value/value as Pathogen,
+                        m/items[at0015]/value/value as Datum
+                        FROM EHR e
+                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+                        CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] 
+                        AND OBSERVATION v[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
+                        CONTAINS (CLUSTER m[openEHR-EHR-CLUSTER.specimen.v1] 
+                        AND CLUSTER s[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] 
+                        CONTAINS (CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1])))
+                        WHERE c/name/value='Virologischer Befund' 
+                        AND d/items[at0001]/name/value='Nachweis' 
+                        AND d/items[at0024]/value/defining_code/code_string MATCHES { parameter.PathogenCodesToAqlMatchString() }
+                        AND m/items[at0015]/value/value>='{ date.ToString("yyyy-MM-dd") }' 
+                        AND m/items[at0015]/value/value<'{ date.AddDays(1).ToString("yyyy-MM-dd") }'"
+                };
+            }
+            else
+            {
+                return new AQLQuery()
+                {
+                    Name = "",
+                    Query = @$"SELECT n/items[at0001]/value/value as FallID,
+                    i/items[at0024]/value/value as Flag,
+                    i/items[at0001]/value/value as Pathogen,
+                    i/items[at0001]/value/defining_code/code_string as PathogenCode,
+                    u/items[at0015]/value/value as Datum
+                    FROM EHR e
+                    CONTAINS COMPOSITION c
+                    CONTAINS (CLUSTER n[openEHR-EHR-CLUSTER.case_identification.v0] and OBSERVATION x[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]
+                    CONTAINS (CLUSTER u[openEHR-EHR-CLUSTER.specimen.v1] and CLUSTER v[openEHR-EHR-CLUSTER.laboratory_test_panel.v0]
+                    CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1])))
+                    WHERE c/archetype_details/template_id/value='Mikrobiologischer Befund' 
+                    and i/items[at0024]/name/value='Nachweis?' 
+                    and i/items[at0001]/name/value='Erregername'
+                    and i/items[at0001]/value/value MATCHES {parameter.PathogenCodesToAqlMatchString()}
+                    and u/items[at0015]/value/value >= '{ date.ToString("yyyy-MM-dd") }'
+                    and u/items[at0015]/value/value < '{ date.AddDays(1).ToString("yyyy-MM-dd") }'"
+                };
+            }
+        }
+
+
+        private AQLQuery ViroLaborEpiCurve(DateTime date, EpiCurveParameter parameter)
+        {
+            return new AQLQuery()
+            {
+                Name = "LaborEpiCurve",
+                Query = $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
+                        i/items[at0001]/value/value as FallID,
+                        d/items[at0001]/value/defining_code/code_string as Flag,
+                        d/items[at0024]/value/defining_code/code_string as VirusCode,
+                        d/items[at0024]/value/value as Virus,
+                        m/items[at0015]/value/value as Datum
+                        FROM EHR e
+                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+                        CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] 
+                        AND OBSERVATION v[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
+                        CONTAINS (CLUSTER m[openEHR-EHR-CLUSTER.specimen.v1] 
+                        AND CLUSTER s[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] 
+                        CONTAINS (CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1])))
+                        WHERE c/name/value='Virologischer Befund' 
+                        AND d/items[at0001]/name/value='Nachweis' 
+                        AND d/items[at0024]/value/defining_code/code_string MATCHES { parameter.PathogenCodesToAqlMatchString() }
+                        AND m/items[at0015]/value/value>='{ date.ToString("yyyy-MM-dd") }' 
+                        AND m/items[at0015]/value/value<'{ date.AddDays(1).ToString("yyyy-MM-dd") }'"
+            };
+        }
     }
     internal enum Purpose
     {

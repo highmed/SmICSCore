@@ -17,6 +17,7 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
         {
             List<Hospitalization> hospitalizations = new List<Hospitalization>();
             List<Case> cases = RestDataAccess.AQLQuery<Case>(HospitalizationCasesQuery(patient));
+            //TODO if null
             foreach (Case Case in cases)
             {
                 Hospitalization hospitalization = Process(Case);

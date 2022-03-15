@@ -61,7 +61,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                 uids = RestDataAccess.AQLQuery<UID>(GetPathogenCompositionsUIDs(Case, pathogen));
             }
             List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case, MedicalField, uids));
-            // TODO: Abfangen von results == null
+            // TODO: Abfangen von results == 
             foreach (LabResult result in results)
             {
                 SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID, MedicalField = MedicalField};

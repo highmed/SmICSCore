@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SmICSCoreLib.Factories.EpiCurve.ReceiveModel
 {
@@ -8,14 +6,14 @@ namespace SmICSCoreLib.Factories.EpiCurve.ReceiveModel
     {
         public string PatientID { get; set; }
         public string FallID { get; set; }
-        public string Virus { get; set; }
-        public string VirusCode { get; set; }
+        public string Pathogen { get; set; }
+        public string PathogenCode { get; set; }
         public string Flag { get; set; }
         public DateTime Datum { get; set; }
 
         public bool HasFlag() 
         {
-            return Flag == "260373001" ? true : false;
+            return (Flag == "260373001" || Flag=="Nachweis") ? true : false;
         }
 
     }

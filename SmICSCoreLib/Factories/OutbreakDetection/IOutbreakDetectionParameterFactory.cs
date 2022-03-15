@@ -2,6 +2,6 @@
 {
     public interface IOutbreakDetectionParameterFactory
     {
-        int[][] Process(OutbreakDetectionParameter parameter, SmICSVersion version);
+        int[][] Process(OutbreakDetectionParameter parameter);
     }
 }

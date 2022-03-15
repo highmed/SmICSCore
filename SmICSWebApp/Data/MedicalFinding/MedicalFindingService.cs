@@ -49,9 +49,11 @@ namespace SmICSWebApp.Data.MedicalFinding
                         ResultText = pathogen.ResultText,
                         Pathogen = pathogen.Name,
                         PathogenID = pathogen.ID,
-                        ResultDate = result.ResultDateTime,
+                        ResultDate = specimen.SpecimenCollectionDateTime,
                         Comment = result.Comment,
-                        Quantity = pathogen.Rate
+                        Quantity = pathogen.Rate,
+                        Unit = string.IsNullOrEmpty(pathogen.Unit) ? null : pathogen.Unit,
+                        Kind = pathogen.MedicalField == MedicalField.VIROLOGY ? "virologisch" : "mikrobiologisch"
 
                     };
                     results.Add(labResult);

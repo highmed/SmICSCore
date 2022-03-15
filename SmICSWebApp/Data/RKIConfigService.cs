@@ -5,6 +5,7 @@ using SmICSCoreLib.Factories.RKIConfig;
 using SmICSCoreLib.Factories.PatientMovement;
 using System.IO;
 using System.Linq;
+using SmICSCoreLib.Factories.MiBi.Nosocomial;
 
 namespace SmICSWebApp.Data
 {
@@ -118,6 +119,12 @@ namespace SmICSWebApp.Data
             {
                 return null;
             }
+        }
+
+        public List<string> GetFilter(string pathogen)
+        {
+            List<string> filter = Rules.GetPossibleMREClasses(pathogen);
+            return filter;
         }
     }
 }

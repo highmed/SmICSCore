@@ -6,7 +6,6 @@ using SmICSCoreLib.Factories.Vaccination;
 using SmICSCoreLib.Factories.ContactNetwork;
 using SmICSCoreLib.Factories.EpiCurve;
 using SmICSCoreLib.REST;
-using SmICSCoreLib.Factories.NEC;
 using SmICSCoreLib.Factories.Lab.MibiLabData;
 using SmICSCoreLib.Factories.PatientStay;
 using SmICSCoreLib.Factories.PatientStay.Stationary;
@@ -28,6 +27,8 @@ using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.MenuList;
 using SmICSCoreLib.Factories.Feasability;
+using SmICSCoreLib.DB;
+using SmICSCoreLib.DB.MenuItems;
 
 namespace SmICS
 {
@@ -37,7 +38,10 @@ namespace SmICS
         {
             services.AddSingleton<RestClientConnector>();
             services.AddSingleton<SmICSCoreLib.REST.IRestDataAccess, RestDataAccess>();
+            services.AddSingleton<DapperContext>();
+            services.AddSingleton<IDataAccess, DataAccess>();
 
+            services.AddScoped<IMenuItemDataAccess, MenuItemDataAccess>();
             services.AddScoped<IMenuListFactory, MenuListFactory>();
 
             services.AddTransient<IPatientMovementFactory, PatientMovementFactory>();
@@ -60,10 +64,6 @@ namespace SmICS
             services.AddTransient<IContactNetworkFactory, ContactNetworkFactory>();
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();
 
-            services.AddTransient<INECCombinedFactory, NECCombinedFactory>();
-
-            services.AddTransient<INECResultDataFactory, NECResultDataFactory>();
-            services.AddTransient<INECResultFileFactory, NECResultFileFactory>();
 
             services.AddTransient<IOutbreakDetectionParameterFactory, OutbreakDetectionParameterFactory>();
             services.AddSingleton<OutbreakDetectionProxy>();
