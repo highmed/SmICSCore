@@ -1,12 +1,10 @@
 ﻿using SmICSCoreLib.Factories.General;
-using System;
-using System.Collections.Generic;
 
 namespace SmICSCoreLib.Factories.EpiCurve
 {
     public class EpiCurveParameter : TimespanParameter
     {
-        public List<string> PathogenCodes { get; set; }
+        
         public string Pathogen { get; set; }
 
         public string MedicalField
@@ -25,18 +23,13 @@ namespace SmICSCoreLib.Factories.EpiCurve
         }
         public EpiCurveParameter() { }
 
-        public EpiCurveParameter(TimespanParameter timespanParameter, List<string> pathogenCodes, string pathogen)
+        public EpiCurveParameter(TimespanParameter timespanParameter, string pathogen)
         {
             Starttime = timespanParameter.Starttime;
             Endtime = timespanParameter.Endtime;
-            PathogenCodes = pathogenCodes;
             Pathogen = pathogen;
         }
 
-        public string PathogenCodesToAqlMatchString()
-        {
-            string convertedList = String.Join("','", PathogenCodes);
-            return "{'" + convertedList + "'}";
-        }
+        
     }
 }

@@ -31,12 +31,12 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             return resistances.Count > 0 ? resistances : null;
         }
 
-        public static List<string> GetPossibleMREClasses(string pathogen)
+        public static List<string> GetPossibleMREClasses(List<string> pathogenCodes)
         {
             List<string> possibleMREClasses = new List<string>();
             using (StreamReader reader = new StreamReader(@"./Resources/Rules/ResistanceRules.json"))
             {
-                RuleParameter input = new RuleParameter("input", pathogen);
+                RuleParameter input = new RuleParameter("input", pathogenCodes);
                 string json = reader.ReadToEnd();
                 Workflow[] resistanceRules = JsonConvert.DeserializeObject<List<Workflow>>(json).ToArray();
                 RulesEngine.RulesEngine engine = new RulesEngine.RulesEngine(resistanceRules, null);

@@ -61,18 +61,20 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                 uids = RestDataAccess.AQLQuery<UID>(GetPathogenCompositionsUIDs(Case, pathogen));
             }
             List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case, MedicalField, uids));
-            // TODO: Abfangen von results == 
-            foreach (LabResult result in results)
-            {
-                SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID, MedicalField = MedicalField};
-                result.Specimens = _specimenFac.Process(parameter, pathogen);
-                result.Specimens.RemoveAll(spec => spec.Pathogens == null);
-                if (result.Specimens.Count > 0)
+            if (results is not null)
+            { 
+                foreach (LabResult result in results)
                 {
-                    result.Sender = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID)).FirstOrDefault();
+                    SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID, MedicalField = MedicalField };
+                    result.Specimens = _specimenFac.Process(parameter, pathogen);
+                    result.Specimens.RemoveAll(spec => spec.Pathogens == null);
+                    if (result.Specimens.Count > 0)
+                    {
+                        result.Sender = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID)).FirstOrDefault();
+                    }
                 }
+                results.RemoveAll(lab => lab.Specimens.Count == 0);
             }
-            results.RemoveAll(lab => lab.Specimens.Count == 0);
             return results;
         }
 
@@ -88,7 +90,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                             CONTAINS CLUSTER m[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] 
                             WHERE c/name/value='{pathogen.MedicalField}'
                             and m/items[at0001]/name/value = 'Erregername'
-                            and m/items[at0001]/value/value = '{pathogen.Name}'
+                            and m/items[at0001]/value/defining_code/code_string = {pathogen.PathogenCodesToAqlMatchString() }
                             and e/ehr_status/subject/external_ref/id/value='{Case.PatientID}'"
             };
         }

@@ -27,6 +27,7 @@ using SmICSWebApp.Data.MedicalFinding;
 using SmICSWebApp.Data.PatientMovement;
 using SmICSWebApp.Data.ContactNetwork;
 using SmICSWebApp.Data.ContactComparison;
+using SmICSWebApp.Data.Menu;
 
 namespace SmICSWebApp
 {
@@ -66,6 +67,7 @@ namespace SmICSWebApp
             services.AddScoped<PatientMovementService>();
             services.AddScoped<ContactNetworkService>();
             services.AddScoped<ComparisonService>();
+            services.AddScoped<MenuService>();
 
             //AUTH - START 
 
@@ -121,7 +123,7 @@ namespace SmICSWebApp
             //OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
             //OpenehrConfig.smicsVisuPort = Environment.GetEnvironmentVariable("SMICS_VISU_PORT");
 
-            OpenehrConfig.openehrEndpoint = "http://plri-highmed01.mh-hannover.local:8081/rest/openehr/v1";
+            OpenehrConfig.openehrEndpoint = "http://plri-highmed01.mh-hannover.local:8081";
             //OpenehrConfig.openehrUser = "smics";
             //OpenehrConfig.openehrPassword = "b+KzsSFD?cgdW2UA";
             OpenehrConfig.openehrUser = "etltestuser";

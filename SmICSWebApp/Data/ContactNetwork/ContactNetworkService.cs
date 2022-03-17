@@ -78,7 +78,8 @@ namespace SmICSWebApp.Data.ContactNetwork
                     {
                         if (contacts.PatientMovements.Where(c => c.PatientID == contact.PatientID).Count() == 0)
                         {
-                            List<VisuLabResult> contactLabResults = _medicalFinding.GetMedicalFinding(contact, new SmICSCoreLib.Factories.MiBi.PatientView.Parameter.PathogenParameter() { Name = parameter.Pathogen });
+                            List<VisuLabResult> contactLabResults = _medicalFinding.GetMedicalFinding(contact, new SmICSCoreLib.Factories.MiBi.PatientView.Parameter.PathogenParameter() { PathogenCodes
+                                = parameter.PathogenCodes });
                             List<VisuPatientMovement> contactMovements = _movementService.GetPatientMovements(contact);
 
                             contacts.LaborData.AddRange(contactLabResults);
@@ -90,7 +91,7 @@ namespace SmICSWebApp.Data.ContactNetwork
                                 {
                                     PatientID = contact.PatientID,
                                     Degree = maxDegree,
-                                    Pathogen = parameter.Pathogen,
+                                    PathogenCodes = parameter.PathogenCodes,
                                     ContactStart = contactMovements.First().Admission,
                                     ContactEnd = contact.Discharge.HasValue && contact.Discharge.Value > patientWard.Discharge ? contact.Discharge.Value : patientWard.Discharge
                                 });

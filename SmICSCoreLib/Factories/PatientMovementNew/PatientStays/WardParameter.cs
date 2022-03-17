@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
 {
@@ -7,6 +8,6 @@ namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
         public string Ward { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
-        public string Pathogen { get; set; }
+        public List<string> PathogenCode { get; set; }
     }
 }

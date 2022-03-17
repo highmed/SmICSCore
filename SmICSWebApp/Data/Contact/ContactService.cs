@@ -27,7 +27,7 @@ namespace SmICSWebApp.Data.Contact
         {
             List<Hospitalization> hospitalizations = _hospitalizationFac.Process(parameter);
             Hospitalization latestHospitalization = hospitalizations.Last();
-            PathogenParameter pathogenParameter = new PathogenParameter() { Name = parameter.Pathogen };
+            PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCodes };
             SortedList<Hospitalization, InfectionStatus> infectionStatus =_infectionStatusFac.Process(parameter, pathogenParameter, parameter.Resistence);
             List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _patientStayFac.Process(latestHospitalization);
             ContactRoot rootContact = new ContactRoot()
@@ -52,7 +52,7 @@ namespace SmICSWebApp.Data.Contact
             Hospitalization prevHospitalization = rootContact.Hospitalizations[index - 1];
             if (!rootContact.Contacts.ContainsKey(prevHospitalization))
             {
-                PathogenParameter pathogenParameter = new PathogenParameter() { Name = parameter.Pathogen };
+                PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCodes };
                 SortedList<Hospitalization, InfectionStatus> infectionStatus = _infectionStatusFac.Process(prevHospitalization, pathogenParameter, parameter.Resistence);
                 List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _patientStayFac.Process(prevHospitalization);
                 rootContact.AddHospitalization(prevHospitalization, infectionStatus[prevHospitalization], null, null);
@@ -61,9 +61,9 @@ namespace SmICSWebApp.Data.Contact
             rootContact.CurrentHospitalization = prevHospitalization;
         }
 
-        public List<string> GetFilter(string pathogen)
+        public List<string> GetFilter(List<string> pathogenCodes)
         {
-            List<string> filter = Rules.GetPossibleMREClasses(pathogen);
+            List<string> filter = Rules.GetPossibleMREClasses(pathogenCodes);
             return filter;
         }
 
@@ -104,7 +104,7 @@ namespace SmICSWebApp.Data.Contact
 
         public List<string> GetFilter(ContactParameter parameter)
         {
-            List<string> filter = Rules.GetPossibleMREClasses(parameter.Pathogen);
+            List<string> filter = Rules.GetPossibleMREClasses(parameter.PathogenCodes);
             return filter;
         }
     }

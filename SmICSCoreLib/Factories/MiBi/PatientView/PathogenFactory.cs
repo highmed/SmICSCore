@@ -65,9 +65,9 @@ implemented) will be monitored first as a proof of principle, followed by methic
                         AND c/uid/value='{parameter.UID}'
                         AND u/items[at0026,'Zugehörige Laborprobe']/value/id = '{parameter.LabID}'"
                     };
-                    if (!string.IsNullOrEmpty(parameter.Name))
+                    if(parameter.PathogenCodes is not null)
                     {
-                        query.Query += $" AND u/items[at0001]/value/value = '{ parameter.Name }'";
+                        query.Query += $" AND u/items[at0001]/value/defining_code/code_string MATCHES { parameter.PathogenCodesToAqlMatchString() }";
                     }
                     return query;
                 case MedicalField.VIROLOGY:
@@ -89,6 +89,10 @@ implemented) will be monitored first as a proof of principle, followed by methic
                                 AND c/uid/value='{parameter.UID}'
                                 AND u/items[at0026,'Zugehörige Laborprobe']/value/id = '{parameter.LabID}'"
                     };
+                    if (parameter.PathogenCodes is not null)
+                    {
+                        query.Query += $" AND u/items[at0024]/value/defining_code/code_string MATCHES { parameter.PathogenCodesToAqlMatchString() }";
+                    }
                     return query;
                 default:
                     throw new NotImplementedException();

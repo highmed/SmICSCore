@@ -1,10 +1,12 @@
-﻿@using SmICSCoreLib.Factories.MenuList;
+﻿@using SmICSCoreLib.DB.Models
+@using SmICSWebApp.Data.Menu
 @using SmICSCoreLib.Factories.PatientMovement
 @using SmICSCoreLib.Factories.RKIConfig
 @using SmICSWebApp.Data
 
 @inject RKIConfigService RKIConfigService
-@inject IMenuListFactory _menuService;
+@inject MenuService _menuService;
+
 @if (_pathogenMenuEntries is not null)
 {
     <div id="div_card_5_full">
@@ -18,12 +20,12 @@
                         <option selected="true" disabled="disabled" value="">Bitte wählen Sie aus</option>
                         <option value="Gesamtklink">Gesamtklink</option>
                         @if (StationList != null)
-                        {
-                            foreach (var item in StationList)
                             {
+                                foreach (var item in StationList)
+                                {
                                 <option value="@item.StationID">@item.StationID</option>
+                                }
                             }
-                        }
 
                     </InputSelect>
                 </div>
@@ -35,15 +37,15 @@
                 <div>
                     <select id="@ID" @onchange="GetFilter">
                         <option selected disabled>Bitte wählen Sie aus</option>
-                        @foreach (PathogenMenuEntry entry in _pathogenMenuEntries)
+                        @foreach (PathogenEntry entry in _pathogenMenuEntries)
                         {
-                            <option value="@entry.Name">@entry.Name</option>
+                            <option value="@entry.Codes">@entry.Name</option>
                         }
                         <option value="SARS-CoV-2">SARS-CoV-2</option>
                     </select>
                 </div>
             </div>
-           
+
             <div id="div_card_5">
                 <div>
                     <label for="Resistenz" class="tb-bez-header">Resistenz</label>
@@ -54,19 +56,19 @@
                         <InputSelect @bind-Value="RKIConfigForm.Resistance" id="@ID">
 
                             @if (!string.IsNullOrEmpty(RKIConfigForm.Erreger) || RKIConfigForm.Erreger != "sars-cov-2")
-                            {
+                                    {
                                 @foreach (string res in _resistances)
-                                {
+                                        {
                                     <option value="@res">@res</option>
-                                } 
-                            }
-                            else
-                            {
+                                        }
+                                    }
+                                    else
+                                    {
                                 <option selected disabled>Leer</option>
-                            }
+                                    }
                         </InputSelect>
                     }
-                    </div>
+                </div>
             </div>
 
             <div id="div_card_5">
@@ -110,74 +112,74 @@
     </div>
 }
 
-    @code {
-        [Parameter]
-        public int ID { get; set; }
-        [Parameter]
-        public RKIConfigTemplate RKIConfigForm { get; set; }
-        private string message;
-        private string messageStyles = "visibility:hidden";
+@code {
+    [Parameter]
+    public int ID { get; set; }
+    [Parameter]
+    public RKIConfigTemplate RKIConfigForm { get; set; }
+    private string message;
+    private string messageStyles = "visibility:hidden";
 
-        List<PatientMovementModel> StationList;
-        private List<PathogenMenuEntry> _pathogenMenuEntries;
-        private List<string> _resistances;
+    List<PatientMovementModel> StationList;
+    private List<PathogenEntry> _pathogenMenuEntries;
+    private List<string> _resistances;
 
-        protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Run(GetAllStations);
+        await Task.Run(LoadMenu);
+    }
+
+    private void LoadMenu()
+    {
+        _pathogenMenuEntries = _menuService.GetPathogens();
+    }
+
+    private void GetAllStations()
+    {
+        try
         {
-            await Task.Run(GetAllStations);
-            await Task.Run(LoadMenu);
+            StationList = RKIConfigService.GetAllStations();
         }
-
-        private void LoadMenu()
+        catch (Exception)
         {
-            _pathogenMenuEntries = _menuService.Pathogens();
-        }
+            throw new Exception($"Failed to GET Station data");
 
-        private void GetAllStations()
-        {
-            try
-            {
-                StationList = RKIConfigService.GetAllStations();
-            }
-            catch (Exception)
-            {
-                throw new Exception($"Failed to GET Station data");
-
-            }
-        }
-
-        void CheckboxClicked(object checkedValue)
-        {
-            if ((bool)checkedValue == true)
-            {
-                checkedValue = false;
-            }
-            else
-            {
-                checkedValue = true;
-            }
-        }
-
-        void ZeitraumSelected(ChangeEventArgs e)
-        {
-            if (Convert.ToInt32(e.Value) < 4)
-            {
-                messageStyles = "color:red";
-                message = "Sie haben eine Einstellung gewählt, die unter Umständen einige NULL-Werte zur Folge haben kann.";
-            }
-            else
-            {
-                messageStyles = "visibility:hidden";
-                message = "";
-            }
-        }
-
-        private void GetFilter(ChangeEventArgs e)
-        {
-            RKIConfigForm.Erreger = e.Value.ToString();
-            if (!string.IsNullOrEmpty(RKIConfigForm.Erreger))
-            {
-                _resistances = RKIConfigService.GetFilter(RKIConfigForm.Erreger);
-            }
         }
     }
+
+    void CheckboxClicked(object checkedValue)
+    {
+        if ((bool)checkedValue == true)
+        {
+            checkedValue = false;
+        }
+        else
+        {
+            checkedValue = true;
+        }
+    }
+
+    void ZeitraumSelected(ChangeEventArgs e)
+    {
+        if (Convert.ToInt32(e.Value) < 4)
+        {
+            messageStyles = "color:red";
+            message = "Sie haben eine Einstellung gewählt, die unter Umständen einige NULL-Werte zur Folge haben kann.";
+        }
+        else
+        {
+            messageStyles = "visibility:hidden";
+            message = "";
+        }
+    }
+
+    private void GetFilter(ChangeEventArgs e)
+    {
+        RKIConfigForm.PathogenCodes = (List<string>)e.Value;
+        if (RKIConfigForm.PathogenCodes is not null)
+        {
+            _resistances = RKIConfigService.GetFilter(RKIConfigForm.PathogenCodes);
+        }
+    }
+}

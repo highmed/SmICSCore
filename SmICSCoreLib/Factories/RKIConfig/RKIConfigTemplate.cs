@@ -19,5 +19,6 @@ namespace SmICSCoreLib.Factories.RKIConfig
         public string Erstellungsdatum { get; set; } = DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
         public string Erregerstatus { get; set; }
         public string Resistance { get; set; }
+        public List<string> PathogenCodes { get; set; }
     }
 }

@@ -35,7 +35,7 @@ namespace SmICSCoreLib.DB.MenuItems
 
         public async void SetWard(Ward ward)
         {
-            string sql = "INSERT INTO wards (Name, Code) VALUES(@Name)";
+            string sql = "INSERT INTO wards (Name) VALUES(@Name)";
             await _data.SaveData(sql, new { Name = ward.Name });
         }
 
@@ -67,6 +67,12 @@ namespace SmICSCoreLib.DB.MenuItems
         {
             string sql = "UPDATE pathogens SET Name=@Name WHERE Code=@Code";
             await _data.SaveData(sql, new { Name = pathogen.Name, Code = pathogen.Code });
+        }
+        public async Task<List<Pathogen>> GetPathogendByName(string pathogen)
+        {
+            string sql = "SELECT Name, Code FROM pathogens WHERE Name=@Name";
+            List<Pathogen> pathogens = await _data.LoadData<Pathogen, dynamic>(sql, new { Name=pathogen});
+            return pathogens;
         }
     }
 }

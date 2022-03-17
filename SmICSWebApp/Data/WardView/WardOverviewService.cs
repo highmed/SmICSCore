@@ -35,11 +35,11 @@ namespace SmICSWebApp.Data.WardView
                 cases = cases.Where(c => patientStays.Select(s => s.CaseID).Contains(c.CaseID)).ToList();
                 foreach (Case c in cases)
                 {
-                    PathogenParameter pathogenParameter = new PathogenParameter() { Name = parameter.Pathogen };
+                    PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCode };
                     SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionStatusByCase = _infectionStatusFac.Process(c, pathogenParameter);
                     Dictionary<string, InfectionStatus> infectionStatus = infectionStatusByCase.Count > 0 ? infectionStatusByCase.Where(h => h.Key.CaseID == c.CaseID).First().Value : null; 
                     WardPatient patient = new WardPatient();
-                    patient.Pathogen = parameter.Pathogen;
+                    patient.PathogenCodes = parameter.PathogenCode;
                     patient.InfectionStatus = infectionStatus;
                     int entryCount = wardPatients.Where(w => w.PatientID == c.PatientID).Count();
                     PatientStay stay = patientStays.Where(stay => stay.PatientID == c.PatientID).ElementAt(entryCount) ?? null;
@@ -69,6 +69,7 @@ namespace SmICSWebApp.Data.WardView
             {
                 chartEntries["Nosokomial"].Add(date, 0);
                 chartEntries["Known"].Add(date, 0);
+                chartEntries["Stress"].Add(date, 0);
             }
 
             foreach (WardPatient patient in wardPatients)
@@ -81,7 +82,14 @@ namespace SmICSWebApp.Data.WardView
                         filterNosokomial == "Nosokomial"))
                     {
                         DateTime infectionDate = patient.InfectionStatus.Values.Where(inf => inf.Nosocomial).OrderBy(inf => inf.NosocomialDate).Select(inf => inf.NosocomialDate).First().Value;
-                        chartEntries["Nosokomial"][infectionDate.Date] += 1;
+                        if (infectionDate.Date >= parameter.Start.Date)
+                        {
+                            chartEntries["Nosokomial"][infectionDate.Date] += 1;
+                        }
+                        else
+                        {
+                            chartEntries["Stress"][parameter.Start.Date] += 1;
+                        }
                     }
                     else if (patient.InfectionStatus != null &&
                         (patient.InfectionStatus.Values.Any(x => x.Known) || patient.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate < patient.Admission)) &&
@@ -96,7 +104,7 @@ namespace SmICSWebApp.Data.WardView
             for (DateTime date = parameter.Start.Date; date <= parameter.End.Date; date = date.AddDays(1.0))
             {
                 int stress = chartEntries["Nosokomial"][date] + chartEntries["Known"][date];
-                chartEntries["Stress"].Add(date, stress);
+                chartEntries["Stress"][date] += stress;
                 if(date.Date > parameter.Start.Date)
                 {
                     chartEntries["Stress"][date.Date] += chartEntries["Stress"][date.Date.AddDays(-1.0)];
@@ -149,7 +157,7 @@ namespace SmICSWebApp.Data.WardView
         }
         public List<string> GetFilter(WardParameter parameter)
         {
-            List<string> filter = Rules.GetPossibleMREClasses(parameter.Pathogen);
+            List<string> filter = Rules.GetPossibleMREClasses(parameter.PathogenCode);
             return filter;
         }
 

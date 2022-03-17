@@ -21,7 +21,9 @@ namespace SmICSCoreLib.Factories.MenuList
 
         public List<PathogenMenuEntry> Pathogens()
         {
-            List<PathogenMenuEntry> entries = RestDataAccess.AQLQuery<PathogenMenuEntry>(PathogenList());
+            List<PathogenMenuEntry> entries = RestDataAccess.AQLQuery<PathogenMenuEntry>(MibiPathogenList());
+            List<PathogenMenuEntry> viroentries = RestDataAccess.AQLQuery<PathogenMenuEntry>(ViroPathogenList());
+            entries.AddRange(viroentries);
             //string sql = "";
             //_db.SaveData(sql, new { });
             return entries;
@@ -39,17 +41,31 @@ namespace SmICSCoreLib.Factories.MenuList
             };
         }
 
-        private AQLQuery PathogenList()
+        private AQLQuery MibiPathogenList()
         {
             return new AQLQuery()
             {
                 Name = "PathogenList",
-                Query = @"SELECT DISTINCT w/items[at0001,'Erregername']/value/value as Name,
-                        w/items[at0001,'Erregername']/value/defining_code/code_string as ID
+                Query = @"SELECT DISTINCT w/items[at0001]/value/value as Name,
+                        w/items[at0001]/value/defining_code/code_string as ID
                         FROM EHR e
                         CONTAINS COMPOSITION c
                         CONTAINS CLUSTER w[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]
-                        WHERE c/name/value='Mikrobiologischer Befund'"
+                        WHERE c/name/value='Mikrobiologischer Befund' and w/items[at0001]/name/value='Erregername'"
+
+            };
+        } 
+        private AQLQuery ViroPathogenList()
+        {
+            return new AQLQuery()
+            {
+                Name = "PathogenList",
+                Query = @"SELECT DISTINCT w/items[at0024]/value/value as Name,
+                        w/items[at0024]/value/defining_code/code_string as ID
+                        FROM EHR e
+                        CONTAINS COMPOSITION c
+                        CONTAINS CLUSTER w[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]
+                        WHERE c/name/value='Virologischer Befund'"
 
             };
         }

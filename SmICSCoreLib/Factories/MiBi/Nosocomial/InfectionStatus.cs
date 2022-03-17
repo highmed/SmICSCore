@@ -14,5 +14,6 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
         public string Pathogen { get; set; }
         public string Resistance { get; set; }
         public string LabID { get; set; }
+        public string PathogenCode { get; set; }
     }
 }

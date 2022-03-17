@@ -5,6 +5,9 @@ using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.EpiCurve.ReceiveModel;
 using SmICSCoreLib.REST;
 using Microsoft.Extensions.Logging;
+using SmICSCoreLib.DB.MenuItems;
+using SmICSCoreLib.DB.Models;
+using System.Linq;
 
 namespace SmICSCoreLib.Factories.EpiCurve
 {
@@ -24,23 +27,47 @@ namespace SmICSCoreLib.Factories.EpiCurve
         
         public IRestDataAccess RestDataAccess { get; }
         private ILogger<EpiCurveFactory> _logger;
-
-        public EpiCurveFactory(IRestDataAccess restData, ILogger<EpiCurveFactory> logger)
+        private IMenuItemDataAccess _menuDataAccess;
+        public EpiCurveFactory(IMenuItemDataAccess menuDataAccess, IRestDataAccess restData, ILogger<EpiCurveFactory> logger)
         {
             RestDataAccess = restData;
             _logger = logger;
+            _menuDataAccess = menuDataAccess;
         }
         public List<EpiCurveModel> Process(EpiCurveParameter parameter)
         {
             InitializeGlobalVariables();
-
+            ExtendedEpiCurveParameter extendedParams = new ExtendedEpiCurveParameter()
+            {
+                Pathogen = parameter.Pathogen,
+                Starttime = parameter.Starttime,
+                Endtime = parameter.Endtime,
+            };
+            if (extendedParams.Pathogen == "sars-cov-2")
+            {
+                List<Pathogen> pathos = _menuDataAccess.GetPathogens().Result;
+                List<string> codes = new List<string>();
+                foreach(Pathogen p in pathos)
+                {
+                    if(p.Name.ToLower().Contains("sars-cov-2"))
+                    {
+                        codes.Add(p.Code);
+                    }
+                }
+                extendedParams.PathogenCodes = codes;
+            }
+            else
+            {
+                List<Pathogen> pathogens = _menuDataAccess.GetPathogendByName(parameter.Pathogen).Result;
+                extendedParams.PathogenCodes = pathogens.Select(p => p.Code).ToList();
+            }
             for (DateTime date = parameter.Starttime.Date; date <= parameter.Endtime.Date; date = date.AddDays(1.0))
             {
-                CreateDailyEntries(date, parameter);
+                CreateDailyEntries(date, extendedParams);
                 CreateEmptyWardEntries(date);
             }
 
-            AddMissingValues(parameter);
+            AddMissingValues(extendedParams);
             DataAggregationStorageToList();
             
             return epiCurveList;
@@ -57,7 +84,7 @@ namespace SmICSCoreLib.Factories.EpiCurve
             mavg7.Add(COMPLETE_CLINIC, new List<int>());
             mavg28.Add(COMPLETE_CLINIC, new List<int>());
         }
-        private void CreateDailyEntries(DateTime date, EpiCurveParameter parameter)
+        private void CreateDailyEntries(DateTime date, ExtendedEpiCurveParameter parameter)
         {
             _logger.LogDebug("Flag - Query Paramters: Datum: {Date} \r PathogenList: {pathogens}", date.ToString(), parameter.PathogenCodesToAqlMatchString());
             List<FlagTimeModel> flagTimes = RestDataAccess.AQLQuery<FlagTimeModel>(LaborEpiCurve(date, parameter));
@@ -252,7 +279,7 @@ namespace SmICSCoreLib.Factories.EpiCurve
             };
         }
 
-        private AQLQuery LaborEpiCurve(DateTime date, EpiCurveParameter parameter)
+        private AQLQuery LaborEpiCurve(DateTime date, ExtendedEpiCurveParameter parameter)
         {
             if (parameter.MedicalField == MedicalField.VIROLOGY)
             {
@@ -284,7 +311,8 @@ namespace SmICSCoreLib.Factories.EpiCurve
                 return new AQLQuery()
                 {
                     Name = "",
-                    Query = @$"SELECT n/items[at0001]/value/value as FallID,
+                    Query = @$"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
+                    n/items[at0001]/value/value as FallID,
                     i/items[at0024]/value/value as Flag,
                     i/items[at0001]/value/value as Pathogen,
                     i/items[at0001]/value/defining_code/code_string as PathogenCode,
@@ -297,7 +325,7 @@ namespace SmICSCoreLib.Factories.EpiCurve
                     WHERE c/archetype_details/template_id/value='Mikrobiologischer Befund' 
                     and i/items[at0024]/name/value='Nachweis?' 
                     and i/items[at0001]/name/value='Erregername'
-                    and i/items[at0001]/value/value MATCHES {parameter.PathogenCodesToAqlMatchString()}
+                    and i/items[at0001]/value/defining_code/code_string MATCHES {parameter.PathogenCodesToAqlMatchString()}
                     and u/items[at0015]/value/value >= '{ date.ToString("yyyy-MM-dd") }'
                     and u/items[at0015]/value/value < '{ date.AddDays(1).ToString("yyyy-MM-dd") }'"
                 };
@@ -305,7 +333,7 @@ namespace SmICSCoreLib.Factories.EpiCurve
         }
 
 
-        private AQLQuery ViroLaborEpiCurve(DateTime date, EpiCurveParameter parameter)
+        private AQLQuery ViroLaborEpiCurve(DateTime date, ExtendedEpiCurveParameter parameter)
         {
             return new AQLQuery()
             {

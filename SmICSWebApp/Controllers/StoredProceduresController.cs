@@ -23,6 +23,9 @@ using SmICSWebApp.Data.MedicalFinding;
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSWebApp.Data.PatientMovement;
 using SmICSWebApp.Data.ContactNetwork;
+using SmICSCoreLib.DB.MenuItems;
+using SmICSCoreLib.DB.Models;
+using System.Linq;
 
 namespace SmICSWebApp.Controllers
 {
@@ -46,7 +49,8 @@ namespace SmICSWebApp.Controllers
         private readonly MedicalFindingService _medicalFindingService;
         private readonly PatientMovementService _movementService;
         private readonly ContactNetworkService _contactService;
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService, MedicalFindingService medicalFindingService, PatientMovementService movementService, ContactNetworkService contactService)
+        private readonly IMenuItemDataAccess _menuItemDataAccess;
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService, MedicalFindingService medicalFindingService, PatientMovementService movementService, ContactNetworkService contactService, IMenuItemDataAccess menuItemDataAccess)
         {
             _logger = logger;
             _contact = contact;
@@ -62,6 +66,7 @@ namespace SmICSWebApp.Controllers
             _medicalFindingService = medicalFindingService;
             _movementService = movementService;
             _contactService = contactService;
+            _menuItemDataAccess = menuItemDataAccess;
         }
 
         /// <summary></summary>
@@ -137,7 +142,8 @@ namespace SmICSWebApp.Controllers
             try
             {
                 List<VisuLabResult> visuLabResults = new List<VisuLabResult>();
-                PathogenParameter pathogen = new PathogenParameter() { Name = parameter.Pathogen };
+                List<string> codes =_menuItemDataAccess.GetPathogendByName(parameter.Pathogen).Result.Select(p => p.Code).ToList();
+                PathogenParameter pathogen = new PathogenParameter() { PathogenCodes = codes };
                 foreach(string pat in parameter.patientList)
                 {
                     Patient patient = new Patient() { PatientID = pat };
@@ -215,15 +221,14 @@ namespace SmICSWebApp.Controllers
         /// <returns></returns>
         [Route("Labor_ErregerProTag_TTEsKSs")]
         [HttpPost]
-        public ActionResult<List<EpiCurveModel>> Labor_ErregerProTag_TTEsKSs([FromBody] TimespanParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
+        public ActionResult<List<EpiCurveModel>> Labor_ErregerProTag_TTEsKSs([FromBody] EpiCurveParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Labor_ErregerProTag_TTEsKSs with parameters: \n\r Starttime: {start} \n\r Endtime: {end} \n\r internal PathogenList: 94500-6, 94745-7, 94558-4", parameter.Starttime, parameter.Endtime);
 
             try
             {
-                EpiCurveParameter epiParams = new EpiCurveParameter() { Endtime = parameter.Endtime, Starttime = parameter.Starttime, PathogenCodes = new List<string>() { "94500-6", "94745-7", "94558-4" }, Pathogen = "sars-cov-2" };
                 _epiCurveFac.RestDataAccess.SetAuthenticationHeader(token);
-                return _epiCurveFac.Process(epiParams);
+                return _epiCurveFac.Process(parameter);
             }
             catch (Exception e)
             {

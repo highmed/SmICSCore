@@ -121,9 +121,9 @@ namespace SmICSWebApp.Data
             }
         }
 
-        public List<string> GetFilter(string pathogen)
+        public List<string> GetFilter(List<string> pathogenCodes)
         {
-            List<string> filter = Rules.GetPossibleMREClasses(pathogen);
+            List<string> filter = Rules.GetPossibleMREClasses(pathogenCodes);
             return filter;
         }
     }

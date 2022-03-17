@@ -15,5 +15,6 @@ namespace SmICSCoreLib.DB.MenuItems
         void UpdatePathogen(Pathogen pathogen);
         void DeletePathogen(Pathogen pathogen);
         void DeleteWard(Ward ward);
+        Task<List<Pathogen>> GetPathogendByName(string pathogen);
     }
 }

@@ -231,7 +231,7 @@ namespace SmICSCoreLib.Factories
                                 AND z/items[at0015]/value/value >= '{timespan.Starttime}' 
                                 AND z/items[at0015]/value/value <= '{timespan.Endtime}'");
         }
-        public static AQLQuery LaborEpiCurve(DateTime date, EpiCurveParameter parameter)
+        public static AQLQuery LaborEpiCurve(DateTime date, ExtendedEpiCurveParameter parameter)
         {
             return new AQLQuery("LaborEpiCurve",$@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
                                 i/items[at0001]/value/value as FallID,

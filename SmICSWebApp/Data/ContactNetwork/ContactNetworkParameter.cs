@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 
 namespace SmICSWebApp.Data.ContactNetwork
 {
@@ -8,7 +9,7 @@ namespace SmICSWebApp.Data.ContactNetwork
         public int Degree { get; set; }
         public DateTime ContactStart { get; set; }
         public DateTime ContactEnd { get; set; }
-        public string Pathogen { get; set; }
+        public List<string> PathogenCodes { get; set; }
 
     }
 }

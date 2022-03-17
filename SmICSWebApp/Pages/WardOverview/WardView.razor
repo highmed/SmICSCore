@@ -7,225 +7,222 @@
 @using ChartJs.Blazor.Common.Enums
 @using ChartJs.Blazor.Util
 
-@using SmICSCoreLib.Factories.MenuList;
+@using SmICSCoreLib.DB.Models
+@using SmICSWebApp.Data.Menu
 @using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 @using SmICSWebApp.Data.WardView;
 
 @inject WardOverviewService _service;
-@inject IMenuListFactory _menuService;
- 
+@inject MenuService _menuService;
+
 @if (_wardMenuEntries is not null && _pathogenMenuEntries is not null)
 {
-<div class="container-fluid">
-    <div class="row">
-        <div class="card">
-            <div class="card-body">
-                <EditForm Model="@parameter" OnValidSubmit="@Submit">
-                    <label for="stationDropdown" class="mr-1">Station</label>
-                    <select id="stationDropdow" class="col-2 mr-2" @bind="@parameter.Ward">
-                        <option value="" selected disabled hidden>Bitte wählen</option>
-                        @foreach (WardMenuEntry entry in _wardMenuEntries)
-                        {
-                            <option value="@entry.ID">@entry.ID</option>
-                        }
-                    </select>
-                    <label for="pathogenDropdown" class="mr-1">Erreger</label>
-                    <input type="text" list="pathogenList" class="col-1 mr-2" @bind="@parameter.Pathogen" id="pathogenDropdown">
-                    <datalist id="pathogenList">
-                        @foreach (PathogenMenuEntry entry in _pathogenMenuEntries)
-                        {
-                            <option value="@entry.Name">@entry.Name</option>
-                        }
-                        <option value="sars-cov-2">SARS-CoV-2</option>
-                    </datalist>
-                    <label for="startdate" class="mr-1">Start</label>
-                    <InputDate id="startdate" class="col-1 mr-2" @bind-Value="parameter.Start"/>
-                    <label for="enddate" class="mr-1">Ende</label>
-                    <InputDate id="enddate" class="col-1 mr-2" @bind-Value="parameter.End" />
-                    <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button>
-
-                </EditForm>
-            </div>
-        </div>
-    </div>
-
-    @if (isLoading)
-    {
-        <div class="spinner"></div>
-    }
-    else if (filteredData != null && chartEntries != null && _filterMRE != null && !isLoading)
-    {
-    <div class="row">
-        <div class="card card-table">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col-10">
-                        <label for="filterMRE">Resistenz:</label>
-                        <select class="col-2" @onchange="FilterMRE" id="filterMRE">
-                            <option selected>Alle</option>
-                            @foreach (string filter in _filterMRE)
+    <div class="container-fluid">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <EditForm Model="@parameter" OnValidSubmit="@Submit">
+                        <label for="stationDropdown" class="mr-1">Station</label>
+                        <select id="stationDropdow" class="col-2 mr-2" @bind="@parameter.Ward">
+                            <option value="" selected disabled hidden>Bitte wählen</option>
+                            @foreach (Ward ward in _wardMenuEntries)
                             {
-                                <option value="@filter">@filter</option>
+                                <option value="@ward.Name">@ward.Name</option>
                             }
                         </select>
-                        <label for="filterNoso">Status:</label>
-                        <select class="col-2" @onchange="FilterNosocomial" id="filterNoso">
-                            <option selected>Alle</option>
-                            <option>Nosokomial</option>
-                            <option>Bekannt</option>
-                        </select>
-                    </div>
-                    <div class="col-2 d-flex justify-content-end">
-                        <b>Patientenanzahl: </b> @filteredData.Count
-                    </div>
-                </div>
-            </div>
-            <div class="card-body bottom-border">
-                <WardTable WardPatients="filteredData" Parameter="parameter" />
-            </div>
-        </div>
-        <div class="card card-chart">
-            <div class="card-body">
-                <div>
-                    <Chart Config="_chart" />
-                </div>
-                <div>
-                    <Chart Config="_accumChart" />
+                        <label for="pathogenDropdown" class="mr-1">Erreger</label>
+                        <input type="text" list="pathogenList" class="col-1 mr-2" id="pathogenDropdown" @onchange="PathogenChanged">
+                        <datalist id="pathogenList">
+                            @foreach (PathogenEntry entry in _pathogenMenuEntries)
+                            {
+                                <option value="@string.Join(",", entry.Codes)" label="@entry.Name"></option>
+                            }
+                        </datalist>
+                        <label for="startdate" class="mr-1">Start</label>
+                        <InputDate id="startdate" class="col-1 mr-2" @bind-Value="parameter.Start" />
+                        <label for="enddate" class="mr-1">Ende</label>
+                        <InputDate id="enddate" class="col-1 mr-2" @bind-Value="parameter.End" />
+                        <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button>
+                    </EditForm>
                 </div>
             </div>
         </div>
+
+        @if (isLoading)
+        {
+            <div class="spinner"></div>
+        }
+        else if (filteredData != null && chartEntries != null && _filterMRE != null && !isLoading)
+        {
+            <div class="row">
+                <div class="card card-table">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-10">
+                                <label for="filterMRE">Resistenz:</label>
+                                <select class="col-2" @onchange="FilterMRE" id="filterMRE">
+                                    <option selected>Alle</option>
+                                    @foreach (string filter in _filterMRE)
+                                    {
+                                        <option value="@filter">@filter</option>
+                                    }
+                                </select>
+                                <label for="filterNoso">Status:</label>
+                                <select class="col-2" @onchange="FilterNosocomial" id="filterNoso">
+                                    <option selected>Alle</option>
+                                    <option>Nosokomial</option>
+                                    <option>Bekannt</option>
+                                </select>
+                            </div>
+                            <div class="col-2 d-flex justify-content-end">
+                                <b>Patientenanzahl: </b> @filteredData.Count
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body bottom-border">
+                        <WardTable WardPatients="filteredData" Parameter="parameter" />
+                    </div>
+                </div>
+                <div class="card card-chart">
+                    <div class="card-body">
+                        <div>
+                            <Chart Config="_chart" />
+                        </div>
+                        <div>
+                            <Chart Config="_accumChart" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-
-
-    }
-</div>
 }
 
-    @code {
-        private WardParameter parameter = new WardParameter() { Start = DateTime.Now.AddDays(-7.0).Date, End = DateTime.Now.Date };
+@code {
+    private WardParameter parameter = new WardParameter() { Start = DateTime.Now.AddDays(-7.0).Date, End = DateTime.Now.Date };
 
-        private List<WardPatient> data = null;
-        private List<WardPatient> filteredData = null;
+    private List<WardPatient> data = null;
+    private List<WardPatient> filteredData = null;
 
-        private Dictionary<string, SortedDictionary<DateTime, int>> chartEntries = null;
+    private Dictionary<string, SortedDictionary<DateTime, int>> chartEntries = null;
 
-        private BarConfig _chart;
-        private BarConfig _accumChart;
+    private BarConfig _chart;
+    private BarConfig _accumChart;
 
-        private List<string> _filterMRE;
-        private string _selectedMREFilter;
-        private string _selectedNosokomialFilter;
+    private List<string> _filterMRE;
+    private string _selectedMREFilter;
+    private string _selectedNosokomialFilter;
 
-        private List<WardMenuEntry> _wardMenuEntries;
-        private List<PathogenMenuEntry> _pathogenMenuEntries;
+    private Ward[] _wardMenuEntries;
+    private List<PathogenEntry> _pathogenMenuEntries;
 
-        private bool isLoading = false;
+    private bool isLoading = false;
 
-        private IDataset<int> Nosocomial;
+    private IDataset<int> Nosocomial;
 
-        private IDataset<int> Known;
+    private IDataset<int> Known;
 
-        private IDataset<int> Stress;
+    private IDataset<int> Stress;
 
-        protected override Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+        return Task.Run(LoadMenu);
+    }
+
+    private void LoadMenu()
+    {
+        _pathogenMenuEntries = _menuService.GetPathogens();
+        List<Ward> wards = _menuService.GetWards().Result;
+        _wardMenuEntries = wards.ToArray();
+    }
+
+    private async Task Submit()
+    {
+        isLoading = true;
+        await Task.Run(LoadData);
+        isLoading = false;
+    }
+
+    private void LoadData()
+    {
+        data = _service.GetData(parameter);
+        filteredData = data;
+        chartEntries = _service.GetChartEntries(parameter);
+        _filterMRE = _service.GetFilter(parameter);
+
+        _chart = EpiCurveConfig("Epidemiologische Kurve der Station: " + parameter.Ward, "Neue Fälle");
+        _accumChart = EpiCurveConfig("", "Last der Station");
+
+        Nosocomial = new BarDataset<int>()
         {
-            base.OnInitializedAsync();
-            return Task.Run(LoadMenu);
+            Label = "Nosokomial",
+            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Red)
+        };
+
+        Known = new BarDataset<int>()
+        {
+            Label = "Bekannt",
+            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue)
+        };
+
+        Stress = new BarDataset<int>()
+        {
+            Label = "Last",
+            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.DarkGray)
+        };
+
+        GetXAxisLabels();
+        _chart.Data.Datasets.Add(Nosocomial);
+        _chart.Data.Datasets.Add(Known);
+        _accumChart.Data.Datasets.Add(Stress);
+
+        FillDataset(Nosocomial, chartEntries["Nosokomial"]);
+        FillDataset(Known, chartEntries["Known"]);
+        FillDataset(Stress, chartEntries["Stress"]);
+    }
+
+    private void GetXAxisLabels()
+    {
+        for (DateTime date = parameter.Start.Date; date <= parameter.End.Date; date = date.AddDays(1.0))
+        {
+            _chart.Data.Labels.Add(date.ToString("dd.MM"));
+            _accumChart.Data.Labels.Add(date.ToString("dd.MM"));
         }
+    }
 
-        private void LoadMenu()
+    private void FillDataset(IDataset<int> dataset, SortedDictionary<DateTime, int> FillValues)
+    {
+        foreach (KeyValuePair<DateTime, int> kvp in FillValues)
         {
-            _wardMenuEntries = _menuService.Wards();
-            _pathogenMenuEntries = _menuService.Pathogens();
+            dataset.Add(kvp.Value);
         }
+    }
 
-        private async Task Submit()
+    private BarConfig EpiCurveConfig(string title, string yAxisLabel)
+    {
+        return new BarConfig
         {
-            isLoading = true;
-            await Task.Run(LoadData);
-            isLoading = false;
-
-        }
-
-        private void LoadData()
-        {
-            data = _service.GetData(parameter);
-            filteredData = data;
-            chartEntries = _service.GetChartEntries(parameter);
-            _filterMRE = _service.GetFilter(parameter);
-
-            _chart = EpiCurveConfig("Epidemiologische Kurve der Station: " + parameter.Ward, "Neue Fälle");
-            _accumChart = EpiCurveConfig("", "Last der Station");
-
-            Nosocomial = new BarDataset<int>()
+            Options = new BarOptions
             {
-                Label = "Nosokomial",
-                BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Red)
-            };
-
-            Known = new BarDataset<int>()
-            {
-                Label = "Bekannt",
-                BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue)
-            };
-
-            Stress = new BarDataset<int>()
-            {
-                Label = "Last",
-                BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.DarkGray)
-            };
-
-            GetXAxisLabels();
-            _chart.Data.Datasets.Add(Nosocomial);
-            _chart.Data.Datasets.Add(Known);
-            _accumChart.Data.Datasets.Add(Stress);
-
-            FillDataset(Nosocomial, chartEntries["Nosokomial"]);
-            FillDataset(Known, chartEntries["Known"]);
-            FillDataset(Stress, chartEntries["Stress"]);
-        }
-
-        private void GetXAxisLabels()
-        {
-            for (DateTime date = parameter.Start.Date; date <= parameter.End.Date; date = date.AddDays(1.0))
-            {
-                _chart.Data.Labels.Add(date.ToString("dd.MM"));
-                _accumChart.Data.Labels.Add(date.ToString("dd.MM"));
-            }
-        }
-
-        private void FillDataset(IDataset<int> dataset, SortedDictionary<DateTime, int> FillValues)
-        {
-            foreach (KeyValuePair<DateTime, int> kvp in FillValues)
-            {
-                dataset.Add(kvp.Value);
-            }
-        }
-
-        private BarConfig EpiCurveConfig(string title, string yAxisLabel)
-        {
-            return new BarConfig
-            {
-                Options = new BarOptions
+                Responsive = true,
+                //MaintainAspectRatio = false,
+                Title = new OptionsTitle
                 {
-                    Responsive = true,
-                    //MaintainAspectRatio = false,
-                    Title = new OptionsTitle
+                    Display = true,
+                    Text = title
+                },
+                Scales = new BarScales
+                {
+                    XAxes = new List<CartesianAxis>
                     {
-                        Display = true,
-                        Text = title
-                    },
-                    Scales = new BarScales
-                    {
-                        XAxes = new List<CartesianAxis>
-                        {
                         new BarCategoryAxis
                         {
                             Stacked = true
                         }
                     },
-                        YAxes = new List<CartesianAxis>
-                        {
+                    YAxes = new List<CartesianAxis>
+                    {
                         new BarLinearCartesianAxis
                         {
                             Stacked = true,
@@ -242,65 +239,70 @@
                             }
                         }
                     }
-                    },
-                    Tooltips = new Tooltips
-                    {
-                        Mode = InteractionMode.Index,
-                        Intersect = false
-                    },
-                }
-            };
-        }
-
-        private void FilterMRE(ChangeEventArgs e)
-        {
-            _selectedMREFilter = e.Value.ToString();
-            if(_selectedMREFilter == "Alle")
-            {
-                _selectedMREFilter = null;
-            }
-            Filter();
-        }
-
-        private void FilterNosocomial(ChangeEventArgs e)
-        {
-            _selectedNosokomialFilter = e.Value.ToString();
-            if (_selectedNosokomialFilter == "Alle")
-            {
-                _selectedNosokomialFilter = null;
-            }
-            Filter();
-
-        }
-
-        private void Filter()
-        {
-            filteredData = data;
-
-            if (!string.IsNullOrEmpty(_selectedMREFilter))
-            {
-                filteredData = filteredData.Where(view => view.InfectionStatus != null && view.InfectionStatus.ContainsKey(_selectedMREFilter)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(_selectedNosokomialFilter))
-            {
-                if (_selectedNosokomialFilter == "Nosokomial")
+                },
+                Tooltips = new Tooltips
                 {
-                    filteredData = filteredData.Where(view => view.InfectionStatus != null && view.InfectionStatus.Values.Any(x => x.Nosocomial == true && x.NosocomialDate.Value > view.Admission)).ToList();
-                }
-                else if (_selectedNosokomialFilter == "Bekannt")
-                {
-                    filteredData = filteredData.Where(view => view.InfectionStatus != null && view.InfectionStatus.Values.Any(x => x.Known == true)).ToList();
-                }
+                    Mode = InteractionMode.Index,
+                    Intersect = false
+                },
             }
-            chartEntries = _service.GetChartEntries(parameter, _selectedMREFilter, _selectedNosokomialFilter);
-
-            Nosocomial.Clear();
-            Known.Clear();
-            Stress.Clear();
-
-            FillDataset(Nosocomial, chartEntries["Nosokomial"]);
-            FillDataset(Known, chartEntries["Known"]);
-            FillDataset(Stress, chartEntries["Stress"]);
-        }
+        };
     }
+
+    private void FilterMRE(ChangeEventArgs e)
+    {
+        _selectedMREFilter = e.Value.ToString();
+        if (_selectedMREFilter == "Alle")
+        {
+            _selectedMREFilter = null;
+        }
+        Filter();
+    }
+
+    private void FilterNosocomial(ChangeEventArgs e)
+    {
+        _selectedNosokomialFilter = e.Value.ToString();
+        if (_selectedNosokomialFilter == "Alle")
+        {
+            _selectedNosokomialFilter = null;
+        }
+        Filter();
+
+    }
+
+    private void PathogenChanged(ChangeEventArgs e)
+    {
+        parameter.PathogenCode = e.Value.ToString().Split(",").ToList();
+    }
+
+    private void Filter()
+    {
+        filteredData = data;
+
+        if (!string.IsNullOrEmpty(_selectedMREFilter))
+        {
+            filteredData = filteredData.Where(view => view.InfectionStatus != null && view.InfectionStatus.ContainsKey(_selectedMREFilter)).ToList();
+        }
+
+        if (!string.IsNullOrEmpty(_selectedNosokomialFilter))
+        {
+            if (_selectedNosokomialFilter == "Nosokomial")
+            {
+                filteredData = filteredData.Where(view => view.InfectionStatus != null && view.InfectionStatus.Values.Any(x => x.Nosocomial == true && x.NosocomialDate.Value > view.Admission)).ToList();
+            }
+            else if (_selectedNosokomialFilter == "Bekannt")
+            {
+                filteredData = filteredData.Where(view => view.InfectionStatus != null && view.InfectionStatus.Values.Any(x => x.Known == true)).ToList();
+            }
+        }
+        chartEntries = _service.GetChartEntries(parameter, _selectedMREFilter, _selectedNosokomialFilter);
+
+        Nosocomial.Clear();
+        Known.Clear();
+        Stress.Clear();
+
+        FillDataset(Nosocomial, chartEntries["Nosokomial"]);
+        FillDataset(Known, chartEntries["Known"]);
+        FillDataset(Stress, chartEntries["Stress"]);
+    }
+}

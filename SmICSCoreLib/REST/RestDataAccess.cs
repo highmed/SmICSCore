@@ -25,7 +25,7 @@ namespace SmICSCoreLib.REST
         public List<T> AQLQuery<T>(AQLQuery query) where T : new()
         {
             _logger.LogInformation("Posted Query: {Query}", query.Name);
-            string restPath = "/query/aql";
+            string restPath = "rest/openehr/v1/query/aql";
             Uri openehr = new Uri(OpenehrConfig.openehrEndpoint);
             Uri RestPath = new Uri(openehr, restPath);
             HttpResponseMessage response = _client.Client.PostAsync(RestPath.ToString(), GetHttpContentQuery(query.ToString())).Result;

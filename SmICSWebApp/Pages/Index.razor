@@ -1,5 +1,11 @@
 ﻿@page "/"
 
+@using SmICSCoreLib.DB.MenuItems
+@using SmICSCoreLib.DB.Models
+@using SmICSCoreLib.Factories.MenuList
+
+@inject IMenuItemDataAccess _dbMenuItems
+@inject IMenuListFactory menuListFac
 
 <div class="containter_content">
     <div class="welcome_header">
@@ -66,3 +72,27 @@
     </a>
 
 </div>
+
+@code
+{      
+    protected override void OnInitialized()
+    {
+        if(_dbMenuItems.GetPathogens().Result.Count == 0)
+        {
+            List<PathogenMenuEntry> pathMenuEntries = menuListFac.Pathogens();
+            foreach(PathogenMenuEntry patEntry in pathMenuEntries)
+            {
+                _dbMenuItems.SetPathogen(new Pathogen() { Name = patEntry.Name, Code = patEntry.ID });
+            }
+        }
+        if (_dbMenuItems.GetWards().Result.Count == 0)
+        {
+            List<WardMenuEntry> wardMenuEntries = menuListFac.Wards();
+            foreach (WardMenuEntry wardEntry in wardMenuEntries)
+            {
+                _dbMenuItems.SetWard(new Ward() { Name = wardEntry.ID });
+            }
+        }
+        base.OnInitialized();
+    }
+}

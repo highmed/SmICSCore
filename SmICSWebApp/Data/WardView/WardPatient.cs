@@ -17,5 +17,6 @@ namespace SmICSWebApp.Data.WardView
         public PatientData PatientData { get; internal set; }
         public string PatientID { get; internal set; }
         public string Pathogen { get; internal set; }
+        public List<string> PathogenCodes { get; internal set; }
     }
 }

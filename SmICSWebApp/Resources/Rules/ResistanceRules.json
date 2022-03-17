@@ -53,7 +53,7 @@
         "ErrorMessage": "One or more adjust rules failed.",
         "ErrorType": "Error",
         "RuleExpressionType": "LambdaExpression",
-        "Expression": "input == \"Staphylococcus aureus\""
+        "Expression": "input.Any(code => code==\"sau\")"
       },
       {
         "RuleName": "MSSA",
@@ -61,7 +61,7 @@
         "ErrorMessage": "One or more adjust rules failed.",
         "ErrorType": "Error",
         "RuleExpressionType": "LambdaExpression",
-        "Expression": "input == \"Staphylococcus aureus\""
+        "Expression": "input.Any(code => code==\"sau\")"
       }
     ]
   }
