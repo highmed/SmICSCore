@@ -102,6 +102,10 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                         {
                             int threshold = GetNosocomialThreshold(pathogen);
                             List<string> resistances = Rules.GetResistances(pathogen);
+                            if(pathogen.Name.ToLower().Contains("sar-cov-2"))
+                            {
+                                resistances = new List<string>() { "sars-cov-2" };
+                            }
                             if (!infectionInformation.ContainsKey(pathogen.ID))
                             {
                                 infectionInformation.Add(pathogen.ID, new Dictionary<string, InfectionStatus>());
@@ -115,7 +119,6 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                             }
                             else
                             {
-
                                 foreach (string res in resistances)
                                 {
                                     if (pathogen.Result && timespan.Days < (threshold - 1))
