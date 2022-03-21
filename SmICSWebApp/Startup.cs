@@ -118,17 +118,10 @@ namespace SmICSWebApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
-            //OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
-            //OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
-            //OpenehrConfig.smicsVisuPort = Environment.GetEnvironmentVariable("SMICS_VISU_PORT");
-
-            OpenehrConfig.openehrEndpoint = "http://plri-highmed01.mh-hannover.local:8081";
-            //OpenehrConfig.openehrUser = "smics";
-            //OpenehrConfig.openehrPassword = "b+KzsSFD?cgdW2UA";
-            OpenehrConfig.openehrUser = "etltestuser";
-            OpenehrConfig.openehrPassword = "etltestuser#01";
-            OpenehrConfig.smicsVisuPort = "3231";
+            OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
+            OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
+            OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
+            OpenehrConfig.smicsVisuPort = Environment.GetEnvironmentVariable("SMICS_VISU_PORT");
 
             if (env.IsDevelopment())
             {
