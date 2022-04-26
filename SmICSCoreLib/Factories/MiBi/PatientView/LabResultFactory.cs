@@ -26,7 +26,10 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             foreach(Case c in cases)
             {
                 List<LabResult> tmpResult = Process(c, pathogen.MedicalField, pathogen);
-                results.AddRange(tmpResult);
+                if (tmpResult is not null)
+                {
+                    results.AddRange(tmpResult);
+                }
             }
             return results;
         }
@@ -70,7 +73,15 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                     result.Specimens.RemoveAll(spec => spec.Pathogens == null);
                     if (result.Specimens.Count > 0)
                     {
-                        result.Sender = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID)).FirstOrDefault();
+                        List<PatientLocation> patLocation = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID));
+                        if(patLocation is not null)
+                        {
+                            result.Sender = patLocation.FirstOrDefault();
+                        }
+                        else 
+                        {
+                            result.Sender = new PatientLocation() { Departement = "N.A", Ward = "N.A"};
+                        }
                     }
                 }
                 results.RemoveAll(lab => lab.Specimens.Count == 0);

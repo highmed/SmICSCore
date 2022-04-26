@@ -41,8 +41,8 @@ namespace SmICS
             services.AddSingleton<DapperContext>();
             services.AddSingleton<IDataAccess, DataAccess>();
 
-            services.AddScoped<IMenuItemDataAccess, MenuItemDataAccess>();
-            services.AddScoped<IMenuListFactory, MenuListFactory>();
+            services.AddSingleton<IMenuItemDataAccess, MenuItemDataAccess>();
+            services.AddSingleton<IMenuListFactory, MenuListFactory>();
 
             services.AddTransient<IPatientMovementFactory, PatientMovementFactory>();
             services.AddTransient<IViroLabDataFactory, ViroLabDataFactory>();

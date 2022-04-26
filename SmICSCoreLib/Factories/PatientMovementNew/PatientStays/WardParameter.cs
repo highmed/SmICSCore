@@ -9,5 +9,6 @@ namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public List<string> PathogenCode { get; set; }
+        public string DepartementID { get; set; }
     }
 }

@@ -44,24 +44,27 @@
 
 <div style="margin-bottom:7.5em;">
 
-    @if(Loading)
+    @if (Loading)
     {
         <div class="spinner"></div>
     }
 
-    else if (patientResults != null & !Loading)
+    else
     {
-        @if (patient == null)
+        @if (patientResults is not null)
         {
-            <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @selectedPatient.PatientID</Heading>
-        }
-        else
-        {
-            <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @patient.Name</Heading>
-        }
-        @foreach (KeyValuePair<Hospitalization, List<LabResult>> kvp in patientResults)
-        {
-            <HospitalizationCard Hospitalization="kvp" />
+            @if (patient == null)
+            {
+                <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @selectedPatient.PatientID</Heading>
+            }
+            else
+            {
+                <Heading Size="HeadingSize.Is4" TextColor="TextColor.Black50" Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop">Patient: @patient.Name</Heading>
+            }
+            @foreach (KeyValuePair<Hospitalization, List<LabResult>> kvp in patientResults)
+            {
+                <HospitalizationCard Hospitalization="kvp" />
+            }
         }
     }
 
@@ -82,14 +85,19 @@
     {
         if (!string.IsNullOrEmpty(PatientID))
         {
-            Loading = true;
-            await Task.Run(Submit);
-            Loading = false;
+            await Submit();
         }
         await base.OnInitializedAsync();
     }
 
-    private void Submit()
+    private async Task Submit()
+    {
+        Loading = true;
+        await Task.Run(GetData);
+        Loading = false;
+    }
+
+    private void GetData()
     {
         selectedPatient.PatientID = PatientID;
         patientResults = _service.GetData(selectedPatient);

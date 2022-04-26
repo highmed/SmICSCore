@@ -27,3 +27,25 @@
     height: 3px;
     box-shadow: 1px 1px 5px lightgrey;
 }
+
+.spinner {
+    border: 16px solid silver;
+    border-top: 16px solid #337AB7;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 1300ms linear infinite;
+    top: 50%;
+    left: 40%;
+    position: absolute;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    100% {
+        transform: rotate(360deg)
+    }
+}

@@ -28,12 +28,15 @@ namespace SmICSWebApp.Data.ContactComparison
             {
                 List<PatientStay> patientStays = new List<PatientStay>();
                 List<Hospitalization> hospitalizations = _hospFac.Process(pat);
-                foreach(Hospitalization hosp in hospitalizations)
+                if (hospitalizations is not null)
                 {
-                    List<PatientStay> patStays = _patStayFac.Process(hosp);
-                    patientStays.AddRange(patStays);
+                    foreach (Hospitalization hosp in hospitalizations)
+                    {
+                        List<PatientStay> patStays = _patStayFac.Process(hosp);
+                        patientStays.AddRange(patStays);
+                    }
+                    patientStayDict.Add(new KeyValuePair<SmICSCoreLib.Factories.General.Patient, List<PatientStay>>(pat, patientStays));
                 }
-                patientStayDict.Add(new KeyValuePair<SmICSCoreLib.Factories.General.Patient, List<PatientStay>>(pat, patientStays));
             }
             List<ComparedContact> contacts = new List<ComparedContact>();
             for (int i = 0; i < patientStayDict.Count - 1; i++)
@@ -75,16 +78,9 @@ namespace SmICSWebApp.Data.ContactComparison
             {
                 for (int j = 0; j < Second.Count; j++)
                 {
-                    if (IsContact(First[i], Second[j], ContactType.INDIRECT, ContactLevel.WARD))
+                    ContactPoint cp = GetContact(First[i], Second[j]);
+                    if (cp is not null)
                     {
-                        ContactPoint cp = new ContactPoint
-                        {
-                            Ward = First[i].Ward,
-                            Room = First[i].Room,
-                            Departement = First[i].DepartementID == Second[j].DepartementID ? First[i].DepartementID : null,
-                            Start = First[i].Admission > Second[j].Admission ? First[i].Admission : Second[j].Admission,
-                            End = GetContactEnd(First[i].Discharge, Second[j].Discharge)
-                        };
                         contact.Add(cp);
                     }
                 }
@@ -92,103 +88,87 @@ namespace SmICSWebApp.Data.ContactComparison
             return contact;
         }
 
-        private bool IsContact(PatientStay First, PatientStay Second, ContactType type, ContactLevel level)
+        private ContactPoint GetContact(PatientStay First, PatientStay Second)
         {
-            if (First.Ward == Second.Ward)
+                  
+            ContactLevel lvl = GetContactLevel(First, Second);
+            DateTime contactStart = First.Admission >= Second.Admission ? First.Admission : Second.Admission;
+            DateTime? contactEnd = null;
+            if (First.Discharge.HasValue && Second.Discharge.HasValue)
             {
-                if (level == ContactLevel.ROOM && First.Room == Second.Room)
+                if (First.Admission <= Second.Discharge.Value && Second.Admission <= First.Discharge.Value)
                 {
-                    if (type == ContactType.DIRECT)
-                    {
-                        return IsDirect(First, Second);
-                    }
-                    else if (type == ContactType.INDIRECT)
-                    {
-                        return IsIndirect(First, Second);
-                    }
+                    contactEnd = First.Discharge.Value <= Second.Discharge.Value ? First.Discharge.Value : Second.Discharge.Value;
+                    return GetContactPoint(First, contactStart, contactEnd, lvl);
                 }
-                else
-                {
-                    if (type == ContactType.DIRECT)
-                    {
-                        return IsDirect(First, Second);
-                    }
-                    else if (type == ContactType.INDIRECT)
-                    {
-                        return IsIndirect(First, Second);
-                    }
-                }
+                return null;
             }
-            else if (First.DepartementID == Second.DepartementID)
+            else if (!First.Discharge.HasValue && Second.Discharge.HasValue)
             {
-                return IsIndirect(First, Second);
+                if (First.Admission <= Second.Discharge.Value)
+                {
+                    contactEnd = Second.Discharge.Value;
+                    return GetContactPoint(First, contactStart, contactEnd, lvl);
+                }
+                return null;
             }
-            return false;
+            else if (First.Discharge.HasValue && !Second.Discharge.HasValue)
+            {
+                if (Second.Admission <= First.Discharge.Value)
+                {
+                    contactEnd = First.Discharge.Value;
+                    return GetContactPoint(First, contactStart, contactEnd, lvl);
+                }
+                return null;
+            }
+            return GetContactPoint(First, contactStart, contactEnd, lvl);
         }
 
-        private bool IsDirect(PatientStay First, PatientStay Second)
+        private ContactPoint GetContactPoint(PatientStay stay, DateTime contactStart, DateTime? contactEnd, ContactLevel level)
         {
-            if (First.Discharge.HasValue && First.Discharge.Value >= Second.Admission)
+            if (level == ContactLevel.DEPARTEMENT || level == ContactLevel.WARD || level == ContactLevel.ROOM)
             {
-                if (Second.Discharge.HasValue && First.Admission <= Second.Discharge.Value)
+                ContactPoint cp = new ContactPoint
                 {
-                    return true;
-                }
-                else if (!Second.Discharge.HasValue)
+               
+                    Departement = stay.Departement,
+                    Start = contactStart,
+                    End = contactEnd
+                };
+                if(level == ContactLevel.WARD || level == ContactLevel.ROOM)
                 {
-                    return true;
-                }
-            }
-            else if (!First.Discharge.HasValue)
-            {
-                if (Second.Discharge.HasValue && First.Admission <= Second.Discharge.Value)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool IsIndirect(PatientStay First, PatientStay Second)
-        {
-            {
-                if (First.Discharge.HasValue && First.Discharge.Value.Date >= Second.Admission.Date)
-                {
-                    if (Second.Discharge.HasValue && First.Admission.Date <= Second.Discharge.Value.Date)
+                    cp.Ward = stay.Ward;
+                    if (level == ContactLevel.ROOM)
                     {
-                        return true;
-                    }
-                    else if (!Second.Discharge.HasValue)
-                    {
-                        return true;
+                        cp.Room = stay.Room;
                     }
                 }
-                else if (!First.Discharge.HasValue)
-                {
-                    if (Second.Discharge.HasValue && First.Admission.Date <= Second.Discharge.Value.Date)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
-
-        private DateTime? GetContactEnd(DateTime? First, DateTime? Second)
-        {
-            if(First.HasValue && Second.HasValue)
-            {
-                return First < Second ? First : Second;
-            }
-            else if (!First.HasValue)
-            {
-                return Second;
-            }
-            else if (!Second.HasValue)
-            {
-                return First;
+                return cp;
             }
             return null;
+        }
+        private ContactLevel GetContactLevel(PatientStay first, PatientStay second)
+        {
+            if (first.MovementType == second.MovementType)
+            {
+                if (first.DepartementID == second.DepartementID)
+                {
+                    if (first.Ward == second.Ward)
+                    {
+                        if (first.Room == second.Room)
+                        {
+                            return ContactLevel.ROOM;
+                        }
+                        return ContactLevel.WARD;
+                    }
+                    else
+                    {
+                        return ContactLevel.NON;
+                    }
+                    return ContactLevel.DEPARTEMENT;
+                }
+            }
+            return ContactLevel.NON;
         }
     }
 }

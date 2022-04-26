@@ -54,7 +54,10 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                 {
                     if (tmp[tmp.Keys[i]].ContainsKey(code))
                     {
-                        retVal.Add(tmp.Keys[i], tmp[tmp.Keys[i]][code][Resistence]);
+                        if (tmp[tmp.Keys[i]][code].ContainsKey(Resistence))
+                        {
+                            retVal.Add(tmp.Keys[i], tmp[tmp.Keys[i]][code][Resistence]);
+                        }
                     }
                 }
             }
@@ -66,26 +69,31 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
         {
             List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
             SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase = new SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>();
-
-            foreach (Case c in cases)
-            {
-                List<LabResult> results = null;
-                Hospitalization hospitalization = _hospitalizationFac.Process(c);
-                if (MedicalField == null)
+            if(cases is not null)
+            { 
+                foreach (Case c in cases)
                 {
-                    results = _mibiResultFac.Process(c, pathogen);
-                }
-                else if (pathogen == null)
-                {
-                    results = _mibiResultFac.Process(c, MedicalField);
-                }
-                results = results.OrderBy(l => l.Specimens.First().SpecimenCollectionDateTime).ToList();
-                Dictionary<string, Dictionary<string, InfectionStatus>>infectionInformation = new Dictionary<string, Dictionary<string, InfectionStatus>>();
+                    List<LabResult> results = null;
+                    Hospitalization hospitalization = _hospitalizationFac.Process(c);
+                    if (MedicalField == null)
+                    {
+                        results = _mibiResultFac.Process(c, pathogen);
+                    }
+                    else if (pathogen == null)
+                    {
+                        results = _mibiResultFac.Process(c, MedicalField);
+                    }
+                    if(results is not null)
+                    {
+                        results = results.OrderBy(l => l.Specimens.First().SpecimenCollectionDateTime).ToList();
+                    
+                        Dictionary<string, Dictionary<string, InfectionStatus>>infectionInformation = new Dictionary<string, Dictionary<string, InfectionStatus>>();
 
-                DetermineInfectionInformation(ref infectionInformation, results, hospitalization, infectionInformationByCase);
-                infectionInformationByCase.Add(hospitalization, infectionInformation);
-
-            } 
+                        DetermineInfectionInformation(ref infectionInformation, results, hospitalization, infectionInformationByCase);
+                        infectionInformationByCase.Add(hospitalization, infectionInformation);
+                    }
+                }
+            }
             return infectionInformationByCase;
         }
 

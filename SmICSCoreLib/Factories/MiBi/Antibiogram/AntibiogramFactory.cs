@@ -24,7 +24,7 @@ namespace SmICSCoreLib.Factories.MiBi
 
         private AQLQuery AntibiogramFromPathogen(AntibiogramParameter parameter)
         {
-            return new AQLQuery("AntibiogramFromPathogen", @$"SELECT b/items[at0024]/value/value as Antibiotic,
+            return new AQLQuery("AntibiogramFromPathogen", @$"SELECT DISTINCT b/items[at0024]/value/value as Antibiotic,
                                                             b/items[at0024]/value/defining_code/code_string as AntibioticID,
                                                             b/items[at0004]/value/defining_code/code_string as Resistance,
                                                             b/items[at0001]/value/magnitude as MinInhibitorConcentration,

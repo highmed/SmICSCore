@@ -1,5 +1,7 @@
 ﻿using SmICSCoreLib.DB;
+using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.REST;
+using System;
 using System.Collections.Generic;
 
 namespace SmICSCoreLib.Factories.MenuList
@@ -21,7 +23,21 @@ namespace SmICSCoreLib.Factories.MenuList
 
         public List<PathogenMenuEntry> Pathogens()
         {
-            List<PathogenMenuEntry> entries = RestDataAccess.AQLQuery<PathogenMenuEntry>(MibiPathogenList());
+            List<Patient> mibiPatients = RestDataAccess.AQLQuery<Patient>(MibiPatientList());
+            List<PathogenMenuEntry> entries = new List<PathogenMenuEntry>();
+            foreach (Patient pat in mibiPatients)
+            {
+                Console.WriteLine(pat.PatientID);
+                List<PathogenMenuEntry> patEntries = RestDataAccess.AQLQuery<PathogenMenuEntry>(MibiPathogenList(pat));
+                foreach(PathogenMenuEntry entry in patEntries)
+                {
+                    if(!entries.Contains(entry))
+                    {
+                        entries.Add(entry);
+                    }
+                }
+                
+            }
             List<PathogenMenuEntry> viroentries = RestDataAccess.AQLQuery<PathogenMenuEntry>(ViroPathogenList());
             entries.AddRange(viroentries);
             //string sql = "";
@@ -41,17 +57,31 @@ namespace SmICSCoreLib.Factories.MenuList
             };
         }
 
-        private AQLQuery MibiPathogenList()
+        private AQLQuery MibiPatientList()
         {
             return new AQLQuery()
             {
                 Name = "PathogenList",
-                Query = @"SELECT DISTINCT w/items[at0001]/value/value as Name,
-                        w/items[at0001]/value/defining_code/code_string as ID
+                Query = @"SELECT DISTINCT e/ehr_status/subject/external_ref/id/value as PatientID
                         FROM EHR e
                         CONTAINS COMPOSITION c
                         CONTAINS CLUSTER w[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]
                         WHERE c/name/value='Mikrobiologischer Befund' and w/items[at0001]/name/value='Erregername'"
+
+            };
+        }
+
+        private AQLQuery MibiPathogenList(Patient patient)
+        {
+            return new AQLQuery()
+            {
+                Name = "PathogenList",
+                Query = $@"SELECT DISTINCT w/items[at0001]/value/value as Name,
+                        w/items[at0001]/value/defining_code/code_string as ID
+                        FROM EHR e
+                        CONTAINS COMPOSITION c
+                        CONTAINS CLUSTER w[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]
+                        WHERE c/name/value='Mikrobiologischer Befund' and w/items[at0001]/name/value='Erregername' AND e/ehr_status/subject/external_ref/id/value='{patient.PatientID}'"
 
             };
         } 

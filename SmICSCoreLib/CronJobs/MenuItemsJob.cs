@@ -12,7 +12,7 @@ using System.Linq;
 namespace SmICSCoreLib.CronJobs
 {
     [DisallowConcurrentExecution]
-    public class MenuItemsJob
+    public class MenuItemsJob : IJob
     {
         private IMenuItemDataAccess _dataAccess;
         private IMenuListFactory _menuListFac;
@@ -35,7 +35,7 @@ namespace SmICSCoreLib.CronJobs
             List<Ward> wards = await _dataAccess.GetWards();
             foreach (WardMenuEntry ward in wardMenuEntries)
             {
-                if (wards.Where(w => w.Name == w.Name).Count() == 0)
+                if (wards.Where(w => w.Name == ward.ID).Count() == 0)
                 {
                     _dataAccess.SetWard(new Ward() { Name = ward.ID });
                 }
@@ -55,13 +55,16 @@ namespace SmICSCoreLib.CronJobs
             List<Pathogen> pathogens = await _dataAccess.GetPathogens();
             foreach (PathogenMenuEntry pat in pathoMenu)
             {
-                if (pathogens.Where(p => p.Code == pat.ID).Count() == 0)
+                if (!string.IsNullOrEmpty(pat.ID))
                 {
-                    _dataAccess.SetPathogen(new Pathogen() { Code = pat.ID, Name = pat.Name });
-                }
-                else if (pathogens.Where(p => p.Code == pat.ID).Count() == 1)
-                {
-                    _dataAccess.UpdatePathogen(new Pathogen() { Code = pat.ID, Name = pat.Name });
+                    if (pathogens.Where(p => p.Code == pat.ID).Count() == 0)
+                    {
+                        _dataAccess.SetPathogen(new Pathogen() { Code = pat.ID, Name = pat.Name });
+                    }
+                    else if (pathogens.Where(p => p.Code == pat.ID).Count() == 1)
+                    {
+                        _dataAccess.UpdatePathogen(new Pathogen() { Code = pat.ID, Name = pat.Name });
+                    }
                 }
             }
             foreach (Pathogen pat in pathogens)

@@ -24,7 +24,6 @@ using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSWebApp.Data.PatientMovement;
 using SmICSWebApp.Data.ContactNetwork;
 using SmICSCoreLib.DB.MenuItems;
-using SmICSCoreLib.DB.Models;
 using System.Linq;
 
 namespace SmICSWebApp.Controllers
@@ -76,24 +75,6 @@ namespace SmICSWebApp.Controllers
         /// <param name="parameter"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        /*[Route("Contact_NthDegree_TTKP_Degree")]
-        [HttpPost]
-        public ActionResult<SmICSCoreLib.Factories.ContactNetwork.ContactModel> Contact_NthDegree_TTP_Degree([FromBody] ContactParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
-        {
-            _logger.LogInformation("CALLED Contact_NthDegree_TTP_Degree with parameters: \n\r PatientID: {patID}\n\r Starttime: {start} \n\r Endtime: {end} \n\r Degree: {d} ", parameter.PatientID, parameter.Starttime, parameter.Endtime, parameter.Degree);
-            try
-            {
-                _contact.RestDataAccess.SetAuthenticationHeader(token);
-                System.Diagnostics.Debug.WriteLine("CALLED Contact_NthDegree_TTKP_Degree " + parameter.PatientID + " - " + parameter.Starttime + " - " + parameter.Endtime + " - " + parameter.Degree);
-                return _contact.Process(parameter);
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning("CALLED Contact_NthDegree_TTP_Degree:" + e.Message);
-                return ErrorHandling(e);
-            }
-        }*/
-
         [Route("Contact_NthDegree_TTKP_Degree")]
         [HttpPost]
         public ActionResult<Data.ContactNetwork.ContactModel> ContactNetwork([FromBody] ContactNetworkParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
@@ -118,23 +99,6 @@ namespace SmICSWebApp.Controllers
         /// <param name="parameter"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        /*[Route("Patient_Labordaten_Ps")]
-        [HttpPost]
-        public ActionResult<List<LabDataModel>> Patient_Labordaten_Ps([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
-        {
-            _logger.LogInformation("CALLED Patient_Labordaten_Ps with parameters: PatientIDs: {patList}", parameter.ToAQLMatchString());
-            try
-            {
-                _viroLabDataFac.RestDataAccess.SetAuthenticationHeader(token);
-                return _viroLabDataFac.Process(parameter);
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning("CALLED Patient_Labordaten_Ps:" + e.Message);
-                return ErrorHandling(e);
-            }
-        }*/
-
         [Route("Patient_Labordaten_Ps")]
         [HttpPost]
         public ActionResult<List<VisuLabResult>> PatientLabData([FromBody] PatientLabDataParameter parameter,[FromHeader(Name = "Authorization")] string token = "NoToken")
@@ -158,33 +122,6 @@ namespace SmICSWebApp.Controllers
                 return ErrorHandling(e);
             }
         }
-
-        /// <summary></summary>
-        /// <remarks>
-        /// Gibt alle stationären Aufnahmen, Entlassungen, Stationswechsel und Prozeduren der angegeben Patienten wieder. 
-        /// Eine Prozedur wird immer nur als ein Zeitpunkt wiedergegeben, da in den meisten Fällen die genaue Dauer einer Prozedur nicht dokumentiert wird.
-        /// </remarks>
-        /// <param name="parameter"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        /*[Route("Patient_Bewegung_Ps")]
-        [HttpPost]
-        public ActionResult<List<PatientMovementModel>> Patient_Bewegung_Ps([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
-        {
-            _logger.LogInformation("CALLED Patient_Bewegung_Ps with parameters: \n\r PatientIDs: {patList}", parameter.ToAQLMatchString());
-
-            try
-            {
-                _patientMoveFac.RestDataAccess.SetAuthenticationHeader(token);
-                return _patientMoveFac.Process(parameter);
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning("CALLED Patient_Bewegung_Ps:" + e.Message);
-                return ErrorHandling(e);
-            }
-        }*/
-
 
         [Route("Patient_Bewegung_Ps")]
         [HttpPost]
@@ -261,129 +198,6 @@ namespace SmICSWebApp.Controllers
             }
         }
 
-        //[Route("Patient_Stay_Stationary")]
-        //[HttpPost]
-        //public ActionResult<List<StationaryDataModel>> Patient_Stay_Stationary(string patientId)
-        //{
-        //    try
-        //    {
-        //        return _patinet_Stay.Stationary_Stay(patientId);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return ErrorHandling(e);
-        //    }
-        //}
-
-
-        //[Route("Patient_Count")]
-        //[HttpPost]
-        //public ActionResult<List<CountDataModel>> Patient_Count(string nachweis)
-        //{
-        //    try
-        //    {
-        //        return _patinet_Stay.CovidPat(nachweis);
-        //    }
-        //    catch (Exception e)
-        //    {
-
-        //        return ErrorHandling(e);
-        //    }
-        //}
-
-        //[Route("Patient_Case")]
-        //[HttpPost]
-        //public ActionResult<List<CaseDataModel>> Patient_Case(DateTime date)
-        //{
-        //    try
-        //    {
-        //        return _patinet_Stay.Case(date);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return ErrorHandling(e);
-        //    }
-        //} 
-
-        //[Route("Patient_WeekCase")]
-        //[HttpPost]
-        //public ActionResult<List<WeekCaseDataModel>> Patient_WeekCase(DateTime startDate, DateTime endDate)
-        //{
-        //    try
-        //    {
-        //        return _patinet_Stay.WeekCase(startDate, endDate);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return ErrorHandling(e);
-        //    }
-        //}
-
-        //[Route("NECAlgorithm")]
-        //[HttpPost]
-        //public ActionResult NECAlgorithm([FromBody] List<NECResultDataModel> parameter)
-        //{
-        //    try
-        //    {
-        //        _algorithm.NECResultFile(parameter);
-        //        return NoContent();  
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return ErrorHandling(e);
-        //    }
-        //}
-
-        //[Route("NECAlgorithmResult")]
-        //[HttpPost]
-        //public ActionResult<List<NECResultDataModel>> NECAlgorithmResult([FromBody] TimespanParameter parameter)
-        //{
-        //    try
-        //    {
-        //        return _algorithm.NECAlgorithmResult(parameter);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return ErrorHandling(e);
-        //    }
-        //}
-
-        //[Route("NEC_Dataset")]
-        //[HttpGet]
-        //public ActionResult<NECCombinedDataModel> NEC_Dataset([FromQuery] DateTime parameter)
-        //{
-        //    try
-        //    {
-        //        return _algorithm.NEC_Dataset(parameter);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return ErrorHandling(e);
-        //    }
-        //}
-
-        /*[Route("RKI_Dataset")]
-        [HttpPost]
-        public ActionResult<JArray> RKI_Dataset([FromBody] JObject parameter)
-        {
-            try
-            {
-                Dictionary<string, object> param = JsonConvert.DeserializeObject<Dictionary<string, object>>(parameter.ToString());
-                return _algorithm.RKI_Dataset(param);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }*/
-
-        private ActionResult ErrorHandling(Exception e) 
-        {
-            if (e is ArgumentNullException) { return new StatusCodeResult(412); }
-            else if (e is ArgumentException) { return new StatusCodeResult(412); }
-            else { return new StatusCodeResult(500); }
-        }
-
         [Route("Patient_Symptom")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
@@ -417,54 +231,6 @@ namespace SmICSWebApp.Controllers
                 return ErrorHandling(e);
             }
         }
-
-        /*[Route("Employee_ContactTracing")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
-        [HttpPost]
-        public ActionResult<List<ContactTracingReceiveModel>> Employee_ContactTracing([FromBody] PatientListParameter parameter)
-        {
-            try
-            {
-                return _employeeinformation.Employee_ContactTracing(parameter);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }
-
-        [Route("Employee_PersonData")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
-        [HttpPost]
-        public ActionResult<List<PersonDataModel>> Employee_PersonData([FromBody] PatientListParameter parameter)
-        {
-            try
-            {
-                return _employeeinformation.Employee_PersonData(parameter);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }
-
-        [Route("Employee_PersInfoInfecCtrl")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
-        [HttpPost]
-        public ActionResult<List<PersInfoInfecCtrlModel>> Employee_PersInfoInfecCtrl([FromBody] PatientListParameter parameter)
-        {
-            try
-            {
-                return _employeeinformation.Employee_PersInfoInfecCtrl(parameter);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }*/
 
         [Route("OutbreakDetectionConfigurations")]
         [HttpPost]
@@ -506,6 +272,13 @@ namespace SmICSWebApp.Controllers
             {
                 return ErrorHandling(e);
             }
+        }
+
+        private ActionResult ErrorHandling(Exception e)
+        {
+            if (e is ArgumentNullException) { return new StatusCodeResult(412); }
+            else if (e is ArgumentException) { return new StatusCodeResult(412); }
+            else { return new StatusCodeResult(500); }
         }
     }
 }

@@ -323,8 +323,6 @@ namespace SmICSCoreLib.Factories.EpiCurve
                     CONTAINS (CLUSTER u[openEHR-EHR-CLUSTER.specimen.v1] and CLUSTER v[openEHR-EHR-CLUSTER.laboratory_test_panel.v0]
                     CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1])))
                     WHERE c/archetype_details/template_id/value='Mikrobiologischer Befund' 
-                    and i/items[at0024]/name/value='Nachweis?' 
-                    and i/items[at0001]/name/value='Erregername'
                     and i/items[at0001]/value/defining_code/code_string MATCHES {parameter.PathogenCodesToAqlMatchString()}
                     and u/items[at0015]/value/value >= '{ date.ToString("yyyy-MM-dd") }'
                     and u/items[at0015]/value/value < '{ date.AddDays(1).ToString("yyyy-MM-dd") }'"

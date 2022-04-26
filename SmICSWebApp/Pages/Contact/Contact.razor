@@ -46,7 +46,7 @@
         {
             <div class="spinner"></div>
         }
-        else if (root != null && !Loading)
+        else if (root is not null && !Loading)
         {
             <div class="row">
                 <div class="card">
@@ -162,7 +162,9 @@
 
     private bool Collapsed = false;
     private FilterParameter _filterParameter;
-    private void Submit()
+
+
+    private void GetData()
     {
         _filterParameter = new FilterParameter();
         _filterParameter.ContactDetail = _filterParameter.ContactOptions[0];
@@ -170,7 +172,18 @@
         _filterParameter.ResistanceOptions.Add(contact.Pathogen);
         _filterParameter.ResistanceOptions.Add(contact.Resistence);
         root = _contactService.LoadContactData(contact);
+        if (root is null)
+        {
+            Console.WriteLine("Keine Daten für das Kontaktnetzwerk gefunden!");
+        }
         contacts = root.Contacts[root.CurrentHospitalization];
+    }
+
+    private async Task Submit()
+    {
+        Loading = true;
+        await Task.Run(GetData);
+        Loading = false;
     }
 
     public override Task SetParametersAsync(ParameterView parameters)
@@ -193,7 +206,7 @@
 
             Loading = true;
             await Task.Run(LoadMenu);
-            await Task.Run(Submit);
+            await Submit();
             Loading = false;
 
         }

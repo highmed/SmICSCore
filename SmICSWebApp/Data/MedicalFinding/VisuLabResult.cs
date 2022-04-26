@@ -8,9 +8,9 @@ namespace SmICSWebApp.Data.MedicalFinding
     {
         [JsonProperty("LabordatenID")]
         public string LabID { get; internal set; }
-        [JsonProperty("Eingangsdatum")]
+        [JsonProperty("ZeitpunktProbenentnahme")]
         public DateTime SpecimenCollectionDateTime { get; internal set; }
-        [JsonProperty("ZeitpunktProbeneingang")]
+        [JsonProperty("Eingangsdatum")]
         public DateTime? SpecimenReceiptDateTime { get; internal set; } 
         [JsonProperty("Probenart")]
         public string MaterialID { get; internal set; }

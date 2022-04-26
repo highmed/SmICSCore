@@ -140,7 +140,7 @@ namespace SmICSWebApp.Data.WardView
                         }
                     }
                 }
-                if (patient.Discharge.HasValue && chartEntries["Stress"].ContainsKey(patient.Discharge.Value.Date.AddDays(1.0)))
+                if (patient.Discharge.HasValue && patient.InfectionStatus is not null && chartEntries["Stress"].ContainsKey(patient.Discharge.Value.Date.AddDays(1.0)))
                 {
                     DecrementSince(patient.Discharge.Value.Date.AddDays(1.0), chartEntries["Stress"]);
                 }
@@ -163,52 +163,67 @@ namespace SmICSWebApp.Data.WardView
 
         private (DateTime?, DateTime?) GetFirstAndLastWardLabResultDate(List<LabResult> labResults, PatientStay patStay)
         {
-            DateTime last = DateTime.MinValue;
-            DateTime first = DateTime.MaxValue;
-            foreach (LabResult labResult in labResults)
+            DateTime? last = DateTime.MinValue;
+            DateTime? first = DateTime.MaxValue;
+            if (labResults is not null)
             {
-                if (labResult.Sender.Ward == patStay.Ward)
+                foreach (LabResult labResult in labResults)
                 {
-                    List<DateTime> tmp = labResult.Specimens.
-                        OrderBy(s => s.SpecimenCollectionDateTime).
-                        Where(s => s.SpecimenCollectionDateTime >= patStay.Admission && (patStay.Discharge.HasValue ? s.SpecimenCollectionDateTime <= patStay.Discharge.Value : true)).
-                        Select(s => s.SpecimenCollectionDateTime).
-                        ToList();
-                    DateTime? firstTmp = tmp.FirstOrDefault();
-                    DateTime? lastTmp = tmp.LastOrDefault();
-                    if (lastTmp.HasValue && last < lastTmp.Value)
+                    if (labResult.Sender.Ward == patStay.Ward)
                     {
-                        last = lastTmp.Value;
+                        List<DateTime> tmp = labResult.Specimens.
+                            OrderBy(s => s.SpecimenCollectionDateTime).
+                            Where(s => s.SpecimenCollectionDateTime >= patStay.Admission && (patStay.Discharge.HasValue ? s.SpecimenCollectionDateTime <= patStay.Discharge.Value : true)).
+                            Select(s => s.SpecimenCollectionDateTime).
+                            ToList();
+                        DateTime? firstTmp = tmp.FirstOrDefault();
+                        DateTime? lastTmp = tmp.LastOrDefault();
+                        if (lastTmp.HasValue && last.Value < lastTmp.Value)
+                        {
+                            last = lastTmp.Value;
+                        }
+                        if (firstTmp.HasValue && first.Value > firstTmp.Value)
+                        {
+                            first = firstTmp.Value;
+                        }
                     }
-                    if (firstTmp.HasValue && first > firstTmp.Value)
-                    {
-                        first = firstTmp.Value;
-                    }
-                }
 
+                }
             }
-            return ((last == DateTime.MinValue ? null : last), (first == DateTime.MaxValue ? null : first));
+            if(last.Value == DateTime.MinValue)
+            {
+                last = null;
+            }
+            if (first.Value == DateTime.MaxValue)
+            {
+                first = null;
+            }
+            return (last, first);
         }
 
         private DateTime? GetFirstPositveLabResultDate(List<LabResult> labResults, PatientStay patStay)
         {
+            
             DateTime last = DateTime.MaxValue;
-            foreach (LabResult labResult in labResults)
+            if (labResults is not null)
             {
-                if (labResult.Sender.Ward == patStay.Ward)
+                foreach (LabResult labResult in labResults)
                 {
-                    IEnumerable<DateTime> dates = labResult.Specimens.
-                        OrderBy(s => s.SpecimenCollectionDateTime).
-                        Where(s => s.Pathogens.Any(p => p.Result)).
-                        Select(s => s.SpecimenCollectionDateTime);
-
-                    DateTime? tmp = dates.Count() > 0 ? dates.First() : null;
-                    if (tmp.HasValue && last > tmp.Value)
+                    if (labResult.Sender.Ward == patStay.Ward)
                     {
-                        last = tmp.Value;
-                    }
-                }
+                        IEnumerable<DateTime> dates = labResult.Specimens.
+                            OrderBy(s => s.SpecimenCollectionDateTime).
+                            Where(s => s.Pathogens.Any(p => p.Result)).
+                            Select(s => s.SpecimenCollectionDateTime);
 
+                        DateTime? tmp = dates.Count() > 0 ? dates.First() : null;
+                        if (tmp.HasValue && last > tmp.Value)
+                        {
+                            last = tmp.Value;
+                        }
+                    }
+
+                }
             }
             return last == DateTime.MaxValue ? null : last;
         }
@@ -216,12 +231,15 @@ namespace SmICSWebApp.Data.WardView
         private DateTime? GetLastLabResultDate(List<LabResult> labResults)
         {
             DateTime last = DateTime.MinValue;
-            foreach (LabResult labResult in labResults)
+            if (labResults is not null)
             {
-                DateTime tmp = labResult.Specimens.OrderBy(s => s.SpecimenCollectionDateTime).Last().SpecimenCollectionDateTime;
-                if (last < tmp)
+                foreach (LabResult labResult in labResults)
                 {
-                    last = tmp;
+                    DateTime tmp = labResult.Specimens.OrderBy(s => s.SpecimenCollectionDateTime).Last().SpecimenCollectionDateTime;
+                    if (last < tmp)
+                    {
+                        last = tmp;
+                    }
                 }
             }
             return last == DateTime.MinValue ? null : last;

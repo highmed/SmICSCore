@@ -28,6 +28,7 @@ using SmICSWebApp.Data.PatientMovement;
 using SmICSWebApp.Data.ContactNetwork;
 using SmICSWebApp.Data.ContactComparison;
 using SmICSWebApp.Data.Menu;
+using SmICSCoreLib.CronJobs;
 
 namespace SmICSWebApp
 {
@@ -93,6 +94,8 @@ namespace SmICSWebApp
 
             services.AddScoped<OutbreakDetectionService>();
 
+            services.AddSingleton<MenuItemsJob>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(MenuItemsJob), "MenuItems", "0 25 15 ? * *"));
             //OpenehrConfig.OutbreakDetectionRuntime = Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME");
             //Console.WriteLine("Transformed: OUTBREAK_DETECTION_TIME " + Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME") + "to CONFIG: " + OpenehrConfig.OutbreakDetectionRuntime);
             //string[] runtimeArr = OpenehrConfig.OutbreakDetectionRuntime.Split(":");
@@ -124,10 +127,10 @@ namespace SmICSWebApp
             //OpenehrConfig.smicsVisuPort = Environment.GetEnvironmentVariable("SMICS_VISU_PORT");
 
             OpenehrConfig.openehrEndpoint = "http://plri-highmed01.mh-hannover.local:8081";
-            //OpenehrConfig.openehrUser = "smics";
-            //OpenehrConfig.openehrPassword = "b+KzsSFD?cgdW2UA";
-            OpenehrConfig.openehrUser = "etltestuser";
-            OpenehrConfig.openehrPassword = "etltestuser#01";
+            OpenehrConfig.openehrUser = "smics";
+            OpenehrConfig.openehrPassword = "b+KzsSFD?cgdW2UA";
+            //OpenehrConfig.openehrUser = "test";
+            //OpenehrConfig.openehrPassword = "test";
             OpenehrConfig.smicsVisuPort = "3231";
 
             if (env.IsDevelopment())

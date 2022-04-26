@@ -50,10 +50,10 @@ implemented) will be monitored first as a proof of principle, followed by methic
                     query = new AQLQuery()
                     {
                         Name = "Pathogen - Mikrobiologischer Befunde",
-                        Query = @$"SELECT u/items[at0001,'Erregername']/value/value as Name,
+                        Query = @$"SELECT DISTINCT u/items[at0001,'Erregername']/value/value as Name,
                         u/items[at0001,'Erregername']/value/defining_code/code_string as ID,
-                        u/items[at0024,'Nachweis?']/value/value as ResultString,
-                        u/items[at0024,'Nachweis?']/value/value as ResultText,
+                        u/items[at0024]/value/value as ResultString,
+                        u/items[at0024]/value/value as ResultText,
                         b/items[at0003]/value/value as Rate,
                         u/items[at0027,'Isolatnummer']/value/magnitude as IsolatNr,
                         '{parameter.MedicalField}' as MedicalField

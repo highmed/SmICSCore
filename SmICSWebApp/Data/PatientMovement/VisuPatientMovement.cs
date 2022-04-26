@@ -12,9 +12,9 @@ namespace SmICSWebApp.Data.PatientMovement
         public DateTime Admission { get; internal set; }
         [JsonProperty("Ende")]
         public DateTime Discharge { get; internal set; }
-        [JsonProperty("Raum")]
+        [JsonProperty("ZimmerNr")]
         public string Room { get; internal set; }
-        [JsonProperty("Station")]
+        [JsonProperty("StationID")]
         public string Ward { get; internal set; }
         [JsonProperty("Fachabteilung")]
         public string Departement { get; internal set; }

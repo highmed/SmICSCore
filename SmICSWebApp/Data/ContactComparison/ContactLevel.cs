@@ -3,6 +3,8 @@
     public enum ContactLevel
     {
         ROOM,
-        WARD
+        WARD,
+        NON,
+        DEPARTEMENT
     }
 }

@@ -35,5 +35,44 @@ namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
         public string DepartementID { get; set; }
         public string Room { get; set; }
         public string StayingReason { get; set; }
+
+        
+        public bool Equals(PatientStay other)
+        { 
+            if(ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            if (other is not null)
+            {
+                if (Admission == other.Admission)
+                {
+                    if (Discharge.HasValue)
+                    {
+                        if (other.Discharge.HasValue)
+                        {
+                            if (Discharge.Value == other.Discharge)
+                            {
+                                if (MovementType == other.MovementType)
+                                {
+                                    if (DepartementID == other.DepartementID)
+                                    {
+                                        if (Ward == other.Ward)
+                                        {
+                                            if (Room == other.Room)
+                                            {
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
     }
 }

@@ -2,6 +2,7 @@
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 using SmICSCoreLib.REST;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -47,12 +48,14 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
         private List<PatientMovementNew.PatientStays.PatientStay> DetermineContacts(Hospitalization hospitalization)
         {
             List<PatientMovementNew.PatientStays.PatientStay> patientStays = _patientStayFac.Process(hospitalization);
+            RemoveDoubleStays(patientStays);
             List<PatientMovementNew.PatientStays.PatientStay> cases = new List<PatientMovementNew.PatientStays.PatientStay>();
             foreach (PatientMovementNew.PatientStays.PatientStay patientStay in patientStays)
             {
                 WardParameter wardParameter = new WardParameter
                 {
                     Ward = patientStay.Ward,
+                    DepartementID = patientStay.DepartementID,
                     Start = patientStay.Admission,
                     End = patientStay.Discharge.Value
                 };
@@ -63,8 +66,36 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
                     cases.AddRange(casesOnWard);
                 }
             }
-
+            RemoveDoubleStays(cases);
             return cases;
+        }
+
+        private void RemoveDoubleStays(List<PatientMovementNew.PatientStays.PatientStay> patientStays)
+        {
+
+            List<int> indices = new List<int>();
+            for(int i = 0; i < (patientStays.Count-2) ; i++)
+            {
+                for (int j = (i + 1); j < (patientStays.Count - 1); j++)
+                {
+                    if (patientStays[i].Equals(patientStays[j]) ||
+                        (patientStays[i].MovementType == MovementType.PROCEDURE &&
+                        patientStays[j].MovementType == MovementType.PROCEDURE &&
+                        patientStays[i].DepartementID == patientStays[j].DepartementID &&
+                        patientStays[i].Admission.Date == patientStays[j].Admission.Date))
+                    {
+                        if (!indices.Contains(j))
+                        {
+                            indices.Add(j);
+                        }
+                    }
+                }
+            }
+            indices = indices.OrderBy(i => i).ToList();
+            for(int i = (indices.Count - 1); i >= 0; i--)
+            {
+                patientStays.RemoveAt(indices[i]);
+            }
         }
     }
 }
