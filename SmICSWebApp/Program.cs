@@ -55,6 +55,10 @@ namespace SmICSWebApp
 
         private static void ConfigureDatabase()
         {
+            if(!Directory.Exists("./Resources/db"))
+            {
+                Directory.CreateDirectory("./Resources/db");
+            }
             if(!File.Exists("./Resources/db/SmICS.db"))
             {
                 File.Create("./Resources/db/SmICS.db");
