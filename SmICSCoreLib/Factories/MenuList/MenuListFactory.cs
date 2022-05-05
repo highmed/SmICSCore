@@ -159,8 +159,8 @@ namespace SmICSCoreLib.Factories.MenuList
                         FROM EHR e
                         CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
                         WHERE c/name/value='Patientenaufenthalt' 
-                        AND c/context/start_time >= '{start.ToString("yyyy-MM-dd")}'
-                        AND c/context/start_time < '{end.ToString("yyyy-MM-dd")}'"
+                        AND c/context/start_time/value >= '{start.ToString("yyyy-MM-dd")}'
+                        AND c/context/start_time/value < '{end.ToString("yyyy-MM-dd")}'"
             };
         }
 
@@ -171,10 +171,10 @@ namespace SmICSCoreLib.Factories.MenuList
                 Name = "Mibi Befund in Zeitraum",
                 Query = @$"SELECT c/uid/value as ID
                         FROM EHR e
-                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
+                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
                         WHERE c/name/value='Mikrobiologischer Befund' 
-                        AND c/context/start_time >= '{start.ToString("yyyy-MM-dd")}'
-                        AND c/context/start_time < '{end.ToString("yyyy-MM-dd")}'"
+                        AND c/context/start_time/value >= '{start.ToString("yyyy-MM-dd")}'
+                        AND c/context/start_time/value < '{end.ToString("yyyy-MM-dd")}'"
             };
         }
 
@@ -185,10 +185,10 @@ namespace SmICSCoreLib.Factories.MenuList
                 Name = "Viro Befund in Zeitraum",
                 Query = @$"SELECT c/uid/value as ID
                         FROM EHR e
-                        CONTAINS COMPOSITION 
+                        CONTAINS COMPOSITION c
                         WHERE c/name/value='Virologischer Befund' 
-                        AND c/context/start_time >= '{start.ToString("yyyy-MM-dd")}'
-                        AND c/context/start_time < '{end.ToString("yyyy-MM-dd")}'"
+                        AND c/context/start_time/value >= '{start.ToString("yyyy-MM-dd")}'
+                        AND c/context/start_time/value < '{end.ToString("yyyy-MM-dd")}'"
             };
         }
 
