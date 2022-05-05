@@ -126,26 +126,26 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                             {
                                 if (pathogen.Result && timespan.Days < (threshold - 1))
                                 { 
-                                    if (!infectionInformation[pathogen.ID].ContainsKey("N.R."))
+                                    if (!infectionInformation[pathogen.ID].ContainsKey("keine"))
                                     {
-                                        infectionInformation[pathogen.ID].Add("N.R.", new InfectionStatus { PathogenCode = pathogen.ID, Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = pathogen.Result, ConsecutiveNegativeCounter = 0, Resistance = "N.R.", LabID = specimen.LabID });
+                                        infectionInformation[pathogen.ID].Add("keine", new InfectionStatus { PathogenCode = pathogen.ID, Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = pathogen.Result, ConsecutiveNegativeCounter = 0, Resistance = "N.R.", LabID = specimen.LabID });
                                     }
                                 }
                                 else if (pathogen.Result && timespan.Days >= (threshold - 1))
                                 {
-                                    bool hasFoundOldStatus = HasOldKnownCase(pathogen, "N.R.", infectionInformationByCase);
+                                    bool hasFoundOldStatus = HasOldKnownCase(pathogen, "keine", infectionInformationByCase);
                                     if (!hasFoundOldStatus)
                                     {
-                                        if (!infectionInformation[pathogen.ID].ContainsKey("N.R."))
+                                        if (!infectionInformation[pathogen.ID].ContainsKey("keine"))
                                         {
-                                            infectionInformation[pathogen.ID].Add("N.R.", new InfectionStatus { PathogenCode = pathogen.ID, Pathogen = pathogen.Name, Nosocomial = true, Known = false, NosocomialDate = specimen.SpecimenCollectionDateTime, Infected = pathogen.Result, ConsecutiveNegativeCounter = 0, Resistance = "N.R.", LabID = specimen.LabID });
+                                            infectionInformation[pathogen.ID].Add("keine", new InfectionStatus { PathogenCode = pathogen.ID, Pathogen = pathogen.Name, Nosocomial = true, Known = false, NosocomialDate = specimen.SpecimenCollectionDateTime, Infected = pathogen.Result, ConsecutiveNegativeCounter = 0, Resistance = "N.R.", LabID = specimen.LabID });
                                         }
                                     }
                                     else
                                     {
-                                        if (!infectionInformation[pathogen.ID].ContainsKey("N.R."))
+                                        if (!infectionInformation[pathogen.ID].ContainsKey("keine"))
                                         {
-                                            infectionInformation[pathogen.ID].Add("N.R.", new InfectionStatus { PathogenCode = pathogen.ID, Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = pathogen.Result, ConsecutiveNegativeCounter = 0, Resistance = "N.R.", LabID = specimen.LabID });
+                                            infectionInformation[pathogen.ID].Add("keine", new InfectionStatus { PathogenCode = pathogen.ID, Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = pathogen.Result, ConsecutiveNegativeCounter = 0, Resistance = "N.R.", LabID = specimen.LabID });
                                         }
                                     }
                                 }
