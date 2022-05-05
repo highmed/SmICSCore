@@ -55,30 +55,36 @@ namespace SmICSWebApp
 
         private static void ConfigureDatabase()
         {
-            if(!Directory.Exists("./Resources/db"))
-            {
-                Directory.CreateDirectory("./Resources/db");
-            }
-            if(!File.Exists("./Resources/db/SmICS.db"))
-            {
-                File.Create("./Resources/db/SmICS.db");
-            }
-            IMenuItemDataAccess dbStartup = new MenuItemDataAccess(new DataAccess(new DapperContext()));
-            dbStartup.CreatePathogenTable();
-            dbStartup.CreateWardTable();
-            RestClientConnector conn = new RestClientConnector();
-            IRestDataAccess rest = new RestDataAccess(NullLogger<RestDataAccess>.Instance, conn);
-            IMenuListFactory menu = new MenuListFactory(rest);
-            MenuItemsJob job = new MenuItemsJob(dbStartup, menu);
-            Task wardtask = new Task(delegate() { 
-                job.UpdateWards(); 
-            });
-            wardtask.RunSynchronously();
+            try{
+                if(!Directory.Exists("./Resources/db"))
+                {
+                    Directory.CreateDirectory("./Resources/db");
+                }
+                if(!File.Exists("./Resources/db/SmICS.db"))
+                {
+                    File.Create("./Resources/db/SmICS.db");
+                }
+                IMenuItemDataAccess dbStartup = new MenuItemDataAccess(new DataAccess(new DapperContext()));
+                dbStartup.CreatePathogenTable();
+                dbStartup.CreateWardTable();
+                RestClientConnector conn = new RestClientConnector();
+                IRestDataAccess rest = new RestDataAccess(NullLogger<RestDataAccess>.Instance, conn);
+                IMenuListFactory menu = new MenuListFactory(rest);
+                MenuItemsJob job = new MenuItemsJob(dbStartup, menu);
+                Task wardtask = new Task(delegate() { 
+                    job.UpdateWards(); 
+                });
+                wardtask.RunSynchronously();
 
-            Task pathotask = new Task(delegate () {
-                job.UpdatePathogens();
-            });
-            pathotask.RunSynchronously();
+                Task pathotask = new Task(delegate () {
+                    job.UpdatePathogens();
+                });
+                pathotask.RunSynchronously();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Failed Database Configuration: \n" + e.Message);
+            }
         }
 
         private static void GetEnvironmentVariables()
