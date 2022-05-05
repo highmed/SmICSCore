@@ -24,27 +24,33 @@ namespace SmICSCoreLib.REST
 
         public List<T> AQLQuery<T>(AQLQuery query) where T : new()
         {
-            _logger.LogInformation("Posted Query: {Query}", query.Name);
-            string restPath = "rest/openehr/v1/query/aql";
-            Uri openehr = new Uri(OpenehrConfig.openehrEndpoint);
-            Uri RestPath = new Uri(openehr, restPath);
-            HttpResponseMessage response = _client.Client.PostAsync(RestPath.ToString(), GetHttpContentQuery(query.ToString())).Result;
-            //System.Diagnostics.Debug.Print(response.RequestMessage.ToString());
-            if (response.IsSuccessStatusCode)
-            {
-                if (response.StatusCode == HttpStatusCode.NoContent)
+            try{
+                _logger.LogInformation("Posted Query: {Query}", query.Name);
+                string restPath = "rest/openehr/v1/query/aql";
+                Uri openehr = new Uri(OpenehrConfig.openehrEndpoint);
+                Uri RestPath = new Uri(openehr, restPath);
+                HttpResponseMessage response = _client.Client.PostAsync(RestPath.ToString(), GetHttpContentQuery(query.ToString())).Result;
+                //System.Diagnostics.Debug.Print(response.RequestMessage.ToString());
+                if (response.IsSuccessStatusCode)
                 {
+                    if (response.StatusCode == HttpStatusCode.NoContent)
+                    {
+                        return null;
+                    }
+                    _logger.LogInformation("Received AQL Result From {Query}", query.Name);
+                    _logger.LogDebug("AQL Result: {Result}", response.Content.ReadAsStringAsync().Result);
+                    return openEHRJSONSerializer<T>.ReceiveModelConstructor(response);
+                }
+                else
+                {
+                    _logger.LogInformation("NO AQL Result Received {Query}", query.Name);
+                    _logger.LogDebug("No Success Code: {statusCode} \n {responsePhrase}", response.StatusCode, response.ReasonPhrase);
                     return null;
                 }
-                _logger.LogInformation("Received AQL Result From {Query}", query.Name);
-                _logger.LogDebug("AQL Result: {Result}", response.Content.ReadAsStringAsync().Result);
-                return openEHRJSONSerializer<T>.ReceiveModelConstructor(response);
             }
-            else
+            catch (Exception e)
             {
-                _logger.LogInformation("NO AQL Result Received {Query}", query.Name);
-                _logger.LogDebug("No Success Code: {statusCode} \n {responsePhrase}", response.StatusCode, response.ReasonPhrase);
-                return null;
+                Console.WriteLine("RestDataAccess.AQLQuery:\n" + e.Message);
             }
         }
         public List<string> GetTemplates()
