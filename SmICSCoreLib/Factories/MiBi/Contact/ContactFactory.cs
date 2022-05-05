@@ -24,7 +24,7 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
         {
             Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>> contacts = new Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>>();
 
-            List<Hospitalization> Hospitalizations = _hospitalizationFac.Process(parameter as Patient);
+            List<Hospitalization> Hospitalizations = _hospitalizationFac.Process(parameter);
             Hospitalizations.ForEach(h => contacts.Add(h, null));
 
             Hospitalization hospitalization = Hospitalizations.Last();
@@ -49,21 +49,52 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
         {
             List<PatientMovementNew.PatientStays.PatientStay> patientStays = _patientStayFac.Process(hospitalization);
             RemoveDoubleStays(patientStays);
+            List<HospStay> possibleContactHosp = _hospitalizationFac.Process(hospitalization.Admission.Date, hospitalization.Discharge.Date);
             List<PatientMovementNew.PatientStays.PatientStay> cases = new List<PatientMovementNew.PatientStays.PatientStay>();
-            foreach (PatientMovementNew.PatientStays.PatientStay patientStay in patientStays)
+            if (possibleContactHosp is not null)
             {
-                WardParameter wardParameter = new WardParameter
+                foreach (HospStay _case in possibleContactHosp)
                 {
-                    Ward = patientStay.Ward,
-                    DepartementID = patientStay.DepartementID,
-                    Start = patientStay.Admission,
-                    End = patientStay.Discharge.Value
-                };
+                    List<HospitalizationWard> wards = RestDataAccess.AQLQuery<HospitalizationWard>(GetsAllWardsFromHospitalization(_case));
+                    if (wards is not null)
+                    {
+                        foreach (PatientMovementNew.PatientStays.PatientStay patientStay in patientStays)
+                        {
 
-                List<PatientMovementNew.PatientStays.PatientStay> casesOnWard = _patientStayFac.Process(wardParameter);
-                if (casesOnWard is not null)
-                {
-                    cases.AddRange(casesOnWard);
+                            if (((_case.Discharge.HasValue && _case.Discharge.Value >= patientStay.Admission) ||
+                                (patientStay.Discharge.HasValue && _case.Admission <= patientStay.Discharge.Value)))
+                            {
+                                bool hasPotentialLocationContact = false;
+                                if (string.IsNullOrEmpty(patientStay.Ward))
+                                {
+                                    hasPotentialLocationContact = wards.Where(w => string.IsNullOrEmpty(w.Ward) && w.DepartementID == patientStay.DepartementID).Count() > 0;
+                                }
+                                else
+                                {
+                                    hasPotentialLocationContact = wards.Where(w => w.Ward == patientStay.Ward).Count() > 0;
+                                }
+                                if (hasPotentialLocationContact)
+                                {
+                                    WardParameter wardParameter = new WardParameter
+                                    {
+                                        Ward = patientStay.Ward,
+                                        DepartementID = patientStay.DepartementID,
+                                        Start = patientStay.Admission,
+                                        End = patientStay.Discharge.Value,
+                                        PatientID = _case.PatientID,
+                                        CaseID = _case.CaseID
+                                    };
+
+
+                                    List<PatientMovementNew.PatientStays.PatientStay> casesOnWard = _patientStayFac.Process(wardParameter);
+                                    if (casesOnWard is not null)
+                                    {
+                                        cases.AddRange(casesOnWard);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             RemoveDoubleStays(cases);
@@ -96,6 +127,24 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
             {
                 patientStays.RemoveAt(indices[i]);
             }
+        }
+
+        private AQLQuery GetsAllWardsFromHospitalization(HospStay hospStay)
+        {
+            return new AQLQuery()
+            {
+                Name = "Wards For Hospitalization",
+                Query = @$"SELECT DISTINCT a/items[at0027]/value/value as Ward, 
+                        o/items[at0024]/value/defining_code/code_string as DepartementID
+                        FROM EHR e
+                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] 
+                        CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] 
+                        AND ADMIN_ENTRY u[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] 
+                        CONTAINS (CLUSTER a[openEHR-EHR-CLUSTER.location.v1]
+                        AND CLUSTER o[openEHR-EHR-CLUSTER.organization.v0]))
+                        WHERE e/ehr_status/subject/external_ref/id/value = '{hospStay.PatientID}'
+                        AND i/items[at0001]/value/value='{hospStay.CaseID}'"
+            };
         }
     }
 }

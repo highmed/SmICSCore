@@ -17,85 +17,85 @@
 
 @if (_wardMenuEntries is not null && _pathogenMenuEntries is not null)
 {
-    <div class="container-fluid">
+<div class="container-fluid">
+    <div class="row">
+        <div class="card">
+            <div class="card-body">
+                <EditForm Model="@parameter" OnValidSubmit="@Submit">
+                    <label for="stationDropdown" class="mr-1">Station</label>
+                    <select id="stationDropdow" class="col-2 mr-2" @bind="@parameter.Ward">
+                        <option value="" selected disabled hidden>Bitte wählen</option>
+                        @foreach (Ward ward in _wardMenuEntries)
+                        {
+                            <option value="@ward.Name">@ward.Name</option>
+                        }
+                    </select>
+                    <label for="pathogenDropdown" class="mr-1">Erreger</label>
+                    <input type="text" list="pathogenList" class="col-1 mr-2" id="pathogenDropdown" @onchange="PathogenChanged">
+                    <datalist id="pathogenList">
+                        @foreach (PathogenEntry entry in _pathogenMenuEntries)
+                        {
+                            <option value="@string.Join(",", entry.Codes)" label="@entry.Name"></option>
+                        }
+                    </datalist>
+                    <label for="startdate" class="mr-1">Start</label>
+                    <InputDate id="startdate" class="col-1 mr-2" @bind-Value="parameter.Start" />
+                    <label for="enddate" class="mr-1">Ende</label>
+                    <InputDate id="enddate" class="col-1 mr-2" @bind-Value="parameter.End" />
+                    <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="spinner"></div>
+    }
+    else if (filteredData != null && chartEntries != null && _filterMRE != null && !isLoading)
+    {
         <div class="row">
-            <div class="card">
+            <div class="card card-table">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-10">
+                            <label for="filterMRE">Resistenz:</label>
+                            <select class="col-2" @onchange="FilterMRE" id="filterMRE">
+                                <option selected>Alle</option>
+                                @foreach (string filter in _filterMRE)
+                                {
+                                    <option value="@filter">@filter</option>
+                                }
+                            </select>
+                            <label for="filterNoso">Status:</label>
+                            <select class="col-2" @onchange="FilterNosocomial" id="filterNoso">
+                                <option selected>Alle</option>
+                                <option>Nosokomial</option>
+                                <option>Bekannt</option>
+                            </select>
+                        </div>
+                        <div class="col-2 d-flex justify-content-end">
+                            <b>Patientenanzahl: </b> @filteredData.Select(p => p.PatientID).Distinct().Count()
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body bottom-border">
+                    <WardTable WardPatients="filteredData" Parameter="parameter" />
+                </div>
+            </div>
+            <div class="card card-chart">
                 <div class="card-body">
-                    <EditForm Model="@parameter" OnValidSubmit="@Submit">
-                        <label for="stationDropdown" class="mr-1">Station</label>
-                        <select id="stationDropdow" class="col-2 mr-2" @bind="@parameter.Ward">
-                            <option value="" selected disabled hidden>Bitte wählen</option>
-                            @foreach (Ward ward in _wardMenuEntries)
-                            {
-                                <option value="@ward.Name">@ward.Name</option>
-                            }
-                        </select>
-                        <label for="pathogenDropdown" class="mr-1">Erreger</label>
-                        <input type="text" list="pathogenList" class="col-1 mr-2" id="pathogenDropdown" @onchange="PathogenChanged">
-                        <datalist id="pathogenList">
-                            @foreach (PathogenEntry entry in _pathogenMenuEntries)
-                            {
-                                <option value="@string.Join(",", entry.Codes)" label="@entry.Name"></option>
-                            }
-                        </datalist>
-                        <label for="startdate" class="mr-1">Start</label>
-                        <InputDate id="startdate" class="col-1 mr-2" @bind-Value="parameter.Start" />
-                        <label for="enddate" class="mr-1">Ende</label>
-                        <InputDate id="enddate" class="col-1 mr-2" @bind-Value="parameter.End" />
-                        <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button>
-                    </EditForm>
+                    <div>
+                        <Chart Config="_chart" />
+                    </div>
+                    <div>
+                        <Chart Config="_accumChart" />
+                    </div>
                 </div>
             </div>
         </div>
-
-        @if (isLoading)
-        {
-            <div class="spinner"></div>
-        }
-        else if (filteredData != null && chartEntries != null && _filterMRE != null && !isLoading)
-        {
-            <div class="row">
-                <div class="card card-table">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-10">
-                                <label for="filterMRE">Resistenz:</label>
-                                <select class="col-2" @onchange="FilterMRE" id="filterMRE">
-                                    <option selected>Alle</option>
-                                    @foreach (string filter in _filterMRE)
-                                    {
-                                        <option value="@filter">@filter</option>
-                                    }
-                                </select>
-                                <label for="filterNoso">Status:</label>
-                                <select class="col-2" @onchange="FilterNosocomial" id="filterNoso">
-                                    <option selected>Alle</option>
-                                    <option>Nosokomial</option>
-                                    <option>Bekannt</option>
-                                </select>
-                            </div>
-                            <div class="col-2 d-flex justify-content-end">
-                                <b>Patientenanzahl: </b> @filteredData.Count
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body bottom-border">
-                        <WardTable WardPatients="filteredData" Parameter="parameter" />
-                    </div>
-                </div>
-                <div class="card card-chart">
-                    <div class="card-body">
-                        <div>
-                            <Chart Config="_chart" />
-                        </div>
-                        <div>
-                            <Chart Config="_accumChart" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
+    }
+</div>
 }
 
 @code {
@@ -117,6 +117,7 @@
     private List<PathogenEntry> _pathogenMenuEntries;
 
     private bool isLoading = false;
+    private string LoadingMessage;
 
     private IDataset<int> Nosocomial;
 
@@ -144,8 +145,15 @@
         isLoading = false;
     }
 
+    public void c_Progress(object sender, EventArgs eventArgs)
+    {
+        LoadingMessage = sender.ToString();
+        Console.WriteLine(LoadingMessage);
+    }
+
     private void LoadData()
     {
+        _service.Progress += c_Progress;
         data = _service.GetData(parameter);
         filteredData = data;
         chartEntries = _service.GetChartEntries(parameter);
@@ -288,11 +296,11 @@
         {
             if (_selectedNosokomialFilter == "Nosokomial")
             {
-                filteredData = filteredData.Where(view => view.InfectionStatus != null && view.InfectionStatus.Values.Any(x => x.Nosocomial == true && x.NosocomialDate.Value > view.Admission)).ToList();
+                filteredData = filteredData.Where(view => view.InfectionStatus != null && view.InfectionStatus.Values.Any(x => x.Nosocomial == true && x.NosocomialDate.Value > view.Admission && (!view.Discharge.HasValue || x.NosocomialDate.Value <= view.Discharge.Value))).ToList();
             }
             else if (_selectedNosokomialFilter == "Bekannt")
             {
-                filteredData = filteredData.Where(view => view.InfectionStatus != null && view.InfectionStatus.Values.Any(x => x.Known == true)).ToList();
+                filteredData = filteredData.Where(view => view.InfectionStatus != null && view.InfectionStatus.Values.Any(x => x.Known == true || (x.Nosocomial && x.NosocomialDate.Value < view.Admission))).ToList();
             }
         }
         chartEntries = _service.GetChartEntries(parameter, _selectedMREFilter, _selectedNosokomialFilter);

@@ -26,53 +26,105 @@ namespace SmICSCoreLib.CronJobs
         {
             Task patho = Task.Run(UpdatePathogens);
             Task wards = Task.Run(UpdateWards);
-            await Task.WhenAll(patho, wards);
+            await Task.WhenAll(wards);
         }
 
-        private async Task UpdateWards()
+        public async Task UpdateWards()
         {
-            List<WardMenuEntry> wardMenuEntries = _menuListFac.Wards();
             List<Ward> wards = await _dataAccess.GetWards();
-            foreach (WardMenuEntry ward in wardMenuEntries)
+            List<WardMenuEntry> wardMenuEntries = null;
+            if (wards.Count == 0)
             {
-                if (wards.Where(w => w.Name == ward.ID).Count() == 0)
-                {
-                    _dataAccess.SetWard(new Ward() { Name = ward.ID });
+                DateTime date = new DateTime((DateTime.Now.Year - 10), 1, 1);
+                try {
+                    string year = Environment.GetEnvironmentVariable("FIRST_DATA_ENTRY_YEAR");
+                    date = new DateTime(Convert.ToInt32(year), 1, 1);
                 }
+                catch
+                { 
+                    Console.WriteLine(string.Format("ENV FIRST_DATA_ENRTY_YEAR couldn't be read. Instead {0} was set as FIRST_DATA_ENRTY_YEAR!", date.Year));
+                }
+                wardMenuEntries = _menuListFac.Wards(JobType.FIRST_STARTUP, date);
             }
-            foreach (Ward ward in wards)
+            else
             {
-                if (wardMenuEntries.Where(w => w.ID == ward.Name).Count() == 0)
+                wardMenuEntries = _menuListFac.Wards(JobType.DAILY, DateTime.Now.Date.AddDays(-1.0));
+            }
+            if (wardMenuEntries is not null)
+            {
+                foreach (WardMenuEntry ward in wardMenuEntries)
                 {
-                    _dataAccess.DeleteWard(ward);
+                    if (!string.IsNullOrEmpty(ward.ID))
+                    {
+                        if (wards is not null && wards.Where(w => w.Name == ward.ID).Count() == 0)
+                        {
+                            _dataAccess.SetWard(new Ward() { Name = ward.ID });
+                        }
+                        else if (wards is null)
+                        {
+                            _dataAccess.SetWard(new Ward() { Name = ward.ID });
+                        }
+                    }
                 }
+                foreach (Ward ward in wards)
+                {
+                    if (wardMenuEntries.Where(w => w.ID == ward.Name).Count() == 0)
+                    {
+                        _dataAccess.DeleteWard(ward);
+                    }
+                }
+                wardMenuEntries = null;
+                wards = null;
             }
         }
 
-        private async Task UpdatePathogens()
+        public async Task UpdatePathogens()
         {
-            List<PathogenMenuEntry> pathoMenu = _menuListFac.Pathogens();
+            List<PathogenMenuEntry> pathoMenu = null;
             List<Pathogen> pathogens = await _dataAccess.GetPathogens();
-            foreach (PathogenMenuEntry pat in pathoMenu)
+            if(pathogens.Count == 0)
             {
-                if (!string.IsNullOrEmpty(pat.ID))
+                DateTime date = new DateTime((DateTime.Now.Year - 10), 1, 1);
+                try
                 {
-                    if (pathogens.Where(p => p.Code == pat.ID).Count() == 0)
-                    {
-                        _dataAccess.SetPathogen(new Pathogen() { Code = pat.ID, Name = pat.Name });
-                    }
-                    else if (pathogens.Where(p => p.Code == pat.ID).Count() == 1)
-                    {
-                        _dataAccess.UpdatePathogen(new Pathogen() { Code = pat.ID, Name = pat.Name });
-                    }
+                    string year = Environment.GetEnvironmentVariable("FIRST_DATA_ENTRY_YEAR");
+                    date = new DateTime(Convert.ToInt32(year), 1, 1);
                 }
+                catch
+                {
+                    Console.WriteLine(string.Format("ENV FIRST_DATA_ENRTY_YEAR couldn't be read. Instead {0} was set as FIRST_DATA_ENRTY_YEAR!", date.Year));
+                }
+                pathoMenu = _menuListFac.Pathogens(JobType.FIRST_STARTUP, date);
             }
-            foreach (Pathogen pat in pathogens)
+            else
             {
-                if (pathoMenu.Where(p => p.ID == pat.Code).Count() == 0)
+                pathoMenu = _menuListFac.Pathogens(JobType.DAILY, DateTime.Now.Date.AddDays(-1.0));
+            }
+            if (pathoMenu is not null)
+            {
+                foreach (PathogenMenuEntry pat in pathoMenu)
                 {
-                    _dataAccess.DeletePathogen(pat);
+                    if (!string.IsNullOrEmpty(pat.ID))
+                    {
+                        if (pathogens.Where(p => p.Code == pat.ID).Count() == 0)
+                        {
+                            _dataAccess.SetPathogen(new Pathogen() { Code = pat.ID, Name = pat.Name });
+                        }
+                        else if (pathogens.Where(p => p.Code == pat.ID).Count() == 1)
+                        {
+                            _dataAccess.UpdatePathogen(new Pathogen() { Code = pat.ID, Name = pat.Name });
+                        }
+                    }
                 }
+                foreach (Pathogen pat in pathogens)
+                {
+                    if (pathoMenu.Where(p => p.ID == pat.Code).Count() == 0)
+                    {
+                        _dataAccess.DeletePathogen(pat);
+                    }
+                }
+                pathoMenu = null;
+                pathogens = null;
             }
         }
     }

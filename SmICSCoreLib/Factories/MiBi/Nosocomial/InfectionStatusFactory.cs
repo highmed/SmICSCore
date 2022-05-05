@@ -73,6 +73,10 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             { 
                 foreach (Case c in cases)
                 {
+                    if (c.PatientID == "4100948488")
+                    {
+                        string i = "";
+                    }
                     List<LabResult> results = null;
                     Hospitalization hospitalization = _hospitalizationFac.Process(c);
                     if (MedicalField == null)
@@ -120,9 +124,30 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                             }
                             if (resistances == null)
                             {
-                                if (!infectionInformation[pathogen.ID].ContainsKey("normal"))
+                                if (pathogen.Result && timespan.Days < (threshold - 1))
+                                { 
+                                    if (!infectionInformation[pathogen.ID].ContainsKey("N.R."))
+                                    {
+                                        infectionInformation[pathogen.ID].Add("N.R.", new InfectionStatus { PathogenCode = pathogen.ID, Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = pathogen.Result, ConsecutiveNegativeCounter = 0, Resistance = "N.R.", LabID = specimen.LabID });
+                                    }
+                                }
+                                else if (pathogen.Result && timespan.Days >= (threshold - 1))
                                 {
-                                    infectionInformation[pathogen.ID].Add("normal", new InfectionStatus { PathogenCode=pathogen.ID, Pathogen = pathogen.Name, Nosocomial = false, Known = false, NosocomialDate = null, Infected = pathogen.Result, ConsecutiveNegativeCounter = 0, Resistance = "normal", LabID = specimen.LabID });
+                                    bool hasFoundOldStatus = HasOldKnownCase(pathogen, "N.R.", infectionInformationByCase);
+                                    if (!hasFoundOldStatus)
+                                    {
+                                        if (!infectionInformation[pathogen.ID].ContainsKey("N.R."))
+                                        {
+                                            infectionInformation[pathogen.ID].Add("N.R.", new InfectionStatus { PathogenCode = pathogen.ID, Pathogen = pathogen.Name, Nosocomial = true, Known = false, NosocomialDate = specimen.SpecimenCollectionDateTime, Infected = pathogen.Result, ConsecutiveNegativeCounter = 0, Resistance = "N.R.", LabID = specimen.LabID });
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (!infectionInformation[pathogen.ID].ContainsKey("N.R."))
+                                        {
+                                            infectionInformation[pathogen.ID].Add("N.R.", new InfectionStatus { PathogenCode = pathogen.ID, Pathogen = pathogen.Name, Nosocomial = false, Known = true, NosocomialDate = null, Infected = pathogen.Result, ConsecutiveNegativeCounter = 0, Resistance = "N.R.", LabID = specimen.LabID });
+                                        }
+                                    }
                                 }
                             }
                             else
@@ -198,9 +223,12 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             {
                 if (infectionInformationByCase[hospi].ContainsKey(pathogen.ID))
                 {
-                    if ((infectionInformationByCase[hospi][pathogen.ID][resistance].Nosocomial || infectionInformationByCase[hospi][pathogen.ID][resistance].Known) && !infectionInformationByCase[hospi][pathogen.ID][resistance].Healed)
+                    if (infectionInformationByCase[hospi][pathogen.ID].ContainsKey(resistance))
                     {
-                        return true;
+                        if ((infectionInformationByCase[hospi][pathogen.ID][resistance].Nosocomial || infectionInformationByCase[hospi][pathogen.ID][resistance].Known) && !infectionInformationByCase[hospi][pathogen.ID][resistance].Healed)
+                        {
+                            return true;
+                        }
                     }
                 }
             }

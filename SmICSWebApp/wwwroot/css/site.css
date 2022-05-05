@@ -28,8 +28,13 @@
     height: 80px;
     animation: spin 1300ms linear infinite;
     top: 50%;
-    left: 40%;
+    left: 45%;
     position: absolute;
+}
+
+.loadingmessage {
+    top: 55%;
+    left: 45%;
 }
 
 @keyframes spin {

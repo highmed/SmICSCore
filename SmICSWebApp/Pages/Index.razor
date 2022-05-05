@@ -77,22 +77,6 @@
 {      
     protected override void OnInitialized()
     {
-        if(_dbMenuItems.GetPathogens().Result.Count == 0)
-        {
-            List<PathogenMenuEntry> pathMenuEntries = menuListFac.Pathogens();
-            foreach(PathogenMenuEntry patEntry in pathMenuEntries)
-            {
-                _dbMenuItems.SetPathogen(new Pathogen() { Name = patEntry.Name, Code = patEntry.ID });
-            }
-        }
-        if (_dbMenuItems.GetWards().Result.Count == 0)
-        {
-            List<WardMenuEntry> wardMenuEntries = menuListFac.Wards();
-            foreach (WardMenuEntry wardEntry in wardMenuEntries)
-            {
-                _dbMenuItems.SetWard(new Ward() { Name = wardEntry.ID });
-            }
-        }
         base.OnInitialized();
     }
 }

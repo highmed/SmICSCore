@@ -1,4 +1,6 @@
-﻿namespace SmICSCoreLib.Factories.MiBi.PatientView
+﻿using System;
+
+namespace SmICSCoreLib.Factories.MiBi.PatientView
 {
     public class UID
     {

@@ -95,7 +95,7 @@ namespace SmICSWebApp
             services.AddScoped<OutbreakDetectionService>();
 
             services.AddSingleton<MenuItemsJob>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(MenuItemsJob), "MenuItems", "0 25 15 ? * *"));
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(MenuItemsJob), "MenuItems", "0 42 10 ? * *"));
             //OpenehrConfig.OutbreakDetectionRuntime = Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME");
             //Console.WriteLine("Transformed: OUTBREAK_DETECTION_TIME " + Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME") + "to CONFIG: " + OpenehrConfig.OutbreakDetectionRuntime);
             //string[] runtimeArr = OpenehrConfig.OutbreakDetectionRuntime.Split(":");
@@ -121,17 +121,9 @@ namespace SmICSWebApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
-            //OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
-            //OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
-            //OpenehrConfig.smicsVisuPort = Environment.GetEnvironmentVariable("SMICS_VISU_PORT");
+            
 
-            OpenehrConfig.openehrEndpoint = "http://plri-highmed01.mh-hannover.local:8081";
-            OpenehrConfig.openehrUser = "smics";
-            OpenehrConfig.openehrPassword = "b+KzsSFD?cgdW2UA";
-            //OpenehrConfig.openehrUser = "test";
-            //OpenehrConfig.openehrPassword = "test";
-            OpenehrConfig.smicsVisuPort = "3231";
+            
 
             if (env.IsDevelopment())
             {

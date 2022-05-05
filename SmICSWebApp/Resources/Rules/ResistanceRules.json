@@ -24,7 +24,7 @@
         "ErrorMessage": "One or more adjust rules failed.",
         "ErrorType": "Error",
         "RuleExpressionType": "LambdaExpression",
-        "Expression": "(input.Name == \" Escherichia coli\" || input.Name == \"Acinetobacter baumannii\") && input.Antibiograms.Any(antibiotigram => (antibiotigram.Antibiotic == \"Piperacillin\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Cefotaxim\" || antibiotigram.Antibiotic == \"Ceftazidim\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Imipenem\" || antibiotigram.Antibiotic == \"Meropenem\" && antibiotigram.Resistance == \"S\" || antibiotigram.Resistance == \"I\") && (antibiotigram.Antibiotic == \"Ciprofloxacin\" && antibiotigram.Resistance == \"R\"))"
+        "Expression": "(input.Name == \"Escherichia coli\" || input.Name == \"Acinetobacter baumannii\" || input.Name == \"Klebsiella pneumoniae\") && input.Antibiograms.Any(antibiotigram => (antibiotigram.Antibiotic == \"Piperacillin\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Cefotaxim\" || antibiotigram.Antibiotic == \"Ceftazidim\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Imipenem\" || antibiotigram.Antibiotic == \"Meropenem\" && antibiotigram.Resistance == \"S\" || antibiotigram.Resistance == \"I\") && (antibiotigram.Antibiotic == \"Ciprofloxacin\" && antibiotigram.Resistance == \"R\"))"
       },
       {
         "RuleName": "4MRGN (Enterobacterales + Acinetobacter baumanmii + Pseudomonas aeruginosa A)",
@@ -32,7 +32,7 @@
         "ErrorMessage": "One or more adjust rules failed.",
         "ErrorType": "Error",
         "RuleExpressionType": "LambdaExpression",
-        "Expression": "(input.Name == \" Escherichia coli\" || input.Name == \"Acinetobacter baumannii\" || input.Name == \"Pseudomonas aeruginosa \") && input.Antibiograms.Any(antibiotigram => (antibiotigram.Antibiotic == \"Piperacillin\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Cefotaxim\" || antibiotigram.Antibiotic == \"Ceftazidim\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Imipenem\" || antibiotigram.Antibiotic == \"Meropenem\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Ciprofloxacin\" && antibiotigram.Resistance == \"R\"))"
+        "Expression": "(input.Name == \"Escherichia coli\" || input.Name == \"Acinetobacter baumannii\" || input.Name == \"Pseudomonas aeruginosa\" || input.Name == \"Klebsiella pneumoniae\") && input.Antibiograms.Any(antibiotigram => (antibiotigram.Antibiotic == \"Piperacillin\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Cefotaxim\" || antibiotigram.Antibiotic == \"Ceftazidim\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Imipenem\" || antibiotigram.Antibiotic == \"Meropenem\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Ciprofloxacin\" && antibiotigram.Resistance == \"R\"))"
       },
       {
         "RuleName": "3MRGN (Pseudomonas aeruginosa)",
@@ -40,7 +40,7 @@
         "ErrorMessage": "One or more adjust rules failed.",
         "ErrorType": "Error",
         "RuleExpressionType": "LambdaExpression",
-        "Expression": "(input.Name == \"Pseudomonas aeruginosa \" && input.Antibiograms.Count((antibiotigram => (antibiotigram.Antibiotic == \"Piperacillin\" == \"R\") || (antibiotigram.Antibiotic == \"Cefotaxim\" || antibiotigram.Antibiotic == \"Ceftazidim\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Imipenem\" || antibiotigram.Antibiotic == \"Meropenem\" && antibiotigram.Resistance == \"R\" ) && (antibiotigram.Antibiotic == \"Ciprofloxacin\" && antibiotigram.Resistance == \"R\") == 3)"
+        "Expression": "(input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Count((antibiotigram => (antibiotigram.Antibiotic == \"Piperacillin\" == \"R\") || (antibiotigram.Antibiotic == \"Cefotaxim\" || antibiotigram.Antibiotic == \"Ceftazidim\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Imipenem\" || antibiotigram.Antibiotic == \"Meropenem\" && antibiotigram.Resistance == \"R\" ) && (antibiotigram.Antibiotic == \"Ciprofloxacin\" && antibiotigram.Resistance == \"R\") == 3)"
       }
     ]
   },
@@ -62,6 +62,70 @@
         "ErrorType": "Error",
         "RuleExpressionType": "LambdaExpression",
         "Expression": "input.Any(code => code==\"sau\")"
+      },
+      {
+        "RuleName": "3MRGN-kpn",
+        "SuccessEvent": "3MRGN",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input.Any(code => code==\"kpn\")"
+      },
+      {
+        "RuleName": "4MRGN-kpn",
+        "SuccessEvent": "4MRGN",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input.Any(code => code==\"kpn\")"
+      },
+      {
+        "RuleName": "3MRGN-eco",
+        "SuccessEvent": "3MRGN",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input.Any(code => code==\"eco\")"
+      },
+      {
+        "RuleName": "4MRGN-eco",
+        "SuccessEvent": "4MRGN",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input.Any(code => code==\"eco\")"
+      },
+      {
+        "RuleName": "3MRGN-aba",
+        "SuccessEvent": "3MRGN",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input.Any(code => code==\"aba\")"
+      },
+      {
+        "RuleName": "4MRGN-aba",
+        "SuccessEvent": "4MRGN",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input.Any(code => code==\"aba\")"
+      },
+      {
+        "RuleName": "3MRGN-pae",
+        "SuccessEvent": "3MRGN",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input.Any(code => code==\"pae\")"
+      },
+      {
+        "RuleName": "4MRGN-pae",
+        "SuccessEvent": "4MRGN",
+        "ErrorMessage": "One or more adjust rules failed.",
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input.Any(code => code==\"pae\")"
       }
     ]
   }

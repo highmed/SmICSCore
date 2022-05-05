@@ -1,5 +1,6 @@
 ﻿using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.REST;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -45,6 +46,26 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
             };
         }
 
+        public List<HospStay> Process(DateTime admission, DateTime? discharge)
+        {
+            List<HospStay> cases = new List<HospStay>();
+            List<HospStay> casesWithDischarge = RestDataAccess.AQLQuery<HospStay>(GetCasesForTimespanWithDischarge(admission, (discharge.HasValue ? discharge.Value : DateTime.Now)));
+            List<HospStay> casesWithoutDischarge = RestDataAccess.AQLQuery<HospStay>(GetCasesForTimespanWithoutDischarge((discharge.HasValue ? discharge.Value : DateTime.Now)));
+            if(casesWithDischarge is not null)
+            {
+                cases.AddRange(casesWithDischarge);
+            }
+            if (casesWithoutDischarge is not null)
+            {
+                cases.AddRange(casesWithoutDischarge);
+            }
+            if (cases.Count > 0)
+            {
+                return cases;
+            }
+            return null; 
+        }
+
         private AQLQuery HospitalizationCasesQuery(Patient patient)
         {
             return new AQLQuery
@@ -87,6 +108,40 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
                         WHERE c/name/value = 'Stationärer Versorgungsfall' 
                         AND e/ehr_status/subject/external_ref/id/value = '{ Case.PatientID }' 
                         AND c/context/other_context[at0001]/items[at0003]/value/value = '{ Case.CaseID }'"
+            };
+        }
+
+        private AQLQuery GetCasesForTimespanWithDischarge(DateTime admission, DateTime discharge)
+        {
+            return new AQLQuery
+            {
+                Name = "Cases in Timespan - With Discharge",
+                Query = $@"SELECT c/context/other_context[at0001]/items[at0003]/value/value as CaseID,
+                        e/ehr_status/subject/external_ref/id/value as PatientID,
+                        d/data[at0001]/items[at0071]/value/value as Admission,
+                        w/data[at0001]/items[at0011]/value/value as Discharge
+                        FROM EHR e 
+                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
+                        CONTAINS (ADMIN_ENTRY d[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
+                        AND ADMIN_ENTRY w[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
+                        WHERE d/data[at0001]/items[at0071]/value/value <= '{ discharge.ToString("yyyy-MM-dd") }'
+                        AND w/data[at0001]/items[at0011]/value/value >= '{ admission.ToString("yyyy-MM-dd") }'"
+            };
+        }
+
+        private AQLQuery GetCasesForTimespanWithoutDischarge(DateTime discharge)
+        {
+            return new AQLQuery
+            {
+                Name = "Cases in Timespan - With Discharge",
+                Query = $@"SELECT c/context/other_context[at0001]/items[at0003]/value/value as CaseID,
+                        e/ehr_status/subject/external_ref/id/value as PatientID,
+                        d/data[at0001]/items[at0071]/value/value as Admission
+                        FROM EHR e 
+                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
+                        CONTAINS ADMIN_ENTRY d[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
+                        WHERE NOT EXISTS c/content[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0] 
+                        AND d/data[at0001]/items[at0071]/value/value <= '{ discharge.ToString("yyyy-MM-dd") }'"
             };
         }
     }

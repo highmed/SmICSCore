@@ -31,6 +31,9 @@
         </ContextMenuTrigger>
     </td>
     <td>
+        @Patient.CaseID
+    </td>
+    <td>
         @if (_nosocomial)
         {
             <span class="text-danger">
@@ -54,9 +57,9 @@
         <td></td>
     }
     <WardTableDateCell Date="@Patient.FirstPositiveResult" />
+    <WardTableDateCell Date="@Patient.CurrentResult" />
     <WardTableDateCell Date="@Patient.FirstWardPositiveResult" />
     <WardTableDateCell Date="@Patient.LastWardResult" />
-    <WardTableDateCell Date="@Patient.CurrentResult" />
     <WardTableDateCell Date="@Patient.Admission" />
     <WardTableDateCell Date="@Patient.Discharge" />
 </tr>
