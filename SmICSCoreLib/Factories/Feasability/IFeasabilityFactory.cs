@@ -7,6 +7,6 @@ namespace SmICSCoreLib.Factories.Feasability
         IRestDataAccess RestDataAccess { get; set; }
 
         Feasability GetPersonMovementCount(SmICSCoreLib.Factories.General.Patient patient);
-        Feasability GetPersonWardCount(SmICSCoreLib.Factories.General.Patient patient);
+        //Feasability GetPersonWardCount(SmICSCoreLib.Factories.General.Patient patient);
     }
 }
