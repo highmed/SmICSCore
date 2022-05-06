@@ -35,8 +35,11 @@ namespace SmICSCoreLib.DB.MenuItems
 
         public async void SetWard(Ward ward)
         {
-            string sql = "INSERT INTO wards (Name) VALUES(@Name)";
-            await _data.SaveData(sql, new { Name = ward.Name });
+            if (!string.IsNullOrEmpty(ward.Name))
+            {
+                string sql = "INSERT INTO wards (Name) VALUES(@Name)";
+                await _data.SaveData(sql, new { Name = ward.Name });
+            }
         }
 
         public async void CreatePathogenTable()

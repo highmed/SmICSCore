@@ -1,4 +1,5 @@
 ﻿using SmICSCoreLib.Factories.General;
+using SmICSCoreLib.Factories.Helpers;
 using SmICSCoreLib.Factories.MiBi.Nosocomial;
 using SmICSCoreLib.Factories.MiBi.PatientView;
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
@@ -15,45 +16,74 @@ namespace SmICSWebApp.Data.WardView
         private readonly IPatientStayFactory _stayFac;
         private readonly InfectionStatusFactory _infectionStatusFac;
         private readonly ILabResultFactory _labFac;
+        private readonly IHospitalizationFactory _hospitalizationFac;
+        private readonly IHelperFactory _helperFac;
+
+        public event EventHandler Progress;
 
         private List<WardPatient> wardPatients;
-        public WardOverviewService(IPatientStayFactory stayFac, InfectionStatusFactory infectionStatusFac, ILabResultFactory labFac)
+        public WardOverviewService(IPatientStayFactory stayFac, InfectionStatusFactory infectionStatusFac, ILabResultFactory labFac, IHospitalizationFactory hospitalizationFactory, IHelperFactory helperFac)
         {
             _stayFac = stayFac;
             _infectionStatusFac = infectionStatusFac;
             _labFac = labFac;
+            _hospitalizationFac = hospitalizationFactory;
+            _helperFac = helperFac;
         }
 
         public List<WardPatient> GetData(WardParameter parameter)
         {
             wardPatients = new List<WardPatient>();
-            List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays = _stayFac.Process(parameter);
-            if (patientStays != null)
+            PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCode };
+            Progress?.Invoke("Searching for fitting Cases", EventArgs.Empty);
+            List<HospStay> possibleContactHosp = _hospitalizationFac.Process(parameter.Start, parameter.End);
+            if (possibleContactHosp is not null)
             {
-                List<Case> cases = new List<Case>();
-                patientStays.ForEach(c => cases.Add(c));
-                cases = cases.Where(c => patientStays.Select(s => s.CaseID).Contains(c.CaseID)).ToList();
-                foreach (Case c in cases)
+                Progress?.Invoke("Determine Cases on Ward", EventArgs.Empty);
+                List<Case> casesOnWard = _helperFac.GetPatientOnWardsFromFiltered(possibleContactHosp, parameter.Ward);
+                if(casesOnWard is not null)
                 {
-                    PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCode };
-                    SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionStatusByCase = _infectionStatusFac.Process(c, pathogenParameter);
-                    Dictionary<string, InfectionStatus> infectionStatus = infectionStatusByCase.Count > 0 ? infectionStatusByCase.Where(h => h.Key.CaseID == c.CaseID).First().Value : null; 
-                    WardPatient patient = new WardPatient();
-                    patient.PathogenCodes = parameter.PathogenCode;
-                    patient.InfectionStatus = infectionStatus;
-                    int entryCount = wardPatients.Where(w => w.PatientID == c.PatientID).Count();
-                    PatientStay stay = patientStays.Where(stay => stay.PatientID == c.PatientID).ElementAt(entryCount) ?? null;
-                    patient.PatientID = stay.PatientID;
-                    patient.Admission = stay.Admission;
-                    patient.Discharge = stay.Discharge;
-                    List<LabResult> labResults = _labFac.Process(c, pathogenParameter);
-                    patient.FirstPositiveResult = GetFirstPositveLabResultDate(labResults, stay);
-                    (patient.FirstWardPositiveResult, patient.LastWardResult) = GetFirstAndLastWardLabResultDate(labResults, stay);
-                    patient.CurrentResult = GetLastLabResultDate(labResults);
-                    wardPatients.Add(patient);
-                }
+                    foreach (Case _case in casesOnWard)
+                    {
+                        WardParameter tmpParam = parameter;
+                        tmpParam.PatientID = _case.PatientID;
+                        tmpParam.CaseID = _case.CaseID;
+
+                        Progress?.Invoke(string.Format("Getting PatientStay Information for {0}", _case.PatientID), EventArgs.Empty);
+                        List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays = _stayFac.Process(tmpParam);
+                        if (patientStays is not null)
+                        {
+                            patientStays = patientStays.OrderBy(stay => stay.Admission).ToList();
+
+                            Progress?.Invoke(string.Format("Calculation InfectionSituation for {0}", _case.PatientID), EventArgs.Empty);
+                            SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionStatusByCase = _infectionStatusFac.Process(_case, pathogenParameter);
+                            Dictionary<string, InfectionStatus> infectionStatus = null;
+                            if (infectionStatusByCase.Count > 0 && infectionStatusByCase.Where(h => h.Key.CaseID == _case.CaseID).Count() > 0)
+                            {
+                                infectionStatus = infectionStatusByCase.Where(h => h.Key.CaseID == _case.CaseID).First().Value;
+                            }
+                            List<LabResult> labResults = _labFac.Process(_case, pathogenParameter);
+
+                            foreach (PatientStay stay in patientStays)
+                            {
+                                WardPatient patient = new WardPatient();
+                                patient.PathogenCodes = parameter.PathogenCode;
+                                patient.InfectionStatus = infectionStatus;
+                                patient.PatientID = stay.PatientID;
+                                patient.Admission = stay.Admission;
+                                patient.Discharge = stay.Discharge;
+                                patient.CaseID = stay.CaseID;
+                                patient.FirstPositiveResult = GetFirstPositveLabResultDate(labResults, stay);
+                                (patient.FirstWardPositiveResult, patient.LastWardResult) = GetFirstAndLastWardLabResultDate(labResults, stay);
+                                patient.CurrentResult = GetLastLabResultDate(labResults);
+                                wardPatients.Add(patient);
+                            }
+                        }
+                    }
+                } 
+                return wardPatients.OrderBy(v => v.Admission).ToList();
             }
-            return wardPatients.OrderBy(v => v.Admission).ToList();
+            return null;
         }
 
 
@@ -82,11 +112,11 @@ namespace SmICSWebApp.Data.WardView
                         filterNosokomial == "Nosokomial"))
                     {
                         DateTime infectionDate = patient.InfectionStatus.Values.Where(inf => inf.Nosocomial).OrderBy(inf => inf.NosocomialDate).Select(inf => inf.NosocomialDate).First().Value;
-                        if (infectionDate.Date >= parameter.Start.Date)
+                        if (infectionDate.Date >= parameter.Start.Date && (!patient.Discharge.HasValue || infectionDate.Date <= patient.Discharge.Value))
                         {
                             chartEntries["Nosokomial"][infectionDate.Date] += 1;
                         }
-                        else
+                        else if(infectionDate.Date < parameter.Start.Date && (!patient.Discharge.HasValue || infectionDate.Date <= patient.Discharge.Value))
                         {
                             chartEntries["Stress"][parameter.Start.Date] += 1;
                         }
@@ -96,7 +126,14 @@ namespace SmICSWebApp.Data.WardView
                         (string.IsNullOrEmpty(filterNosokomial) ||
                         filterNosokomial == "Bekannt"))
                     {
-                        chartEntries["Known"][patient.Admission.Date] += 1;
+                        if (patient.Admission.Date >= parameter.Start.Date)
+                        {
+                            chartEntries["Known"][patient.Admission.Date] += 1;
+                        }
+                        else
+                        {
+                            chartEntries["Stress"][parameter.Start.Date] += 1;
+                        }
                     }
                 }
             }
@@ -140,9 +177,21 @@ namespace SmICSWebApp.Data.WardView
                         }
                     }
                 }
-                if (patient.Discharge.HasValue && patient.InfectionStatus is not null && chartEntries["Stress"].ContainsKey(patient.Discharge.Value.Date.AddDays(1.0)))
+
+                if ((string.IsNullOrEmpty(filterNosokomial) || filterNosokomial == "Nosokomial") 
+                    && patient.Discharge.HasValue && patient.InfectionStatus is not null
+                    && (patient.InfectionStatus.Values.Any(i => (i.Nosocomial && i.NosocomialDate >= patient.Admission && i.NosocomialDate <= patient.Discharge.Value)))
+                    && chartEntries["Stress"].ContainsKey(patient.Discharge.Value.Date.AddDays(1.0)))
                 {
                     DecrementSince(patient.Discharge.Value.Date.AddDays(1.0), chartEntries["Stress"]);
+                }
+                else if ((string.IsNullOrEmpty(filterNosokomial) || filterNosokomial == "Bekannt") 
+                    && patient.Discharge.HasValue && patient.InfectionStatus is not null
+                    && (patient.InfectionStatus.Values.Any(i => i.Known || (i.Nosocomial && i.NosocomialDate < patient.Admission)))
+                    && chartEntries["Stress"].ContainsKey(patient.Discharge.Value.Date.AddDays(1.0)))
+                {
+                     DecrementSince(patient.Discharge.Value.Date.AddDays(1.0), chartEntries["Stress"]);
+
                 }
             }      
             return chartEntries;
@@ -173,7 +222,7 @@ namespace SmICSWebApp.Data.WardView
                     {
                         List<DateTime> tmp = labResult.Specimens.
                             OrderBy(s => s.SpecimenCollectionDateTime).
-                            Where(s => s.SpecimenCollectionDateTime >= patStay.Admission && (patStay.Discharge.HasValue ? s.SpecimenCollectionDateTime <= patStay.Discharge.Value : true)).
+                            Where(s => s.SpecimenCollectionDateTime >= patStay.Admission && (patStay.Discharge.HasValue ? s.SpecimenCollectionDateTime <= patStay.Discharge.Value : true) && s.Pathogens.Any(p => p.Result)).
                             Select(s => s.SpecimenCollectionDateTime).
                             ToList();
                         DateTime? firstTmp = tmp.FirstOrDefault();
@@ -203,26 +252,22 @@ namespace SmICSWebApp.Data.WardView
 
         private DateTime? GetFirstPositveLabResultDate(List<LabResult> labResults, PatientStay patStay)
         {
-            
             DateTime last = DateTime.MaxValue;
             if (labResults is not null)
             {
                 foreach (LabResult labResult in labResults)
                 {
-                    if (labResult.Sender.Ward == patStay.Ward)
+                   
+                    IEnumerable<DateTime> dates = labResult.Specimens.
+                        OrderBy(s => s.SpecimenCollectionDateTime).
+                        Where(s => s.Pathogens.Any(p => p.Result)).
+                        Select(s => s.SpecimenCollectionDateTime);
+
+                    DateTime? tmp = dates.Count() > 0 ? dates.First() : null;
+                    if (tmp.HasValue && last > tmp.Value)
                     {
-                        IEnumerable<DateTime> dates = labResult.Specimens.
-                            OrderBy(s => s.SpecimenCollectionDateTime).
-                            Where(s => s.Pathogens.Any(p => p.Result)).
-                            Select(s => s.SpecimenCollectionDateTime);
-
-                        DateTime? tmp = dates.Count() > 0 ? dates.First() : null;
-                        if (tmp.HasValue && last > tmp.Value)
-                        {
-                            last = tmp.Value;
-                        }
+                        last = tmp.Value;
                     }
-
                 }
             }
             return last == DateTime.MaxValue ? null : last;
@@ -235,7 +280,9 @@ namespace SmICSWebApp.Data.WardView
             {
                 foreach (LabResult labResult in labResults)
                 {
-                    DateTime tmp = labResult.Specimens.OrderBy(s => s.SpecimenCollectionDateTime).Last().SpecimenCollectionDateTime;
+                    DateTime tmp = labResult.Specimens.Where(s => s.Pathogens.Any(p => p.Result))
+                        .OrderBy(s => s.SpecimenCollectionDateTime)
+                        .Last().SpecimenCollectionDateTime;
                     if (last < tmp)
                     {
                         last = tmp;
@@ -244,5 +291,6 @@ namespace SmICSWebApp.Data.WardView
             }
             return last == DateTime.MinValue ? null : last;
         }
+
     }
 }

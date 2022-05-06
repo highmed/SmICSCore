@@ -17,7 +17,7 @@
                     <EditForm Model="@contact" OnValidSubmit="@Submit">
                         <label for="patID">PatientID:</label>
                         <input type="text" @bind="contact.PatientID" id="patID" />
-                        <label for="pathogen">Pathogen:</label>
+                        <label for="pathogen">Erreger:</label>
                         <input type="text" id="pathogen" list="pathogenList" @onchange="GetFilter" />
                         <datalist id="pathogenList">
                             @foreach (PathogenEntry entry in _pathogenMenuEntries)
@@ -59,9 +59,28 @@
                                 }
                             </div>
                             <div class="col-8">
-                                <h2 class="text-center">@contact.PatientID</h2>
+                                @if (FirstInfection.HasValue && FirstInfection.Value > root.CurrentHospitalization.Admission.Date)
+                                {
+                                    <h2 class="text-center text-danger">@contact.PatientID</h2>
+                                }
+                                else if (FirstInfection.HasValue && FirstInfection.Value <= root.CurrentHospitalization.Admission.Date)
+                                {
+                                    <h2 class="text-center text-primary">@contact.PatientID</h2>
+                                }
+                                else
+                                {
+                                    <h2 class="text-center">@contact.PatientID</h2>
+                                }
                                 <h4 class="text-center">Fall: @root.CurrentHospitalization.CaseID</h4>
                                 <h4 class="text-center">Zeitraum: @root.CurrentHospitalization.Admission.Date.ToString("yyyy-MM-dd") - @(root.CurrentHospitalization.Discharge.Date.HasValue ? (root.CurrentHospitalization.Discharge.Date.Value.ToString("yyyy-MM-dd")) : null)</h4>
+                                @if (FirstInfection.HasValue)
+                                {
+                                    <h4 class="text-center ">Bekannt seit: @FirstInfection.Value.ToString("yyyy-MM-dd")</h4>
+                                }
+                                else
+                                {
+                                    <h4 class="text-center">Bekannt seit: <i>kein positiver Nachweis</i></h4>
+                                }
                             </div>
                             <div class="col-2">
                                 @if (root.CurrentHospitalization != root.Hospitalizations.Last())
@@ -110,13 +129,13 @@
                                             <InputDate @bind-Value="_filterParameter.EndDate" />
                                         </div>
                                         <button class="btn btn-outline-primary text-right text-blue btn-bottom-right" type="submit" hidden="@(!Collapsed)" @onclick="@(() => Collapsed = !Collapsed)">Filter</button>
-                                        <button class="btn btn-outline-primary text-right text-blue btn-bottom-left" type="submit" hidden="@(!Collapsed)" @onclick="ResetFilter">Zurücksetzten</button>
+                                        <button class="btn btn-outline-primary text-right text-blue btn-bottom-left" type="submit" hidden="@(!Collapsed)" @onclick="ResetFilter">Zurücksetzen</button>
                                     </EditForm>
                                 </div>
                                 <button class="btn btn-outline-primary text-blue" @onclick="@(() => Collapsed = !Collapsed)"><i class="fa fa-filter"></i></button>
                             </div>
                             <div class="col-8">
-                                <ContactTable Contacts="contacts" />
+                                <ContactTable Contacts="contactDetails" />
                             </div>
                             <div class="col-2">
                                 <div>
@@ -129,12 +148,17 @@
                                     </canvas>
                                     Bekannt
                                 </div>
+                                <div>
+                                    <svg class="p-0" width="30px" height="30px">
+                                        <circle cx="15" cy="15" r="10" stroke="black" stroke-width="0.5" fill="#006400" />
+                                    </svg>
+                                    Im Krankenhaus nach Erstnachweis des Indexpatienten
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         }
     </div>
 }
@@ -142,7 +166,9 @@
 @code {
     [Parameter]
     public ContactParameter contact { get; set; } = new ContactParameter();
+
     private List<Data.Contact.Contact> contacts;
+    private List<Data.Contact.ContactDetails> contactDetails;
 
     [Parameter]
     public string PatientID { get; set; }
@@ -163,20 +189,23 @@
     private bool Collapsed = false;
     private FilterParameter _filterParameter;
 
+    private DateTime? FirstInfection = null;
 
     private void GetData()
     {
         _filterParameter = new FilterParameter();
         _filterParameter.ContactDetail = _filterParameter.ContactOptions[0];
         _filterParameter.ResistenceDetail = _filterParameter.ResistanceOptions[0];
-        _filterParameter.ResistanceOptions.Add(contact.Pathogen);
+        _filterParameter.ResistanceOptions.Add(_pathogenMenuEntries.Where(p => p.Codes[0] == contact.PathogenCodes[0]).Select(p => p.Name).First());
         _filterParameter.ResistanceOptions.Add(contact.Resistence);
         root = _contactService.LoadContactData(contact);
         if (root is null)
         {
             Console.WriteLine("Keine Daten für das Kontaktnetzwerk gefunden!");
         }
+        DetermineRootFirstInfection();
         contacts = root.Contacts[root.CurrentHospitalization];
+        contactDetails = GetContactDetails(contacts);
     }
 
     private async Task Submit()
@@ -226,6 +255,7 @@
         ResetFilter();
         _contactService.GetPreviousHospitalizationContacts(ref root, contact);
         contacts = root.Contacts[root.CurrentHospitalization];
+        contactDetails = GetContactDetails(contacts);
     }
 
     private void GetNext()
@@ -234,6 +264,7 @@
         int index = root.Hospitalizations.IndexOf(root.CurrentHospitalization);
         root.CurrentHospitalization = root.Hospitalizations[index + 1];
         contacts = root.Contacts[root.CurrentHospitalization];
+        contactDetails = GetContactDetails(contacts);
     }
 
     private void GetFilter(ChangeEventArgs e)
@@ -258,7 +289,7 @@
                 contacts = contacts.Where(c => c.InfectionStatus is not null && c.InfectionStatus.Infected).ToList();
                 break;
             case 2:
-                contacts = contacts.Where(c => c.InfectionStatus is not null && (c.InfectionStatus.Nosocomial || c.InfectionStatus.Known) && !c.InfectionStatus.Healed).ToList();
+                contacts = contacts.Where(c => c.InfectionStatus is not null && (c.InfectionStatus.Nosocomial || c.InfectionStatus.Known)).ToList();
                 break;
         }
         switch (con)
@@ -280,6 +311,7 @@
         {
             contacts = contacts.Where(c => (c.ContactEnd.HasValue && _filterParameter.EndDate.Value.Date >= c.ContactEnd.Value.Date) || (_filterParameter.EndDate.Value.Date >= c.ContactStart.Date)).ToList();
         }
+        contactDetails = GetContactDetails(contacts);
     }
 
     private void ResetFilter()
@@ -290,4 +322,94 @@
         _filterParameter.EndDate = null;
     }
 
+    private void DetermineRootFirstInfection()
+    {
+        DateTime? tmpFirstKnownAppearance = null;
+        if (root.InfectionStatus.Count > 0)
+        {
+            for (int i = root.Hospitalizations.Count - 1; i == 0; i--)
+            {
+                if (root.InfectionStatus.ContainsKey(root.Hospitalizations[i]))
+                {
+                    if (root.InfectionStatus[root.Hospitalizations[i]].Resistance == contact.Resistence)
+                    {
+                        if (root.InfectionStatus[root.Hospitalizations[i]].Nosocomial)
+                        {
+                            FirstInfection = root.InfectionStatus[root.Hospitalizations[i]].NosocomialDate;
+                            return;
+                        }
+                        else if (root.InfectionStatus[root.Hospitalizations[i]].Known)
+                        {
+                            tmpFirstKnownAppearance = root.Hospitalizations[i].Admission.Date;
+                        }
+                    }
+                }
+            }
+            if (!FirstInfection.HasValue && tmpFirstKnownAppearance.HasValue)
+            {
+                FirstInfection = tmpFirstKnownAppearance;
+            }
+        }
+    }
+
+    private List<ContactDetails> GetContactDetails(List<Data.Contact.Contact> contacts)
+    {
+        if (contacts is null)
+        {
+            return null;
+        }
+        List<ContactDetails> details = new List<ContactDetails>();
+        foreach (Data.Contact.Contact contact in contacts)
+        {
+            ContactDetails detail = new ContactDetails();
+            detail.PatientID = contact.PatientID;
+            if (contact.InfectionStatus is not null)
+            {
+                if (contact.InfectionStatus.Nosocomial)
+                {
+                    detail.IsNosocomial = true;
+                    detail.IsKnown = false;
+                }
+                else if (contact.InfectionStatus.Known)
+                {
+                    detail.IsNosocomial = false;
+                    detail.IsKnown = true;
+                }
+                if (contact.InfectionStatus.Nosocomial)
+                {
+                    detail.StatusDate = contact.InfectionStatus.NosocomialDate.Value.ToString("yyy-MM-dd");
+                }
+                else if (contact.InfectionStatus.Known)
+                {
+                    detail.StatusDate = contact.StatusDate.Value.ToString("yyy-MM-dd");
+                }
+            }
+            else
+            {
+                detail.IsNosocomial = false;
+                detail.IsKnown = false;
+                detail.StatusDate = "";
+            }
+
+            detail.Room = contact.RoomContact ? contact.PatientLocation.Room : "";
+            detail.Ward = contact.WardContact ? contact.PatientLocation.Ward : "";
+            detail.Departement = contact.DepartementContact ? contact.PatientLocation.Departement : "";
+            detail.ContactStart = contact.ContactStart.ToString("yyy-MM-dd");
+            detail.ContactEnd = contact.ContactEnd.HasValue ? contact.ContactEnd.Value.ToString("yyyy-MM-dd") : "";
+            if (!contact.Hospitalization.Discharge.Date.HasValue)
+            {
+                detail.IsPresent = true;
+            }
+            else if (contact.Hospitalization.Discharge.Date.HasValue && FirstInfection.HasValue && contact.Hospitalization.Discharge.Date.Value > FirstInfection.Value)
+            {
+                detail.IsPresent = true;
+            }
+
+            if (!details.Contains(detail))
+            {
+                details.Add(detail);
+            }
+        }
+        return details;
+    }
 }

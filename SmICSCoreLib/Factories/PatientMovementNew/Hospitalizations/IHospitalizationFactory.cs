@@ -1,5 +1,6 @@
 ﻿using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.REST;
+using System;
 using System.Collections.Generic;
 
 namespace SmICSCoreLib.Factories.PatientMovementNew
@@ -8,7 +9,8 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        Hospitalization Process(Case Case);
         List<Hospitalization> Process(Patient patient);
+        Hospitalization Process(Case Case);
+        List<HospStay> Process(DateTime admission, DateTime? discharge);
     }
 }

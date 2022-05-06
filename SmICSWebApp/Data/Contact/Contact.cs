@@ -1,5 +1,6 @@
 ﻿using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.MiBi.Nosocomial;
+using SmICSCoreLib.Factories.PatientMovementNew;
 using System;
 using System.Collections.Generic;
 
@@ -15,5 +16,6 @@ namespace SmICSWebApp.Data.Contact
         public bool WardContact { get; internal set; }
         public bool DepartementContact { get; internal set; }
         public DateTime? StatusDate { get; internal set; }
+        public Hospitalization Hospitalization { get; internal set; }
     }
 }

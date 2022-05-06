@@ -70,7 +70,10 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                 {
                     SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID, MedicalField = MedicalField };
                     result.Specimens = _specimenFac.Process(parameter, pathogen);
-                    result.Specimens.RemoveAll(spec => spec.Pathogens == null);
+                    if(result.Specimens is not null)
+                    {
+                        result.Specimens.RemoveAll(spec => spec.Pathogens == null);
+                    }
                     if (result.Specimens.Count > 0)
                     {
                         List<PatientLocation> patLocation = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID));

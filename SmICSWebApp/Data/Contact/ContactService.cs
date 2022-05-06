@@ -42,8 +42,6 @@ namespace SmICSWebApp.Data.Contact
                     Contacts = new Dictionary<Hospitalization, List<Contact>> { { latestHospitalization, null } }
                 };
 
-                infectionStatus.Clear();
-
                 MergeInfectionStatusAndContactCases(ref rootContact, latestHospitalization, pathogenParameter, parameter.Resistence);
 
                 return rootContact;
@@ -98,28 +96,33 @@ namespace SmICSWebApp.Data.Contact
             List<string> distinctPatientIDs = contactLocations.Select(cl => cl.PatientID).Distinct().ToList();
             Dictionary<string, SortedList<Hospitalization, InfectionStatus>> infectionStati = new Dictionary<string, SortedList<Hospitalization, InfectionStatus>>();
             distinctPatientIDs.ForEach(patID => infectionStati.Add(patID, _infectionStatusFac.Process(new SmICSCoreLib.Factories.General.Patient() { PatientID = patID }, pathogenParameter, resistence)));
-            foreach (SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay patLoc in contactLocations)
+            foreach (SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay locationContact in contactLocations)
             {
-                if (patLoc.PatientID != rootContact.Hospitalizations.Last().PatientID)
+                if (locationContact.PatientID != rootContact.Hospitalizations.Last().PatientID)
                 {
-                    SortedList<Hospitalization, InfectionStatus> infectionStatus = infectionStati[patLoc.PatientID];
-                    SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay rootStay = GetRootStay(rootContact.PatientStays[hospitalization], patLoc);
-                    if(rootStay is not null)
+                    SortedList<Hospitalization, InfectionStatus> infectionStatus = infectionStati[locationContact.PatientID];
+                    List<PatientStay> rootStays = GetRootStay(rootContact.PatientStays[hospitalization], locationContact);
+                    if(rootStays is not null)
                     {
-                        Contact contact = new Contact
+                        Hospitalization hosp = _hospitalizationFac.Process(locationContact); 
+                        foreach (PatientStay stay in rootStays)
                         {
-                            PatientID = patLoc.PatientID,
-                            CaseID = patLoc.CaseID,
-                            PatientLocation = patLoc,
-                            ContactStart = rootStay.Admission >= patLoc.Admission ? rootStay.Admission : patLoc.Admission,
-                            ContactEnd = GetContactEnd(rootStay.Discharge, patLoc.Discharge),
-                            RoomContact = rootStay.Room != null && rootStay.Room == patLoc.Room ? true : false,
-                            WardContact = rootStay.Ward != null && rootStay.Ward == patLoc.Ward ? true : false,
-                            DepartementContact = rootStay.DepartementID != null && rootStay.DepartementID == patLoc.DepartementID ? true : false
-                        };
-                        contact.InfectionStatus = infectionStatus.Count > 0 ? infectionStatus.First().Value : null;
-                        contact.StatusDate = contact.InfectionStatus is not null && contact.InfectionStatus.Known ? _hospitalizationFac.Process(patLoc).Admission.Date : null;
-                        contacts.Add(contact);
+                            Contact contact = new Contact
+                            {
+                                PatientID = locationContact.PatientID,
+                                CaseID = locationContact.CaseID,
+                                PatientLocation = locationContact,
+                                ContactStart = stay.Admission >= locationContact.Admission ? stay.Admission : locationContact.Admission,
+                                ContactEnd = GetContactEnd(stay.Discharge, locationContact.Discharge),
+                                RoomContact = stay.Room != null && stay.Room == locationContact.Room ? true : false,
+                                WardContact = stay.Ward != null && stay.Ward == locationContact.Ward ? true : false,
+                                DepartementContact = stay.DepartementID != null && stay.DepartementID == locationContact.DepartementID ? true : false
+                            };
+                            contact.Hospitalization = hosp;
+                            contact.InfectionStatus = infectionStatus.Count > 0 ? infectionStatus.First().Value : null;
+                            contact.StatusDate = contact.InfectionStatus is not null && contact.InfectionStatus.Known ? contact.Hospitalization.Admission.Date : null;
+                            contacts.Add(contact);
+                        }
                     }
                 }
             }
@@ -133,8 +136,9 @@ namespace SmICSWebApp.Data.Contact
             return filter;
         }
 
-        private SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay GetRootStay(List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays, SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay patientLocation)
+        private List<PatientStay> GetRootStay(List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays, SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay patientLocation)
         {
+            List<PatientStay> contactsPoint = new List<PatientStay>();
             foreach(PatientStay stay in patientStays)
             {
                 if(patientLocation.MovementType == MovementType.PROCEDURE)
@@ -143,7 +147,7 @@ namespace SmICSWebApp.Data.Contact
                     {
                         if (stay.Admission.Date == patientLocation.Admission.Date && stay.DepartementID == patientLocation.DepartementID)
                         {
-                            return stay;
+                            contactsPoint.Add(stay);
                         }
                     }
                 }
@@ -153,28 +157,33 @@ namespace SmICSWebApp.Data.Contact
                     {
                         if (stay.Admission <= patientLocation.Discharge && stay.Discharge >= patientLocation.Admission && patientLocation.Ward == stay.Ward)
                         {
-                            return stay;
+                            contactsPoint.Add(stay);
                         }
                     }
                     else if (!patientLocation.Discharge.HasValue && stay.Discharge.HasValue)
                     {
                         if (stay.Discharge >= patientLocation.Admission && patientLocation.Ward == stay.Ward)
                         {
-                            return stay;
+                            contactsPoint.Add(stay);
                         }
                     }
                     else if (patientLocation.Discharge.HasValue && !stay.Discharge.HasValue)
                     {
                         if (stay.Admission <= patientLocation.Discharge && patientLocation.Ward == stay.Ward)
                         {
-                            return stay;
+                            contactsPoint.Add(stay);
                         }
                     }
                     else 
                     {
-                        return stay;
+                        contactsPoint.Add(stay);
                     }
                 }
+               
+            }
+            if (contactsPoint.Count > 0)
+            {
+                return contactsPoint;
             }
             return null;
         }

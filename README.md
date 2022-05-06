@@ -19,9 +19,7 @@ The openEHR Repository needs to be prefilled with following templates and compos
 - [Virologischer Befund](https://ckm.highmed.org/ckm/templates/1246.169.636)
 - [Impfstatus](https://ckm.highmed.org/ckm/templates/1246.169.1187)
 - [Symptome](https://ckm.highmed.org/ckm/templates/1246.169.1109)
-
-*Upcoming:*
-- *[Mikrobiologischer Befund](https://ckm.highmed.org/ckm/templates/1246.169.69)*
+- [Mikrobiologischer Befund](https://ckm.highmed.org/ckm/templates/1246.169.69)
 
 ### Hardware
 

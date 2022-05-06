@@ -3,72 +3,70 @@
         <tr>
             <th class="text-center">Kontaktpatient</th>
             <th class="text-center">Statusdatum</th>
-            <th class="text-center">Raum <i class="oi oi-elevator" @onclick="() => Sort(p => p.RoomContact)"></i></th>
-            <th class="text-center">Station <i class="oi oi-elevator" @onclick="() => Sort(p => p.WardContact)"></i></th>
-            <th class="text-center">Fachabteilung <i class="oi oi-elevator" @onclick="() => Sort(p => p.DepartementContact)"></i></th>
+            <th class="text-center">Raum <i class="oi oi-elevator" @onclick="() => Sort(p => p.Room)"></i></th>
+            <th class="text-center">Station <i class="oi oi-elevator" @onclick="() => Sort(p => p.Ward)"></i></th>
+            <th class="text-center">Fachabteilung <i class="oi oi-elevator" @onclick="() => Sort(p => p.Departement)"></i></th>
             <th class="text-center">Kontaktzeitraum <i class="oi oi-elevator" @onclick="() => Sort(p => p.ContactStart)"></i></th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
 
-        @foreach (Data.Contact.Contact contact in Contacts)
+        @foreach (Data.Contact.ContactDetails contact in Contacts)
         {
-            <tr>
-                <td class="text-center">
-                    @if (contact.InfectionStatus is not null)
-                    {
-                        @if (contact.InfectionStatus.Nosocomial)
-                        {
-                            <span class="text-danger">@contact.PatientID</span>
-                        }
-                        else if (contact.InfectionStatus.Known)
-                        {
-                            <span class="text-primary">@contact.PatientID</span>
-                        }
-                    }
-                    else
-                    {
-                        @contact.PatientID
-                    }
-                    </td>
-                <td class="text-center">
-                    @if (contact.InfectionStatus is not null)
-                    {
-                        @if (contact.InfectionStatus.Nosocomial)
-                        {
-                            @contact.InfectionStatus.NosocomialDate.Value.ToString("yyyy-MM-dd")
-                        }
-                        else if (contact.InfectionStatus.Known)
-                        {
-                            @contact.StatusDate.Value.ToString("yyyy-MM-dd");
-                        }
-                    }
-                </td>
-                <td class="text-center">
-                    @(contact.RoomContact ? contact.PatientLocation.Room : "")
-                </td>
-                <td>
-                    @(contact.WardContact ? contact.PatientLocation.Ward : "")
-                </td>
-                <td class="text-center">
-                    @(contact.DepartementContact ? contact.PatientLocation.Departement : "")
-                </td>
-                <td class="text-center">
-                    @contact.ContactStart.ToString("yyyy-MM-dd") - @(contact.ContactEnd.HasValue ? contact.ContactEnd.Value.ToString("yyyy-MM-dd") : "")
-                </td>
-            </tr>
+        <tr>
+            <td class="text-center">
+                @if (contact.IsNosocomial)
+                {
+                    <span class="text-danger">@contact.PatientID</span>
+                }
+                else if (contact.IsKnown)
+                {
+                    <span class="text-primary">@contact.PatientID</span>
+                }
+                else
+                {
+                    @contact.PatientID
+                }
+            </td>
+            <td class="text-center">
+                @contact.StatusDate
+            </td>
+            <td class="text-center">
+                @contact.Room
+            </td>
+            <td>
+                @contact.Ward
+            </td>
+            <td class="text-center">
+                @contact.Departement
+            </td>
+            <td class="text-center">
+                @contact.ContactStart - @contact.ContactEnd
+            </td>
+            <td>
+                @if (contact.IsPresent)
+                {
+                    <svg class="p-0" width="30px" height="30px">
+                        <circle cx="15" cy="15" r="10" stroke="black" stroke-width="0.5" fill="#006400" />
+                    </svg>
+                }
+            </td>
+        </tr>
         }
     </tbody>
 </table>
 
 @code {
     [Parameter]
-    public List<Data.Contact.Contact> Contacts { get; set;}
+    public List<Data.Contact.ContactDetails> Contacts { get; set; }
 
-    private Func<Data.Contact.Contact, IComparable> Prop;
+
+    private Func<Data.Contact.ContactDetails, IComparable> Prop;
     private bool IsMinSorted = false;
 
-    private void Sort(Func<Data.Contact.Contact, IComparable> getProp)
+    private void Sort(Func<Data.Contact.ContactDetails, IComparable> getProp)
     {
         if (Contacts != null && Contacts.Count > 0 && (Prop != getProp || !(Prop == getProp && IsMinSorted)))
         {

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using SmICSCoreLib.Factories.General;
+using System;
 using System.Collections.Generic;
 
 namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
 {
-    public class WardParameter
+    public class WardParameter : Case
     {
         public string Ward { get; set; }
         public DateTime Start { get; set; }

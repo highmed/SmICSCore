@@ -29,6 +29,7 @@ using SmICSCoreLib.Factories.MenuList;
 using SmICSCoreLib.Factories.Feasability;
 using SmICSCoreLib.DB;
 using SmICSCoreLib.DB.MenuItems;
+using SmICSCoreLib.Factories.Helpers;
 
 namespace SmICS
 {
@@ -60,6 +61,7 @@ namespace SmICS
             services.AddScoped<ILabResultFactory, LabResultFactory>();
             services.AddScoped<IContactFactory, ContactFactory>();
             services.AddScoped<InfectionStatusFactory>();
+            services.AddScoped<IHelperFactory, HelperFactory>();
             #endregion
             services.AddTransient<IContactNetworkFactory, ContactNetworkFactory>();
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();

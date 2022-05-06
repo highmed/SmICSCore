@@ -5,6 +5,7 @@
     <thead>
         <tr>
             <th class="text-center">Patient</th>
+            <th class="text-center">Fall</th>
             <th class="text-center">Resistenz</th>
             @if (HasPatientData())
             {
@@ -13,12 +14,12 @@
                 <th>Sex</th>
             }
             <th class="text-center">
-                1.Positiver
-                <i class="oi oi-elevator" @onclick="() => Sort(p => p.FirstWardPositiveResult)"></i>
+                1.Positiver (Fall)
+                <i class="oi oi-elevator" @onclick="() => Sort(p => p.FirstPositiveResult)"></i>
             </th>
-            <th class="text-center">1.Stationstest <i class="oi oi-elevator" @onclick="() => Sort(p => p.FirstWardPositiveResult)"></i></th>
-            <th class="text-center">letzter Stationstest <i class="oi oi-elevator" @onclick="() => Sort(p => p.LastWardResult)"></i></th>
-            <th class="text-center">Aktueller Test <i class="oi oi-elevator" @onclick="() => Sort(p => p.CurrentResult)"></i></th>
+            <th class="text-center">letzter Positiver (Fall) <i class="oi oi-elevator" @onclick="() => Sort(p => p.CurrentResult)"></i></th>
+            <th class="text-center">1.Positiver (Station) <i class="oi oi-elevator" @onclick="() => Sort(p => p.FirstWardPositiveResult)"></i></th>
+            <th class="text-center">letzter Positiver (Station) <i class="oi oi-elevator" @onclick="() => Sort(p => p.LastWardResult)"></i></th>
             <th class="text-center">Stationsaufnahme <i class="oi oi-elevator" @onclick="() => Sort(p => p.Admission)"></i></th>
             <th class="text-center">Stationsentlassung <i class="oi oi-elevator" @onclick="() => Sort(p => p.Discharge)"></i></th>
         </tr>
@@ -56,20 +57,23 @@
     private void Sort(Func<WardPatient, IComparable> getProp)
     {
         Console.WriteLine(Prop == getProp);
+        List<WardPatient> ordered;
         if (WardPatients != null && WardPatients.Count > 0 && (Prop != getProp || !(Prop == getProp && IsMinSorted)))
         {
             Prop = getProp;
             IsMinSorted = true;
-            WardPatients = WardPatients
-            .OrderBy(x => getProp(x))
-            .ToList();
+            ordered = WardPatients.Where(x => getProp(x) is not null).OrderBy(x => getProp(x)).ToList();
+            ordered.AddRange(WardPatients.Where(x => getProp(x) is null).ToList());
+            WardPatients = ordered;
         }
         else
         {
             IsMinSorted = false;
-            WardPatients = WardPatients
+            ordered = WardPatients.Where(x => getProp(x) is not null)
             .OrderByDescending(x => getProp(x))
             .ToList();
+            ordered.AddRange(WardPatients.Where(x => getProp(x) is null).ToList());
+            WardPatients = ordered;
         }
     }
 }
