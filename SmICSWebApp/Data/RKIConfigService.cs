@@ -11,34 +11,18 @@ namespace SmICSWebApp.Data
 {
     public class RKIConfigService
     {
-        private readonly IRKILabDataFactory _labdata;
         private readonly IPatientMovementFactory _patientInformation;
         private readonly string path = @"./Resources/OutbreakDetection/RKIConfig.json";
 
-        public RKIConfigService(IPatientMovementFactory patientInfo, IRKILabDataFactory labdata)
+        public RKIConfigService(IPatientMovementFactory patientInfo)
         {
             _patientInformation = patientInfo;
-            _labdata = labdata;
-        }
-
-        public List<PatientMovementModel> GetAllStations()
-        {
-            try
-            {
-                List<PatientMovementModel> stationListe = _patientInformation.ProcessGetStations();
-                return stationListe;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
         }
 
         public void StoreRules(List<RKIConfigTemplate> storedValues)
         {
             try
             {
-                storedValues.Where(w => w.Erreger != null).ToList().ForEach(s => s.ErregerID = GetErregerList(s.Erreger));
                 if (File.Exists(path) == false)
                 {
                     string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
@@ -96,7 +80,6 @@ namespace SmICSWebApp.Data
         {
             try
             {
-                storedValues.Where(w => w.Erreger != null).ToList().ForEach(s => s.ErregerID = GetErregerList(s.Erreger));
 
                 string json = JsonConvert.SerializeObject(storedValues.ToArray(), Formatting.Indented);
                 File.WriteAllText(path, json);
@@ -105,19 +88,6 @@ namespace SmICSWebApp.Data
             catch (Exception)
             {
                 throw new Exception($"Failed to update data");
-            }
-        }
-
-        public List<LabDataKeimReceiveModel> GetErregerList(string name)
-        {
-            try
-            {
-                List<LabDataKeimReceiveModel> erregerListe = _labdata.ProcessGetErreger(name);
-                return erregerListe;
-            }
-            catch (Exception)
-            {
-                return null;
             }
         }
 

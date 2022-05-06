@@ -153,15 +153,5 @@ namespace SmICSCoreLib.Factories.PatientMovement
             return epsiodeOfCareParameter;
         }
 
-        public List<PatientMovementModel> ProcessGetStations()
-        {
-            List<PatientMovementModel> stationList = RestDataAccess.AQLQuery<PatientMovementModel>(AQLCatalog.GetAllStationsForConfig());
-            if (stationList is null)
-            {
-                return new List<PatientMovementModel>();
-            }
-
-            return stationList;
-        }
     }
 }

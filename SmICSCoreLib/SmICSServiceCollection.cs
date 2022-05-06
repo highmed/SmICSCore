@@ -81,7 +81,6 @@ namespace SmICS
             services.AddTransient<IPersInfoInfecCtrlFactory, PersInfoInfecCtrlFactory>();
             services.AddTransient<IPersonDataFactory, PersonDataFactory>();
 
-            services.AddTransient<IRKILabDataFactory, RKILabDataFactory>();
             services.AddSingleton<IFeasabilityFactory, FeasabilityFactory>();
             return services;
         }

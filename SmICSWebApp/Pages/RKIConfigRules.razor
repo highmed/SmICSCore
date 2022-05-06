@@ -7,7 +7,7 @@
 @inject RKIConfigService RKIConfigService
 @inject MenuService _menuService;
 
-@if (_pathogenMenuEntries is not null)
+@if (_wardMenuEntries is not null && _pathogenMenuEntries is not null)
 {
     <div id="div_card_5_full">
         <div id="div_card_5_only_rules">
@@ -18,14 +18,11 @@
                 <div>
                     <InputSelect @bind-Value="RKIConfigForm.Station" id="@ID">
                         <option selected="true" disabled="disabled" value="">Bitte wählen Sie aus</option>
-                        <option value="Gesamtklink">Gesamtklink</option>
-                        @if (StationList != null)
-                            {
-                                foreach (var item in StationList)
-                                {
-                                <option value="@item.StationID">@item.StationID</option>
-                                }
-                            }
+                        <option value="Gesamtklink">Gesamtklinik</option>
+                        @foreach (Ward item in _wardMenuEntries)
+                        {
+                            <option value="@item.Name">@item.Name</option>
+                        }
 
                     </InputSelect>
                 </div>
@@ -120,32 +117,19 @@
     private string message;
     private string messageStyles = "visibility:hidden";
 
-    List<PatientMovementModel> StationList;
+    private List<Ward> _wardMenuEntries;
     private List<PathogenEntry> _pathogenMenuEntries;
     private List<string> _resistances;
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Run(GetAllStations);
         await Task.Run(LoadMenu);
     }
 
     private void LoadMenu()
     {
         _pathogenMenuEntries = _menuService.GetPathogens();
-    }
-
-    private void GetAllStations()
-    {
-        try
-        {
-            StationList = RKIConfigService.GetAllStations();
-        }
-        catch (Exception)
-        {
-            throw new Exception($"Failed to GET Station data");
-
-        }
+        _wardMenuEntries = _menuService.GetWards().Result;
     }
 
     void CheckboxClicked(object checkedValue)
