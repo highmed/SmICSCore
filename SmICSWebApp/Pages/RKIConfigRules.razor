@@ -16,7 +16,7 @@
                     <label for="Station" class="tb-bez-header">Station</label>
                 </div>
                 <div>
-                    <InputSelect @bind-Value="RKIConfigForm.Station" id="@ID">
+                    <InputSelect @bind-Value="RKIConfigForm.Ward" id="@ID">
                         <option selected="true" disabled="disabled" value="">Bitte wählen Sie aus</option>
                         <option value="Gesamtklink">Gesamtklinik</option>
                         @foreach (Ward item in _wardMenuEntries)
@@ -52,7 +52,7 @@
                     {
                         <InputSelect @bind-Value="RKIConfigForm.Resistance" id="@ID">
 
-                            @if (!string.IsNullOrEmpty(RKIConfigForm.Erreger) || RKIConfigForm.Erreger != "sars-cov-2")
+                            @if (!string.IsNullOrEmpty(RKIConfigForm.Pathogen) || RKIConfigForm.Pathogen != "sars-cov-2")
                                     {
                                 @foreach (string res in _resistances)
                                         {
@@ -73,7 +73,7 @@
                     <label for="Zeitraum" class="tb-bez-header">Zeitraum</label>
                 </div>
                 <div>
-                    <InputSelect @bind-Value="RKIConfigForm.Zeitraum" id="@ID" @oninput=ZeitraumSelected>
+                    <InputSelect @bind-Value="RKIConfigForm.Timespan" id="@ID" @oninput=ZeitraumSelected>
                         <option selected="true" disabled="disabled" value=0>Bitte wählen Sie aus</option>
                         <option value=1>1 Woche</option>
                         <option value=2>2 Wochen</option>
@@ -161,13 +161,13 @@
     private void GetFilter(ChangeEventArgs e)
     {
         List<string> values = e.Value.ToString().Split(',').ToList();
-        RKIConfigForm.Erreger = values.Last();
+        RKIConfigForm.Pathogen = values.Last();
         values.RemoveAt(values.Count - 1);
-        RKIConfigForm.ErregerID = values;
+        RKIConfigForm.PathogenCodes = values;
 
-        if (RKIConfigForm.ErregerID is not null)
+        if (RKIConfigForm.PathogenCodes is not null)
         {
-            _resistances = RKIConfigService.GetFilter(RKIConfigForm.ErregerID);
+            _resistances = RKIConfigService.GetFilter(RKIConfigForm.PathogenCodes);
         }
     }
 }

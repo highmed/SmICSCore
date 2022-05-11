@@ -8,16 +8,16 @@ namespace SmICSCoreLib.Factories.RKIConfig
     public class RKIConfigTemplate
     {
         [Required]
-        public string Station { get; set; }
-        public List<string> ErregerID { get; set; }
+        public string Ward { get; set; }
+        public List<string> PathogenCodes { get; set; }
         [Required]
-        public string Erreger { get; set; }
+        public string Pathogen { get; set; }
         [Required]
-        public string Zeitraum { get; set; }
+        public string Timespan { get; set; }
         public bool Retro { get; set; } = false;
         [Required]
-        public string Erstellungsdatum { get; set; } = DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
-        public string Erregerstatus { get; set; }
+        public string Entrydate { get; set; } = DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
+        public string Pathogenstatus { get; set; }
         public string Resistance { get; set; }
     }
 }

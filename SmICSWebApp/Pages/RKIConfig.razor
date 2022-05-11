@@ -92,22 +92,22 @@
                     {
                         <div class="tb-colunm-config" id="@ID">
                             <div class="tb-cell-config-1">
-                                @item.Station
+                                @item.Ward
                             </div>
                             <div class="tb-cell-config-1">
-                                @item.Erreger 
-                                (@foreach (string i in item.ErregerID) {
+                                @item.Pathogen 
+                                (@foreach (string i in item.PathogenCodes) {
                                     @i
                                 })
                             </div>
                             <div class="tb-cell-config-1">
-                                @item.Zeitraum
+                                @item.Timespan
                             </div>
                             <div class="tb-cell-config-1">
                                 @item.Retro
                             </div>
                             <div class="tb-cell-config-1">
-                                @item.Erstellungsdatum
+                                @item.Entrydate
                             </div>
                             <div class="space-2" style="padding-left: 1%; padding: 0.25%;">
                                 <button id="btn" type="button" @onclick="()=>DeleteReadyRules(item)"><i class="oi oi-minus"></i></button>
@@ -171,24 +171,24 @@
 
             if (RKIConfigForm.Count > 0)
             {
-                List<int> indices = RKIConfigForm.Where(x => x.Station == "").Select(x => RKIConfigForm.IndexOf(x)).ToList();
+                List<int> indices = RKIConfigForm.Where(x => x.Ward == "").Select(x => RKIConfigForm.IndexOf(x)).ToList();
                 foreach (int index in indices)
                 {
                     RKIConfigForm.RemoveAt(index);
                 }
             }
 
-            RKIConfigForm.Where(x => x.Erreger == "SARS-CoV-2").ToList().ForEach(s => s.Erregerstatus = "virologisch");
-            RKIConfigForm.Where(x => x.Erreger != "SARS-CoV-2").ToList().ForEach(s => s.Erregerstatus = "mikrobiologisch");
+            RKIConfigForm.Where(x => x.Pathogen == "SARS-CoV-2").ToList().ForEach(s => s.Pathogenstatus = "virologisch");
+            RKIConfigForm.Where(x => x.Pathogen != "SARS-CoV-2").ToList().ForEach(s => s.Pathogenstatus = "mikrobiologisch");
 
             RKIConfigService.StoreRules(RKIConfigForm);
 
 
             foreach (var item in RKIConfigForm)
             {
-                bool exists = System.IO.Directory.Exists(path + item.Erreger + "_" + item.Station + "_" + item.Zeitraum + (item.Retro ? "_Retro" : "") + "/");
+                bool exists = System.IO.Directory.Exists(path + item.Pathogen + "_" + item.Ward + "_" + item.Timespan + (item.Retro ? "_Retro" : "") + "/");
                 if (!exists)
-                    System.IO.Directory.CreateDirectory(path + item.Erreger + "_" + item.Station + "_" + item.Zeitraum + (item.Retro ? "_Retro" : "") + "/");
+                    System.IO.Directory.CreateDirectory(path + item.Pathogen + "_" + item.Ward + "_" + item.Timespan + (item.Retro ? "_Retro" : "") + "/");
             }
 
             await Task.Run(GetConfigs);
@@ -210,7 +210,7 @@
 
     private void AddRules()
     {
-        RKIConfigTemplate RKIConfigFormAdds = new RKIConfigTemplate { Station = "" };
+        RKIConfigTemplate RKIConfigFormAdds = new RKIConfigTemplate { Ward = "" };
         RKIConfigForm.Add(RKIConfigFormAdds);
 
         DynamicFragment.Add(CreateComponent(RKIConfigFormAdds, DynamicFragment.Count));

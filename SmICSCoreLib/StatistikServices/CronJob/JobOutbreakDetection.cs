@@ -47,14 +47,14 @@ namespace SmICSCoreLib.StatistikServices.CronJob
                 string savingFolder = GetSavingFolder(config);
                 savingFolder = "";
                 OutbreakDetectionParameter outbreakParam = ConfigToParam(config, savingFolder);
-                outbreakParam.MedicalField = config.Erregerstatus == "virologisch" ? MedicalField.VIROLOGY : MedicalField.MICROBIOLOGY;
+                outbreakParam.MedicalField = config.Pathogenstatus == "virologisch" ? MedicalField.VIROLOGY : MedicalField.MICROBIOLOGY;
                 ProxyParameterModel parameter = new ProxyParameterModel()
                 {
                     EpochsObserved = _paramFac.Process(outbreakParam),
                     SavingFolder = savingFolder,
                     SavingDirectory = Directory.GetCurrentDirectory(),
-                    FitRange = GetFitRange(outbreakParam, savingFolder, Convert.ToInt32(config.Zeitraum)),
-                    LookbackWeeks = Convert.ToInt32(config.Zeitraum),
+                    FitRange = GetFitRange(outbreakParam, savingFolder, Convert.ToInt32(config.Timespan)),
+                    LookbackWeeks = Convert.ToInt32(config.Timespan),
                     MedicalField = outbreakParam.MedicalField
                 };
 
@@ -64,7 +64,7 @@ namespace SmICSCoreLib.StatistikServices.CronJob
 
         private string GetSavingFolder(RKIConfigTemplate config)
         {
-            return config.Erreger + "_" + config.Station + "_" + config.Zeitraum + (config.Retro ? "_Retro" : "") + "/";
+            return config.Pathogen + "_" + config.Ward + "_" + config.Timespan + (config.Retro ? "_Retro" : "") + "/";
         }
 
         private int[] GetFitRange(OutbreakDetectionParameter outbreakParam, string savingFolder, int lookback)
@@ -95,10 +95,10 @@ namespace SmICSCoreLib.StatistikServices.CronJob
             {
                 outbreakParam.Retro = false;
             }
-            outbreakParam.Starttime = DateTime.Now.AddDays(-((Convert.ToInt32(config.Zeitraum) * 7)+1));
+            outbreakParam.Starttime = DateTime.Now.AddDays(-((Convert.ToInt32(config.Timespan) * 7)+1));
             outbreakParam.Endtime = DateTime.Now;
-            outbreakParam.PathogenIDs = config.ErregerID.ToList();
-            outbreakParam.Ward = config.Station;
+            outbreakParam.PathogenIDs = config.PathogenCodes.ToList();
+            outbreakParam.Ward = config.Ward;
             return outbreakParam;
         }
     }

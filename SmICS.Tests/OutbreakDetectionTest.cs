@@ -26,17 +26,17 @@ namespace SmICSFactory.Tests
             {
                 new RKIConfigTemplate
                 {
-                    Station = "Coronastation",
-                    Erreger = "Sars-Cov-2",
-                    ErregerID = new List<string>
+                    Ward = "Coronastation",
+                    Pathogen = "Sars-Cov-2",
+                    PathogenCodes = new List<string>
                     {
                         "94500-6",
                         "94558-4",
                         "94745-7"
                     },
                     Retro = false,
-                    Erregerstatus = "virologisch",
-                    Zeitraum = "4"
+                    Pathogenstatus = "virologisch",
+                    Timespan = "4"
                 }
             };
 
@@ -46,11 +46,11 @@ namespace SmICSFactory.Tests
             {
                 OutbreakDetectionParameter outbreakParam = new OutbreakDetectionParameter();
                 outbreakParam.Retro = false;
-                outbreakParam.Starttime = new DateTime(2021, 1, 30).AddDays(-((Convert.ToInt32(config.Zeitraum) * 7)+1));
+                outbreakParam.Starttime = new DateTime(2021, 1, 30).AddDays(-((Convert.ToInt32(config.Timespan) * 7)+1));
                 outbreakParam.Endtime = new DateTime(2021,1,30); //oder DateTime.Now.AddDays(-1);
-                outbreakParam.PathogenIDs = config.ErregerID.ToList();
-                outbreakParam.Ward = config.Station;
-                SmICSVersion version = config.Erregerstatus == "virologisch" ? SmICSVersion.VIROLOGY : SmICSVersion.MICROBIOLOGY;
+                outbreakParam.PathogenIDs = config.PathogenCodes.ToList();
+                outbreakParam.Ward = config.Ward;
+                SmICSVersion version = config.Pathogenstatus == "virologisch" ? SmICSVersion.VIROLOGY : SmICSVersion.MICROBIOLOGY;
 
                 ProxyParameterModel parameter = new ProxyParameterModel()
                 {
@@ -58,7 +58,7 @@ namespace SmICSFactory.Tests
                     SavingFolder = "",
                     SavingDirectory = "C:\\Users\\biermapa\\source\\repos\\highmed\\SmICSCore\\SmICS.Tests",
                     FitRange = new int[] { 29, 29 },
-                    LookbackWeeks = Convert.ToInt32(config.Zeitraum)
+                    LookbackWeeks = Convert.ToInt32(config.Timespan)
                 };
 
                 OutbreakDetectionProxy _proxy = new OutbreakDetectionProxy();
