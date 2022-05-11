@@ -28,20 +28,11 @@ namespace SmICSFactory.Tests
                 {
                     Station = "Coronastation",
                     Erreger = "Sars-Cov-2",
-                    ErregerID = new List<LabDataKeimReceiveModel>
+                    ErregerID = new List<string>
                     {
-                        new LabDataKeimReceiveModel()
-                        {
-                            KeimID = "94500-6"
-                        },
-                        new LabDataKeimReceiveModel()
-                        {
-                            KeimID = "94558-4"
-                        },
-                        new LabDataKeimReceiveModel()
-                        {
-                            KeimID = "94745-7"
-                        }
+                        "94500-6",
+                        "94558-4",
+                        "94745-7"
                     },
                     Retro = false,
                     Erregerstatus = "virologisch",
@@ -57,13 +48,13 @@ namespace SmICSFactory.Tests
                 outbreakParam.Retro = false;
                 outbreakParam.Starttime = new DateTime(2021, 1, 30).AddDays(-((Convert.ToInt32(config.Zeitraum) * 7)+1));
                 outbreakParam.Endtime = new DateTime(2021,1,30); //oder DateTime.Now.AddDays(-1);
-                outbreakParam.PathogenIDs = config.ErregerID.Select(k => k.KeimID).ToList();
+                outbreakParam.PathogenIDs = config.ErregerID.ToList();
                 outbreakParam.Ward = config.Station;
                 SmICSVersion version = config.Erregerstatus == "virologisch" ? SmICSVersion.VIROLOGY : SmICSVersion.MICROBIOLOGY;
 
                 ProxyParameterModel parameter = new ProxyParameterModel()
                 {
-                    EpochsObserved = _paramFac.Process(outbreakParam, version),
+                    EpochsObserved = _paramFac.Process(outbreakParam),
                     SavingFolder = "",
                     SavingDirectory = "C:\\Users\\biermapa\\source\\repos\\highmed\\SmICSCore\\SmICS.Tests",
                     FitRange = new int[] { 29, 29 },

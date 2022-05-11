@@ -97,7 +97,7 @@ namespace SmICSCoreLib.StatistikServices.CronJob
             }
             outbreakParam.Starttime = DateTime.Now.AddDays(-((Convert.ToInt32(config.Zeitraum) * 7)+1));
             outbreakParam.Endtime = DateTime.Now;
-            outbreakParam.PathogenIDs = config.ErregerID.Select(k => k.KeimID).ToList();
+            outbreakParam.PathogenIDs = config.ErregerID.ToList();
             outbreakParam.Ward = config.Station;
             return outbreakParam;
         }

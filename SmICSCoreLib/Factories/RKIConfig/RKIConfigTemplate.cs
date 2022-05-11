@@ -9,7 +9,7 @@ namespace SmICSCoreLib.Factories.RKIConfig
     {
         [Required]
         public string Station { get; set; }
-        public List<LabDataKeimReceiveModel> ErregerID { get; set; }
+        public List<string> ErregerID { get; set; }
         [Required]
         public string Erreger { get; set; }
         [Required]
@@ -19,6 +19,5 @@ namespace SmICSCoreLib.Factories.RKIConfig
         public string Erstellungsdatum { get; set; } = DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'");
         public string Erregerstatus { get; set; }
         public string Resistance { get; set; }
-        public List<string> PathogenCodes { get; set; }
     }
 }

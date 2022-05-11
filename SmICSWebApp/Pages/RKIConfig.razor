@@ -95,7 +95,10 @@
                                 @item.Station
                             </div>
                             <div class="tb-cell-config-1">
-                                @item.Erreger
+                                @item.Erreger 
+                                (@foreach (string i in item.ErregerID) {
+                                    @i
+                                })
                             </div>
                             <div class="tb-cell-config-1">
                                 @item.Zeitraum

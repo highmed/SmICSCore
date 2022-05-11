@@ -36,7 +36,7 @@
                         <option selected disabled>Bitte wählen Sie aus</option>
                         @foreach (PathogenEntry entry in _pathogenMenuEntries)
                         {
-                            <option value="@entry.Codes">@entry.Name</option>
+                            <option value="@string.Join(",", entry.Codes)|@entry.Name">@entry.Name</option>
                         }
                         <option value="SARS-CoV-2">SARS-CoV-2</option>
                     </select>
@@ -160,10 +160,14 @@
 
     private void GetFilter(ChangeEventArgs e)
     {
-        RKIConfigForm.PathogenCodes = (List<string>)e.Value;
-        if (RKIConfigForm.PathogenCodes is not null)
+        List<string> values = e.Value.ToString().Split(',').ToList();
+        RKIConfigForm.Erreger = values.Last();
+        values.RemoveAt(values.Count - 1);
+        RKIConfigForm.ErregerID = values;
+
+        if (RKIConfigForm.ErregerID is not null)
         {
-            _resistances = RKIConfigService.GetFilter(RKIConfigForm.PathogenCodes);
+            _resistances = RKIConfigService.GetFilter(RKIConfigForm.ErregerID);
         }
     }
 }
