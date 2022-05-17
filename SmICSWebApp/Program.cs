@@ -72,12 +72,12 @@ namespace SmICSWebApp
                 IMenuListFactory menu = new MenuListFactory(rest);
                 MenuItemsJob job = new MenuItemsJob(dbStartup, menu);
                 Task wardtask = new Task(delegate() { 
-                    job.UpdateWards(); 
+                    _ = job.UpdateWards(); 
                 });
                 wardtask.RunSynchronously();
 
                 Task pathotask = new Task(delegate () {
-                    job.UpdatePathogens();
+                    _ = job.UpdatePathogens();
                 });
                 pathotask.RunSynchronously();
             }
