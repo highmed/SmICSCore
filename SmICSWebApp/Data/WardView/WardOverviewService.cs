@@ -283,9 +283,12 @@ namespace SmICSWebApp.Data.WardView
                     DateTime tmp = labResult.Specimens.Where(s => s.Pathogens.Any(p => p.Result))
                         .OrderBy(s => s.SpecimenCollectionDateTime)
                         .Last().SpecimenCollectionDateTime;
-                    if (last < tmp)
+                    if (tmp != null)
                     {
-                        last = tmp;
+                        if (last < tmp)
+                        {
+                            last = tmp;
+                        }
                     }
                 }
             }

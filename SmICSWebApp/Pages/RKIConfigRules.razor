@@ -36,9 +36,8 @@
                         <option selected disabled>Bitte wählen Sie aus</option>
                         @foreach (PathogenEntry entry in _pathogenMenuEntries)
                         {
-                            <option value="@string.Join(",", entry.Codes)|@entry.Name">@entry.Name</option>
+                            <option value="@string.Join(",", entry.Codes),@entry.Name">@entry.Name</option>
                         }
-                        <option value="SARS-CoV-2">SARS-CoV-2</option>
                     </select>
                 </div>
             </div>
