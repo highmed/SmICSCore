@@ -66,13 +66,6 @@ namespace SmICSCoreLib.CronJobs
                         }
                     }
                 }
-                foreach (Ward ward in wards)
-                {
-                    if (wardMenuEntries.Where(w => w.ID == ward.Name).Count() == 0)
-                    {
-                        _dataAccess.DeleteWard(ward);
-                    }
-                }
                 wardMenuEntries = null;
                 wards = null;
             }
@@ -114,13 +107,6 @@ namespace SmICSCoreLib.CronJobs
                         {
                             _dataAccess.UpdatePathogen(new Pathogen() { Code = pat.ID, Name = pat.Name });
                         }
-                    }
-                }
-                foreach (Pathogen pat in pathogens)
-                {
-                    if (pathoMenu.Where(p => p.ID == pat.Code).Count() == 0)
-                    {
-                        _dataAccess.DeletePathogen(pat);
                     }
                 }
                 pathoMenu = null;

@@ -69,13 +69,21 @@ mkdir SmICSCore/Certificates
 <li>Copy the root certificates to the Certificates Folder</li>
 </ul>
 
-### 3. Editing docker-compose.yml
+### 3.Prepare Resources Volume
+
+Create a "SmICSData" folder at the same path where the SmICSCore is located.
+
+```
+mkdir SmICSData
+```
+
+### 4. Editing docker-compose.yml
 
 The docker-compose.yml is located in the SmICSCore folder.
 
 Every Environment Variable which contains an expression with ```<>``` needs to be replaced by your local settings.
 
-### 4. Running docker-compose
+### 5. Running docker-compose
 
 Enter the SmICSCore directory and enter following command. 
 
