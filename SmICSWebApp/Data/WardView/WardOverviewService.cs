@@ -75,6 +75,10 @@ namespace SmICSWebApp.Data.WardView
                                 patient.CaseID = stay.CaseID;
                                 patient.FirstPositiveResult = GetFirstPositveLabResultDate(labResults, stay);
                                 (patient.FirstWardPositiveResult, patient.LastWardResult) = GetFirstAndLastWardLabResultDate(labResults, stay);
+                                if (patient.LastWardResult == DateTime.MinValue)
+                                {
+                                    patient.LastWardResult = patient.FirstWardPositiveResult;
+                                }
                                 patient.CurrentResult = GetLastLabResultDate(labResults);
                                 wardPatients.Add(patient);
                             }
@@ -280,14 +284,14 @@ namespace SmICSWebApp.Data.WardView
             {
                 foreach (LabResult labResult in labResults)
                 {
-                    DateTime tmp = labResult.Specimens.Where(s => s.Pathogens.Any(p => p.Result))
+                    DateTime? tmp = labResult.Specimens.Where(s => s.Pathogens.Any(p => p.Result))
                         .OrderBy(s => s.SpecimenCollectionDateTime)
-                        .Last().SpecimenCollectionDateTime;
+                        .LastOrDefault()?.SpecimenCollectionDateTime;
                     if (tmp != null)
                     {
                         if (last < tmp)
                         {
-                            last = tmp;
+                            last = (DateTime)tmp;
                         }
                     }
                 }
