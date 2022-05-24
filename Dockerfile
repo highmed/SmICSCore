@@ -31,9 +31,6 @@ COPY SmICSWebApp/Resources/RRuntime/R_Script_00010.R Resources/RRuntime/
 COPY pub/jranke.asc jranke.asc
 COPY SmICSWebApp/Resources/ Resources/
 
-RUN mkdir /app/Resources/db
-RUN touch /app/Resources/db/SmICS.db
-
 #RUN apt-get update 
 #Run apt-get -y upgrade
 #RUN apt-get -y install ca-certificates wget
