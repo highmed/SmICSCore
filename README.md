@@ -74,7 +74,7 @@ mkdir SmICSCore/Certificates
 Create a "SmICSData" folder at the same path where the SmICSCore is located.
 
 ```
-mkdir SmICSData
+mkdir SmICSData && touch SmICSData/SmICS.db
 ```
 
 ### 4. Editing docker-compose.yml
