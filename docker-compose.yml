@@ -7,7 +7,7 @@ services:
         context: .
     restart: unless-stopped
     volumes:
-      - ../SmICSData/:/app/Resources/db/
+      - ../SmICSData/db/:/app/Resources/db/
     environment:
       - OPENEHR_DB=<openEHR REST API URL>
       - OPENEHR_USER=<openEHR SmICS User>
