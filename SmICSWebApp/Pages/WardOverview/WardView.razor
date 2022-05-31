@@ -31,7 +31,7 @@
                         }
                     </select>
                     <label for="pathogenDropdown" class="mr-1">Erreger</label>
-                    <input type="text" list="pathogenList" class="col-1 mr-2" id="pathogenDropdown" @onchange="PathogenChanged">
+                    <input type="text" list="pathogenList" class="col-2 mr-2" id="pathogenDropdown" size="40" @onchange="PathogenChanged">
                     <datalist id="pathogenList">
                         @foreach (PathogenEntry entry in _pathogenMenuEntries)
                         {
