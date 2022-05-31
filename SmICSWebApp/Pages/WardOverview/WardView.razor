@@ -31,7 +31,7 @@
                         }
                     </select>
                     <label for="pathogenDropdown" class="mr-1">Erreger</label>
-                    <select id="pathogenDropdown" class="col-2 mr-2" @bind="@parameter.PathogenCode">
+                    <select id="pathogenDropdown" class="col-2 mr-2" @onchange="PathogenChanged">
                         <option value="" selected disabled hidden>Bitte wählen</option>
                         @foreach (PathogenEntry entry in _pathogenMenuEntries)
                         {
@@ -134,8 +134,9 @@
     private void LoadMenu()
     {
         _pathogenMenuEntries = _menuService.GetPathogens();
+        _pathogenMenuEntries = _pathogenMenuEntries.OrderBy(p => p.Name).ToList();
         List<Ward> wards = _menuService.GetWards().Result;
-        _wardMenuEntries = wards.ToArray();
+        _wardMenuEntries = wards.OrderBy(w => w.Name).ToArray();
     }
 
     private async Task Submit()
