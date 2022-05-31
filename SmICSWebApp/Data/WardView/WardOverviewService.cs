@@ -247,7 +247,7 @@ namespace SmICSWebApp.Data.WardView
             {
                 first = null;
             }
-            return (last, first);
+            return (first, last);
         }
 
         private DateTime? GetFirstPositveLabResultDate(List<LabResult> labResults, PatientStay patStay)
