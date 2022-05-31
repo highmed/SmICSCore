@@ -31,13 +31,13 @@
                         }
                     </select>
                     <label for="pathogenDropdown" class="mr-1">Erreger</label>
-                    <input type="text" list="pathogenList" class="col-2 mr-2" id="pathogenDropdown" size="40" @onchange="PathogenChanged">
-                    <datalist id="pathogenList">
+                    <select id="pathogenDropdown" class="col-2 mr-2" @bind="@parameter.PathogenCode">
+                        <option value="" selected disabled hidden>Bitte wählen</option>
                         @foreach (PathogenEntry entry in _pathogenMenuEntries)
                         {
-                            <option value="@string.Join(",", entry.Codes)" label="@entry.Name"></option>
+                            <option value="@string.Join(",", entry.Codes)">@entry.Name</option>
                         }
-                    </datalist>
+                    </select>
                     <label for="startdate" class="mr-1">Start</label>
                     <InputDate id="startdate" class="col-1 mr-2" @bind-Value="parameter.Start" />
                     <label for="enddate" class="mr-1">Ende</label>
