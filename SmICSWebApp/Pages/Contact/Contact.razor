@@ -18,14 +18,13 @@
                         <label for="patID">PatientID:</label>
                         <input type="text" @bind="contact.PatientID" id="patID" />
                         <label for="pathogen">Erreger:</label>
-                        <input type="text" id="pathogen" list="pathogenList" @onchange="GetFilter" />
-                        <datalist id="pathogenList">
+                        <select id="pathogenDropdown" class="col-2 mr-2" @onchange="GetFilter">
+                            <option value="" selected disabled hidden>Bitte wählen</option>
                             @foreach (PathogenEntry entry in _pathogenMenuEntries)
                             {
                                 <option value="@string.Join(",", entry.Codes)">@entry.Name</option>
                             }
-                            <option value="sars-cov-2">SARS-CoV-2</option>
-                        </datalist>
+                        </select>
                         <label for="res">Resistenz:</label>
                         <input type="text" id="res" list="resistanceList" @bind="contact.Resistence" />
                         <datalist id="resistanceList">
@@ -248,6 +247,7 @@
     private void LoadMenu()
     {
         _pathogenMenuEntries = _menuService.GetPathogens();
+        _pathogenMenuEntries = _pathogenMenuEntries.OrderBy(p => p.Name).ToList();
     }
 
     private void GetPrevious()
