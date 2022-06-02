@@ -9,7 +9,7 @@ services:
     volumes:
       - ../SmICSData/db/:/app/Resources/db/
     environment:
-      - OPENEHR_DB=<openEHR REST API URL>
+      - OPENEHR_DB=<openEHR Repo Url http://adress:port (in case of ehrbase  http://adress:port/ehrbase/)>
       - OPENEHR_USER=<openEHR SmICS User>
       - OPENEHR_PASSWD=<openEHR SmICS User PW>
       - FIRST_DATA_ENTRY_YEAR=<Year>
