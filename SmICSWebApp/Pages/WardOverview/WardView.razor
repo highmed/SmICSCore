@@ -48,11 +48,19 @@
         </div>
     </div>
 
-    @if (isLoading)
+    @if (isLoading && !emptyResult)
     {
         <div class="spinner"></div>
     }
-    else if (filteredData != null && chartEntries != null && _filterMRE != null && !isLoading)
+    else if(!isLoading && emptyResult)
+    {
+        <div>
+            <span class="text-danger">
+                Es wurden leider keine Daten zu den gewählten Parametern gefunden.
+            </span>
+        </div>
+    }
+    else if (filteredData != null && chartEntries != null && _filterMRE != null && !isLoading && !emptyResult)
     {
         <div class="row">
             <div class="card card-table">
@@ -65,7 +73,7 @@
                                 @foreach (string filter in _filterMRE)
                                 {
                                     <option value="@filter">@filter</option>
-                                }
+                                    }
                             </select>
                             <label for="filterNoso">Status:</label>
                             <select class="col-2" @onchange="FilterNosocomial" id="filterNoso">
@@ -119,6 +127,8 @@
     private bool isLoading = false;
     private string LoadingMessage;
 
+    private bool emptyResult = false;
+
     private IDataset<int> Nosocomial;
 
     private IDataset<int> Known;
@@ -141,6 +151,7 @@
 
     private async Task Submit()
     {
+        emptyResult = false;
         isLoading = true;
         await Task.Run(LoadData);
         isLoading = false;
@@ -154,41 +165,57 @@
 
     private void LoadData()
     {
-        _service.Progress += c_Progress;
+        //_service.Progress += c_Progress;
         data = _service.GetData(parameter);
-        filteredData = data;
-        chartEntries = _service.GetChartEntries(parameter);
-        _filterMRE = _service.GetFilter(parameter);
-
-        _chart = EpiCurveConfig("Epidemiologische Kurve der Station: " + parameter.Ward, "Neue Fälle");
-        _accumChart = EpiCurveConfig("", "Last der Station");
-
-        Nosocomial = new BarDataset<int>()
+        if (data is null)
         {
-            Label = "Nosokomial",
-            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Red)
-        };
-
-        Known = new BarDataset<int>()
+            emptyResult = true;
+        }
+        else
         {
-            Label = "Bekannt",
-            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue)
-        };
+            if (data.Count == 0)
+            {
+                data = null;
+                emptyResult = true;
+            }
+            else 
+            {
+                filteredData = data;
+                chartEntries = _service.GetChartEntries(parameter);
+                _filterMRE = _service.GetFilter(parameter);
 
-        Stress = new BarDataset<int>()
-        {
-            Label = "Last",
-            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.DarkGray)
-        };
+                _chart = EpiCurveConfig("Epidemiologische Kurve der Station: " + parameter.Ward, "Neue Fälle");
+                _accumChart = EpiCurveConfig("", "Last der Station");
 
-        GetXAxisLabels();
-        _chart.Data.Datasets.Add(Nosocomial);
-        _chart.Data.Datasets.Add(Known);
-        _accumChart.Data.Datasets.Add(Stress);
+                Nosocomial = new BarDataset<int>()
+                {
+                    Label = "Nosokomial",
+                    BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Red)
+                };
 
-        FillDataset(Nosocomial, chartEntries["Nosokomial"]);
-        FillDataset(Known, chartEntries["Known"]);
-        FillDataset(Stress, chartEntries["Stress"]);
+                Known = new BarDataset<int>()
+                {
+                    Label = "Bekannt",
+                    BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue)
+                };
+
+                Stress = new BarDataset<int>()
+                {
+                    Label = "Last",
+                    BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.DarkGray)
+                };
+
+                GetXAxisLabels();
+                _chart.Data.Datasets.Add(Nosocomial);
+                _chart.Data.Datasets.Add(Known);
+                _accumChart.Data.Datasets.Add(Stress);
+
+                FillDataset(Nosocomial, chartEntries["Nosokomial"]);
+                FillDataset(Known, chartEntries["Known"]);
+                FillDataset(Stress, chartEntries["Stress"]);
+            }
+                
+        }
     }
 
     private void GetXAxisLabels()

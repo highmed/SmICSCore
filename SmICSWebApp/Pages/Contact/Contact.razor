@@ -327,7 +327,7 @@
         DateTime? tmpFirstKnownAppearance = null;
         if (root.InfectionStatus.Count > 0)
         {
-            for (int i = root.Hospitalizations.Count - 1; i == 0; i--)
+            for (int i = root.Hospitalizations.Count - 1; i >= 0; i--)
             {
                 if (root.InfectionStatus.ContainsKey(root.Hospitalizations[i]))
                 {

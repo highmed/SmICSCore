@@ -73,10 +73,6 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             { 
                 foreach (Case c in cases)
                 {
-                    if (c.PatientID == "4100948488")
-                    {
-                        string i = "";
-                    }
                     List<LabResult> results = null;
                     Hospitalization hospitalization = _hospitalizationFac.Process(c);
                     if (MedicalField == null)
