@@ -41,11 +41,17 @@
                 </div>
             </div>
         </div>
-        @if (Loading)
+        @if (Loading && !EmptyResult)
         {
             <div class="spinner"></div>
         }
-        else if (root is not null && !Loading)
+        else if (!Loading && EmptyResult)
+        {
+            <div>
+                <span class="text-danger">Es wurden keine Daten zu den gewählten Parametern gefunden.</span>
+            </div>
+        }
+        else if (root is not null && !Loading && !EmptyResult)
         {
             <div class="row">
                 <div class="card">
@@ -180,6 +186,7 @@
 
     private ContactRoot root = null;
     private bool Loading = false;
+    private bool EmptyResult = false;
 
     private List<string> _filterMRE;
 
@@ -200,15 +207,20 @@
         root = _contactService.LoadContactData(contact);
         if (root is null)
         {
+            EmptyResult = true;
             Console.WriteLine("Keine Daten für das Kontaktnetzwerk gefunden!");
         }
-        DetermineRootFirstInfection();
-        contacts = root.Contacts[root.CurrentHospitalization];
-        contactDetails = GetContactDetails(contacts);
+        else
+        {
+            DetermineRootFirstInfection();
+            contacts = root.Contacts[root.CurrentHospitalization];
+            contactDetails = GetContactDetails(contacts);
+        }
     }
 
     private async Task Submit()
     {
+        EmptyResult = false;
         Loading = true;
         await Task.Run(GetData);
         Loading = false;
