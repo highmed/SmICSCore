@@ -26,8 +26,9 @@
                             }
                         </select>
                         <label for="res">Resistenz:</label>
-                        <input type="text" id="res" list="resistanceList" @bind="contact.Resistence" />
-                        <datalist id="resistanceList">
+                        <select id="res" class="col-2 mr-2" @bind="contact.Resistence">
+                            <option value="" selected disabled hidden>Bitte wählen</option>
+                            <option value="keine">keine</option>
                             @if (_filterMRE is not null)
                             {
                                 @foreach (string filter in _filterMRE)
@@ -35,7 +36,7 @@
                                     <option value="@filter">@filter</option>
                                 }
                             }
-                        </datalist>
+                        </select>
                         <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button>
                     </EditForm>
                 </div>
