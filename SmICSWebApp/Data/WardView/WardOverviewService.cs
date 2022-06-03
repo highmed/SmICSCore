@@ -112,7 +112,9 @@ namespace SmICSWebApp.Data.WardView
                         filterNosokomial == "Nosokomial"))
                     {
                         DateTime infectionDate = patient.InfectionStatus.Values.Where(inf => inf.Nosocomial).OrderBy(inf => inf.NosocomialDate).Select(inf => inf.NosocomialDate).First().Value;
-                        if (infectionDate.Date >= parameter.Start.Date && (!patient.Discharge.HasValue || infectionDate.Date <= patient.Discharge.Value))
+                        if (infectionDate.Date >= parameter.Start.Date 
+                            && infectionDate.Date <= parameter.End.Date 
+                            && (!patient.Discharge.HasValue || infectionDate.Date <= patient.Discharge.Value))
                         {
                             chartEntries["Nosokomial"][infectionDate.Date] += 1;
                         }
