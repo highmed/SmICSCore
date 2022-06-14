@@ -1,4 +1,5 @@
-﻿using SmICSCoreLib.REST;
+﻿using SmICSCoreLib.Factories.General;
+using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
 
@@ -8,7 +9,8 @@ namespace SmICSCoreLib.Factories.NUMNode
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        public List<NUMNodeModel> Process();
+        public List<NUMNodeModel> Process(TimespanParameter timespan);
         public void FirstDataEntry();
+        public void RegularDataEntry();
     }
 }

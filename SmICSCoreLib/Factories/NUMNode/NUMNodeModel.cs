@@ -11,7 +11,6 @@ namespace SmICSCoreLib.Factories.NUMNode
         public int AverageNumberOfNosCases { get; set; }
         [JsonProperty(PropertyName = "AverageNumberOfContacts")]
         public int AverageNumberOfContacts { get; set; }
-        [JsonProperty(PropertyName = "Date")]
-        public DateTime Date { get; set; }
+
     }
 }

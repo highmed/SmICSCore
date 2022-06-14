@@ -1,10 +1,7 @@
 ﻿
 using System.Threading.Tasks;
 using Quartz;
-using System;
 using SmICSCoreLib.Factories.NUMNode;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SmICSCoreLib.CronJobs
 {
@@ -19,10 +16,9 @@ namespace SmICSCoreLib.CronJobs
         }
         public Task Execute(IJobExecutionContext context)
         {
-            //Task allData = Task.Run(_listFac.);
-            //await Task.WhenAll(allData);
             _listFac.FirstDataEntry();
             return Task.CompletedTask;
         }
+
     }
 }

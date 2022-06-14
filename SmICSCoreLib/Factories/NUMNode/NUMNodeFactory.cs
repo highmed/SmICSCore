@@ -1,23 +1,21 @@
 ﻿using Microsoft.Extensions.Logging;
-using SmICSCoreLib.DB;
 using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.Lab.ViroLabData.ReceiveModel;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.NUMNode
 {
     public class NUMNodeFactory : INUMNodeFactory
     {
         private List<NUMNodeModel> NUMNodeList;
-        private SortedDictionary<DateTime, Dictionary<string, NUMNodeModel>> dataAggregationStorage;
+        private SortedDictionary<DateTime, List<NUMNodeModel>> dataAggregationStorage;
 
-        private Dictionary<string, List<int>> AverageNumberOfStays;
-        private Dictionary<string, List<int>> AverageNumberOfNosCases;
-        private Dictionary<string, List<int>> AverageNumberOfContacts;
+        private int averageNumberOfStays;
+        private int averageNumberOfNosCases;
+        private int averageNumberOfContacts;
 
         private List<LabDataReceiveModel> receiveLabDataListnegativ;
         private List<NUMNodeCountModel> countStays;
@@ -28,6 +26,9 @@ namespace SmICSCoreLib.Factories.NUMNode
         private static int numberOfContacts;
         private string pathogen = "94500-6";
 
+        private (int, int, int) average;
+        private readonly string path = @"../SmICSWebApp/Resources/";
+
         public IRestDataAccess RestDataAccess { get; set; }
         private ILogger<NUMNodeFactory> _logger;
         public NUMNodeFactory(IRestDataAccess restDataAccess, ILogger<NUMNodeFactory> logger)
@@ -36,19 +37,32 @@ namespace SmICSCoreLib.Factories.NUMNode
             _logger = logger;
         }
 
-        public List<NUMNodeModel> Process()
+        public List<NUMNodeModel> Process(TimespanParameter timespan)
+        {
+            
+            (countPatient, numberOfStays, numberOfNosCases, numberOfContacts) = getDataAggregation(timespan, pathogen);
+
+            (averageNumberOfStays, averageNumberOfNosCases, averageNumberOfContacts) = GetAverage((numberOfStays, numberOfNosCases, numberOfContacts), countPatient);
+
+            NUMNodeList.Add(new NUMNodeModel() { AverageNumberOfStays = averageNumberOfStays, AverageNumberOfNosCases = averageNumberOfNosCases, AverageNumberOfContacts = averageNumberOfContacts });
+            dataAggregationStorage.Add(DateTime.Now, NUMNodeList);
+
+            SaveCSV.ToCsv(dataAggregationStorage, path);
+            return null;
+        }
+
+        public void RegularDataEntry()
         {
             InitializeGlobalVariables();
             TimespanParameter timespan = new TimespanParameter { Starttime = DateTime.Now, Endtime = DateTime.Now };
-            (countPatient, numberOfStays, numberOfNosCases, numberOfContacts) = getDataAggregation(timespan, pathogen);
-            return null;
+            Process(timespan);
         }
 
         public void FirstDataEntry()
         {
             InitializeGlobalVariables();
             TimespanParameter timespan = new TimespanParameter { Starttime = DateTime.MinValue, Endtime = DateTime.Now };
-            (countPatient, numberOfStays, numberOfNosCases, numberOfContacts) = getDataAggregation(timespan, pathogen);
+            Process(timespan);
         }
 
         private (int, int, int, int) getDataAggregation(TimespanParameter timespan, string pathogen)
@@ -69,13 +83,14 @@ namespace SmICSCoreLib.Factories.NUMNode
                         LabDataReceiveModel labDataReceiveModel = new LabDataReceiveModel { Befunddatum = DateTime.Now };
                         countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(getStaysCount(labDataReceiveModel, pat));
                     }
-                }
 
-                foreach (NUMNodeCountModel count in countStays)
-                {
-                    numberOfStays += count.Count;
+                    foreach (NUMNodeCountModel count in countStays)
+                    {
+                        numberOfStays = numberOfStays + count.Count;
+                    }
                 }
                 return (countPatient, numberOfStays, 0, 0);
+
             }
             else
             {
@@ -86,13 +101,28 @@ namespace SmICSCoreLib.Factories.NUMNode
 
         private void InitializeGlobalVariables()
         {
-            dataAggregationStorage = new SortedDictionary<DateTime, Dictionary<string, NUMNodeModel>>();
+            dataAggregationStorage = new SortedDictionary<DateTime, List<NUMNodeModel>>();
             NUMNodeList = new List<NUMNodeModel>();
-            AverageNumberOfStays = new Dictionary<string, List<int>>();
-            AverageNumberOfNosCases = new Dictionary<string, List<int>>();
-            AverageNumberOfContacts = new Dictionary<string, List<int>>();
             receiveLabDataListnegativ = new List<LabDataReceiveModel>();
             countStays = new List<NUMNodeCountModel>();
+        }
+
+        public (int, int, int) GetAverage((int, int, int) parameter, int quanti)
+        {
+            
+            if (parameter != (0, 0, 0) & quanti != 0)
+            {
+                int average1 = parameter.Item1 / quanti;
+                int average2 = parameter.Item2 / quanti;
+                int average3 = parameter.Item3 / quanti;
+                average = (average1, average2, average3);
+                return average;
+            }
+            else
+            {
+                return average = (0, 0, 0);
+            }
+
         }
 
         private AQLQuery getStaysCount(LabDataReceiveModel labDataListnegativ, LabDataReceiveModel labDataListpositiv)
@@ -106,7 +136,9 @@ namespace SmICSCoreLib.Factories.NUMNode
                         CONTAINS (CLUSTER g[openEHR-EHR-CLUSTER.case_identification.v0] and ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]) 
                         WHERE c/name/value='Patientenaufenthalt'
                         AND g/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value = '{labDataListpositiv.FallID}'
-                        AND a/data[at0001]/items[at0004]/value >= '{labDataListpositiv.Befunddatum.ToString("yyyy-MM-dd")}' AND a/data[at0001]/items[at0005]/value <='{labDataListnegativ.Befunddatum.ToString("yyyy-MM-dd")}'"
+                        AND a/data[at0001]/items[at0004]/value/value <= '{labDataListnegativ.Befunddatum.ToString("yyyy-MM-dd")}' 
+                        AND (a/data[at0001]/items[at0005]/value/value >='{labDataListpositiv.Befunddatum.ToString("yyyy-MM-dd")}' 
+                        OR NOT EXISTS a/data[at0001]/items[at0005]/value/value)"
             };
             return aql;
         }
