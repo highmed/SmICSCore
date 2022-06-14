@@ -69,7 +69,6 @@ namespace SmICSWebApp
             services.AddScoped<ContactNetworkService>();
             services.AddScoped<ComparisonService>();
             services.AddScoped<MenuService>();
-            services.AddScoped<NUMNodeService>();
 
             //AUTH - START 
 
