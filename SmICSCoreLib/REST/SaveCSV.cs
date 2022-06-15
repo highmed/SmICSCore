@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -8,13 +8,13 @@ namespace SmICSCoreLib.REST
 {
     public static class SaveCSV
     {
-        public static void ToCsv<T>(SortedDictionary<DateTime, List<T>> reportData, string path)
+        public static void SaveToCsv<T>(List<T> reportData, string path)
         {
             var lines = new List<string>();
             IEnumerable<PropertyDescriptor> props = TypeDescriptor.GetProperties(typeof(T)).OfType<PropertyDescriptor>();
-            var header = string.Join(",", props.ToList().Select(x => x.Name));
+            var header = string.Join(";", props.ToList().Select(x => x.Name));
             lines.Add(header);
-            var valueLines = reportData.Select(row => string.Join(",", header.Split(',').Select(a => row.GetType().GetProperty(a).GetValue(row, null))));
+            var valueLines = reportData.Select(row => string.Join(";", header.Split(';').Select(a => row.GetType().GetProperty(a).GetValue(row, null))));
             lines.AddRange(valueLines);
             File.WriteAllLines(path, lines.ToArray());
         }

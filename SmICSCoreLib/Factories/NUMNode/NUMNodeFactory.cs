@@ -4,14 +4,15 @@ using SmICSCoreLib.Factories.Lab.ViroLabData.ReceiveModel;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace SmICSCoreLib.Factories.NUMNode
 {
     public class NUMNodeFactory : INUMNodeFactory
     {
-        private List<NUMNodeModel> NUMNodeList;
-        private SortedDictionary<DateTime, List<NUMNodeModel>> dataAggregationStorage;
+        private NUMNodeModel NUMNodeList;
+        private List<NUMNodeModel> dataAggregationStorage;
 
         private int averageNumberOfStays;
         private int averageNumberOfNosCases;
@@ -27,7 +28,7 @@ namespace SmICSCoreLib.Factories.NUMNode
         private string pathogen = "94500-6";
 
         private (int, int, int) average;
-        private readonly string path = @"../SmICSWebApp/Resources/";
+        private readonly string path = @"../SmICSWebApp/Resources/NUMNode.csv";
 
         public IRestDataAccess RestDataAccess { get; set; }
         private ILogger<NUMNodeFactory> _logger;
@@ -37,18 +38,17 @@ namespace SmICSCoreLib.Factories.NUMNode
             _logger = logger;
         }
 
-        public List<NUMNodeModel> Process(TimespanParameter timespan)
+        public void Process(TimespanParameter timespan)
         {
             
             (countPatient, numberOfStays, numberOfNosCases, numberOfContacts) = getDataAggregation(timespan, pathogen);
 
             (averageNumberOfStays, averageNumberOfNosCases, averageNumberOfContacts) = GetAverage((numberOfStays, numberOfNosCases, numberOfContacts), countPatient);
 
-            NUMNodeList.Add(new NUMNodeModel() { AverageNumberOfStays = averageNumberOfStays, AverageNumberOfNosCases = averageNumberOfNosCases, AverageNumberOfContacts = averageNumberOfContacts });
-            dataAggregationStorage.Add(DateTime.Now, NUMNodeList);
+            NUMNodeList = new NUMNodeModel() { AverageNumberOfStays = averageNumberOfStays, AverageNumberOfNosCases = averageNumberOfNosCases, AverageNumberOfContacts = averageNumberOfContacts, DateTime = DateTime.Now };
+            dataAggregationStorage.Add(NUMNodeList);
 
-            SaveCSV.ToCsv(dataAggregationStorage, path);
-            return null;
+            SaveCSV.SaveToCsv(dataAggregationStorage, path);
         }
 
         public void RegularDataEntry()
@@ -101,8 +101,8 @@ namespace SmICSCoreLib.Factories.NUMNode
 
         private void InitializeGlobalVariables()
         {
-            dataAggregationStorage = new SortedDictionary<DateTime, List<NUMNodeModel>>();
-            NUMNodeList = new List<NUMNodeModel>();
+            dataAggregationStorage = new List<NUMNodeModel>();
+            NUMNodeList = new NUMNodeModel();
             receiveLabDataListnegativ = new List<LabDataReceiveModel>();
             countStays = new List<NUMNodeCountModel>();
         }

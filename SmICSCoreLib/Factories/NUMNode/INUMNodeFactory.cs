@@ -9,7 +9,6 @@ namespace SmICSCoreLib.Factories.NUMNode
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        public List<NUMNodeModel> Process(TimespanParameter timespan);
         public void FirstDataEntry();
         public void RegularDataEntry();
     }
