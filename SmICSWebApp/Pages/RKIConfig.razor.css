@@ -21,8 +21,9 @@
     background-color: #5F90AF;
     opacity: 1;
     color: azure;
-    padding: 0.2%;
+    padding: 1%;
     margin: 1%;
+    font-size: smaller;
 }
 
 #div_card_1 {
@@ -89,8 +90,8 @@
 }
 
 #button {
-    width: 20%;
-    border-radius: 8px;
+    width: 10%;
+    border-radius: 5px;
     background: linear-gradient(to bottom, #33ccff 0%, #3399ff 100%);
     padding: 0.5%;
     color: white;
@@ -220,3 +221,4 @@
     font-size: 22px;
     margin-left: 1%;
 }
+

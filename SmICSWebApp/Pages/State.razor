@@ -483,29 +483,50 @@
         {
             path = @""+ StatistikPath + "/" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
             dailyReport = rkiService.DeserializeRkiData(path);
-            stand = dailyReport.Bericht.Stand;
-            standAktuell = dailyReport.Bericht.StandAktuell;
-            blStandAktuell = dailyReport.Bericht.BlStandAktuell;
-            fallzahl = dailyReport.Bericht.Fallzahl;
-            fallzahlVortag = dailyReport.Bericht.FallzahlVortag;
-            todesfaelle = dailyReport.Bericht.Todesfaelle;
-            todesfaelleVortag = dailyReport.Bericht.TodesfaelleVortag;
-            inzidenz7Tage = dailyReport.Bericht.Inzidenz7Tage;
-            rWert7Tage = dailyReport.Bericht.RWert7Tage;
-            rWert7TageVortag = dailyReport.Bericht.RWert7TageVortag;
-            impfStatus = dailyReport.Bericht.ImpfStatus;
-            gesamtImpfung = dailyReport.Bericht.GesamtImpfung;
-            erstImpfung = dailyReport.Bericht.ErstImpfung;
-            zweittImpfung = dailyReport.Bericht.ZweitImpfung;
-
-            bundeslaender = dailyReport.Bericht.Bundesland;
-            if (bundeslaender != null)
+            if(dailyReport != null)
             {
-                foreach (var bundesland in bundeslaender)
+                stand = dailyReport.Bericht.Stand;
+                standAktuell = dailyReport.Bericht.StandAktuell;
+                blStandAktuell = dailyReport.Bericht.BlStandAktuell;
+                fallzahl = dailyReport.Bericht.Fallzahl;
+                fallzahlVortag = dailyReport.Bericht.FallzahlVortag;
+                todesfaelle = dailyReport.Bericht.Todesfaelle;
+                todesfaelleVortag = dailyReport.Bericht.TodesfaelleVortag;
+                inzidenz7Tage = dailyReport.Bericht.Inzidenz7Tage;
+                rWert7Tage = dailyReport.Bericht.RWert7Tage;
+                rWert7TageVortag = dailyReport.Bericht.RWert7TageVortag;
+                impfStatus = dailyReport.Bericht.ImpfStatus;
+                gesamtImpfung = dailyReport.Bericht.GesamtImpfung;
+                erstImpfung = dailyReport.Bericht.ErstImpfung;
+                zweittImpfung = dailyReport.Bericht.ZweitImpfung;
+
+                bundeslaender = dailyReport.Bericht.Bundesland;
+                if (bundeslaender != null)
                 {
-                    farbe.Add(bundesland.BlAttribute.Farbe);
+                    foreach (var bundesland in bundeslaender)
+                    {
+                        farbe.Add(bundesland.BlAttribute.Farbe);
+                    }
                 }
+            } else
+            {
+                Logger.LogWarning("DailyReport koennte nicht heruntergeladen werden!");
+                stand = null;
+                standAktuell = false;
+                blStandAktuell = false;
+                fallzahl = null;
+                fallzahlVortag = null;
+                todesfaelle = null;
+                todesfaelleVortag = null;
+                inzidenz7Tage = null;
+                rWert7Tage = null;
+                rWert7TageVortag = null;
+                impfStatus = false;
+                gesamtImpfung = null;
+                erstImpfung = null;
+                zweittImpfung = null;
             }
+
 
             try
             {

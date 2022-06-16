@@ -8,15 +8,15 @@
 @inject ILogger<FormPersonInformation> Logger
 @inject PersonInformationService PersonInformationService
 
-<div class="zurueck-bottom">
-    <NavLink class="nav-link" href="contactIndex" Match="NavLinkMatch.All">
-        <span class="oi oi-chevron-left" aria-hidden="true">&nbsp;</span> zur&uuml;ck
-    </NavLink>
-</div>
+
 <div class="con">
     <div class="deph_1">
-        <h3>Personendaten</h3>
-
+        <h4>Personendaten</h4>
+        <div class="zurueck-bottom">
+            <NavLink class="nav-link" href="contactIndex" Match="NavLinkMatch.All">
+                <span class="oi oi-chevron-left" aria-hidden="true">&nbsp;</span> zur&uuml;ck
+            </NavLink>
+        </div>
         <EditForm Model="@information" OnValidSubmit="@HandleValidSubmit">
             <DataAnnotationsValidator />
             <ValidationSummary />

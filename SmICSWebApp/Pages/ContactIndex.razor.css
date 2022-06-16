@@ -1,17 +1,17 @@
 .index-forms {
     display: flex;
-    margin: 2%;
+    margin: 1%;
     flex-direction: column;
-    margin: 2%;
 }
 
 .index-text {
     background-color: #0086b3;
     opacity: 1;
     color: azure;
-    padding: 2%;
+    padding: 1%;
     margin: 2%;
-    margin-top:0;
+    margin-top: 0;
+    font-size: smaller;
 }
 
 .index-button:hover {

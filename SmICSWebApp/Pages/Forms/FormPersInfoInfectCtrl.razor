@@ -8,15 +8,15 @@
 @inject ILogger<FormPersInfoInfectCtrl> Logger
 @inject PersInfoInfectCtrlService PersInfoInfectCtrlService
 
-<div class="zurueck-bottom">
-    <NavLink class="nav-link" href="contactIndex" Match="NavLinkMatch.All">
-        <span class="oi oi-chevron-left" aria-hidden="true">&nbsp;</span> zur&uuml;ck
-    </NavLink>
-</div>
+
 <div class="con">
     <div class="deph_1">
-        <h3>Personeninformationen zur Infektionskontrolle</h3>
-
+        <h4>Personeninformationen zur Infektionskontrolle</h4>
+        <div class="zurueck-bottom">
+            <NavLink class="nav-link" href="contactIndex" Match="NavLinkMatch.All">
+                <span class="oi oi-chevron-left" aria-hidden="true">&nbsp;</span> zur&uuml;ck
+            </NavLink>
+        </div>
         <EditForm Model="@informationControl" OnValidSubmit="@HandleValidSubmit">
             <DataAnnotationsValidator />
             <ValidationSummary />

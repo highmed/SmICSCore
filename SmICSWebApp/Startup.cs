@@ -79,7 +79,7 @@ namespace SmICSWebApp
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             services.AddSingleton<JobGetReport>();
-            //services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 00 10 ? * *"));
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 00 10 ? * *"));
             services.AddHostedService<QuartzHostedService>();
 
             services.AddSingleton<RKIConfigService>();
@@ -90,7 +90,7 @@ namespace SmICSWebApp
 
             //CronJob UpdateRkidata
             services.AddSingleton<JobUpdateRkidata>();
-            //services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
 
             services.AddScoped<OutbreakDetectionService>();
 
