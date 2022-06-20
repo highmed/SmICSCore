@@ -104,7 +104,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                             CONTAINS CLUSTER m[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] 
                             WHERE c/name/value='{pathogen.MedicalField}'
                             and m/items[at0001]/name/value = 'Erregername'
-                            and m/items[at0001]/value/defining_code/code_string = {pathogen.PathogenCodesToAqlMatchString() }
+                            and m/items[at0001]/value/defining_code/code_string MATCHES {pathogen.PathogenCodesToAqlMatchString() }
                             and e/ehr_status/subject/external_ref/id/value='{Case.PatientID}'"
             };
         }

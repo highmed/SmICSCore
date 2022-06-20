@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace SmICSCoreLib.Factories.General
 {
-    public class Patient
+    public class Patient : ICloneable
     {
         [JsonProperty(PropertyName = "PatientID")]
         public string PatientID { get; set; }
@@ -22,6 +23,11 @@ namespace SmICSCoreLib.Factories.General
                 return PatientID == other.PatientID;
             }
             return false;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }

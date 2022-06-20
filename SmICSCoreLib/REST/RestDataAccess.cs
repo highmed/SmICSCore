@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -42,15 +44,30 @@ namespace SmICSCoreLib.REST
                 }
                 else
                 {
-                    _logger.LogInformation("NO AQL Result Received {Query}", query.Name);
-                    _logger.LogDebug("No Success Code: {statusCode} \n {responsePhrase}", response.StatusCode, response.ReasonPhrase);
-                    return null;
+                    _logger.LogInformation("NO AQL Result Received {Query} \n {QueryComplete}", query.Name, query.Query);
+                    if(response.StatusCode == HttpStatusCode.RequestTimeout || response.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        HttpError error = response.Content.ReadAsAsync<HttpError>().GetAwaiter().GetResult();
+                        _logger.LogError("No Success Code: {status} \n {msg}", response.StatusCode, error.Message);
+                        throw new HttpRequestException("No Success StatusCode: \n" + error["error"].ToString());
+                    }
+                    else if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        _logger.LogError("No Success StatusCode: {status} \n Couldn't connect to {server}", response.StatusCode, RestPath.ToString());
+                        throw new HttpRequestException("Couldn't connect to " + RestPath.ToString());
+                    }
+                    else if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        _logger.LogError("No Success StatusCode: {status} \n Couldn't connect to {server}: Unauthorized", response.StatusCode, RestPath.ToString());
+                        throw new HttpRequestException("Couldn't connect to " + RestPath.ToString() + ": Unauthorized");
+                    }
+                    throw new HttpRequestException("Unknown Error " + response.StatusCode);
                 }
             }
             catch(Exception e)
             {
                 Console.WriteLine("RestDataAccess.AQLQuery:\n" + e.Message);
-                return null;
+                throw;
             }
         }
         public List<string> GetTemplates()
@@ -119,6 +136,7 @@ namespace SmICSCoreLib.REST
             //obj.Add("aql", query);
             obj.Add("q", query);
             string json = JsonConvert.SerializeObject(obj, Formatting.Indented);
+            _client.Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
             HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
             return content;

@@ -29,9 +29,9 @@ namespace SmICSCoreLib.CronJobs
             await Task.WhenAll(wards);
         }
 
-        public async Task UpdateWards()
+        public void UpdateWards()
         {
-            List<Ward> wards = await _dataAccess.GetWards();
+            List<Ward> wards = _dataAccess.GetWards().GetAwaiter().GetResult();
             List<WardMenuEntry> wardMenuEntries = null;
             if (wards.Count == 0)
             {
@@ -71,10 +71,10 @@ namespace SmICSCoreLib.CronJobs
             }
         }
 
-        public async Task UpdatePathogens()
+        public void UpdatePathogens()
         {
             List<PathogenMenuEntry> pathoMenu = null;
-            List<Pathogen> pathogens = await _dataAccess.GetPathogens();
+            List<Pathogen> pathogens = _dataAccess.GetPathogens().GetAwaiter().GetResult();
             if(pathogens.Count == 0)
             {
                 DateTime date = new DateTime((DateTime.Now.Year - 10), 1, 1);

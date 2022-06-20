@@ -97,7 +97,17 @@
 
         private void GetData()
         {
-            contacts = _service.Compare(patientList);
+            List<SmICSCoreLib.Factories.General.Patient> copy = new List<SmICSCoreLib.Factories.General.Patient>(patientList.Count);
+
+            patientList.ForEach((item) =>
+            {
+                if(!string.IsNullOrEmpty(item.PatientID))
+                {
+                    copy.Add((SmICSCoreLib.Factories.General.Patient)item.Clone());
+
+                }
+            });
+            contacts = _service.Compare(copy);
         }
 
         private void Validate()
@@ -107,10 +117,6 @@
             if (IsValidSubmit)
             {
                 ExistsPatients();
-            }
-            if (IsValidSubmit)
-            {
-                RemoveEmpty();
             }
         }
 
