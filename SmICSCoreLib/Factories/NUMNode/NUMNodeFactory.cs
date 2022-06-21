@@ -8,6 +8,8 @@ using System.IO;
 using System.Linq;
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.Symptome;
+using SmICSCoreLib.Factories.ContactNetwork;
+using SmICSCoreLib.Factories.ContactNetwork.ReceiveModels;
 
 namespace SmICSCoreLib.Factories.NUMNode
 {
@@ -18,10 +20,10 @@ namespace SmICSCoreLib.Factories.NUMNode
         private List<HospStay> caseList;
         private List<SymptomModel> patSymptomList;
 
-        private int averageNumberOfStays;
-        private int averageNumberOfNosCases;
-        private int averageNumberOfMaybeNosCases;
-        private int averageNumberOfContacts;
+        private double averageNumberOfStays;
+        private double averageNumberOfNosCases;
+        private double averageNumberOfMaybeNosCases;
+        private double averageNumberOfContacts;
 
         private List<LabDataReceiveModel> receiveLabDataListnegativ;
         private List<NUMNodeCountModel> countStays;
@@ -33,7 +35,7 @@ namespace SmICSCoreLib.Factories.NUMNode
         private static int numberOfContacts;
         private string pathogen = "94500-6";
 
-        private (int, int, int, int) average;
+        private (double, double, double, double) average;
         private readonly string path = @"../SmICSWebApp/Resources/NUMNode.csv";
         private List<string> symptomList = new List<string>(new string[] { "Chill (finding)", "Cough (finding)", "Dry cough (finding)",
                 "Diarrhea (finding)", "Fever (finding)", "Fever greater than 100.4 Fahrenheit", "38° Celsius (finding)", "Nausea (finding)",
@@ -51,10 +53,9 @@ namespace SmICSCoreLib.Factories.NUMNode
         {
             
             (countPatient, numberOfStays, numberOfNosCases, numberOfMaybeNosCases, numberOfContacts) = getDataAggregation(timespan, pathogen);
-
             (averageNumberOfStays, averageNumberOfNosCases, averageNumberOfMaybeNosCases, averageNumberOfContacts) = GetAverage((numberOfStays, numberOfNosCases, numberOfMaybeNosCases, numberOfContacts), countPatient);
 
-            NUMNodeList = new NUMNodeModel() { AverageNumberOfStays = averageNumberOfStays, AverageNumberOfNosCases = averageNumberOfNosCases,AverageNumberOfMaybeNosCases = numberOfMaybeNosCases, AverageNumberOfContacts = averageNumberOfContacts, DateTime = DateTime.Now };
+            NUMNodeList = new NUMNodeModel() { AverageNumberOfStays = averageNumberOfStays, AverageNumberOfNosCases = averageNumberOfNosCases, AverageNumberOfMaybeNosCases = averageNumberOfMaybeNosCases, AverageNumberOfContacts = averageNumberOfContacts, DateTime = DateTime.Now };
             dataAggregationStorage.Add(NUMNodeList);
 
             SaveCSV.SaveToCsv(dataAggregationStorage, path);
@@ -79,11 +80,10 @@ namespace SmICSCoreLib.Factories.NUMNode
             List<LabDataReceiveModel> receiveLabDataListpositiv = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborPositivData(timespan, pathogen));
             if (receiveLabDataListpositiv is not null)
             {
-                foreach (LabDataReceiveModel pat in receiveLabDataListpositiv.GroupBy(x => x.PatientID).Select(g => g.First()).ToList())
+                foreach (LabDataReceiveModel pat in receiveLabDataListpositiv.GroupBy(x => x.PatientID).Select(g => g.OrderBy(a => a.Befunddatum).First()).ToList())
                 {
                     countPatient++;
-                    numberOfStays = GetNumberOfStays(timespan, pathogen, pat);
-                    (numberOfMaybeNosCases, numberOfNosCases) = GetNumberOfNosCases(pat);
+                    numberOfStays = GetNumberOfStays(timespan, pathogen, pat, receiveLabDataListpositiv);       
                     numberOfContacts = GetNumberOfContacts(timespan, pathogen, pat);
                 }
                 return (countPatient, numberOfStays, numberOfNosCases, numberOfMaybeNosCases,  numberOfContacts);
@@ -96,12 +96,16 @@ namespace SmICSCoreLib.Factories.NUMNode
 
         }
 
-        private int GetNumberOfStays(TimespanParameter timespan, string pathogen, LabDataReceiveModel pat)
+        private int GetNumberOfStays(TimespanParameter timespan, string pathogen, LabDataReceiveModel pat, List<LabDataReceiveModel> receiveLabDataListpositiv)
         {
             receiveLabDataListnegativ = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborNegativData(timespan, pathogen, pat));
             if (receiveLabDataListnegativ is not null)
             {
-                countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(getStaysCount(receiveLabDataListnegativ.First(), pat));
+                countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(getStaysCount(receiveLabDataListnegativ.OrderBy(x => x.Befunddatum).First(), pat));
+                (int, int) number = GetNumberOfNosCases(receiveLabDataListnegativ.OrderBy(x => x.Befunddatum).First(), pat, receiveLabDataListpositiv);
+                numberOfMaybeNosCases = numberOfMaybeNosCases + number.Item1;
+                numberOfNosCases = numberOfNosCases + number.Item2;
+                Console.WriteLine(numberOfMaybeNosCases);
             }
             else
             {
@@ -116,32 +120,73 @@ namespace SmICSCoreLib.Factories.NUMNode
             return numberOfStays;
         }
 
-        private (int, int) GetNumberOfNosCases(LabDataReceiveModel pat)
+        private (int, int) GetNumberOfNosCases(LabDataReceiveModel negpat, LabDataReceiveModel pospat, List<LabDataReceiveModel> receiveLabDataListpositiv)
         {
-
-            caseList = RestDataAccess.AQLQuery<HospStay>(PatientAddmissionByNegativCase(pat));
-            patSymptomList = RestDataAccess.AQLQuery<SymptomModel>(GetAllSymptomsByPatient(pat));
             int countNosCases = 0;
             int countMaybeNosCases = 0;
-
-            if (patSymptomList is not null && caseList is not null)
+            caseList = RestDataAccess.AQLQuery<HospStay>(PatientAddmissionByNegativCase(negpat));
+            if(caseList is not null)
             {
-                bool symCase = false;
-                foreach (var sym in patSymptomList)
+                foreach (var c in caseList)
                 {
-                    if (symptomList.Contains(sym.NameDesSymptoms))
+                    if (c.Admission.ToString("yyyy-MM-dd") != pospat.Befunddatum.ToString("yyyy-MM-dd"))
                     {
-                        symCase = true;
-                    }
+                        patSymptomList = RestDataAccess.AQLQuery<SymptomModel>(GetAllSymptomsByPatient(pospat));
 
-                }
-                if (symCase == false)
-                {
-                    countMaybeNosCases++;
-                    //to do: nos cases with contacts
+                        if (patSymptomList is not null)
+                        {
+                            bool symCase = false;
+                            DateTime? symBefund = null;
+                            foreach (var sym in patSymptomList)
+                            {
+                                
+                                if (symptomList.Contains(sym.NameDesSymptoms) && sym.Beginn?.ToString("yyyy-MM-dd") == c.Admission.ToString("yyyy-MM-dd"))
+                                {
+                                    symCase = true;
+                                }else if (symptomList.Contains(sym.NameDesSymptoms) && sym.Beginn < pospat.Befunddatum && symBefund > sym.Beginn)
+                                {
+                                    symBefund = sym.Beginn;
+                                }
+
+                            }
+                            if (symCase == false)
+                            {
+                                countMaybeNosCases++;
+                                ContactParameter contactParameter;
+                                if (symBefund is not null)
+                                {
+                                    DateTime dateTime = (DateTime)symBefund;
+                                    contactParameter = new ContactParameter { PatientID = pospat.PatientID, Starttime = dateTime.AddDays(-14), Endtime = dateTime };
+                                }else
+                                {
+                                    contactParameter = new ContactParameter { PatientID = pospat.PatientID, Starttime = pospat.Befunddatum.AddDays(-14), Endtime = pospat.Befunddatum };
+                                }
+                                
+                                List<PatientWardModel> wardList = RestDataAccess.AQLQuery<PatientWardModel>(AQLCatalog.ContactPatientWards(contactParameter));
+                                foreach(var ward in wardList)
+                                {
+                                    List<Patient> hasContact = RestDataAccess.AQLQuery<Patient>(GetPatientLocation(receiveLabDataListpositiv, ward, pospat.PatientID));
+                                    //To-DO. if every contact was or still postiv at that time.
+                                    if(hasContact is not null)
+                                    {
+                                        TimespanParameter timespanContacts = new TimespanParameter { Starttime = contactParameter.Starttime, Endtime = contactParameter.Endtime };
+                                        foreach(var contact in hasContact)
+                                        {
+                                            List<NUMNodeCountModel> isPos = RestDataAccess.AQLQuery<NUMNodeCountModel>(LaborPositivDataByPatient(timespanContacts, pathogen, contact));
+                                            if(isPos.Count > 0)
+                                            {
+                                                countNosCases++;
+                                            }
+                                        }
+                                        
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
-
+            
             return (countMaybeNosCases, countNosCases);
         }
 
@@ -160,15 +205,15 @@ namespace SmICSCoreLib.Factories.NUMNode
             patSymptomList = new List<SymptomModel>();
         }
 
-        public (int, int, int, int) GetAverage((int, int, int, int) parameter, int quanti)
+        public (double, double, double, double) GetAverage((int, int, int, int) parameter, int quanti)
         {
             
             if (parameter != (0, 0, 0, 0) & quanti != 0)
             {
-                int average1 = parameter.Item1 / quanti;
-                int average2 = parameter.Item2 / quanti;
-                int average3 = parameter.Item3 / quanti;
-                int average4 = parameter.Item4 / quanti;
+                double average1 = parameter.Item1 / quanti;
+                double average2 = parameter.Item2 / quanti;
+                double average3 = parameter.Item3 / quanti;
+                double average4 = parameter.Item4 / quanti;
                 average = (average1, average2, average3, average4);
                 return average;
             }
@@ -184,7 +229,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             AQLQuery aql = new AQLQuery()
             {
                 Name = "LaborNegativData",
-                Query = $@"SELECT COUNT(g/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value) as Count
+                Query = $@"SELECT COUNT(g/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value) AS Count
                         FROM EHR e
                         CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
                         CONTAINS (CLUSTER g[openEHR-EHR-CLUSTER.case_identification.v0] and ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]) 
@@ -223,6 +268,30 @@ namespace SmICSCoreLib.Factories.NUMNode
             };
             return aql;
         }
+
+        private AQLQuery LaborPositivDataByPatient(TimespanParameter timespan, string pathogen, Patient pat)
+        {
+            AQLQuery aql = new AQLQuery()
+            {
+                Name = "LaborPositivDataByPatient",
+                Query = $@"SELECT COUNT(e/ehr_status/subject/external_ref/id/value) AS Count
+                                FROM EHR e
+                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.report-result.v1]
+                                CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0] 
+                                AND OBSERVATION v[openEHR-EHR-OBSERVATION.laboratory_test_result.v1] 
+                                CONTAINS (CLUSTER m[openEHR-EHR-CLUSTER.specimen.v1] 
+                                AND CLUSTER s[openEHR-EHR-CLUSTER.laboratory_test_panel.v0] 
+                                CONTAINS (CLUSTER d[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1])))
+                                WHERE c/name/value='Virologischer Befund' 
+                                AND d/items[at0001]/name/value='Nachweis'
+                                AND d/items[at0001,'Nachweis']/value/defining_code/code_string = '260373001'
+                                AND d/items[at0024]/value/defining_code/code_string = '{ pathogen }'
+                                AND m/items[at0015]/value/value>='{ timespan.Starttime.ToString("yyyy-MM-dd") }' 
+                                AND m/items[at0015]/value/value<'{ timespan.Endtime.ToString("yyyy-MM-dd") }'
+                                AND e/ehr_status/subject/external_ref/id/value = '{pat.PatientID}'"
+            };
+            return aql;
+        }
         private AQLQuery LaborNegativData(TimespanParameter timespan, string pathogen, LabDataReceiveModel lab)
         {
             AQLQuery aql = new AQLQuery()
@@ -256,9 +325,9 @@ namespace SmICSCoreLib.Factories.NUMNode
             AQLQuery aql = new AQLQuery()
             {
                 Name = "PatientAddmissionByNegativCase",
-                Query = $@"SELECT i/data[at0001]/items[at0071]/value/value AS Beginn,
-                                p/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value AS Ende,
-                                c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value AS FallID
+                Query = $@"SELECT i/data[at0001]/items[at0071]/value/value AS Admission,
+                                p/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value AS Discharge,
+                                c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value AS CaseID
                                 FROM EHR e
                                 CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1]
                                 CONTAINS (ADMIN_ENTRY i[openEHR-EHR-ADMIN_ENTRY.admission.v0] and ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
@@ -268,7 +337,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             };
             return aql;
         }
-        //need to test
+
         private AQLQuery GetAllSymptomsByPatient(LabDataReceiveModel lab)
         {
             AQLQuery aql = new AQLQuery()
@@ -283,6 +352,27 @@ namespace SmICSCoreLib.Factories.NUMNode
                                 WHERE c/archetype_details/template_id='Symptom'
                                 AND e/ehr_status/subject/external_ref/id/value = '{lab.PatientID}'
                                 AND o/data[at0190]/events[at0191]/data[at0192]/items[at0152]/value/value>='{ lab.Befunddatum.AddDays(-4).ToString("yyyy-MM-dd") }'"
+            };
+            return aql;
+        }
+
+        private AQLQuery GetPatientLocation(List<LabDataReceiveModel> lab, PatientWardModel parameter, string patID)
+        {
+            AQLQuery aql = new AQLQuery()
+            {
+                Name = "GetPatientLocation",
+                Query = $@"SELECT Distinct e/ehr_status/subject/external_ref/id/value AS PatientID 
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] 
+                                CONTAINS ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] 
+                                CONTAINS (CLUSTER l[openEHR-EHR-CLUSTER.location.v1] and CLUSTER o[openEHR-EHR-CLUSTER.organization.v0])
+                                WHERE c/name/value='Patientenaufenthalt' 
+                                AND h/data[at0001]/items[at0004]/value/value <= '{ parameter.Ende.ToString("o") }' 
+                                AND (h/data[at0001]/items[at0005]/value/value >= '{ parameter.Beginn.ToString("o") }'
+                                OR NOT EXISTS h/data[at0001]/items[at0005]/value/value)
+                                AND l/items[at0027]/value/value = '{ parameter.StationID }'
+                                AND NOT e/ehr_status/subject/external_ref/id/value = '{patID}'
+                                ORDER BY h/data[at0001]/items[at0004]/value/value"
             };
             return aql;
         }
