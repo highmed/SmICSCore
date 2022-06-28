@@ -1,4 +1,5 @@
 ﻿
+using System.IO;
 using System.Threading.Tasks;
 using Quartz;
 using SmICSCoreLib.Factories.NUMNode;
@@ -9,6 +10,7 @@ namespace SmICSCoreLib.CronJobs
     public class NUMNodeJob : IJob
     {
         private INUMNodeFactory _listFac;
+        private readonly string path = @"../SmICSWebApp/Resources/NUMNode.csv";
 
         public NUMNodeJob(INUMNodeFactory listFac)
         {
@@ -16,7 +18,14 @@ namespace SmICSCoreLib.CronJobs
         }
         public Task Execute(IJobExecutionContext context)
         {
-            _listFac.FirstDataEntry();
+            if (!File.Exists(path))
+            {
+                _listFac.FirstDataEntry();
+            }else
+            {
+                _listFac.RegularDataEntry();
+            }
+            
             return Task.CompletedTask;
         }
 

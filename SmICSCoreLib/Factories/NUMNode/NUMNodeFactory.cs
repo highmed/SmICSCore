@@ -4,12 +4,8 @@ using SmICSCoreLib.Factories.Lab.ViroLabData.ReceiveModel;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using SmICSCoreLib.Factories.PatientMovementNew;
-using SmICSCoreLib.Factories.Symptome;
 using SmICSCoreLib.Factories.ContactNetwork;
-using SmICSCoreLib.Factories.ContactNetwork.ReceiveModels;
 using SmICSCoreLib.Factories.InfectionSituation;
 using SmICSCoreLib.StatistikDataModels;
 
@@ -54,14 +50,26 @@ namespace SmICSCoreLib.Factories.NUMNode
 
         public void Process(TimespanParameter timespan)
         {
-            
-            (countPatient, numberOfStays, numberOfNosCases, numberOfMaybeNosCases, numberOfContacts) = getDataAggregation(timespan, pathogen);
-            (averageNumberOfStays, averageNumberOfNosCases, averageNumberOfMaybeNosCases, averageNumberOfContacts) = GetAverage((numberOfStays, numberOfNosCases, numberOfMaybeNosCases, numberOfContacts), countPatient);
+            try
+            {
+                (countPatient, numberOfStays, numberOfNosCases, numberOfMaybeNosCases, numberOfContacts) = getDataAggregation(timespan, pathogen);
+                (averageNumberOfStays, averageNumberOfNosCases, averageNumberOfMaybeNosCases, averageNumberOfContacts) = GetAverage((numberOfStays, numberOfNosCases, numberOfMaybeNosCases, numberOfContacts), countPatient);
 
-            NUMNodeList = new NUMNodeModel() { AverageNumberOfStays = averageNumberOfStays, AverageNumberOfNosCases = averageNumberOfNosCases, AverageNumberOfMaybeNosCases = averageNumberOfMaybeNosCases, AverageNumberOfContacts = averageNumberOfContacts, DateTime = DateTime.Now };
-            dataAggregationStorage.Add(NUMNodeList);
+                NUMNodeList = new NUMNodeModel() { AverageNumberOfStays = averageNumberOfStays, AverageNumberOfNosCases = averageNumberOfNosCases, AverageNumberOfMaybeNosCases = averageNumberOfMaybeNosCases, AverageNumberOfContacts = averageNumberOfContacts, DateTime = DateTime.Now };
+                dataAggregationStorage.Add(NUMNodeList);
+            } catch (Exception e)
+            {
+                _logger.LogWarning("Can not get aggregated Data " + e.Message);
+            }
+            try
+            {
+                SaveCSV.SaveToCsv(dataAggregationStorage, path);
 
-            SaveCSV.SaveToCsv(dataAggregationStorage, path);
+            }catch (Exception e)
+            {
+                _logger.LogWarning("Can not save aggregated Data " + e.Message);
+            }
+ 
         }
 
         public void RegularDataEntry()
@@ -80,61 +88,111 @@ namespace SmICSCoreLib.Factories.NUMNode
 
         private (int, int, int, int, int) getDataAggregation(TimespanParameter timespan, string pathogen)
         {
-            List<LabDataReceiveModel> receiveLabDataListpositiv = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborPositivData(timespan, pathogen));
-
-            patientList = new List<string>();
-            
-            if (receiveLabDataListpositiv is not null)
+            try
             {
-                foreach (var pat in receiveLabDataListpositiv)
+                List<LabDataReceiveModel> receiveLabDataListpositiv = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborPositivData(timespan, pathogen));
+
+                patientList = new List<string>();
+
+                if (receiveLabDataListpositiv is not null)
                 {
-                    countPatient++;
-                    patientList.Add(pat.PatientID);
-                    numberOfStays = GetNumberOfStays(timespan, pathogen, pat, receiveLabDataListpositiv);
-                    numberOfContacts = GetNumberOfContacts(timespan, pathogen, pat);
-                }
-                PatientListParameter patList = new PatientListParameter { patientList = patientList };
-                List<PatientModel> list = _infecFac.Process(patList);
-                numberOfMaybeNosCases = list.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-                numberOfNosCases = list.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-                return (countPatient, numberOfStays, numberOfNosCases, numberOfMaybeNosCases,  numberOfContacts);
+                    foreach (var pat in receiveLabDataListpositiv)
+                    {
+                        countPatient++;
+                        patientList.Add(pat.PatientID);
+                        numberOfStays = GetNumberOfStays(timespan, pathogen, pat, receiveLabDataListpositiv);
+                        numberOfContacts = GetNumberOfContacts(timespan, pathogen, pat);
+                    }
+                    (numberOfMaybeNosCases, numberOfNosCases) = GetNumberOfNosCases(patientList);
 
-            }
-            else
+                    return (countPatient, numberOfStays, numberOfNosCases, numberOfMaybeNosCases, numberOfContacts);
+
+                }
+                else
+                {
+                    return (countPatient, numberOfStays, numberOfNosCases, numberOfMaybeNosCases, numberOfContacts);
+                }
+
+            }catch (Exception e)
             {
-                return (countPatient, numberOfStays, numberOfNosCases, numberOfMaybeNosCases,  numberOfContacts);
+                _logger.LogWarning("Can not get aggregated Data " + e.Message);
+                return (0, 0, 0, 0, 0);
             }
+            
 
         }
 
         private int GetNumberOfStays(TimespanParameter timespan, string pathogen, LabDataReceiveModel pat, List<LabDataReceiveModel> receiveLabDataListpositiv)
         {
-            receiveLabDataListnegativ = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborNegativData(timespan, pathogen, pat));
-            if (receiveLabDataListnegativ is not null)
+            try
             {
-                countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(getStaysCount(receiveLabDataListnegativ.OrderBy(x => x.Befunddatum).First(), pat));
- 
-            }
-            else
-            {
-                LabDataReceiveModel labDataReceiveModel = new LabDataReceiveModel { Befunddatum = DateTime.Now };
-                countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(getStaysCount(labDataReceiveModel, pat));
-            }
+                receiveLabDataListnegativ = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborNegativData(timespan, pathogen, pat));
+                if (receiveLabDataListnegativ is not null)
+                {
+                    countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(getStaysCount(receiveLabDataListnegativ.OrderBy(x => x.Befunddatum).First(), pat));
 
-            foreach (NUMNodeCountModel count in countStays)
+                }
+                else
+                {
+                    LabDataReceiveModel labDataReceiveModel = new LabDataReceiveModel { Befunddatum = DateTime.Now };
+                    countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(getStaysCount(labDataReceiveModel, pat));
+                }
+
+                foreach (NUMNodeCountModel count in countStays)
+                {
+                    numberOfStays = numberOfStays + count.Count;
+                }
+                return numberOfStays;
+
+            }catch (Exception e)
             {
-                numberOfStays = numberOfStays + count.Count;
+                _logger.LogWarning("Can not get number of Stays " + e.Message);
+                return 0;
             }
-            return numberOfStays;
+            
         }
 
         private int GetNumberOfContacts(TimespanParameter timespan, string pathogen, LabDataReceiveModel pat)
         {
-            ContactParameter contact = new ContactParameter { PatientID = pat.PatientID, Starttime = timespan.Starttime, Endtime = timespan.Endtime };
-            contacts = _contactFac.Process(contact);
-            int numberofCon = contacts.PatientMovements.Select(x => x.PatientID).Distinct().Count();
-            numberOfContacts = numberOfContacts + numberofCon;
-            return numberOfContacts;
+            try
+            {
+                ContactParameter contact = new ContactParameter { PatientID = pat.PatientID, Starttime = timespan.Starttime, Endtime = timespan.Endtime };
+                contacts = _contactFac.Process(contact);
+                int numberofCon = 0;
+                if (contacts is not null)
+                {
+                    numberofCon = contacts.PatientMovements.Select(x => x.PatientID).Distinct().Count();
+                }
+                numberOfContacts = numberOfContacts + numberofCon;
+                return numberOfContacts;
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("Can not get number of Contacts " + e.Message);
+                return 0;
+            }
+
+        }
+
+        private (int, int) GetNumberOfNosCases(List<string> patientList)
+        {
+            try
+            {
+                PatientListParameter patList = new PatientListParameter { patientList = patientList };
+                List<PatientModel> list = _infecFac.Process(patList);
+                if (list is not null)
+                {
+                    numberOfMaybeNosCases = list.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+                    numberOfNosCases = list.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+                }
+
+                return (numberOfMaybeNosCases, numberOfNosCases);
+            }catch (Exception e)
+            {
+                _logger.LogWarning("Can not get number of nosokomial cases " + e.Message);
+                return (0, 0);
+            }
+  
         }
 
         private void InitializeGlobalVariables()
@@ -148,20 +206,28 @@ namespace SmICSCoreLib.Factories.NUMNode
 
         public (double, double, double, double) GetAverage((int, int, int, int) parameter, int quanti)
         {
+            try
+            {
+                if (quanti != 0)
+                {
+                    double average1 = (double)parameter.Item1 / (double)quanti;
+                    double average2 = (double)parameter.Item2 / (double)quanti;
+                    double average3 = (double)parameter.Item3 / (double)quanti;
+                    double average4 = (double)parameter.Item4 / (double)quanti;
+                    average = (average1, average2, average3, average4);
+                    return average;
+                }
+                else
+                {
+                    return average = (0, 0, 0, 0);
+                }
+            }catch (Exception e)
+            {
+                _logger.LogWarning("Can not get average " + e.Message);
+                return (0, 0, 0, 0);
+            }
             
-            if (quanti != 0)
-            {
-                double average1 = (double)parameter.Item1 / (double)quanti;
-                double average2 = (double)parameter.Item2 / (double)quanti;
-                double average3 = (double)parameter.Item3 / (double)quanti;
-                double average4 = (double)parameter.Item4 / (double)quanti;
-                average = (average1, average2, average3, average4);
-                return average;
-            }
-            else
-            {
-                return average = (0, 0, 0, 0);
-            }
+            
 
         }
 
