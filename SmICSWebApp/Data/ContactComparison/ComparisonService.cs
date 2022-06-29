@@ -161,11 +161,8 @@ namespace SmICSWebApp.Data.ContactComparison
                         }
                         return ContactLevel.WARD;
                     }
-                    else
-                    {
-                        return ContactLevel.NON;
-                    }
                     return ContactLevel.DEPARTEMENT;
+
                 }
             }
             return ContactLevel.NON;
