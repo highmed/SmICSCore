@@ -44,7 +44,7 @@
         {
             <span class="text-primary">
                 @string.Join("/", Patient.InfectionStatus.Values.
-               Where(x => x.Known || (Patient.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate < Patient.Admission))).
+               Where(x => x.Known || (Patient.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate.Value.Date < Patient.Admission.Date.AddDays(2.0)))).
                Where(x => x.Resistance != "normal").Select(x => x.Resistance))
             </span>
         }
@@ -66,11 +66,11 @@
 
 @code {
 
-    [Parameter]
-    public WardPatient Patient { get; set; }
+        [Parameter]
+        public WardPatient Patient { get; set; }
 
-    [Parameter]
-    public WardParameter WardParameter { get; set; }
+        [Parameter]
+        public WardParameter WardParameter { get; set; }
 
     private bool _nosocomial;
     private bool _known;
@@ -82,14 +82,28 @@
 
         await base.SetParametersAsync(parameters);
 
-        _nosocomial = Patient.InfectionStatus != null && Patient.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate > Patient.Admission && (Patient.Discharge.HasValue ? x.NosocomialDate <= Patient.Discharge : true));
-        _known = Patient.InfectionStatus != null && (Patient.InfectionStatus.Values.Any(x => x.Known) || Patient.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate < Patient.Admission));
+        _nosocomial = IsNosocomial();
+        _known = Patient.InfectionStatus != null && (Patient.InfectionStatus.Values.Any(x => x.Known) || Patient.InfectionStatus.Values.Any(x => x.Nosocomial && x.NosocomialDate <= Patient.Admission.Date.AddDays(2.0)));
     }
 
 
     private void OnContextClick(ItemClickEventArgs e)
     {
         Console.WriteLine($"WardOverview Clicked => Menu: {e.ContextMenuId}, MenuTarget: {e.ContextMenuTargetId}, IsCanceled: {e.IsCanceled}, MenuWardOverview: {e.MenuItemElement}, MouseEvent: {e.MouseEvent}");
+    }
+
+    private bool IsNosocomial()
+    {
+        if (Patient.InfectionStatus != null)
+        {
+            if (Patient.InfectionStatus.Values.Any(x => x.Nosocomial 
+            && x.NosocomialDate.Value.Date > Patient.Admission.Date.AddDays(2.0) 
+            && (Patient.Discharge.HasValue ? x.NosocomialDate <= Patient.Discharge : true)))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

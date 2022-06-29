@@ -73,17 +73,17 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                     if(result.Specimens is not null)
                     {
                         result.Specimens.RemoveAll(spec => spec.Pathogens == null);
-                    }
-                    if (result.Specimens.Count > 0)
-                    {
-                        List<PatientLocation> patLocation = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID));
-                        if(patLocation is not null)
+                        if (result.Specimens.Count > 0)
                         {
-                            result.Sender = patLocation.FirstOrDefault();
-                        }
-                        else 
-                        {
-                            result.Sender = new PatientLocation() { Departement = "N.A", Ward = "N.A"};
+                            List<PatientLocation> patLocation = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID));
+                            if(patLocation is not null)
+                            {
+                                result.Sender = patLocation.FirstOrDefault();
+                            }
+                            else 
+                            {
+                                result.Sender = new PatientLocation() { Departement = "N.A", Ward = "N.A"};
+                            }
                         }
                     }
                 }

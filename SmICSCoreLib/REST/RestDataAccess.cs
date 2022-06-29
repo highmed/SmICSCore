@@ -49,7 +49,7 @@ namespace SmICSCoreLib.REST
                     {
                         HttpError error = response.Content.ReadAsAsync<HttpError>().GetAwaiter().GetResult();
                         _logger.LogError("No Success Code: {status} \n {msg}", response.StatusCode, error.Message);
-                        throw new HttpRequestException("No Success StatusCode: \n" + error["error"].ToString());
+                        throw new HttpRequestException("No Success StatusCode: " + response.StatusCode + "\n" + error.Message);
                     }
                     else if (response.StatusCode == HttpStatusCode.NotFound)
                     {
@@ -126,7 +126,7 @@ namespace SmICSCoreLib.REST
         private HttpContent GetHttpContent(string json)
         {
             HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
-            content.Headers.Add("Prefer", "return=representation");
+            //content.Headers.Add("Prefer", "return=representation");
             return content;
         }
 
@@ -136,7 +136,7 @@ namespace SmICSCoreLib.REST
             //obj.Add("aql", query);
             obj.Add("q", query);
             string json = JsonConvert.SerializeObject(obj, Formatting.Indented);
-            _client.Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
+            //_client.Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
             HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
             return content;

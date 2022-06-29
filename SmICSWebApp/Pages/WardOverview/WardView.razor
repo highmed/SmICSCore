@@ -181,7 +181,7 @@
             else 
             {
                 filteredData = data;
-                chartEntries = _service.GetChartEntries(parameter);
+                chartEntries = _service.GetChartEntries(parameter, filteredData);
                 _filterMRE = _service.GetFilter(parameter);
 
                 _chart = EpiCurveConfig("Epidemiologische Kurve der Station: " + parameter.Ward, "Neue Fälle");
@@ -271,7 +271,8 @@
                             {
                                 StepSize = 1,
                                 BeginAtZero = true,
-                                Min = 0
+                                Min = 0,
+                                SuggestedMax = 5
                             }
                         }
                     }
@@ -331,7 +332,7 @@
                 filteredData = filteredData.Where(view => view.InfectionStatus != null && view.InfectionStatus.Values.Any(x => x.Known == true || (x.Nosocomial && x.NosocomialDate.Value < view.Admission))).ToList();
             }
         }
-        chartEntries = _service.GetChartEntries(parameter, _selectedMREFilter, _selectedNosokomialFilter);
+        chartEntries = _service.GetChartEntries(parameter, filteredData);
 
         Nosocomial.Clear();
         Known.Clear();
