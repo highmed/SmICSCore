@@ -1,4 +1,5 @@
-﻿using SmICSCoreLib.Factories.General;
+﻿using Microsoft.Extensions.Logging;
+using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.REST;
 using System;
@@ -17,79 +18,115 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         {
             RestDataAccess = restDataAccess;
             _specimenFac = specimenFac;
+
         }
 
         public List<LabResult> Process(Patient patient, PathogenParameter pathogen)
         {
-            List<LabResult> results = new List<LabResult>();
-            List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
-            foreach(Case c in cases)
+            try
             {
-                List<LabResult> tmpResult = Process(c, pathogen.MedicalField, pathogen);
-                if (tmpResult is not null)
+                List<LabResult> results = new List<LabResult>();
+                List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
+                foreach(Case c in cases)
                 {
-                    results.AddRange(tmpResult);
+                    List<LabResult> tmpResult = Process(c, pathogen.MedicalField, pathogen);
+                    if (tmpResult is not null)
+                    {
+                        results.AddRange(tmpResult);
+                    }
                 }
+                return results;
             }
-            return results;
+            catch
+            {
+                throw;
+            }
         }
 
         public List<LabResult> Process(Patient patient, string MedicalField)
         {
-            List<LabResult> results = new List<LabResult>();
-            List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
-            foreach (Case c in cases)
+            try
             {
-                List<LabResult> tmpResult = Process(c, MedicalField);
-                results.AddRange(tmpResult);
+                List<LabResult> results = new List<LabResult>();
+                List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
+                foreach (Case c in cases)
+                {
+                    List<LabResult> tmpResult = Process(c, MedicalField);
+                    results.AddRange(tmpResult);
+                }
+                return results;
             }
-            return results;
+            catch 
+            {
+                throw;
+            }
         }
 
         public List<LabResult> Process(Case Case, string MedicalField)
         {
-            return Process(Case, MedicalField, null);
+            try
+            {
+                return Process(Case, MedicalField, null);
+            }
+            catch 
+            {
+                throw;
+            }
         }
 
         public List<LabResult> Process(Case Case, PathogenParameter pathogen)
         {
-            return Process(Case, pathogen.MedicalField, pathogen);
+            try
+            {
+                return Process(Case, pathogen.MedicalField, pathogen);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         private List<LabResult> Process(Case Case, string MedicalField, PathogenParameter pathogen = null)
         {
-            List<UID> uids = null;
-            if (pathogen != null)
+            try
             {
-                uids = RestDataAccess.AQLQuery<UID>(GetPathogenCompositionsUIDs(Case, pathogen));
-            }
-            List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case, MedicalField, uids));
-            if (results is not null)
-            { 
-                foreach (LabResult result in results)
+                List<UID> uids = null;
+                if (pathogen != null)
                 {
-                    SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID, MedicalField = MedicalField };
-                    result.Specimens = _specimenFac.Process(parameter, pathogen);
-                    if(result.Specimens is not null)
+                    uids = RestDataAccess.AQLQuery<UID>(GetPathogenCompositionsUIDs(Case, pathogen));
+                }
+                List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case, MedicalField, uids));
+                if (results is not null)
+                {
+                    foreach (LabResult result in results)
                     {
-                        result.Specimens.RemoveAll(spec => spec.Pathogens == null);
-                        if (result.Specimens.Count > 0)
+                        SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID, MedicalField = MedicalField };
+                        result.Specimens = _specimenFac.Process(parameter, pathogen);
+                        if (result.Specimens is not null)
                         {
-                            List<PatientLocation> patLocation = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID));
-                            if(patLocation is not null)
+                            result.Specimens.RemoveAll(spec => spec.Pathogens == null);
+                            if (result.Specimens.Count > 0)
                             {
-                                result.Sender = patLocation.FirstOrDefault();
-                            }
-                            else 
-                            {
-                                result.Sender = new PatientLocation() { Departement = "N.A", Ward = "N.A"};
+                                List<PatientLocation> patLocation = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID));
+                                if (patLocation is not null)
+                                {
+                                    result.Sender = patLocation.FirstOrDefault();
+                                }
+                                else
+                                {
+                                    result.Sender = new PatientLocation() { Departement = "N.A", Ward = "N.A" };
+                                }
                             }
                         }
                     }
+                    results.RemoveAll(lab => lab.Specimens.Count == 0);
                 }
-                results.RemoveAll(lab => lab.Specimens.Count == 0);
+                return results;
             }
-            return results;
+            catch
+            {
+                throw;
+            }
         }
 
 

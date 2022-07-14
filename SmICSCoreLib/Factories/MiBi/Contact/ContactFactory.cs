@@ -22,27 +22,42 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
 
         public Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>> Process(Patient parameter)
         {
-            Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>> contacts = new Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>>();
-
-            List<Hospitalization> Hospitalizations = _hospitalizationFac.Process(parameter);
-            Hospitalizations.ForEach(h => contacts.Add(h, null));
-
-            Hospitalization hospitalization = Hospitalizations.Last();
-
-            List<PatientMovementNew.PatientStays.PatientStay> patientStays = _patientStayFac.Process(hospitalization);
-            List<PatientMovementNew.PatientStays.PatientStay> contactCases = DetermineContacts(Hospitalizations.Last());
-             
-            if (contacts[hospitalization] == null)
+            try
             {
-                contacts[hospitalization] = contactCases;
+                Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>> contacts = new Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>>();
+
+                List<Hospitalization> Hospitalizations = _hospitalizationFac.Process(parameter);
+                Hospitalizations.ForEach(h => contacts.Add(h, null));
+
+                Hospitalization hospitalization = Hospitalizations.Last();
+
+                List<PatientMovementNew.PatientStays.PatientStay> patientStays = _patientStayFac.Process(hospitalization);
+                List<PatientMovementNew.PatientStays.PatientStay> contactCases = DetermineContacts(Hospitalizations.Last());
+
+                if (contacts[hospitalization] == null)
+                {
+                    contacts[hospitalization] = contactCases;
+                }
+
+                return contacts;
             }
-            
-            return contacts;
+            catch
+            {
+                throw;
+            }
+           
         }
 
         public List<PatientMovementNew.PatientStays.PatientStay> Process(Hospitalization hospitalization)
         {
-           return DetermineContacts(hospitalization);
+            try
+            {
+                return DetermineContacts(hospitalization);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         private List<PatientMovementNew.PatientStays.PatientStay> DetermineContacts(Hospitalization hospitalization)

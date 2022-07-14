@@ -15,7 +15,14 @@ namespace SmICSCoreLib.Factories.Feasability
 
         public Feasability GetPersonMovementCount(SmICSCoreLib.Factories.General.Patient patient)
         {
-            return RestDataAccess.AQLQuery<Feasability>(PersonMovementCount(patient)).First();
+            try
+            {
+                return RestDataAccess.AQLQuery<Feasability>(PersonMovementCount(patient)).First();
+            }
+            catch 
+            {
+                throw;
+            }
         }
 
         private AQLQuery PersonMovementCount(SmICSCoreLib.Factories.General.Patient patient)

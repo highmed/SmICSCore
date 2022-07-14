@@ -17,25 +17,33 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
 
         public List<Specimen> Process(SpecimenParameter specimenParameter, PathogenParameter pathogen = null)
         {
-           List<Specimen> specimens = _restDataAccess.AQLQuery<Specimen>(SpecimenQuery(specimenParameter));
-            if(specimens is not null)
+            try
             {
-                foreach (Specimen specimen in specimens)
+                List<Specimen> specimens = _restDataAccess.AQLQuery<Specimen>(SpecimenQuery(specimenParameter));
+                if (specimens is not null)
                 {
-                    if (pathogen == null)
+                    foreach (Specimen specimen in specimens)
                     {
-                        pathogen = new PathogenParameter(specimenParameter);
-                    }
-                    else
-                    {
-                        pathogen.UID = specimenParameter.UID;
-                    }
-                    pathogen.LabID = specimen.LabID;
+                        if (pathogen == null)
+                        {
+                            pathogen = new PathogenParameter(specimenParameter);
+                        }
+                        else
+                        {
+                            pathogen.UID = specimenParameter.UID;
+                        }
+                        pathogen.LabID = specimen.LabID;
 
-                    specimen.Pathogens = _pathogegFac.Process(pathogen);
+                        specimen.Pathogens = _pathogegFac.Process(pathogen);
+                    }
                 }
+                return specimens;
             }
-            return specimens;
+            catch 
+            {
+                throw;
+            }
+          
         }
 
         private AQLQuery SpecimenQuery(SpecimenParameter parameter)

@@ -29,72 +29,95 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
 
         public SortedList<Hospitalization, Dictionary<string, InfectionStatus>> Process(Patient patient, PathogenParameter pathogen)
         {
-            SortedList<Hospitalization, Dictionary<string, InfectionStatus>> retVal = retVal = new SortedList<Hospitalization, Dictionary<string, InfectionStatus>>();
-            SortedList <Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = Process(patient, null, pathogen);
-            for (int i = 0; i < tmp.Keys.Count; i++)
+            try
             {
-                foreach (string code in pathogen.PathogenCodes)
+                SortedList<Hospitalization, Dictionary<string, InfectionStatus>> retVal = retVal = new SortedList<Hospitalization, Dictionary<string, InfectionStatus>>();
+                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = Process(patient, null, pathogen);
+                for (int i = 0; i < tmp.Keys.Count; i++)
                 {
-                    if (tmp[tmp.Keys[i]].Count > 0 && tmp[tmp.Keys[i]].ContainsKey(code))
+                    foreach (string code in pathogen.PathogenCodes)
                     {
-                        retVal.Add(tmp.Keys[i], tmp[tmp.Keys[i]][code]);
+                        if (tmp[tmp.Keys[i]].Count > 0 && tmp[tmp.Keys[i]].ContainsKey(code))
+                        {
+                            retVal.Add(tmp.Keys[i], tmp[tmp.Keys[i]][code]);
+                        }
                     }
                 }
+                return retVal;
             }
-            return retVal;
+            catch
+            {
+                throw;
+            }
         }
 
         public SortedList<Hospitalization, InfectionStatus> Process(Patient patient, PathogenParameter pathogen, string Resistence)
         {
-            SortedList<Hospitalization, InfectionStatus> retVal = new SortedList<Hospitalization, InfectionStatus>();
-            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = Process(patient, null, pathogen);
-            for(int i = 0; i < tmp.Keys.Count; i++)
+            try
             {
-                foreach(string code in pathogen.PathogenCodes)
+                SortedList<Hospitalization, InfectionStatus> retVal = new SortedList<Hospitalization, InfectionStatus>();
+                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = Process(patient, null, pathogen);
+                for (int i = 0; i < tmp.Keys.Count; i++)
                 {
-                    if (tmp[tmp.Keys[i]].ContainsKey(code))
+                    foreach (string code in pathogen.PathogenCodes)
                     {
-                        if (tmp[tmp.Keys[i]][code].ContainsKey(Resistence))
+                        if (tmp[tmp.Keys[i]].ContainsKey(code))
                         {
-                            retVal.Add(tmp.Keys[i], tmp[tmp.Keys[i]][code][Resistence]);
+                            if (tmp[tmp.Keys[i]][code].ContainsKey(Resistence))
+                            {
+                                retVal.Add(tmp.Keys[i], tmp[tmp.Keys[i]][code][Resistence]);
+                            }
                         }
                     }
                 }
+                return retVal;
             }
-            return retVal;
+            catch
+            {
+
+                throw;
+            }
+            
         }
 
         //Hospitalization, Pathogen, Resitance, InfectionStatus
         private SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, string MedicalField = null, PathogenParameter pathogen = null)
         {
-            List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
-            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase = new SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>();
-            if(cases is not null)
-            { 
-                foreach (Case c in cases)
+            try
+            {
+                List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
+                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase = new SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>();
+                if (cases is not null)
                 {
-                    List<LabResult> results = null;
-                    Hospitalization hospitalization = _hospitalizationFac.Process(c);
-                    if (MedicalField == null)
+                    foreach (Case c in cases)
                     {
-                        results = _mibiResultFac.Process(c, pathogen);
-                    }
-                    else if (pathogen == null)
-                    {
-                        results = _mibiResultFac.Process(c, MedicalField);
-                    }
-                    if(results is not null)
-                    {
-                        results = results.OrderBy(l => l.Specimens.First().SpecimenCollectionDateTime).ToList();
-                    
-                        Dictionary<string, Dictionary<string, InfectionStatus>>infectionInformation = new Dictionary<string, Dictionary<string, InfectionStatus>>();
+                        List<LabResult> results = null;
+                        Hospitalization hospitalization = _hospitalizationFac.Process(c);
+                        if (MedicalField == null)
+                        {
+                            results = _mibiResultFac.Process(c, pathogen);
+                        }
+                        else if (pathogen == null)
+                        {
+                            results = _mibiResultFac.Process(c, MedicalField);
+                        }
+                        if (results is not null)
+                        {
+                            results = results.OrderBy(l => l.Specimens.First().SpecimenCollectionDateTime).ToList();
 
-                        DetermineInfectionInformation(ref infectionInformation, results, hospitalization, infectionInformationByCase);
-                        infectionInformationByCase.Add(hospitalization, infectionInformation);
+                            Dictionary<string, Dictionary<string, InfectionStatus>> infectionInformation = new Dictionary<string, Dictionary<string, InfectionStatus>>();
+
+                            DetermineInfectionInformation(ref infectionInformation, results, hospitalization, infectionInformationByCase);
+                            infectionInformationByCase.Add(hospitalization, infectionInformation);
+                        }
                     }
                 }
+                return infectionInformationByCase;
             }
-            return infectionInformationByCase;
+            catch
+            {
+                throw;
+            } 
         }
 
         private void DetermineInfectionInformation(ref Dictionary<string, Dictionary<string, InfectionStatus>> infectionInformation, List<LabResult> results, Hospitalization hospitalization, SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase)

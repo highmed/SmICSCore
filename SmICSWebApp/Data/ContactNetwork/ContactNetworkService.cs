@@ -30,25 +30,33 @@ namespace SmICSWebApp.Data.ContactNetwork
 
         public ContactModel GetContactNetwork(ContactNetworkParameter parameter)
         {
-            ContactStack = new Stack<ContactNetworkParameter>();
-            ContactStack.Push(parameter);
-
-            contacts = new ContactModel() { PatientMovements = new List<VisuPatientMovement>(), LaborData = new List<VisuLabResult>() };
-
-            int maxDegree = Convert.ToInt32(ContactStack.Peek().Degree);
-            int currentDegree = 1;
-
-            while (currentDegree <= maxDegree)
+            try
             {
-                nextDegree = new Stack<ContactNetworkParameter>();
-                while (ContactStack.Count > 0)
+                ContactStack = new Stack<ContactNetworkParameter>();
+                ContactStack.Push(parameter);
+
+                contacts = new ContactModel() { PatientMovements = new List<VisuPatientMovement>(), LaborData = new List<VisuLabResult>() };
+
+                int maxDegree = Convert.ToInt32(ContactStack.Peek().Degree);
+                int currentDegree = 1;
+
+                while (currentDegree <= maxDegree)
                 {
-                    FindWardsQuery();
+                    nextDegree = new Stack<ContactNetworkParameter>();
+                    while (ContactStack.Count > 0)
+                    {
+                        FindWardsQuery();
+                    }
+                    currentDegree += 1;
+                    ContactStack = nextDegree;
                 }
-                currentDegree += 1;
-                ContactStack = nextDegree;
+                return contacts;
             }
-            return contacts;
+            catch
+            {
+                throw;
+
+            }
         }
 
         private void FindWardsQuery()

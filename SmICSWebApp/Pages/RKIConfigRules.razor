@@ -132,7 +132,7 @@
 
     private void LoadMenu()
     {
-        _pathogenMenuEntries = _menuService.GetPathogens();
+        _pathogenMenuEntries = _menuService.GetPathogens().GetAwaiter().GetResult();
     }
 
     private void GetAllStations()

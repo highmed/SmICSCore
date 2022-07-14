@@ -19,98 +19,113 @@ namespace SmICSCoreLib.Factories.MenuList
 
         public List<WardMenuEntry> Wards(JobType type, DateTime StartDate)
         {
-            List<WardMenuEntry> wards = new List<WardMenuEntry>();
-            DateTime end = DateTime.Now.Date;
-
-            DateTime date = StartDate.Date;
-            while (date.Date < end.Date)
+            try
             {
-                DateTime nextDate = DateTime.MinValue;
-                if(type == JobType.DAILY)
+                List<WardMenuEntry> wards = new List<WardMenuEntry>();
+                DateTime end = DateTime.Now.Date;
+
+                DateTime date = StartDate.Date;
+                while (date.Date < end.Date)
                 {
-                    nextDate = date.AddDays(1.0);
-                }
-                else
-                {
-                    nextDate = date.AddMonths(1);
-                    if(date > nextDate)
+                    DateTime nextDate = DateTime.MinValue;
+                    if (type == JobType.DAILY)
                     {
-                        nextDate = end;
+                        nextDate = date.AddDays(1.0);
                     }
-                }
-                List<UID> uids = RestDataAccess.AQLQuery<UID>(StayCompositionsPerTimespan(date, nextDate));
-                if (uids is not null)
-                {
-                    int count = 0;
-                    while (count < uids.Count)
+                    else
                     {
-                        int range = 999;
-                        if ((count + range) > (uids.Count - 1))
+                        nextDate = date.AddMonths(1);
+                        if (date > nextDate)
                         {
-                            range = uids.Count - count;
-                        } 
-                        List<WardMenuEntry> tmpWards = RestDataAccess.AQLQuery<WardMenuEntry>(WardList(uids.GetRange(count, range)));
-                        if (tmpWards is not null)
+                            nextDate = end;
+                        }
+                    }
+                    List<UID> uids = RestDataAccess.AQLQuery<UID>(StayCompositionsPerTimespan(date, nextDate));
+                    if (uids is not null)
+                    {
+                        int count = 0;
+                        while (count < uids.Count)
                         {
-                            foreach (WardMenuEntry entry in tmpWards)
+                            int range = 999;
+                            if ((count + range) > (uids.Count - 1))
                             {
-                                if (!wards.Contains(entry))
+                                range = uids.Count - count;
+                            }
+                            List<WardMenuEntry> tmpWards = RestDataAccess.AQLQuery<WardMenuEntry>(WardList(uids.GetRange(count, range)));
+                            if (tmpWards is not null)
+                            {
+                                foreach (WardMenuEntry entry in tmpWards)
                                 {
-                                    wards.Add(entry);
+                                    if (!wards.Contains(entry))
+                                    {
+                                        wards.Add(entry);
+                                    }
                                 }
                             }
+                            tmpWards = null;
+                            count += (range + 1);
                         }
-                        tmpWards = null;
-                        count += (range + 1);
+                        uids = null;
                     }
-                    uids = null;
+                    date = nextDate;
                 }
-                date = nextDate;
+                if (wards.Count > 0)
+                {
+                    return wards;
+                }
+                return null;
             }
-            if (wards.Count > 0)
+            catch
             {
-                return wards;
+
+                throw;
             }
-            return null;
         }
 
         public List<PathogenMenuEntry> Pathogens(JobType type, DateTime StartDate)
         {
-
-            List<PathogenMenuEntry> pathogens = new List<PathogenMenuEntry>();
-            DateTime end = DateTime.Now.Date;
-
-            DateTime date = StartDate.Date;
-            while (date.Date < end.Date)
+            try
             {
-                DateTime nextDate = DateTime.MinValue;
-                if (type == JobType.DAILY)
+                List<PathogenMenuEntry> pathogens = new List<PathogenMenuEntry>();
+                DateTime end = DateTime.Now.Date;
+
+                DateTime date = StartDate.Date;
+                while (date.Date < end.Date)
                 {
-                    nextDate = date.AddDays(1.0);
-                }
-                else
-                {
-                    nextDate = date.AddMonths(1);
-                    if (date > nextDate)
+                    DateTime nextDate = DateTime.MinValue;
+                    if (type == JobType.DAILY)
                     {
-                        nextDate = end;
+                        nextDate = date.AddDays(1.0);
                     }
+                    else
+                    {
+                        nextDate = date.AddMonths(1);
+                        if (date > nextDate)
+                        {
+                            nextDate = end;
+                        }
+                    }
+                    List<UID> mibi_uids = RestDataAccess.AQLQuery<UID>(MibiPathogenCompositionsPerTimespan(date, nextDate));
+                    PathoEntries(mibi_uids, ref pathogens, MedicalField.MICROBIOLOGY);
+                    mibi_uids = null;
+                    List<UID> viro_uids = RestDataAccess.AQLQuery<UID>(ViroPathogenCompositionsPerTimespan(date, nextDate));
+                    PathoEntries(viro_uids, ref pathogens, MedicalField.VIROLOGY);
+                    viro_uids = null;
+
+                    date = nextDate;
                 }
-                List<UID> mibi_uids = RestDataAccess.AQLQuery<UID>(MibiPathogenCompositionsPerTimespan(date, nextDate));
-                PathoEntries(mibi_uids, ref pathogens, MedicalField.MICROBIOLOGY);
-                mibi_uids = null;
-                List<UID> viro_uids = RestDataAccess.AQLQuery<UID>(ViroPathogenCompositionsPerTimespan(date, nextDate));
-                PathoEntries(viro_uids, ref pathogens, MedicalField.VIROLOGY);
-                viro_uids = null;
 
-                date = nextDate;
+                if (pathogens.Count > 0)
+                {
+                    return pathogens;
+                }
+                return null;
             }
-
-            if (pathogens.Count > 0)
+            catch
             {
-                return pathogens;
+                throw;
             }
-            return null;
+            
         }
 
         private void PathoEntries(List<UID> uids, ref List<PathogenMenuEntry> pathogens, string field)

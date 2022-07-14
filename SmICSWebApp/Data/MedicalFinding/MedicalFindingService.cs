@@ -16,17 +16,24 @@ namespace SmICSWebApp.Data.MedicalFinding
 
         public List<VisuLabResult> GetMedicalFinding(SmICSCoreLib.Factories.General.Patient patient, PathogenParameter pathogen)
         {
-            List<VisuLabResult> labResults = new List<VisuLabResult>();
-            List<LabResult> results = _resultFac.Process(patient, pathogen);
-            if (results != null)
+            try
             {
-                foreach (LabResult result in results)
+                List<VisuLabResult> labResults = new List<VisuLabResult>();
+                List<LabResult> results = _resultFac.Process(patient, pathogen);
+                if (results != null)
                 {
-                    labResults.AddRange(TransformResult(result));
+                    foreach (LabResult result in results)
+                    {
+                        labResults.AddRange(TransformResult(result));
+                    }
+                    return labResults;
                 }
-                return labResults;
+                return null;
             }
-            return null;
+            catch
+            {
+                throw;
+            }
         }
 
         private List<VisuLabResult> TransformResult(LabResult result)

@@ -25,28 +25,35 @@ namespace SmICSWebApp.Data.Contact
 
         public ContactRoot LoadContactData(ContactParameter parameter)
         {
-            List<Hospitalization> hospitalizations = _hospitalizationFac.Process(parameter);
-            if (hospitalizations is not null)
+            try
             {
-                Hospitalization latestHospitalization = hospitalizations.Last();
-                PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCodes };
-                SortedList<Hospitalization, InfectionStatus> infectionStatus = _infectionStatusFac.Process(parameter, pathogenParameter, parameter.Resistence);
-                List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _patientStayFac.Process(latestHospitalization);
-                RemoveDoubleStays(contactLocations);
-                ContactRoot rootContact = new ContactRoot()
+                List<Hospitalization> hospitalizations = _hospitalizationFac.Process(parameter);
+                if (hospitalizations is not null)
                 {
-                    CurrentHospitalization = latestHospitalization,
-                    Hospitalizations = hospitalizations,
-                    InfectionStatus = infectionStatus,
-                    PatientStays = new Dictionary<Hospitalization, List<PatientStay>> { { latestHospitalization, contactLocations } },
-                    Contacts = new Dictionary<Hospitalization, List<Contact>> { { latestHospitalization, null } }
-                };
+                    Hospitalization latestHospitalization = hospitalizations.Last();
+                    PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCodes };
+                    SortedList<Hospitalization, InfectionStatus> infectionStatus = _infectionStatusFac.Process(parameter, pathogenParameter, parameter.Resistence);
+                    List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _patientStayFac.Process(latestHospitalization);
+                    RemoveDoubleStays(contactLocations);
+                    ContactRoot rootContact = new ContactRoot()
+                    {
+                        CurrentHospitalization = latestHospitalization,
+                        Hospitalizations = hospitalizations,
+                        InfectionStatus = infectionStatus,
+                        PatientStays = new Dictionary<Hospitalization, List<PatientStay>> { { latestHospitalization, contactLocations } },
+                        Contacts = new Dictionary<Hospitalization, List<Contact>> { { latestHospitalization, null } }
+                    };
 
-                MergeInfectionStatusAndContactCases(ref rootContact, latestHospitalization, pathogenParameter, parameter.Resistence);
+                    MergeInfectionStatusAndContactCases(ref rootContact, latestHospitalization, pathogenParameter, parameter.Resistence);
 
-                return rootContact;
+                    return rootContact;
+                }
+                return null;
             }
-            return null;
+            catch
+            {
+                throw;
+            }
         }
         private void RemoveDoubleStays(List<PatientStay> patientStays)
         {
@@ -70,23 +77,37 @@ namespace SmICSWebApp.Data.Contact
         }
         public void GetPreviousHospitalizationContacts(ref ContactRoot rootContact, ContactParameter parameter)
         {
-            int index = rootContact.Hospitalizations.IndexOf(rootContact.CurrentHospitalization);
-            Hospitalization prevHospitalization = rootContact.Hospitalizations[index - 1];
-            if (!rootContact.Contacts.ContainsKey(prevHospitalization))
+            try
             {
-                PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCodes };
-                SortedList<Hospitalization, InfectionStatus> infectionStatus = _infectionStatusFac.Process(prevHospitalization, pathogenParameter, parameter.Resistence);
-                List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _patientStayFac.Process(prevHospitalization);
-                rootContact.AddHospitalization(prevHospitalization, infectionStatus[prevHospitalization], null, null);
-                MergeInfectionStatusAndContactCases(ref rootContact, prevHospitalization, pathogenParameter, parameter.Resistence);
+                int index = rootContact.Hospitalizations.IndexOf(rootContact.CurrentHospitalization);
+                Hospitalization prevHospitalization = rootContact.Hospitalizations[index - 1];
+                if (!rootContact.Contacts.ContainsKey(prevHospitalization))
+                {
+                    PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCodes };
+                    SortedList<Hospitalization, InfectionStatus> infectionStatus = _infectionStatusFac.Process(prevHospitalization, pathogenParameter, parameter.Resistence);
+                    List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _patientStayFac.Process(prevHospitalization);
+                    rootContact.AddHospitalization(prevHospitalization, infectionStatus[prevHospitalization], null, null);
+                    MergeInfectionStatusAndContactCases(ref rootContact, prevHospitalization, pathogenParameter, parameter.Resistence);
+                }
+                rootContact.CurrentHospitalization = prevHospitalization;
             }
-            rootContact.CurrentHospitalization = prevHospitalization;
+            catch
+            {
+                throw;
+            }
         }
 
         public List<string> GetFilter(List<string> pathogenCodes)
         {
-            List<string> filter = Rules.GetPossibleMREClasses(pathogenCodes);
-            return filter;
+            try
+            {
+                List<string> filter = Rules.GetPossibleMREClasses(pathogenCodes);
+                return filter;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         private void MergeInfectionStatusAndContactCases(ref ContactRoot rootContact, Hospitalization hospitalization, PathogenParameter pathogenParameter, string resistence)
@@ -132,8 +153,15 @@ namespace SmICSWebApp.Data.Contact
 
         public List<string> GetFilter(ContactParameter parameter)
         {
-            List<string> filter = Rules.GetPossibleMREClasses(parameter.PathogenCodes);
-            return filter;
+            try
+            {
+                List<string> filter = Rules.GetPossibleMREClasses(parameter.PathogenCodes);
+                return filter;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         private List<PatientStay> GetRootStay(List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays, SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay patientLocation)

@@ -14,12 +14,20 @@ namespace SmICSCoreLib.Factories.MiBi
 
         public List<Antibiogram> Process(AntibiogramParameter parameters)
         {
-            List<Antibiogram> antibiograms = _rest.AQLQuery<Antibiogram>(AntibiogramFromPathogen(parameters));
-            if (antibiograms == null)
+            try
             {
-                return null;
+                List<Antibiogram> antibiograms = _rest.AQLQuery<Antibiogram>(AntibiogramFromPathogen(parameters));
+                if (antibiograms == null)
+                {
+                    return null;
+                }
+                return antibiograms;
             }
-            return antibiograms;
+            catch
+            {
+                throw;
+            }
+            
         }
 
         private AQLQuery AntibiogramFromPathogen(AntibiogramParameter parameter)

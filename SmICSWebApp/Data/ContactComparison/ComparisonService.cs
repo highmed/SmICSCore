@@ -23,52 +23,68 @@ namespace SmICSWebApp.Data.ContactComparison
 
         public List<ComparedContact> Compare(List<SmICSCoreLib.Factories.General.Patient> patients)
         {
-            List<KeyValuePair<SmICSCoreLib.Factories.General.Patient, List<PatientStay>>> patientStayDict = new List<KeyValuePair<SmICSCoreLib.Factories.General.Patient, List<PatientStay>>>();
-            foreach(SmICSCoreLib.Factories.General.Patient pat in patients)
+            try
             {
-                List<PatientStay> patientStays = new List<PatientStay>();
-                List<Hospitalization> hospitalizations = _hospFac.Process(pat);
-                if (hospitalizations is not null)
+                List<KeyValuePair<SmICSCoreLib.Factories.General.Patient, List<PatientStay>>> patientStayDict = new List<KeyValuePair<SmICSCoreLib.Factories.General.Patient, List<PatientStay>>>();
+                foreach (SmICSCoreLib.Factories.General.Patient pat in patients)
                 {
-                    foreach (Hospitalization hosp in hospitalizations)
+                    List<PatientStay> patientStays = new List<PatientStay>();
+                    List<Hospitalization> hospitalizations = _hospFac.Process(pat);
+                    if (hospitalizations is not null)
                     {
-                        List<PatientStay> patStays = _patStayFac.Process(hosp);
-                        patientStays.AddRange(patStays);
-                    }
-                    patientStayDict.Add(new KeyValuePair<SmICSCoreLib.Factories.General.Patient, List<PatientStay>>(pat, patientStays));
-                }
-            }
-            List<ComparedContact> contacts = new List<ComparedContact>();
-            for (int i = 0; i < patientStayDict.Count - 1; i++)
-            {
-                List<PatientStay> first = patientStayDict[i].Value;
-                for (int j = (i + 1); j < patientStayDict.Count; j++)
-                {
-                    List<PatientStay> second = patientStayDict[j].Value;
-                    List<ContactPoint> contactLocations = FindContact(first, second);
-                    if (contactLocations.Count > 0)
-                    {
-                        ComparedContact contact = new ComparedContact
+                        foreach (Hospitalization hosp in hospitalizations)
                         {
-                            PatientA = first[0].PatientID,
-                            PatientB = second[0].PatientID,
-                            ContactLocations = contactLocations
-                        };
-                        contacts.Add(contact);
+                            List<PatientStay> patStays = _patStayFac.Process(hosp);
+                            patientStays.AddRange(patStays);
+                        }
+                        patientStayDict.Add(new KeyValuePair<SmICSCoreLib.Factories.General.Patient, List<PatientStay>>(pat, patientStays));
                     }
                 }
+                List<ComparedContact> contacts = new List<ComparedContact>();
+                for (int i = 0; i < patientStayDict.Count - 1; i++)
+                {
+                    List<PatientStay> first = patientStayDict[i].Value;
+                    for (int j = (i + 1); j < patientStayDict.Count; j++)
+                    {
+                        List<PatientStay> second = patientStayDict[j].Value;
+                        List<ContactPoint> contactLocations = FindContact(first, second);
+                        if (contactLocations.Count > 0)
+                        {
+                            ComparedContact contact = new ComparedContact
+                            {
+                                PatientA = first[0].PatientID,
+                                PatientB = second[0].PatientID,
+                                ContactLocations = contactLocations
+                            };
+                            contacts.Add(contact);
+                        }
+                    }
+                }
+                return contacts;
             }
-            return contacts;
+            catch
+            {
+                throw;
+            }
+            
         }
 
         public bool ExistsPatient(SmICSCoreLib.Factories.General.Patient Patient)
         {
-            Feasability feas = _feasabilityFac.GetPersonMovementCount(Patient);
-            if(feas.Count > 0)
+            try
             {
-                return true;
+                Feasability feas = _feasabilityFac.GetPersonMovementCount(Patient);
+                if (feas.Count > 0)
+                {
+                    return true;
+                }
+                return false;
             }
-            return false;
+            catch
+            {
+                throw;
+            }
+            
         }
 
         private List<ContactPoint> FindContact(List<PatientStay> First, List<PatientStay> Second)

@@ -52,7 +52,7 @@
     {
         <div class="spinner"></div>
     }
-    else if(!isLoading && emptyResult)
+    else if (!isLoading && emptyResult)
     {
         <div>
             <span class="text-danger">
@@ -73,7 +73,7 @@
                                 @foreach (string filter in _filterMRE)
                                 {
                                     <option value="@filter">@filter</option>
-                                    }
+                                }
                             </select>
                             <label for="filterNoso">Status:</label>
                             <select class="col-2" @onchange="FilterNosocomial" id="filterNoso">
@@ -135,26 +135,29 @@
 
     private IDataset<int> Stress;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitializedAsync();
-        return Task.Run(LoadMenu);
+        await base.OnInitializedAsync();
+        await LoadMenu();
     }
 
-    private void LoadMenu()
+    private async Task LoadMenu()
     {
-        _pathogenMenuEntries = _menuService.GetPathogens();
+        _pathogenMenuEntries = await _menuService.GetPathogens();
         _pathogenMenuEntries = _pathogenMenuEntries.OrderBy(p => p.Name).ToList();
-        List<Ward> wards = _menuService.GetWards().Result;
+        List<Ward> wards = await _menuService.GetWards();
         _wardMenuEntries = wards.OrderBy(w => w.Name).ToArray();
     }
 
     private async Task Submit()
     {
+
         emptyResult = false;
         isLoading = true;
-        await Task.Run(LoadData);
+        await Task.Delay(1);
+        await LoadDataAsync();
         isLoading = false;
+
     }
 
     public void c_Progress(object sender, EventArgs eventArgs)
@@ -163,10 +166,11 @@
         Console.WriteLine(LoadingMessage);
     }
 
-    private void LoadData()
+    private async Task LoadDataAsync()
     {
+
         //_service.Progress += c_Progress;
-        data = _service.GetData(parameter);
+        data = await _service.GetData(parameter);
         if (data is null)
         {
             emptyResult = true;
@@ -178,7 +182,7 @@
                 data = null;
                 emptyResult = true;
             }
-            else 
+            else
             {
                 filteredData = data;
                 chartEntries = _service.GetChartEntries(parameter, filteredData);
@@ -214,7 +218,7 @@
                 FillDataset(Known, chartEntries["Known"]);
                 FillDataset(Stress, chartEntries["Stress"]);
             }
-                
+
         }
     }
 

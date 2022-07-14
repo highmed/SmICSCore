@@ -16,54 +16,76 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
 
         public List<Hospitalization> Process(Patient patient)
         {
-            List<Hospitalization> hospitalizations = new List<Hospitalization>();
-            List<Case> cases = RestDataAccess.AQLQuery<Case>(HospitalizationCasesQuery(patient));
-            if (cases is not null)
+            try
             {
-                foreach (Case Case in cases)
+                List<Hospitalization> hospitalizations = new List<Hospitalization>();
+                List<Case> cases = RestDataAccess.AQLQuery<Case>(HospitalizationCasesQuery(patient));
+                if (cases is not null)
                 {
-                    Hospitalization hospitalization = Process(Case);
-                    hospitalizations.Add(hospitalization);
+                    foreach (Case Case in cases)
+                    {
+                        Hospitalization hospitalization = Process(Case);
+                        hospitalizations.Add(hospitalization);
+                    }
+                    return hospitalizations;
                 }
-                return hospitalizations;
+                return null;
             }
-            return null;
+            catch
+            {
+                throw;
+            }
         }
 
 
         public Hospitalization Process(Case Case)
         {
-            Admission admission = RestDataAccess.AQLQuery<Admission>(AdmissionQuery(Case)).FirstOrDefault();
-            var dischargeResponse = RestDataAccess.AQLQuery<Discharge>(DischargeQuery(Case));
-            Discharge discharge = dischargeResponse == null ? new Discharge() { Date = null } : dischargeResponse.FirstOrDefault();
-
-            return new Hospitalization
+            try
             {
-                CaseID = Case.CaseID,
-                PatientID = Case.PatientID,
-                Admission = admission,
-                Discharge = discharge
-            };
+                Admission admission = RestDataAccess.AQLQuery<Admission>(AdmissionQuery(Case)).FirstOrDefault();
+                var dischargeResponse = RestDataAccess.AQLQuery<Discharge>(DischargeQuery(Case));
+                Discharge discharge = dischargeResponse == null ? new Discharge() { Date = null } : dischargeResponse.FirstOrDefault();
+
+                return new Hospitalization
+                {
+                    CaseID = Case.CaseID,
+                    PatientID = Case.PatientID,
+                    Admission = admission,
+                    Discharge = discharge
+                };
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public List<HospStay> Process(DateTime admission, DateTime? discharge)
         {
-            List<HospStay> cases = new List<HospStay>();
-            List<HospStay> casesWithDischarge = RestDataAccess.AQLQuery<HospStay>(GetCasesForTimespanWithDischarge(admission, (discharge.HasValue ? discharge.Value : DateTime.Now)));
-            List<HospStay> casesWithoutDischarge = RestDataAccess.AQLQuery<HospStay>(GetCasesForTimespanWithoutDischarge((discharge.HasValue ? discharge.Value : DateTime.Now)));
-            if(casesWithDischarge is not null)
+            try
             {
-                cases.AddRange(casesWithDischarge);
+                List<HospStay> cases = new List<HospStay>();
+                List<HospStay> casesWithDischarge = RestDataAccess.AQLQuery<HospStay>(GetCasesForTimespanWithDischarge(admission, (discharge.HasValue ? discharge.Value : DateTime.Now)));
+                List<HospStay> casesWithoutDischarge = RestDataAccess.AQLQuery<HospStay>(GetCasesForTimespanWithoutDischarge((discharge.HasValue ? discharge.Value : DateTime.Now)));
+                if (casesWithDischarge is not null)
+                {
+                    cases.AddRange(casesWithDischarge);
+                }
+                if (casesWithoutDischarge is not null)
+                {
+                    cases.AddRange(casesWithoutDischarge);
+                }
+                if (cases.Count > 0)
+                {
+                    return cases;
+                }
+                return null;
             }
-            if (casesWithoutDischarge is not null)
+            catch
             {
-                cases.AddRange(casesWithoutDischarge);
+                throw;
             }
-            if (cases.Count > 0)
-            {
-                return cases;
-            }
-            return null; 
+            
         }
 
         private AQLQuery HospitalizationCasesQuery(Patient patient)
