@@ -22,21 +22,21 @@ namespace SmICSCoreLib.Factories.Symptome
 
             try
             {
-                List<SymptomModel> symptomList_VS = RestDataAccess.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_VS(parameter));
+                List<SymptomModel> symptomList_VS = RestDataAccess.AQLQueryAsync<SymptomModel>(AQLCatalog.PatientSymptom_VS(parameter)).GetAwaiter().GetResult();
 
                 if (symptomList_VS != null)
                 {
                     symptomList = symptomList_VS;
                 }
 
-                List<SymptomModel> symptomList_AS = RestDataAccess.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_AS(parameter));
+                List<SymptomModel> symptomList_AS = RestDataAccess.AQLQueryAsync<SymptomModel>(AQLCatalog.PatientSymptom_AS(parameter)).GetAwaiter().GetResult();
 
                 if (symptomList_AS != null)
                 {
                     symptomList = symptomList.Concat(symptomList_AS).ToList();
                 }
 
-                List<SymptomModel> symptomList_US = RestDataAccess.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom_US(parameter));
+                List<SymptomModel> symptomList_US = RestDataAccess.AQLQueryAsync<SymptomModel>(AQLCatalog.PatientSymptom_US(parameter)).GetAwaiter().GetResult();
 
                 if (symptomList_US != null)
                 {
@@ -58,7 +58,7 @@ namespace SmICSCoreLib.Factories.Symptome
         {
             List<SymptomModel> symptomList = new List<SymptomModel>();
 
-            List<SymptomModel> symptomList_VS = RestDataAccess.AQLQuery<SymptomModel>(AQLCatalog.PatientSymptom());
+            List<SymptomModel> symptomList_VS = RestDataAccess.AQLQueryAsync<SymptomModel>(AQLCatalog.PatientSymptom()).GetAwaiter().GetResult();
 
             if (symptomList_VS != null)
             {
@@ -71,7 +71,7 @@ namespace SmICSCoreLib.Factories.Symptome
         {
             List<SymptomModel> symptomList = new List<SymptomModel>();
 
-            List<SymptomModel> symptomList_VS = RestDataAccess.AQLQuery<SymptomModel>(AQLCatalog.PatientBySymptom(symptom));
+            List<SymptomModel> symptomList_VS = RestDataAccess.AQLQueryAsync<SymptomModel>(AQLCatalog.PatientBySymptom(symptom)).GetAwaiter().GetResult();
 
             if (symptomList_VS != null)
             {
@@ -84,7 +84,7 @@ namespace SmICSCoreLib.Factories.Symptome
         {
             List<SymptomModel> symptomList = new List<SymptomModel>();
 
-            List<SymptomModel> symptomList_VS = RestDataAccess.AQLQuery<SymptomModel>(AQLCatalog.SymptomsByPatient(patientId, datum));
+            List<SymptomModel> symptomList_VS = RestDataAccess.AQLQueryAsync<SymptomModel>(AQLCatalog.SymptomsByPatient(patientId, datum)).GetAwaiter().GetResult();
 
             if (symptomList_VS != null)
             {

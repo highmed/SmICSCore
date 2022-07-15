@@ -18,7 +18,7 @@ namespace SmICSCoreLib.Factories.PatientStay.Stationary
 
         public List<StationaryDataModel> Process(string patientId, string fallkennung, DateTime datum)
         {
-            List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQuery<StationaryDataReceiveModel>(AQLCatalog.Stationary(patientId, fallkennung, datum));
+            List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQueryAsync<StationaryDataReceiveModel>(AQLCatalog.Stationary(patientId, fallkennung, datum)).GetAwaiter().GetResult();
 
             if (stationaryDataReceives is null)
             {
@@ -30,7 +30,7 @@ namespace SmICSCoreLib.Factories.PatientStay.Stationary
 
         public List<StationaryDataModel> ProcessFromCase(string patientId, string fallId)
         {
-            List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQuery<StationaryDataReceiveModel>(AQLCatalog.StayFromCase(patientId, fallId));
+            List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQueryAsync<StationaryDataReceiveModel>(AQLCatalog.StayFromCase(patientId, fallId)).GetAwaiter().GetResult();
 
             if (stationaryDataReceives is null)
             {
@@ -42,7 +42,7 @@ namespace SmICSCoreLib.Factories.PatientStay.Stationary
 
         public List<StationaryDataModel> ProcessFromDate(DateTime datum)
         {
-            List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQuery<StationaryDataReceiveModel>(AQLCatalog.StayFromDate(datum));
+            List<StationaryDataReceiveModel> stationaryDataReceives = _restData.AQLQueryAsync<StationaryDataReceiveModel>(AQLCatalog.StayFromDate(datum)).GetAwaiter().GetResult();
 
             if (stationaryDataReceives is null)
             {

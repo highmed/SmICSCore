@@ -404,7 +404,7 @@ namespace SmICSWebApp.Data
 
         private string ExistsSubject(IRestDataAccess _data, string subjectID)
         {
-            List<Employee> subject = _data.AQLQuery<Employee>(AQLCatalog.GetEHRID(subjectID));
+            List<Employee> subject = _data.AQLQueryAsync<Employee>(AQLCatalog.GetEHRID(subjectID)).GetAwaiter().GetResult();
             return subject != null ? subject[0].ID : null;
         }
 

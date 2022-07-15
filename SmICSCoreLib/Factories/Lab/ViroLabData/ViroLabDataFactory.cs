@@ -18,7 +18,7 @@ namespace SmICSCoreLib.Factories.Lab.ViroLabData
         }
         public List<LabDataModel> Process(PatientListParameter parameter)
         {
-            List<LabDataReceiveModel> receiveLabDataList = RestDataAccess.AQLQuery<LabDataReceiveModel>(AQLCatalog.PatientLaborData(parameter));
+            List<LabDataReceiveModel> receiveLabDataList = RestDataAccess.AQLQueryAsync<LabDataReceiveModel>(AQLCatalog.PatientLaborData(parameter)).GetAwaiter().GetResult();
 
             if (receiveLabDataList is null)
             { 

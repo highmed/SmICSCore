@@ -24,10 +24,10 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
         {
             if(parameter.Retro)
             {
-                EarliestMovement firstMove = _restData.AQLQuery<EarliestMovement>(AQLCatalog.GetFirstMovementFromStation(parameter)).FirstOrDefault();
+                EarliestMovement firstMove = _restData.AQLQueryAsync<EarliestMovement>(AQLCatalog.GetFirstMovementFromStation(parameter)).GetAwaiter().GetResult().FirstOrDefault();
                 parameter.Starttime = firstMove.MinDate;
             }
-            List<OutbreakDectectionPatient> patientList = _restData.AQLQuery<OutbreakDectectionPatient>(GetPatientCaseList(parameter));
+            List<OutbreakDectectionPatient> patientList = _restData.AQLQueryAsync<OutbreakDectectionPatient>(GetPatientCaseList(parameter)).GetAwaiter().GetResult();
             int[] PositivCounts = GetPatientLabResults(patientList, parameter);
             int[] Epochs = GenerateEpochsArray(parameter);
             int[][] epochs_and_outbreaks = new int[][] { Epochs, PositivCounts };
@@ -42,7 +42,7 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
             {
                 if (parameter.MedicalField == MedicalField.VIROLOGY)
                 { 
-                    List<OutbreakDetectionLabResult> labResult = _restData.AQLQuery<OutbreakDetectionLabResult>(GetPatientViroLabResultList(parameter, pat));
+                    List<OutbreakDetectionLabResult> labResult = _restData.AQLQueryAsync<OutbreakDetectionLabResult>(GetPatientViroLabResultList(parameter, pat)).GetAwaiter().GetResult();
                     labResult = labResult.OrderBy(l => l.SpecimenCollectionDateTime).ToList();
                     OutbreakDetectionLabResult result = labResult.Where(l => l.SpecimenCollectionDateTime >= parameter.Starttime && l.Result == (int)SarsCovResult.POSITIVE).FirstOrDefault();
                     if (result != null)
@@ -52,12 +52,12 @@ namespace SmICSCoreLib.Factories.OutbreakDetection
                 }
                 else if(parameter.MedicalField == MedicalField.MICROBIOLOGY)
                 {
-                    List<OutbreakDetectionLabResult> labResult = _restData.AQLQuery<OutbreakDetectionLabResult>(GetPatientMibiLabResultList(parameter, pat));
+                    List<OutbreakDetectionLabResult> labResult = _restData.AQLQueryAsync<OutbreakDetectionLabResult>(GetPatientMibiLabResultList(parameter, pat)).GetAwaiter().GetResult();
                     foreach (OutbreakDetectionLabResult lab in labResult)
                     {
                         if (lab.SpecimenCollectionDateTime >= parameter.Starttime)
                         {
-                            List<Antibiogram> antibiogram = _restData.AQLQuery<Antibiogram>(GetAntibiogram(lab)); 
+                            List<Antibiogram> antibiogram = _restData.AQLQueryAsync<Antibiogram>(GetAntibiogram(lab)).GetAwaiter().GetResult(); 
                             Pathogen pathogen = new Pathogen()
                             {
                                 Name = parameter.PathogenIDs.First(),

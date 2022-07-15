@@ -44,11 +44,11 @@ namespace SmICSCoreLib.CronJobs
                 { 
                     Console.WriteLine(string.Format("ENV FIRST_DATA_ENRTY_YEAR couldn't be read. Instead {0} was set as FIRST_DATA_ENRTY_YEAR!", date.Year));
                 }
-                wardMenuEntries = _menuListFac.Wards(JobType.FIRST_STARTUP, date);
+                wardMenuEntries = _menuListFac.WardsAsync(JobType.FIRST_STARTUP, date).GetAwaiter().GetResult();
             }
             else
             {
-                wardMenuEntries = _menuListFac.Wards(JobType.DAILY, DateTime.Now.Date.AddDays(-1.0));
+                wardMenuEntries = _menuListFac.WardsAsync(JobType.DAILY, DateTime.Now.Date.AddDays(-1.0)).GetAwaiter().GetResult();
             }
             if (wardMenuEntries is not null)
             {
@@ -87,11 +87,11 @@ namespace SmICSCoreLib.CronJobs
                 {
                     Console.WriteLine(string.Format("ENV FIRST_DATA_ENRTY_YEAR couldn't be read. Instead {0} was set as FIRST_DATA_ENRTY_YEAR!", date.Year));
                 }
-                pathoMenu = _menuListFac.Pathogens(JobType.FIRST_STARTUP, date);
+                pathoMenu = _menuListFac.PathogensAsync(JobType.FIRST_STARTUP, date).GetAwaiter().GetResult();
             }
             else
             {
-                pathoMenu = _menuListFac.Pathogens(JobType.DAILY, DateTime.Now.Date.AddDays(-1.0));
+                pathoMenu = _menuListFac.PathogensAsync(JobType.DAILY, DateTime.Now.Date.AddDays(-1.0)).GetAwaiter().GetResult();
             }
             if (pathoMenu is not null)
             {

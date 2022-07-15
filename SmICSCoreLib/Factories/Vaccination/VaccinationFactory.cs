@@ -18,7 +18,7 @@ namespace SmICSCoreLib.Factories.Vaccination
         public List<VaccinationModel> Process(PatientListParameter parameter)
         {
 
-            List<VaccinationModel> vaccList = RestDataAccess.AQLQuery<VaccinationModel>(AQLCatalog.PatientVaccination(parameter));
+            List<VaccinationModel> vaccList = RestDataAccess.AQLQueryAsync<VaccinationModel>(AQLCatalog.PatientVaccination(parameter)).GetAwaiter().GetResult();
 
             if (vaccList is null)
             {
@@ -30,7 +30,7 @@ namespace SmICSCoreLib.Factories.Vaccination
 
         public List<VaccinationModel> ProcessSpecificVaccination(PatientListParameter parameter, string vaccination)
         {
-            List<VaccinationModel> vaccList = RestDataAccess.AQLQuery<VaccinationModel>(AQLCatalog.SpecificVaccination(parameter, vaccination ));
+            List<VaccinationModel> vaccList = RestDataAccess.AQLQueryAsync<VaccinationModel>(AQLCatalog.SpecificVaccination(parameter, vaccination)).GetAwaiter().GetResult();
 
             if (vaccList is null)
             {

@@ -19,7 +19,7 @@ namespace SmICSCoreLib.Factories.PatientMovement
         }
         public List<PatientMovementModel> Process(PatientListParameter parameter)
         {
-            List<PatientStayModel> patientStayList = RestDataAccess.AQLQuery<PatientStayModel>(AQLCatalog.PatientStay(parameter));
+            List<PatientStayModel> patientStayList = RestDataAccess.AQLQueryAsync<PatientStayModel>(AQLCatalog.PatientStay(parameter)).GetAwaiter().GetResult();
             if (patientStayList is null)
             {
                 return new List<PatientMovementModel>();
@@ -30,7 +30,7 @@ namespace SmICSCoreLib.Factories.PatientMovement
 
         public List<PatientMovementModel> Process(Patient patient)
         {
-            List<PatientStayModel> patientStayList = RestDataAccess.AQLQuery<PatientStayModel>(AQLCatalog.PatientStay(patient));
+            List<PatientStayModel> patientStayList = RestDataAccess.AQLQueryAsync<PatientStayModel>(AQLCatalog.PatientStay(patient)).GetAwaiter().GetResult();
             if (patientStayList is null)
             {
                 return new List<PatientMovementModel>();
@@ -41,7 +41,7 @@ namespace SmICSCoreLib.Factories.PatientMovement
 
         public List<PatientMovementModel> ProcessFromStation(PatientListParameter parameter, string station, DateTime starttime, DateTime endtime)
         {
-            List<PatientStayModel> patientStayList = RestDataAccess.AQLQuery<PatientStayModel>(AQLCatalog.PatientStayFromStation(parameter, station, starttime, endtime));
+            List<PatientStayModel> patientStayList = RestDataAccess.AQLQueryAsync<PatientStayModel>(AQLCatalog.PatientStayFromStation(parameter, station, starttime, endtime)).GetAwaiter().GetResult();
             if (patientStayList is null)
             {
                 return new List<PatientMovementModel>();
@@ -65,8 +65,8 @@ namespace SmICSCoreLib.Factories.PatientMovement
                 if (!PatID_CaseId_Combination.Contains(patfallID))
                 {
 
-                    List<EpisodeOfCareModel> episodeOfCareList = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParam));
-                    List<EpisodeOfCareModel> discharges = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParam));
+                    List<EpisodeOfCareModel> episodeOfCareList = RestDataAccess.AQLQueryAsync<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParam)).GetAwaiter().GetResult();
+                    List<EpisodeOfCareModel> discharges = RestDataAccess.AQLQueryAsync<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParam)).GetAwaiter().GetResult();
                     if (!(episodeOfCareList is null))
                     {
                         //result.First because there can be just one admission/discharge timestamp for each case
@@ -155,7 +155,7 @@ namespace SmICSCoreLib.Factories.PatientMovement
 
         public List<PatientMovementModel> ProcessGetStations()
         {
-            List<PatientMovementModel> stationList = RestDataAccess.AQLQuery<PatientMovementModel>(AQLCatalog.GetAllStationsForConfig());
+            List<PatientMovementModel> stationList = RestDataAccess.AQLQueryAsync<PatientMovementModel>(AQLCatalog.GetAllStationsForConfig()).GetAwaiter().GetResult();
             if (stationList is null)
             {
                 return new List<PatientMovementModel>();

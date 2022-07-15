@@ -111,7 +111,7 @@ namespace SmICSWebApp.Controllers
                 foreach(string pat in parameter.patientList)
                 {
                     Patient patient = new Patient() { PatientID = pat };
-                    List<VisuLabResult> labs = _medicalFindingService.GetMedicalFinding(patient, pathogen);
+                    List<VisuLabResult> labs = _medicalFindingService.GetMedicalFinding(patient, pathogen).GetAwaiter().GetResult();
                     visuLabResults.AddRange(labs);
                 }
                 return visuLabResults;
@@ -135,7 +135,7 @@ namespace SmICSWebApp.Controllers
                 foreach (string pat in parameter.patientList)
                 {
                     Patient patient = new Patient() { PatientID = pat };
-                    List<VisuPatientMovement> movements = _movementService.GetPatientMovements(patient);
+                    List<VisuPatientMovement> movements = _movementService.GetPatientMovements(patient).GetAwaiter().GetResult();
                     visuMovements.AddRange(movements);
                 }
                 return visuMovements;

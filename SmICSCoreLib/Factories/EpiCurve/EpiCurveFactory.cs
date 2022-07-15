@@ -87,7 +87,7 @@ namespace SmICSCoreLib.Factories.EpiCurve
         private void CreateDailyEntries(DateTime date, ExtendedEpiCurveParameter parameter)
         {
             _logger.LogDebug("Flag - Query Paramters: Datum: {Date} \r PathogenList: {pathogens}", date.ToString(), parameter.PathogenCodesToAqlMatchString());
-            List<FlagTimeModel> flagTimes = RestDataAccess.AQLQuery<FlagTimeModel>(LaborEpiCurve(date, parameter));
+            List<FlagTimeModel> flagTimes = RestDataAccess.AQLQueryAsync<FlagTimeModel>(LaborEpiCurve(date, parameter)).GetAwaiter().GetResult();
 
             if (flagTimes == null)
             {
@@ -111,7 +111,7 @@ namespace SmICSCoreLib.Factories.EpiCurve
             {
                 _logger.LogDebug("PatientLocation - Query Paramters: PatientID: {PatientID} \r Datum: {Date}", flag.PatientID, flag.Datum.ToString());
 
-                List<PatientLocation> patientLocations = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(flag.Datum, flag.PatientID));
+                List<PatientLocation> patientLocations = RestDataAccess.AQLQueryAsync<PatientLocation>(AQLCatalog.PatientLocation(flag.Datum, flag.PatientID)).GetAwaiter().GetResult();
 
                 PatientLocation patientLocation = null;
                 if (patientLocations == null)

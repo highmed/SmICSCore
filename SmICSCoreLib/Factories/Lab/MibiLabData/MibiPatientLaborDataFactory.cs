@@ -3,6 +3,7 @@ using SmICSCoreLib.Factories.MiBi;
 using SmICSCoreLib.REST;
 using System.Collections.Generic;
 using SmICSCoreLib.Factories.Lab.MibiLabdata.ReceiveModel;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.Lab.MibiLabData
 {
@@ -21,7 +22,7 @@ namespace SmICSCoreLib.Factories.Lab.MibiLabData
         {
             mibiLabDatas = new List<MibiLabDataModel>();
 
-            List<MetaDataReceiveModel> metaDatas = _restData.AQLQuery<MetaDataReceiveModel>(AQLCatalog.CasesWithResults(parameter));
+            List<MetaDataReceiveModel> metaDatas = _restData.AQLQueryAsync<MetaDataReceiveModel>(AQLCatalog.CasesWithResults(parameter)).GetAwaiter().GetResult();
 
             if (metaDatas != null)
             {
@@ -39,7 +40,7 @@ namespace SmICSCoreLib.Factories.Lab.MibiLabData
         {
             foreach (CaseIDReceiveModel caseID in cases)
             {
-                List<MetaDataReceiveModel> metaDatas = _restData.AQLQuery<MetaDataReceiveModel>(AQLCatalog.ReportMeta(caseID);
+                List<MetaDataReceiveModel> metaDatas = _restData.AQLQueryAsync<MetaDataReceiveModel>(AQLCatalog.ReportMeta(caseID);
 
                 getSampleData(metaDatas);
             }
@@ -49,7 +50,7 @@ namespace SmICSCoreLib.Factories.Lab.MibiLabData
         {
             foreach (MetaDataReceiveModel metaData in metaDatas)
             {
-                List<RequirementReceiveModel> requirements = _restData.AQLQuery<RequirementReceiveModel>(AQLCatalog.Requirements(metaData));
+                List<RequirementReceiveModel> requirements = _restData.AQLQueryAsync<RequirementReceiveModel>(AQLCatalog.Requirements(metaData)).GetAwaiter().GetResult();
             }
         }
 
@@ -57,7 +58,7 @@ namespace SmICSCoreLib.Factories.Lab.MibiLabData
         {
             foreach (MetaDataReceiveModel metaData in metaDatas)
             {
-                List<SampleReceiveModel> sampleDatas = _restData.AQLQuery<SampleReceiveModel>(AQLCatalog.SamplesFromResult(metaData));
+                List<SampleReceiveModel> sampleDatas = _restData.AQLQueryAsync<SampleReceiveModel>(AQLCatalog.SamplesFromResult(metaData)).GetAwaiter().GetResult();
 
                 if (sampleDatas != null)
                 {
@@ -70,11 +71,11 @@ namespace SmICSCoreLib.Factories.Lab.MibiLabData
             }
         }
 
-        private void getPathogenData(List<SampleReceiveModel> sampleDatas, MetaDataReceiveModel metaData)
+        private async Task getPathogenData(List<SampleReceiveModel> sampleDatas, MetaDataReceiveModel metaData)
         {
             foreach (SampleReceiveModel sampleData in sampleDatas)
             {
-                List<PathogenReceiveModel> pathogenDatas = _restData.AQLQuery<PathogenReceiveModel>(AQLCatalog.PathogensFromResult(metaData, sampleData));
+                List<PathogenReceiveModel> pathogenDatas = await _restData.AQLQueryAsync<PathogenReceiveModel>(AQLCatalog.PathogensFromResult(metaData, sampleData));
 
                 if (pathogenDatas != null)
                 {
@@ -88,7 +89,7 @@ namespace SmICSCoreLib.Factories.Lab.MibiLabData
             }
         }
 
-        private void createMibiLabData(List<PathogenReceiveModel> pathogenDatas, SampleReceiveModel sampleData, MetaDataReceiveModel metaData)
+        private async Task createMibiLabData(List<PathogenReceiveModel> pathogenDatas, SampleReceiveModel sampleData, MetaDataReceiveModel metaData)
         {
             foreach (PathogenReceiveModel pathogenData in pathogenDatas)
             {
@@ -100,7 +101,7 @@ namespace SmICSCoreLib.Factories.Lab.MibiLabData
                     UID = metaData.UID,
                     IsolatNo = pathogenData.IsolatNo
                 };
-                mibiLabData.Antibiogram = _antibiogram.Process(antibiogramParameter);
+                mibiLabData.Antibiogram = await _antibiogram.ProcessAsync(antibiogramParameter);
                 mibiLabDatas.Add(mibiLabData);
             }
         }

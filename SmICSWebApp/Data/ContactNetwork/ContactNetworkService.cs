@@ -62,7 +62,7 @@ namespace SmICSWebApp.Data.ContactNetwork
         private void FindWardsQuery()
         {
             ContactNetworkParameter parameter = ContactStack.Pop();
-            List<VisuPatientMovement> patientWardList = _movementService.GetPatientMovements(parameter);
+            List<VisuPatientMovement> patientWardList = _movementService.GetPatientMovements(parameter).GetAwaiter().GetResult();
             patientWardList = patientWardList.Where(w => w.MovementTypeID != (int)MovementType.ADMISSION && w.MovementTypeID != (int)MovementType.DISCHARGE).ToList();
 
             if (patientWardList is null)
@@ -79,7 +79,7 @@ namespace SmICSWebApp.Data.ContactNetwork
 
             foreach (VisuPatientMovement patientWard in PatientWardList)
             {
-                List<PatientStay> contactStays = _patStayFac.Process(new WardParameter() { Ward = patientWard.Ward, Start = patientWard.Admission, End = patientWard.Discharge });
+                List<PatientStay> contactStays = _patStayFac.ProcessAsync(new WardParameter() { Ward = patientWard.Ward, Start = patientWard.Admission, End = patientWard.Discharge }).GetAwaiter().GetResult();
                 if (contactStays is not null)
                 {
                     foreach (PatientStay contact in contactStays)
@@ -87,8 +87,8 @@ namespace SmICSWebApp.Data.ContactNetwork
                         if (contacts.PatientMovements.Where(c => c.PatientID == contact.PatientID).Count() == 0)
                         {
                             List<VisuLabResult> contactLabResults = _medicalFinding.GetMedicalFinding(contact, new SmICSCoreLib.Factories.MiBi.PatientView.Parameter.PathogenParameter() { PathogenCodes
-                                = new List<string> { parameter.pathogen }    });
-                            List<VisuPatientMovement> contactMovements = _movementService.GetPatientMovements(contact);
+                                = new List<string> { parameter.pathogen }    }).GetAwaiter().GetResult();
+                            List<VisuPatientMovement> contactMovements = _movementService.GetPatientMovements(contact).GetAwaiter().GetResult();
 
                             contacts.LaborData.AddRange(contactLabResults);
                             contacts.PatientMovements.AddRange(contactMovements);

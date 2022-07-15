@@ -17,11 +17,11 @@ namespace SmICSCoreLib.Factories.RKIConfig
             List<LabDataKeimReceiveModel> erregerList = new List<LabDataKeimReceiveModel>();
             if (name == "SARS-CoV-2")
             {
-                erregerList = _restData.AQLQuery<LabDataKeimReceiveModel>(AQLCatalog.GetErregernameFromViro(name));
+                erregerList = _restData.AQLQueryAsync<LabDataKeimReceiveModel>(AQLCatalog.GetErregernameFromViro(name)).GetAwaiter().GetResult();
             }
             else
             {
-                erregerList = _restData.AQLQuery<LabDataKeimReceiveModel>(AQLCatalog.GetErregernameFromMikro(name));
+                erregerList = _restData.AQLQueryAsync<LabDataKeimReceiveModel>(AQLCatalog.GetErregernameFromMikro(name)).GetAwaiter().GetResult();
             }
 
             return erregerList;

@@ -18,7 +18,7 @@ namespace SmICSCoreLib.Factories.Employees.PersInfoInfecCtrl
         public List<PersInfoInfecCtrlModel> Process(PatientListParameter parameter)
         {
 
-            List<PersInfoInfecCtrlModel> ctList = _restData.AQLQuery<PersInfoInfecCtrlModel>(AQLCatalog.EmployeePersInfoInfecCtrl(parameter));
+            List<PersInfoInfecCtrlModel> ctList = _restData.AQLQueryAsync<PersInfoInfecCtrlModel>(AQLCatalog.EmployeePersInfoInfecCtrl(parameter)).GetAwaiter().GetResult();
 
             if (ctList is null)
             {
