@@ -21,7 +21,7 @@ namespace SmICSWebApp.Data.ContactComparison
             _hospFac = hospFac;
         }
 
-        public List<ComparedContact> Compare(List<SmICSCoreLib.Factories.General.Patient> patients)
+        public async Task<List<ComparedContact>> Compare(List<SmICSCoreLib.Factories.General.Patient> patients)
         {
             try
             {
@@ -29,12 +29,12 @@ namespace SmICSWebApp.Data.ContactComparison
                 foreach (SmICSCoreLib.Factories.General.Patient pat in patients)
                 {
                     List<PatientStay> patientStays = new List<PatientStay>();
-                    List<Hospitalization> hospitalizations = _hospFac.Process(pat);
+                    List<Hospitalization> hospitalizations = await _hospFac.ProcessAsync(pat);
                     if (hospitalizations is not null)
                     {
                         foreach (Hospitalization hosp in hospitalizations)
                         {
-                            List<PatientStay> patStays = _patStayFac.Process(hosp);
+                            List<PatientStay> patStays = await _patStayFac.ProcessAsync(hosp);
                             patientStays.AddRange(patStays);
                         }
                         patientStayDict.Add(new KeyValuePair<SmICSCoreLib.Factories.General.Patient, List<PatientStay>>(pat, patientStays));
@@ -69,11 +69,11 @@ namespace SmICSWebApp.Data.ContactComparison
             
         }
 
-        public bool ExistsPatient(SmICSCoreLib.Factories.General.Patient Patient)
+        public async Task<bool> ExistsPatient(SmICSCoreLib.Factories.General.Patient Patient)
         {
             try
             {
-                Feasability feas = _feasabilityFac.GetPersonMovementCount(Patient);
+                Feasability feas = await _feasabilityFac.GetPersonMovementCountAsync(Patient);
                 if (feas.Count > 0)
                 {
                     return true;

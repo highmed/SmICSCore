@@ -18,17 +18,17 @@ namespace SmICSWebApp.Data.PatientMovement
             _hospFac = hospFac;
         }
 
-        public List<VisuPatientMovement> GetPatientMovements(SmICSCoreLib.Factories.General.Patient patient)
+        public async Task<List<VisuPatientMovement>> GetPatientMovements(SmICSCoreLib.Factories.General.Patient patient)
         {
             try
             {
                 List<VisuPatientMovement> visuPatientMovements = new List<VisuPatientMovement>();
-                List<Hospitalization> hospitalizations = _hospFac.Process(patient);
+                List<Hospitalization> hospitalizations = await _hospFac.ProcessAsync(patient);
                 if (hospitalizations is not null)
                 {
                     foreach (Hospitalization hosp in hospitalizations)
                     {
-                        List<PatientStay> patientStays = _patStayFac.Process(hosp);
+                        List<PatientStay> patientStays = await _patStayFac.ProcessAsync(hosp);
                         visuPatientMovements.Add(new VisuPatientMovement(hosp.Admission, patientStays.First()));
                         foreach (PatientStay patientStay in patientStays)
                         {

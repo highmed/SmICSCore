@@ -2,9 +2,9 @@
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 using SmICSCoreLib.REST;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi.Contact
 {
@@ -20,19 +20,19 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
             _patientStayFac = patientStayFac;
         }
 
-        public Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>> Process(Patient parameter)
+        public async Task<Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>>> ProcessAsync(Patient parameter)
         {
             try
             {
                 Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>> contacts = new Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>>();
 
-                List<Hospitalization> Hospitalizations = _hospitalizationFac.Process(parameter);
+                List<Hospitalization> Hospitalizations = await _hospitalizationFac.ProcessAsync(parameter);
                 Hospitalizations.ForEach(h => contacts.Add(h, null));
 
                 Hospitalization hospitalization = Hospitalizations.Last();
 
-                List<PatientMovementNew.PatientStays.PatientStay> patientStays = _patientStayFac.Process(hospitalization);
-                List<PatientMovementNew.PatientStays.PatientStay> contactCases = DetermineContacts(Hospitalizations.Last());
+                List<PatientMovementNew.PatientStays.PatientStay> patientStays = await _patientStayFac.ProcessAsync(hospitalization);
+                List<PatientMovementNew.PatientStays.PatientStay> contactCases = await DetermineContacts(Hospitalizations.Last());
 
                 if (contacts[hospitalization] == null)
                 {
@@ -48,11 +48,11 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
            
         }
 
-        public List<PatientMovementNew.PatientStays.PatientStay> Process(Hospitalization hospitalization)
+        public async Task<List<PatientMovementNew.PatientStays.PatientStay>> ProcessAsync(Hospitalization hospitalization)
         {
             try
             {
-                return DetermineContacts(hospitalization);
+                return await DetermineContacts(hospitalization);
             }
             catch
             {
@@ -60,17 +60,17 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
             }
         }
 
-        private List<PatientMovementNew.PatientStays.PatientStay> DetermineContacts(Hospitalization hospitalization)
+        private async Task<List<PatientMovementNew.PatientStays.PatientStay>> DetermineContacts(Hospitalization hospitalization)
         {
-            List<PatientMovementNew.PatientStays.PatientStay> patientStays = _patientStayFac.Process(hospitalization);
+            List<PatientMovementNew.PatientStays.PatientStay> patientStays = await _patientStayFac.ProcessAsync(hospitalization);
             RemoveDoubleStays(patientStays);
-            List<HospStay> possibleContactHosp = _hospitalizationFac.Process(hospitalization.Admission.Date, hospitalization.Discharge.Date);
+            List<HospStay> possibleContactHosp = await _hospitalizationFac.ProcessAsync(hospitalization.Admission.Date, hospitalization.Discharge.Date);
             List<PatientMovementNew.PatientStays.PatientStay> cases = new List<PatientMovementNew.PatientStays.PatientStay>();
             if (possibleContactHosp is not null)
             {
                 foreach (HospStay _case in possibleContactHosp)
                 {
-                    List<HospitalizationWard> wards = RestDataAccess.AQLQuery<HospitalizationWard>(GetsAllWardsFromHospitalization(_case));
+                    List<HospitalizationWard> wards = await RestDataAccess.AQLQueryAsync<HospitalizationWard>(GetsAllWardsFromHospitalization(_case));
                     if (wards is not null)
                     {
                         foreach (PatientMovementNew.PatientStays.PatientStay patientStay in patientStays)
@@ -101,7 +101,7 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
                                     };
 
 
-                                    List<PatientMovementNew.PatientStays.PatientStay> casesOnWard = _patientStayFac.Process(wardParameter);
+                                    List<PatientMovementNew.PatientStays.PatientStay> casesOnWard = await _patientStayFac.ProcessAsync(wardParameter);
                                     if (casesOnWard is not null)
                                     {
                                         cases.AddRange(casesOnWard);

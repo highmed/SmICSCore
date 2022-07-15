@@ -5,6 +5,7 @@ using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MenuList
 {
@@ -17,7 +18,7 @@ namespace SmICSCoreLib.Factories.MenuList
             RestDataAccess = restDataAccess;
         }
 
-        public List<WardMenuEntry> Wards(JobType type, DateTime StartDate)
+        public async Task<List<WardMenuEntry>> WardsAsync(JobType type, DateTime StartDate)
         {
             try
             {
@@ -40,7 +41,7 @@ namespace SmICSCoreLib.Factories.MenuList
                             nextDate = end;
                         }
                     }
-                    List<UID> uids = RestDataAccess.AQLQuery<UID>(StayCompositionsPerTimespan(date, nextDate));
+                    List<UID> uids = await RestDataAccess.AQLQueryAsync<UID>(StayCompositionsPerTimespan(date, nextDate));
                     if (uids is not null)
                     {
                         int count = 0;
@@ -51,7 +52,7 @@ namespace SmICSCoreLib.Factories.MenuList
                             {
                                 range = uids.Count - count;
                             }
-                            List<WardMenuEntry> tmpWards = RestDataAccess.AQLQuery<WardMenuEntry>(WardList(uids.GetRange(count, range)));
+                            List<WardMenuEntry> tmpWards = await RestDataAccess.AQLQueryAsync<WardMenuEntry>(WardList(uids.GetRange(count, range)));
                             if (tmpWards is not null)
                             {
                                 foreach (WardMenuEntry entry in tmpWards)
@@ -82,7 +83,7 @@ namespace SmICSCoreLib.Factories.MenuList
             }
         }
 
-        public List<PathogenMenuEntry> Pathogens(JobType type, DateTime StartDate)
+        public async Task<List<PathogenMenuEntry>> PathogensAsync(JobType type, DateTime StartDate)
         {
             try
             {
@@ -105,11 +106,11 @@ namespace SmICSCoreLib.Factories.MenuList
                             nextDate = end;
                         }
                     }
-                    List<UID> mibi_uids = RestDataAccess.AQLQuery<UID>(MibiPathogenCompositionsPerTimespan(date, nextDate));
-                    PathoEntries(mibi_uids, ref pathogens, MedicalField.MICROBIOLOGY);
+                    List<UID> mibi_uids = await RestDataAccess.AQLQueryAsync<UID>(MibiPathogenCompositionsPerTimespan(date, nextDate));
+                    await PathoEntriesAsync(mibi_uids, pathogens, MedicalField.MICROBIOLOGY);
                     mibi_uids = null;
-                    List<UID> viro_uids = RestDataAccess.AQLQuery<UID>(ViroPathogenCompositionsPerTimespan(date, nextDate));
-                    PathoEntries(viro_uids, ref pathogens, MedicalField.VIROLOGY);
+                    List<UID> viro_uids = await RestDataAccess.AQLQueryAsync<UID>(ViroPathogenCompositionsPerTimespan(date, nextDate));
+                    await PathoEntriesAsync(viro_uids, pathogens, MedicalField.VIROLOGY);
                     viro_uids = null;
 
                     date = nextDate;
@@ -128,7 +129,7 @@ namespace SmICSCoreLib.Factories.MenuList
             
         }
 
-        private void PathoEntries(List<UID> uids, ref List<PathogenMenuEntry> pathogens, string field)
+        private async Task PathoEntriesAsync(List<UID> uids, List<PathogenMenuEntry> pathogens, string field)
         {
             if (uids is not null)
             {
@@ -143,11 +144,11 @@ namespace SmICSCoreLib.Factories.MenuList
                     List<PathogenMenuEntry> tmpPatho = null;
                     if (field == MedicalField.MICROBIOLOGY)
                     {
-                        tmpPatho = RestDataAccess.AQLQuery<PathogenMenuEntry>(MibiPathogenList(uids.GetRange(count, range)));
+                        tmpPatho = await RestDataAccess.AQLQueryAsync<PathogenMenuEntry>(MibiPathogenList(uids.GetRange(count, range)));
                     }
                     else
                     {
-                        tmpPatho = RestDataAccess.AQLQuery<PathogenMenuEntry>(ViroPathogenList(uids.GetRange(count, range)));
+                        tmpPatho = await RestDataAccess.AQLQueryAsync<PathogenMenuEntry>(ViroPathogenList(uids.GetRange(count, range)));
                     }
                     if (tmpPatho is not null)
                     {

@@ -107,6 +107,8 @@
 }
 
 @code {
+    [CascadingParameter]
+    public Error Error { get; set; }
     private WardParameter parameter = new WardParameter() { Start = DateTime.Now.AddDays(-7.0).Date, End = DateTime.Now.Date };
 
     private List<WardPatient> data = null;
@@ -170,55 +172,64 @@
     {
 
         //_service.Progress += c_Progress;
-        data = await _service.GetData(parameter);
-        if (data is null)
+        try
         {
-            emptyResult = true;
-        }
-        else
-        {
-            if (data.Count == 0)
+
+
+            data = await _service.GetData(parameter);
+            if (data is null)
             {
-                data = null;
                 emptyResult = true;
             }
             else
             {
-                filteredData = data;
-                chartEntries = _service.GetChartEntries(parameter, filteredData);
-                _filterMRE = _service.GetFilter(parameter);
-
-                _chart = EpiCurveConfig("Epidemiologische Kurve der Station: " + parameter.Ward, "Neue Fälle");
-                _accumChart = EpiCurveConfig("", "Last der Station");
-
-                Nosocomial = new BarDataset<int>()
+                if (data.Count == 0)
                 {
-                    Label = "Nosokomial",
-                    BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Red)
-                };
-
-                Known = new BarDataset<int>()
+                    data = null;
+                    emptyResult = true;
+                }
+                else
                 {
-                    Label = "Bekannt",
-                    BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue)
-                };
+                    filteredData = data;
+                    chartEntries = _service.GetChartEntries(parameter, filteredData);
+                    _filterMRE = _service.GetFilter(parameter);
 
-                Stress = new BarDataset<int>()
-                {
-                    Label = "Last",
-                    BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.DarkGray)
-                };
+                    _chart = EpiCurveConfig("Epidemiologische Kurve der Station: " + parameter.Ward, "Neue Fälle");
+                    _accumChart = EpiCurveConfig("", "Last der Station");
 
-                GetXAxisLabels();
-                _chart.Data.Datasets.Add(Nosocomial);
-                _chart.Data.Datasets.Add(Known);
-                _accumChart.Data.Datasets.Add(Stress);
+                    Nosocomial = new BarDataset<int>()
+                        {
+                            Label = "Nosokomial",
+                            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Red)
+                        };
 
-                FillDataset(Nosocomial, chartEntries["Nosokomial"]);
-                FillDataset(Known, chartEntries["Known"]);
-                FillDataset(Stress, chartEntries["Stress"]);
+                    Known = new BarDataset<int>()
+                        {
+                            Label = "Bekannt",
+                            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue)
+                        };
+
+                    Stress = new BarDataset<int>()
+                        {
+                            Label = "Last",
+                            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.DarkGray)
+                        };
+
+                    GetXAxisLabels();
+                    _chart.Data.Datasets.Add(Nosocomial);
+                    _chart.Data.Datasets.Add(Known);
+                    _accumChart.Data.Datasets.Add(Stress);
+
+                    FillDataset(Nosocomial, chartEntries["Nosokomial"]);
+                    FillDataset(Known, chartEntries["Known"]);
+                    FillDataset(Stress, chartEntries["Stress"]);
+                }
+
             }
-
+        }
+        catch (Exception e)
+        {
+            Error.ProcessError(e);
         }
     }
 

@@ -1,0 +1,16 @@
+﻿@using Blazored.Toast.Services
+@inject IToastService _toast
+
+<CascadingValue Value=this>
+    @ChildContent
+</CascadingValue>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }        
+
+    public void ProcessError(Exception e)
+    {
+        _toast.ShowError(string.Format("Oops, Something went wrong: \n {1}", e.Message));
+    }
+}

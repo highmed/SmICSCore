@@ -2,6 +2,7 @@
 using SmICSCoreLib.Factories.MiBi.PatientView;
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmICSWebApp.Data.MedicalFinding
 {
@@ -14,12 +15,12 @@ namespace SmICSWebApp.Data.MedicalFinding
             _resultFac = resultFac;
         }
 
-        public List<VisuLabResult> GetMedicalFinding(SmICSCoreLib.Factories.General.Patient patient, PathogenParameter pathogen)
+        public async Task<List<VisuLabResult>> GetMedicalFinding(SmICSCoreLib.Factories.General.Patient patient, PathogenParameter pathogen)
         {
             try
             {
                 List<VisuLabResult> labResults = new List<VisuLabResult>();
-                List<LabResult> results = _resultFac.Process(patient, pathogen);
+                List<LabResult> results = await _resultFac.ProcessAsync(patient, pathogen);
                 if (results != null)
                 {
                     foreach (LabResult result in results)

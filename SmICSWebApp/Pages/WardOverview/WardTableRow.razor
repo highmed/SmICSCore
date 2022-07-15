@@ -31,7 +31,26 @@
         </ContextMenuTrigger>
     </td>
     <td>
-        @Patient.CaseID
+        @Patient.
+
+
+
+
+
+        <CaseTooltip Text="Tooltip welcher noch auf den Versorgungsfall angepasst werden muss">
+        @if (Patient.InfectionStatus.Values.Any(x => x.Nosocomial))
+        {
+            <span class="text-danger"> @Patient.PatientID</span>
+        }
+        else if (Patient.InfectionStatus.Values.Any(x => x.Known))
+        {
+            <span class="text-primary"> @Patient.PatientID</span>
+        }
+        else
+        {
+            @Patient.CaseID
+        }
+        </CaseTooltip>
     </td>
     <td>
         @if (_nosocomial)

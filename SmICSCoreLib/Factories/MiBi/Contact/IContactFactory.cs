@@ -1,6 +1,7 @@
 ﻿using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.REST;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi.Contact
 {
@@ -8,7 +9,7 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        List<PatientMovementNew.PatientStays.PatientStay> Process(Hospitalization hospitalization);
+        Task<List<PatientMovementNew.PatientStays.PatientStay>> ProcessAsync(Hospitalization hospitalization);
   
     }
 }

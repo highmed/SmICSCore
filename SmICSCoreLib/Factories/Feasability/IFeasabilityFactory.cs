@@ -1,4 +1,5 @@
 ﻿using SmICSCoreLib.REST;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.Feasability
 {
@@ -6,6 +7,6 @@ namespace SmICSCoreLib.Factories.Feasability
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        Feasability GetPersonMovementCount(SmICSCoreLib.Factories.General.Patient patient);
+        Task<Feasability> GetPersonMovementCountAsync(SmICSCoreLib.Factories.General.Patient patient);
     }
 }

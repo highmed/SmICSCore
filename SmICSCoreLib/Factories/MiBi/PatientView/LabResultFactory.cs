@@ -5,6 +5,7 @@ using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi.PatientView
 {
@@ -21,15 +22,15 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
 
         }
 
-        public List<LabResult> Process(Patient patient, PathogenParameter pathogen)
+        public async Task<List<LabResult>> ProcessAsync(Patient patient, PathogenParameter pathogen)
         {
             try
             {
                 List<LabResult> results = new List<LabResult>();
-                List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
+                List<Case> cases = await RestDataAccess.AQLQueryAsync<Case>(AQLCatalog.Cases(patient));
                 foreach(Case c in cases)
                 {
-                    List<LabResult> tmpResult = Process(c, pathogen.MedicalField, pathogen);
+                    List<LabResult> tmpResult = await ProcessAsync(c, pathogen.MedicalField, pathogen);
                     if (tmpResult is not null)
                     {
                         results.AddRange(tmpResult);
@@ -43,15 +44,15 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             }
         }
 
-        public List<LabResult> Process(Patient patient, string MedicalField)
+        public async Task<List<LabResult>> ProcessAsync(Patient patient, string MedicalField)
         {
             try
             {
                 List<LabResult> results = new List<LabResult>();
-                List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
+                List<Case> cases = await RestDataAccess.AQLQueryAsync<Case>(AQLCatalog.Cases(patient));
                 foreach (Case c in cases)
                 {
-                    List<LabResult> tmpResult = Process(c, MedicalField);
+                    List<LabResult> tmpResult = await ProcessAsync(c, MedicalField);
                     results.AddRange(tmpResult);
                 }
                 return results;
@@ -62,11 +63,11 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             }
         }
 
-        public List<LabResult> Process(Case Case, string MedicalField)
+        public async Task<List<LabResult>> ProcessAsync(Case Case, string MedicalField)
         {
             try
             {
-                return Process(Case, MedicalField, null);
+                return await ProcessAsync(Case, MedicalField, null);
             }
             catch 
             {
@@ -74,11 +75,11 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             }
         }
 
-        public List<LabResult> Process(Case Case, PathogenParameter pathogen)
+        public async Task<List<LabResult>> ProcessAsync(Case Case, PathogenParameter pathogen)
         {
             try
             {
-                return Process(Case, pathogen.MedicalField, pathogen);
+                return await ProcessAsync(Case, pathogen.MedicalField, pathogen);
             }
             catch
             {
@@ -86,28 +87,28 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             }
         }
 
-        private List<LabResult> Process(Case Case, string MedicalField, PathogenParameter pathogen = null)
+        private async Task<List<LabResult>> ProcessAsync(Case Case, string MedicalField, PathogenParameter pathogen = null)
         {
             try
             {
                 List<UID> uids = null;
                 if (pathogen != null)
                 {
-                    uids = RestDataAccess.AQLQuery<UID>(GetPathogenCompositionsUIDs(Case, pathogen));
+                    uids = await RestDataAccess.AQLQueryAsync<UID>(GetPathogenCompositionsUIDs(Case, pathogen));
                 }
-                List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case, MedicalField, uids));
+                List<LabResult> results = await RestDataAccess.AQLQueryAsync<LabResult>(MetaDataQuery(Case, MedicalField, uids));
                 if (results is not null)
                 {
                     foreach (LabResult result in results)
                     {
                         SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID, MedicalField = MedicalField };
-                        result.Specimens = _specimenFac.Process(parameter, pathogen);
+                        result.Specimens = await _specimenFac.ProcessAsync(parameter, pathogen);
                         if (result.Specimens is not null)
                         {
                             result.Specimens.RemoveAll(spec => spec.Pathogens == null);
                             if (result.Specimens.Count > 0)
                             {
-                                List<PatientLocation> patLocation = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID));
+                                List<PatientLocation> patLocation = await RestDataAccess.AQLQueryAsync<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID));
                                 if (patLocation is not null)
                                 {
                                     result.Sender = patLocation.FirstOrDefault();

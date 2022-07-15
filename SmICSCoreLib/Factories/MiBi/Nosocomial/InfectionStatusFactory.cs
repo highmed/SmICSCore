@@ -6,6 +6,7 @@ using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi.Nosocomial
 {
@@ -22,17 +23,17 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             _hospitalizationFac = hospitalizationFac;
         }
 
-        public SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, string MedicalField)
+        public async Task<SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>> ProcessAsync(Patient patient, string MedicalField)
         {
-           return Process(patient, MedicalField, null);
+           return await ProcessAsync(patient, MedicalField, null);
         }
 
-        public SortedList<Hospitalization, Dictionary<string, InfectionStatus>> Process(Patient patient, PathogenParameter pathogen)
+        public async Task<SortedList<Hospitalization, Dictionary<string, InfectionStatus>>> ProcessAsync(Patient patient, PathogenParameter pathogen)
         {
             try
             {
                 SortedList<Hospitalization, Dictionary<string, InfectionStatus>> retVal = retVal = new SortedList<Hospitalization, Dictionary<string, InfectionStatus>>();
-                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = Process(patient, null, pathogen);
+                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = await ProcessAsync(patient, null, pathogen);
                 for (int i = 0; i < tmp.Keys.Count; i++)
                 {
                     foreach (string code in pathogen.PathogenCodes)
@@ -51,12 +52,12 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             }
         }
 
-        public SortedList<Hospitalization, InfectionStatus> Process(Patient patient, PathogenParameter pathogen, string Resistence)
+        public async Task<SortedList<Hospitalization, InfectionStatus>> ProcessAsync(Patient patient, PathogenParameter pathogen, string Resistence)
         {
             try
             {
                 SortedList<Hospitalization, InfectionStatus> retVal = new SortedList<Hospitalization, InfectionStatus>();
-                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = Process(patient, null, pathogen);
+                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = await ProcessAsync(patient, null, pathogen);
                 for (int i = 0; i < tmp.Keys.Count; i++)
                 {
                     foreach (string code in pathogen.PathogenCodes)
@@ -81,25 +82,25 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
         }
 
         //Hospitalization, Pathogen, Resitance, InfectionStatus
-        private SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, string MedicalField = null, PathogenParameter pathogen = null)
+        private async Task<SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>> ProcessAsync(Patient patient, string MedicalField = null, PathogenParameter pathogen = null)
         {
             try
             {
-                List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
+                List<Case> cases = await RestDataAccess.AQLQueryAsync<Case>(AQLCatalog.Cases(patient));
                 SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase = new SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>();
                 if (cases is not null)
                 {
                     foreach (Case c in cases)
                     {
                         List<LabResult> results = null;
-                        Hospitalization hospitalization = _hospitalizationFac.Process(c);
+                        Hospitalization hospitalization = await _hospitalizationFac.ProcessAsync(c);
                         if (MedicalField == null)
                         {
-                            results = _mibiResultFac.Process(c, pathogen);
+                            results = await _mibiResultFac.ProcessAsync(c, pathogen);
                         }
                         else if (pathogen == null)
                         {
-                            results = _mibiResultFac.Process(c, MedicalField);
+                            results = await _mibiResultFac.ProcessAsync(c, MedicalField);
                         }
                         if (results is not null)
                         {

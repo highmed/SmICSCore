@@ -39,11 +39,11 @@ namespace SmICSWebApp.Data.WardView
                 wardPatients = new List<WardPatient>();
                 PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCode };
  
-                List<HospStay> possibleContactHosp = _hospitalizationFac.Process(parameter.Start, parameter.End);
+                List<HospStay> possibleContactHosp = await _hospitalizationFac.ProcessAsync(parameter.Start, parameter.End);
                 if (possibleContactHosp is not null)
                 {
                     //progress.Report("Determine Cases on Ward");
-                    List<Case> casesOnWard = _helperFac.GetPatientOnWardsFromFiltered(possibleContactHosp, parameter.Ward);
+                    List<Case> casesOnWard = await _helperFac.GetPatientOnWardsFromFilteredAsync(possibleContactHosp, parameter.Ward);
                     if (casesOnWard is not null)
                     {
                         foreach (Case _case in casesOnWard)
@@ -53,19 +53,19 @@ namespace SmICSWebApp.Data.WardView
                             tmpParam.CaseID = _case.CaseID;
 
                             //progress.Report(string.Format("Getting PatientStay Information for {0}", _case.PatientID));
-                            List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays = _stayFac.Process(tmpParam);
+                            List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays = await _stayFac.ProcessAsync(tmpParam);
                             if (patientStays is not null)
                             {
                                 patientStays = patientStays.OrderBy(stay => stay.Admission).ToList();
 
                                 //progress.Report(string.Format("Calculation InfectionSituation for {0}", _case.PatientID));
-                                SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionStatusByCase = _infectionStatusFac.Process(_case, pathogenParameter);
+                                SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionStatusByCase = await _infectionStatusFac.ProcessAsync(_case, pathogenParameter);
                                 Dictionary<string, InfectionStatus> infectionStatus = null;
                                 if (infectionStatusByCase.Count > 0 && infectionStatusByCase.Where(h => h.Key.CaseID == _case.CaseID).Count() > 0)
                                 {
                                     infectionStatus = infectionStatusByCase.Where(h => h.Key.CaseID == _case.CaseID).First().Value;
                                 }
-                                List<LabResult> labResults = _labFac.Process(_case, pathogenParameter);
+                                List<LabResult> labResults = await _labFac.ProcessAsync(_case, pathogenParameter);
 
                                 foreach (PatientStay stay in patientStays)
                                 {

@@ -6,6 +6,7 @@ using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmICSWebApp.Data.Contact
 {
@@ -23,17 +24,17 @@ namespace SmICSWebApp.Data.Contact
             _patientStayFac = patientStayFac;
         }
 
-        public ContactRoot LoadContactData(ContactParameter parameter)
+        public async Task<ContactRoot> LoadContactData(ContactParameter parameter)
         {
             try
             {
-                List<Hospitalization> hospitalizations = _hospitalizationFac.Process(parameter);
+                List<Hospitalization> hospitalizations =await _hospitalizationFac.ProcessAsync(parameter);
                 if (hospitalizations is not null)
                 {
                     Hospitalization latestHospitalization = hospitalizations.Last();
                     PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCodes };
-                    SortedList<Hospitalization, InfectionStatus> infectionStatus = _infectionStatusFac.Process(parameter, pathogenParameter, parameter.Resistence);
-                    List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _patientStayFac.Process(latestHospitalization);
+                    SortedList<Hospitalization, InfectionStatus> infectionStatus = await _infectionStatusFac.ProcessAsync(parameter, pathogenParameter, parameter.Resistence);
+                    List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = await _patientStayFac.ProcessAsync(latestHospitalization);
                     RemoveDoubleStays(contactLocations);
                     ContactRoot rootContact = new ContactRoot()
                     {
@@ -44,7 +45,7 @@ namespace SmICSWebApp.Data.Contact
                         Contacts = new Dictionary<Hospitalization, List<Contact>> { { latestHospitalization, null } }
                     };
 
-                    MergeInfectionStatusAndContactCases(ref rootContact, latestHospitalization, pathogenParameter, parameter.Resistence);
+                    MergeInfectionStatusAndContactCases(rootContact, latestHospitalization, pathogenParameter, parameter.Resistence);
 
                     return rootContact;
                 }
@@ -75,7 +76,7 @@ namespace SmICSWebApp.Data.Contact
                 patientStays.RemoveAt(index);
             }
         }
-        public void GetPreviousHospitalizationContacts(ref ContactRoot rootContact, ContactParameter parameter)
+        public async Task GetPreviousHospitalizationContacts(ContactRoot rootContact, ContactParameter parameter)
         {
             try
             {
@@ -84,10 +85,10 @@ namespace SmICSWebApp.Data.Contact
                 if (!rootContact.Contacts.ContainsKey(prevHospitalization))
                 {
                     PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCodes };
-                    SortedList<Hospitalization, InfectionStatus> infectionStatus = _infectionStatusFac.Process(prevHospitalization, pathogenParameter, parameter.Resistence);
-                    List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _patientStayFac.Process(prevHospitalization);
+                    SortedList<Hospitalization, InfectionStatus> infectionStatus = await _infectionStatusFac.ProcessAsync(prevHospitalization, pathogenParameter, parameter.Resistence);
+                    List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = await _patientStayFac.ProcessAsync(prevHospitalization);
                     rootContact.AddHospitalization(prevHospitalization, infectionStatus[prevHospitalization], null, null);
-                    MergeInfectionStatusAndContactCases(ref rootContact, prevHospitalization, pathogenParameter, parameter.Resistence);
+                    await MergeInfectionStatusAndContactCases(rootContact, prevHospitalization, pathogenParameter, parameter.Resistence);
                 }
                 rootContact.CurrentHospitalization = prevHospitalization;
             }
@@ -110,13 +111,13 @@ namespace SmICSWebApp.Data.Contact
             }
         }
 
-        private void MergeInfectionStatusAndContactCases(ref ContactRoot rootContact, Hospitalization hospitalization, PathogenParameter pathogenParameter, string resistence)
+        private async Task MergeInfectionStatusAndContactCases(ContactRoot rootContact, Hospitalization hospitalization, PathogenParameter pathogenParameter, string resistence)
         {
             List<Contact> contacts = new List<Contact>();
-            List< SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = _contactFac.Process(hospitalization);
+            List< SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = await _contactFac.ProcessAsync(hospitalization);
             List<string> distinctPatientIDs = contactLocations.Select(cl => cl.PatientID).Distinct().ToList();
             Dictionary<string, SortedList<Hospitalization, InfectionStatus>> infectionStati = new Dictionary<string, SortedList<Hospitalization, InfectionStatus>>();
-            distinctPatientIDs.ForEach(patID => infectionStati.Add(patID, _infectionStatusFac.Process(new SmICSCoreLib.Factories.General.Patient() { PatientID = patID }, pathogenParameter, resistence)));
+            distinctPatientIDs.ForEach(async patID => infectionStati.Add(patID, await _infectionStatusFac.ProcessAsync(new SmICSCoreLib.Factories.General.Patient() { PatientID = patID }, pathogenParameter, resistence)));
             foreach (SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay locationContact in contactLocations)
             {
                 if (locationContact.PatientID != rootContact.Hospitalizations.Last().PatientID)
@@ -125,7 +126,7 @@ namespace SmICSWebApp.Data.Contact
                     List<PatientStay> rootStays = GetRootStay(rootContact.PatientStays[hospitalization], locationContact);
                     if(rootStays is not null)
                     {
-                        Hospitalization hosp = _hospitalizationFac.Process(locationContact); 
+                        Hospitalization hosp = await _hospitalizationFac.ProcessAsync(locationContact); 
                         foreach (PatientStay stay in rootStays)
                         {
                             Contact contact = new Contact

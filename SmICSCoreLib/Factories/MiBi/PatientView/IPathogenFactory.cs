@@ -1,6 +1,7 @@
 ﻿using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.REST;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi.PatientView
 {
@@ -8,6 +9,6 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        List<Pathogen> Process(PathogenParameter parameter);
+        Task<List<Pathogen>> ProcessAsync(PathogenParameter parameter);
     }
 }

@@ -66,6 +66,9 @@
 </div>
 
 @code {
+
+    [CascadingParameter]
+    public Error Error { get; set; }
     [Parameter]
     public string PatientID { get; set; }
 
@@ -90,17 +93,25 @@
     {
         emptyResult = false;
         Loading = true;
+        await Task.Delay(1);
         await Task.Run(GetData);
         Loading = false;
     }
 
-    private void GetData()
+    private async Task GetData()
     {
         selectedPatient.PatientID = PatientID;
-        patientResults = _service.GetData(selectedPatient);
-        if(patientResults is null)
+        try
         {
-            emptyResult = true;
+            patientResults = await _service.GetData(selectedPatient);
+            if (patientResults is null)
+            {
+                emptyResult = true;
+            }
+        }
+        catch (Exception e)
+        {
+            Error.ProcessError(e);
         }
     }
 }

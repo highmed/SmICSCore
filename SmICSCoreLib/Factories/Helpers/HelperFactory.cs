@@ -18,7 +18,7 @@ namespace SmICSCoreLib.Factories.Helpers
             RestDataAccess = restDataAccess;
         }
 
-        public List<Case> GetPatientOnWardsFromFiltered(List<HospStay> cases, string ward)
+        public async Task<List<Case>> GetPatientOnWardsFromFilteredAsync (List<HospStay> cases, string ward)
         {
             List<Case> casesOnWard = new List<Case>();
             int i = 0;
@@ -29,7 +29,7 @@ namespace SmICSCoreLib.Factories.Helpers
                 {
                     count = cases.Count - i;
                 }
-                List<Case> tmpCasesOnWard = RestDataAccess.AQLQuery<Case>(GetsAllWardsFromHospitalization(cases.GetRange(i, count), ward));
+                List<Case> tmpCasesOnWard = await RestDataAccess.AQLQueryAsync<Case>(GetsAllWardsFromHospitalization(cases.GetRange(i, count), ward));
                 if (tmpCasesOnWard is not null)
                 {
                     casesOnWard.AddRange(tmpCasesOnWard);

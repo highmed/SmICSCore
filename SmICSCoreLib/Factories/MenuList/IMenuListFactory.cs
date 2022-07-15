@@ -1,6 +1,7 @@
 ﻿using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MenuList
 {
@@ -8,7 +9,7 @@ namespace SmICSCoreLib.Factories.MenuList
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        List<PathogenMenuEntry> Pathogens(JobType type, DateTime StartDate);
-        List<WardMenuEntry> Wards(JobType type, DateTime StartDate);
+        Task<List<PathogenMenuEntry>> PathogensAsync(JobType type, DateTime StartDate);
+        Task<List<WardMenuEntry>> WardsAsync(JobType type, DateTime StartDate);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.REST;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
 {
@@ -8,7 +9,7 @@ namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        List<PatientStay> Process(Case Case);
-        List<PatientStay> Process(WardParameter wardParameter);
+        Task<List<PatientStay>> ProcessAsync(Case Case);
+        Task<List<PatientStay>> ProcessAsync(WardParameter wardParameter);
     }
 }

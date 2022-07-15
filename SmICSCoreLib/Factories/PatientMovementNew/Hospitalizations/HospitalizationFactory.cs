@@ -3,6 +3,7 @@ using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.PatientMovementNew
 {
@@ -14,17 +15,17 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
             RestDataAccess = restDataAccess;
         }
 
-        public List<Hospitalization> Process(Patient patient)
+        public async Task<List<Hospitalization>> ProcessAsync(Patient patient)
         {
             try
             {
                 List<Hospitalization> hospitalizations = new List<Hospitalization>();
-                List<Case> cases = RestDataAccess.AQLQuery<Case>(HospitalizationCasesQuery(patient));
+                List<Case> cases = await RestDataAccess.AQLQueryAsync<Case>(HospitalizationCasesQuery(patient));
                 if (cases is not null)
                 {
                     foreach (Case Case in cases)
                     {
-                        Hospitalization hospitalization = Process(Case);
+                        Hospitalization hospitalization = await ProcessAsync(Case);
                         hospitalizations.Add(hospitalization);
                     }
                     return hospitalizations;
@@ -38,12 +39,13 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
         }
 
 
-        public Hospitalization Process(Case Case)
+        public async Task<Hospitalization> ProcessAsync(Case Case)
         {
             try
             {
-                Admission admission = RestDataAccess.AQLQuery<Admission>(AdmissionQuery(Case)).FirstOrDefault();
-                var dischargeResponse = RestDataAccess.AQLQuery<Discharge>(DischargeQuery(Case));
+                List<Admission> admissions = await RestDataAccess.AQLQueryAsync<Admission>(AdmissionQuery(Case));
+                Admission admission = admissions.FirstOrDefault();
+                var dischargeResponse = await RestDataAccess.AQLQueryAsync<Discharge>(DischargeQuery(Case));
                 Discharge discharge = dischargeResponse == null ? new Discharge() { Date = null } : dischargeResponse.FirstOrDefault();
 
                 return new Hospitalization
@@ -60,13 +62,13 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
             }
         }
 
-        public List<HospStay> Process(DateTime admission, DateTime? discharge)
+        public async Task<List<HospStay>> ProcessAsync(DateTime admission, DateTime? discharge)
         {
             try
             {
                 List<HospStay> cases = new List<HospStay>();
-                List<HospStay> casesWithDischarge = RestDataAccess.AQLQuery<HospStay>(GetCasesForTimespanWithDischarge(admission, (discharge.HasValue ? discharge.Value : DateTime.Now)));
-                List<HospStay> casesWithoutDischarge = RestDataAccess.AQLQuery<HospStay>(GetCasesForTimespanWithoutDischarge((discharge.HasValue ? discharge.Value : DateTime.Now)));
+                List<HospStay> casesWithDischarge = await RestDataAccess.AQLQueryAsync<HospStay>(GetCasesForTimespanWithDischarge(admission, (discharge.HasValue ? discharge.Value : DateTime.Now)));
+                List<HospStay> casesWithoutDischarge = await RestDataAccess.AQLQueryAsync<HospStay>(GetCasesForTimespanWithoutDischarge((discharge.HasValue ? discharge.Value : DateTime.Now)));
                 if (casesWithDischarge is not null)
                 {
                     cases.AddRange(casesWithDischarge);
@@ -166,5 +168,6 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
                         AND d/data[at0001]/items[at0071]/value/value <= '{ discharge.ToString("yyyy-MM-dd") }'"
             };
         }
+
     }
 }

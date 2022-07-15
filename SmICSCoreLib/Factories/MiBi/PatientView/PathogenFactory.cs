@@ -3,6 +3,7 @@ using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi.PatientView
 {
@@ -17,10 +18,10 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             _antibiogramFac = antibiogramFac;
         }
 
-        public List<Pathogen> Process(PathogenParameter pathogenParameter)
+        public async Task<List<Pathogen>> ProcessAsync(PathogenParameter pathogenParameter)
         {
             try { 
-                List<Pathogen> pathogens = RestDataAccess.AQLQuery<Pathogen>(PathogenQuery(pathogenParameter));
+                List<Pathogen> pathogens = await RestDataAccess.AQLQueryAsync<Pathogen>(PathogenQuery(pathogenParameter));
                 if (pathogens != null)
                 {
                     if (pathogenParameter.MedicalField == MedicalField.MICROBIOLOGY)
@@ -30,7 +31,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                             AntibiogramParameter parameter = new AntibiogramParameter(pathogenParameter);
                             parameter.IsolatNo = pathogen.IsolatNr;
                             parameter.Pathogen = pathogen.Name;
-                            pathogen.Antibiograms = _antibiogramFac.Process(parameter);
+                            pathogen.Antibiograms = await _antibiogramFac.ProcessAsync(parameter);
                         }
                     }
                     return pathogens;

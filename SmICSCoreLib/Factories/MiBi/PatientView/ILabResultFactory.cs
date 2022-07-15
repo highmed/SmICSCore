@@ -2,6 +2,7 @@
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.REST;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi.PatientView
 {
@@ -9,9 +10,9 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        List<LabResult> Process(Case Case, string MedicalField);
-        List<LabResult> Process(Case Case, PathogenParameter pathogen);
-        List<LabResult> Process(Patient patient, string MedicalField);
-        List<LabResult> Process(Patient patient, PathogenParameter pathogen);
+        Task<List<LabResult>> ProcessAsync(Case Case, string MedicalField);
+        Task<List<LabResult>> ProcessAsync(Case Case, PathogenParameter pathogen);
+        Task<List<LabResult>> ProcessAsync(Patient patient, string MedicalField);
+        Task<List<LabResult>> ProcessAsync(Patient patient, PathogenParameter pathogen);
     }
 }

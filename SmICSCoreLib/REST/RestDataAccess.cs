@@ -24,13 +24,13 @@ namespace SmICSCoreLib.REST
             _logger = logger;
         }
 
-        public List<T> AQLQuery<T>(AQLQuery query) where T : new()
+        public async Task<List<T>> AQLQueryAsync<T>(AQLQuery query) where T : new()
         {
             try{
                 _logger.LogInformation("Posted Query: {Query}", query.Name);
                 string restPath = "rest/openehr/v1/query/aql";
                 Uri RestPath = GetRequestUri(restPath);
-                HttpResponseMessage response = _client.Client.PostAsync(RestPath, GetHttpContentQuery(query.ToString())).Result;
+                HttpResponseMessage response = await _client.Client.PostAsync(RestPath, GetHttpContentQuery(query.ToString()));
                 //System.Diagnostics.Debug.Print(response.RequestMessage.ToString());
                 if (response.IsSuccessStatusCode)
                 {

@@ -2,6 +2,7 @@
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi.PatientView
 {
@@ -15,11 +16,11 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
             _pathogegFac = pathogegFac;
         }
 
-        public List<Specimen> Process(SpecimenParameter specimenParameter, PathogenParameter pathogen = null)
+        public async Task<List<Specimen>> ProcessAsync(SpecimenParameter specimenParameter, PathogenParameter pathogen = null)
         {
             try
             {
-                List<Specimen> specimens = _restDataAccess.AQLQuery<Specimen>(SpecimenQuery(specimenParameter));
+                List<Specimen> specimens = await _restDataAccess.AQLQueryAsync<Specimen>(SpecimenQuery(specimenParameter));
                 if (specimens is not null)
                 {
                     foreach (Specimen specimen in specimens)
@@ -34,7 +35,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                         }
                         pathogen.LabID = specimen.LabID;
 
-                        specimen.Pathogens = _pathogegFac.Process(pathogen);
+                        specimen.Pathogens = await _pathogegFac.ProcessAsync(pathogen);
                     }
                 }
                 return specimens;

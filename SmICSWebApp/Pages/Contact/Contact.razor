@@ -185,6 +185,9 @@
     [Parameter]
     public string Resistence { get; set; }
 
+    [CascadingParameter]
+    public Error Error { get; set; }
+
     private ContactRoot root = null;
     private bool Loading = false;
     private bool EmptyResult = false;
@@ -198,31 +201,40 @@
 
     private DateTime? FirstInfection = null;
 
-    private void GetData()
+    private async Task GetData()
     {
         _filterParameter = new FilterParameter();
         _filterParameter.ContactDetail = _filterParameter.ContactOptions[0];
         _filterParameter.ResistenceDetail = _filterParameter.ResistanceOptions[0];
         _filterParameter.ResistanceOptions.Add(_pathogenMenuEntries.Where(p => p.Codes[0] == contact.PathogenCodes[0]).Select(p => p.Name).First());
         _filterParameter.ResistanceOptions.Add(contact.Resistence);
-        root = _contactService.LoadContactData(contact);
-        if (root is null)
+        try
         {
-            EmptyResult = true;
-            Console.WriteLine("Keine Daten für das Kontaktnetzwerk gefunden!");
+            root = await _contactService.LoadContactData(contact);
+            if (root is null)
+            {
+                EmptyResult = true;
+                Console.WriteLine("Keine Daten für das Kontaktnetzwerk gefunden!");
+            }
+            else
+            {
+                DetermineRootFirstInfection();
+                contacts = root.Contacts[root.CurrentHospitalization];
+                contactDetails = GetContactDetails(contacts);
+            }
         }
-        else
+        catch (Exception ex)
         {
-            DetermineRootFirstInfection();
-            contacts = root.Contacts[root.CurrentHospitalization];
-            contactDetails = GetContactDetails(contacts);
+            Error.ProcessError(ex);
         }
+
     }
 
     private async Task Submit()
     {
         EmptyResult = false;
         Loading = true;
+        await Task.Delay(1);
         await Task.Run(GetData);
         Loading = false;
     }
@@ -263,10 +275,10 @@
         _pathogenMenuEntries = _pathogenMenuEntries.OrderBy(p => p.Name).ToList();
     }
 
-    private void GetPrevious()
+    private async Task GetPrevious()
     {
         ResetFilter();
-        _contactService.GetPreviousHospitalizationContacts(ref root, contact);
+        await _contactService.GetPreviousHospitalizationContacts(root, contact);
         contacts = root.Contacts[root.CurrentHospitalization];
         contactDetails = GetContactDetails(contacts);
     }
