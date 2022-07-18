@@ -29,6 +29,7 @@ using SmICSWebApp.Data.ContactNetwork;
 using SmICSWebApp.Data.ContactComparison;
 using SmICSWebApp.Data.Menu;
 using SmICSCoreLib.CronJobs;
+using Blazored.Toast;
 
 namespace SmICSWebApp
 {
@@ -51,7 +52,7 @@ namespace SmICSWebApp
                 })
             .AddBootstrapProviders()
             .AddFontAwesomeIcons();
-
+            services.AddBlazoredToast();
             services.AddControllers();
             services.AddControllers().AddNewtonsoftJson();
             services.AddRazorPages();

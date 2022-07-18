@@ -11,6 +11,7 @@
 
     public void ProcessError(Exception e)
     {
-        _toast.ShowError(string.Format("Oops, Something went wrong: \n {1}", e.Message));
+        Console.WriteLine(e.Message);
+        _toast.ShowError(string.Format("Oops, Something went wrong: \n {0}", e.Message));
     }
 }
