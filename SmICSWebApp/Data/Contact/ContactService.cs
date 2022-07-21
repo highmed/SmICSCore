@@ -45,7 +45,7 @@ namespace SmICSWebApp.Data.Contact
                         Contacts = new Dictionary<Hospitalization, List<Contact>> { { latestHospitalization, null } }
                     };
 
-                    MergeInfectionStatusAndContactCases(rootContact, latestHospitalization, pathogenParameter, parameter.Resistence);
+                    await MergeInfectionStatusAndContactCases(rootContact, latestHospitalization, pathogenParameter, parameter.Resistence);
 
                     return rootContact;
                 }
