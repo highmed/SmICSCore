@@ -55,6 +55,8 @@ namespace SmICSWebApp.Data.WardView
 
                             //progress.Report(string.Format("Getting PatientStay Information for {0}", _case.PatientID));
                             List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays = await _stayFac.ProcessAsync(tmpParam);
+                            Hospitalization caseHosp = await _hospitalizationFac.ProcessAsync(_case);
+
                             if (patientStays is not null)
                             {
                                 patientStays = patientStays.OrderBy(stay => stay.Admission).ToList();
@@ -80,6 +82,11 @@ namespace SmICSWebApp.Data.WardView
                                     patient.FirstPositiveResult = GetFirstPositveLabResultDate(labResults, stay);
                                     (patient.FirstWardPositiveResult, patient.LastWardResult) = GetFirstAndLastWardLabResultDate(labResults, stay);
                                     patient.CurrentResult = GetLastLabResultDate(labResults);
+                                    if(caseHosp is not null)
+                                    {
+                                        patient.CaseAdmission = caseHosp.Admission.Date;
+                                        patient.CaseDischarge = caseHosp.Discharge.Date;
+                                    }
                                     wardPatients.Add(patient);
                                 }
                             }

@@ -1,9 +1,28 @@
 ﻿<div class="tooltip-wrapper">
-    <span>@Text</span>
+    <span>Krankenhausaufenthalt: @GetAdmissionString() - @GetDischargeString() </span>
     @ChildContent
 </div>
 
 @code {
     [Parameter] public RenderFragment ChildContent { get; set; }
-    [Parameter] public string Text { get; set; }
+    [Parameter] public DateTime? Admission { get; set; }
+    [Parameter] public DateTime? Discharge { get; set; }
+
+    private string GetAdmissionString()
+    {
+        if(Admission.HasValue)
+        {
+            return Admission.Value.Date.ToString("dd.mm.yyyy");
+        }
+        return "";
+    }
+
+    private string GetDischargeString()
+    {
+        if (Admission.HasValue)
+        {
+            return Discharge.Value.Date.ToString("dd.mm.yyyy");
+        }
+        return "";
+    }
 }
