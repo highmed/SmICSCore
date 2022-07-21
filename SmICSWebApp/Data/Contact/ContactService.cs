@@ -119,7 +119,11 @@ namespace SmICSWebApp.Data.Contact
                 List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = await _contactFac.ProcessAsync(hospitalization);
                 List<string> distinctPatientIDs = contactLocations.Select(cl => cl.PatientID).Distinct().ToList();
                 Dictionary<string, SortedList<Hospitalization, InfectionStatus>> infectionStati = new Dictionary<string, SortedList<Hospitalization, InfectionStatus>>();
-                distinctPatientIDs.ForEach(async patID => infectionStati.Add(patID, await _infectionStatusFac.ProcessAsync(new SmICSCoreLib.Factories.General.Patient() { PatientID = patID }, pathogenParameter, resistence)));
+                foreach (string patID in distinctPatientIDs)
+                {
+                    SortedList<Hospitalization, InfectionStatus> infStatus = await _infectionStatusFac.ProcessAsync(new SmICSCoreLib.Factories.General.Patient() { PatientID = patID }, pathogenParameter, resistence);
+                    infectionStati.Add(patID, infStatus);
+                }
                 foreach (SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay locationContact in contactLocations)
                 {
                     if (locationContact.PatientID != rootContact.Hospitalizations.Last().PatientID)
