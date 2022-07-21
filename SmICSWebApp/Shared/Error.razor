@@ -1,5 +1,8 @@
 ﻿@using Blazored.Toast.Services
+@using Microsoft.Extensions.Logging
+
 @inject IToastService _toast
+@inject ILogger<Error> _logger
 
 <CascadingValue Value=this>
     @ChildContent
@@ -11,7 +14,7 @@
 
     public void ProcessError(Exception e)
     {
-        Console.WriteLine(e.ToString() + " " +e.Message + " " + e.Source);
+        _logger.LogError(e.ToString());
         _toast.ShowError(string.Format("Oops, Something went wrong: \n {0}", e.Message));
     }
 }
