@@ -32,7 +32,7 @@
         </ContextMenuTrigger>
     </td>
     <td>
-        <Tooltip Text="Krankenhausaufenthalt: 15.01.2001 - 15.01.2002">
+        <Tooltip Text="() => GetTooltipText(Patient)">
             @if (Patient.InfectionStatus is not null && Patient.InfectionStatus.Values.Any(x => x.Nosocomial))
             {
                 <span class="text-danger"> @Patient.PatientID</span>
@@ -80,11 +80,11 @@
 
 @code {
 
-        [Parameter]
-        public WardPatient Patient { get; set; }
+    [Parameter]
+    public WardPatient Patient { get; set; }
 
-        [Parameter]
-        public WardParameter WardParameter { get; set; }
+    [Parameter]
+    public WardParameter WardParameter { get; set; }
 
     private bool _nosocomial;
     private bool _known;
@@ -118,6 +118,22 @@
             }
         }
         return false;
+    }
+
+    private string GetTooltipText(WardPatient Patient)
+    {
+        string text = "Krankenhausaufenthalt: ";
+
+        if (Patient.CaseAdmission.HasValue)
+        {
+            text += Patient.CaseAdmission.Value.Date.ToString("dd.mm.yyyy");
+        }
+        if (Patient.CaseDischarge.HasValue)
+        {
+            text += " - " + Patient.Discharge.Value.Date.ToString("dd.mm.yyyy");
+        }
+
+        return text;
     }
 
 }
