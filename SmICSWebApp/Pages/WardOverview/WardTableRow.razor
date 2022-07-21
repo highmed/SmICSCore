@@ -35,11 +35,11 @@
         <Tooltip Text="@GetTooltipText()">
             @if (Patient.InfectionStatus is not null && Patient.InfectionStatus.Values.Any(x => x.Nosocomial))
             {
-                <span class="text-danger"> @Patient.PatientID</span>
+                <span class="text-danger"> @Patient.CaseID</span>
             }
             else if (Patient.InfectionStatus is not null && Patient.InfectionStatus.Values.Any(x => x.Known))
             {
-                <span class="text-primary"> @Patient.PatientID</span>
+                <span class="text-primary"> @Patient.CaseID</span>
             }
             else
             {
@@ -126,11 +126,11 @@
 
         if (Patient.CaseAdmission.HasValue)
         {
-            text += Patient.CaseAdmission.Value.Date.ToString("dd.mm.yyyy");
+            text += Patient.CaseAdmission.Value.Date.ToString("dd.MM.yyyy");
         }
         if (Patient.CaseDischarge.HasValue)
         {
-            text += " - " + Patient.Discharge.Value.Date.ToString("dd.mm.yyyy");
+            text += " - " + Patient.Discharge.Value.Date.ToString("dd.MM.yyyy");
         }
 
         return text;
