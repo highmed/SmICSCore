@@ -277,10 +277,19 @@
 
     private async Task GetPrevious()
     {
-        ResetFilter();
-        await _contactService.GetPreviousHospitalizationContacts(root, contact);
-        contacts = root.Contacts[root.CurrentHospitalization];
-        contactDetails = GetContactDetails(contacts);
+        try
+        {
+            ResetFilter();
+            await _contactService.GetPreviousHospitalizationContacts(root, contact);
+            contacts = root.Contacts[root.CurrentHospitalization];
+            contactDetails = GetContactDetails(contacts);
+
+        }
+        catch (Exception ex)
+        {
+            
+            Error.ProcessError(ex);
+        }
     }
 
     private void GetNext()
@@ -290,6 +299,7 @@
         root.CurrentHospitalization = root.Hospitalizations[index + 1];
         contacts = root.Contacts[root.CurrentHospitalization];
         contactDetails = GetContactDetails(contacts);
+
     }
 
     private void GetFilter(ChangeEventArgs e)

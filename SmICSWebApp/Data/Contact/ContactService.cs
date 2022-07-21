@@ -113,43 +113,50 @@ namespace SmICSWebApp.Data.Contact
 
         private async Task MergeInfectionStatusAndContactCases(ContactRoot rootContact, Hospitalization hospitalization, PathogenParameter pathogenParameter, string resistence)
         {
-            List<Contact> contacts = new List<Contact>();
-            List< SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = await _contactFac.ProcessAsync(hospitalization);
-            List<string> distinctPatientIDs = contactLocations.Select(cl => cl.PatientID).Distinct().ToList();
-            Dictionary<string, SortedList<Hospitalization, InfectionStatus>> infectionStati = new Dictionary<string, SortedList<Hospitalization, InfectionStatus>>();
-            distinctPatientIDs.ForEach(async patID => infectionStati.Add(patID, await _infectionStatusFac.ProcessAsync(new SmICSCoreLib.Factories.General.Patient() { PatientID = patID }, pathogenParameter, resistence)));
-            foreach (SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay locationContact in contactLocations)
+            try
             {
-                if (locationContact.PatientID != rootContact.Hospitalizations.Last().PatientID)
+                List<Contact> contacts = new List<Contact>();
+                List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = await _contactFac.ProcessAsync(hospitalization);
+                List<string> distinctPatientIDs = contactLocations.Select(cl => cl.PatientID).Distinct().ToList();
+                Dictionary<string, SortedList<Hospitalization, InfectionStatus>> infectionStati = new Dictionary<string, SortedList<Hospitalization, InfectionStatus>>();
+                distinctPatientIDs.ForEach(async patID => infectionStati.Add(patID, await _infectionStatusFac.ProcessAsync(new SmICSCoreLib.Factories.General.Patient() { PatientID = patID }, pathogenParameter, resistence)));
+                foreach (SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay locationContact in contactLocations)
                 {
-                    SortedList<Hospitalization, InfectionStatus> infectionStatus = infectionStati[locationContact.PatientID];
-                    List<PatientStay> rootStays = GetRootStay(rootContact.PatientStays[hospitalization], locationContact);
-                    if(rootStays is not null)
+                    if (locationContact.PatientID != rootContact.Hospitalizations.Last().PatientID)
                     {
-                        Hospitalization hosp = await _hospitalizationFac.ProcessAsync(locationContact); 
-                        foreach (PatientStay stay in rootStays)
+                        SortedList<Hospitalization, InfectionStatus> infectionStatus = infectionStati[locationContact.PatientID];
+                        List<PatientStay> rootStays = GetRootStay(rootContact.PatientStays[hospitalization], locationContact);
+                        if (rootStays is not null)
                         {
-                            Contact contact = new Contact
+                            Hospitalization hosp = await _hospitalizationFac.ProcessAsync(locationContact);
+                            foreach (PatientStay stay in rootStays)
                             {
-                                PatientID = locationContact.PatientID,
-                                CaseID = locationContact.CaseID,
-                                PatientLocation = locationContact,
-                                ContactStart = stay.Admission >= locationContact.Admission ? stay.Admission : locationContact.Admission,
-                                ContactEnd = GetContactEnd(stay.Discharge, locationContact.Discharge),
-                                RoomContact = stay.Room != null && stay.Room == locationContact.Room ? true : false,
-                                WardContact = stay.Ward != null && stay.Ward == locationContact.Ward ? true : false,
-                                DepartementContact = stay.DepartementID != null && stay.DepartementID == locationContact.DepartementID ? true : false
-                            };
-                            contact.Hospitalization = hosp;
-                            contact.InfectionStatus = infectionStatus.Count > 0 ? infectionStatus.First().Value : null;
-                            contact.StatusDate = contact.InfectionStatus is not null && contact.InfectionStatus.Known ? contact.Hospitalization.Admission.Date : null;
-                            contacts.Add(contact);
+                                Contact contact = new Contact
+                                {
+                                    PatientID = locationContact.PatientID,
+                                    CaseID = locationContact.CaseID,
+                                    PatientLocation = locationContact,
+                                    ContactStart = stay.Admission >= locationContact.Admission ? stay.Admission : locationContact.Admission,
+                                    ContactEnd = GetContactEnd(stay.Discharge, locationContact.Discharge),
+                                    RoomContact = stay.Room != null && stay.Room == locationContact.Room ? true : false,
+                                    WardContact = stay.Ward != null && stay.Ward == locationContact.Ward ? true : false,
+                                    DepartementContact = stay.DepartementID != null && stay.DepartementID == locationContact.DepartementID ? true : false
+                                };
+                                contact.Hospitalization = hosp;
+                                contact.InfectionStatus = infectionStatus.Count > 0 ? infectionStatus.First().Value : null;
+                                contact.StatusDate = contact.InfectionStatus is not null && contact.InfectionStatus.Known ? contact.Hospitalization.Admission.Date : null;
+                                contacts.Add(contact);
+                            }
                         }
                     }
                 }
+                contacts = SortContacts(contacts);
+                rootContact.Contacts[hospitalization] = contacts;
             }
-            contacts = SortContacts(contacts);
-            rootContact.Contacts[hospitalization] = contacts;
+            catch
+            {
+                throw;
+            }
         }
 
         public List<string> GetFilter(ContactParameter parameter)
