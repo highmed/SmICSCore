@@ -25,7 +25,11 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
 
         public async Task<SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>> ProcessAsync(Patient patient, string MedicalField)
         {
-           return await ProcessAsync(patient, MedicalField, null);
+            try
+            { 
+                return await ProcessAsync(patient, MedicalField, null);
+            }
+            catch { throw; }
         }
 
         public async Task<SortedList<Hospitalization, Dictionary<string, InfectionStatus>>> ProcessAsync(Patient patient, PathogenParameter pathogen)

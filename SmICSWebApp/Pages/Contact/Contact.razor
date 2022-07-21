@@ -235,7 +235,7 @@
         EmptyResult = false;
         Loading = true;
         await Task.Delay(1);
-        await Task.Run(GetData);
+        await GetData();
         Loading = false;
     }
 
@@ -437,4 +437,5 @@
         }
         return details;
     }
+
 }

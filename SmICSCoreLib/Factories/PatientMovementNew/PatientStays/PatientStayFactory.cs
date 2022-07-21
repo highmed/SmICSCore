@@ -17,23 +17,30 @@ namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
 
         public async Task<List<PatientStay>> ProcessAsync(Case Case)
         {
-            List<PatientStay> patientStays = await RestDataAccess.AQLQueryAsync<PatientStay>(PatientStay(Case));
-            patientStays = MergeConsectiveStaysAndSetMovementType(patientStays);
+            try
+            {
+                List<PatientStay> patientStays = await RestDataAccess.AQLQueryAsync<PatientStay>(PatientStay(Case));
+                patientStays = MergeConsectiveStaysAndSetMovementType(patientStays);
 
-            return patientStays;
+                return patientStays;
+            }
+            catch { throw; }
         }
 
         public async Task<List<PatientStay>> ProcessAsync(WardParameter wardParameter)
         {
-            List<PatientStay> patientStays = await RestDataAccess.AQLQueryAsync<PatientStay>(PatientStayByWard(wardParameter));
+            try{
+                List<PatientStay> patientStays = await RestDataAccess.AQLQueryAsync<PatientStay>(PatientStayByWard(wardParameter));
 
-            if (patientStays is not null)
-            {
-                patientStays = patientStays.OrderBy(stay => stay.Admission).ToList();
-                patientStays = MergeConsectiveStaysAndSetMovementType(patientStays);
-                return patientStays;
+                if (patientStays is not null)
+                {
+                    patientStays = patientStays.OrderBy(stay => stay.Admission).ToList();
+                    patientStays = MergeConsectiveStaysAndSetMovementType(patientStays);
+                    return patientStays;
+                }
+                return null;
             }
-            return null;
+            catch { throw; }
         }
 
         private List<PatientStay> MergeConsectiveStaysAndSetMovementType(List<PatientStay> patientStays)
