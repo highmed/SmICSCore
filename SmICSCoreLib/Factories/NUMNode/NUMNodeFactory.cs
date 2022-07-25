@@ -5,194 +5,63 @@ using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SmICSCoreLib.Factories.ContactNetwork;
+using SmICSCoreLib.Factories.MiBi.Contact;
 using SmICSCoreLib.Factories.InfectionSituation;
 using SmICSCoreLib.StatistikDataModels;
+using System.Threading.Tasks;
+using SmICSCoreLib.Factories.PatientMovement;
+using SmICSCoreLib.Factories.PatientMovement.ReceiveModels;
 
 namespace SmICSCoreLib.Factories.NUMNode
 {
     public class NUMNodeFactory : INUMNodeFactory
     {
         private NUMNodeModel NUMNodeList;
+        private LabPatientModel labPatient;
+        private List<LabPatientModel> labPatientList;
         private List<NUMNodeModel> dataAggregationStorage;
-        private ContactModel contacts;
+        private List<LabDataReceiveModel> receiveLabDataListpositiv;
+        private List<LabDataReceiveModel> receiveLabDataListnegativ;
+        private List<NUMNodeCountModel> countStays;
+        private List<NUMNodeCountModel> countContacts;
+        private EpsiodeOfCareParameter episodeOfCareParameter;
 
         private double averageNumberOfStays;
         private double averageNumberOfNosCases;
         private double averageNumberOfMaybeNosCases;
         private double averageNumberOfContacts;
 
-        private List<LabDataReceiveModel> receiveLabDataListnegativ;
-        private List<NUMNodeCountModel> countStays;
-
         private static int countPatient;
         private static int numberOfStays;
         private static int numberOfNosCases;
         private static int numberOfMaybeNosCases;
         private static int numberOfContacts;
-        private string pathogen = "94500-6";
 
-        private (double, double, double, double) average;
-        private readonly string path = @"../SmICSWebApp/Resources/NUMNode.csv";
-        public List<string> patientList;
+        private readonly string pathogen = "94500-6";
+        private readonly string path = @"../SmICSWebApp/Resources/NUMNode.json";
 
         public IRestDataAccess RestDataAccess { get; set; }
-        private ILogger<NUMNodeFactory> _logger;
+        private readonly ILogger<NUMNodeFactory> _logger;
         private readonly IInfectionSituationFactory _infecFac;
-        private readonly IContactNetworkFactory _contactFac;
-        public NUMNodeFactory(IRestDataAccess restDataAccess, ILogger<NUMNodeFactory> logger, IInfectionSituationFactory infecFac, IContactNetworkFactory contactFac)
+
+        public NUMNodeFactory(IRestDataAccess restDataAccess, ILogger<NUMNodeFactory> logger, IInfectionSituationFactory infecFac)
         {
             RestDataAccess = restDataAccess;
             _logger = logger;
             _infecFac = infecFac;
-            _contactFac = contactFac;
         }
-
-        public void Process(TimespanParameter timespan)
+        public void FirstDataEntry()
         {
-            try
-            {
-                (countPatient, numberOfStays, numberOfNosCases, numberOfMaybeNosCases, numberOfContacts) = getDataAggregation(timespan, pathogen);
-                (averageNumberOfStays, averageNumberOfNosCases, averageNumberOfMaybeNosCases, averageNumberOfContacts) = GetAverage((numberOfStays, numberOfNosCases, numberOfMaybeNosCases, numberOfContacts), countPatient);
-
-                NUMNodeList = new NUMNodeModel() { AverageNumberOfStays = averageNumberOfStays, AverageNumberOfNosCases = averageNumberOfNosCases, AverageNumberOfMaybeNosCases = averageNumberOfMaybeNosCases, AverageNumberOfContacts = averageNumberOfContacts, DateTime = DateTime.Now };
-                dataAggregationStorage.Add(NUMNodeList);
-            } catch (Exception e)
-            {
-                _logger.LogWarning("Can not get aggregated Data " + e.Message);
-            }
-            try
-            {
-                SaveCSV.SaveToCsv(dataAggregationStorage, path);
-
-            }catch (Exception e)
-            {
-                _logger.LogWarning("Can not save aggregated Data " + e.Message);
-            }
- 
+            InitializeGlobalVariables();
+            TimespanParameter timespan = new() { Starttime = DateTime.MinValue, Endtime = DateTime.Now };
+            Process(timespan);
         }
 
         public void RegularDataEntry()
         {
             InitializeGlobalVariables();
-            TimespanParameter timespan = new TimespanParameter { Starttime = DateTime.Now, Endtime = DateTime.Now };
+            TimespanParameter timespan = new() { Starttime = DateTime.Now.AddDays(-7), Endtime = DateTime.Now };
             Process(timespan);
-        }
-
-        public void FirstDataEntry()
-        {
-            InitializeGlobalVariables();
-            TimespanParameter timespan = new TimespanParameter { Starttime = DateTime.MinValue, Endtime = DateTime.Now };
-            Process(timespan);
-        }
-
-        private (int, int, int, int, int) getDataAggregation(TimespanParameter timespan, string pathogen)
-        {
-            try
-            {
-                List<LabDataReceiveModel> receiveLabDataListpositiv = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborPositivData(timespan, pathogen));
-
-                patientList = new List<string>();
-
-                if (receiveLabDataListpositiv is not null)
-                {
-                    foreach (var pat in receiveLabDataListpositiv)
-                    {
-                        countPatient++;
-                        patientList.Add(pat.PatientID);
-                        numberOfStays = GetNumberOfStays(timespan, pathogen, pat, receiveLabDataListpositiv);
-                        numberOfContacts = GetNumberOfContacts(timespan, pathogen, pat);
-                    }
-                    (numberOfMaybeNosCases, numberOfNosCases) = GetNumberOfNosCases(patientList);
-
-                    return (countPatient, numberOfStays, numberOfNosCases, numberOfMaybeNosCases, numberOfContacts);
-
-                }
-                else
-                {
-                    return (countPatient, numberOfStays, numberOfNosCases, numberOfMaybeNosCases, numberOfContacts);
-                }
-
-            }catch (Exception e)
-            {
-                _logger.LogWarning("Can not get aggregated Data " + e.Message);
-                return (0, 0, 0, 0, 0);
-            }
-            
-
-        }
-
-        private int GetNumberOfStays(TimespanParameter timespan, string pathogen, LabDataReceiveModel pat, List<LabDataReceiveModel> receiveLabDataListpositiv)
-        {
-            try
-            {
-                receiveLabDataListnegativ = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborNegativData(timespan, pathogen, pat));
-                if (receiveLabDataListnegativ is not null)
-                {
-                    countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(getStaysCount(receiveLabDataListnegativ.OrderBy(x => x.Befunddatum).First(), pat));
-
-                }
-                else
-                {
-                    LabDataReceiveModel labDataReceiveModel = new LabDataReceiveModel { Befunddatum = DateTime.Now };
-                    countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(getStaysCount(labDataReceiveModel, pat));
-                }
-
-                foreach (NUMNodeCountModel count in countStays)
-                {
-                    numberOfStays = numberOfStays + count.Count;
-                }
-                return numberOfStays;
-
-            }catch (Exception e)
-            {
-                _logger.LogWarning("Can not get number of Stays " + e.Message);
-                return 0;
-            }
-            
-        }
-
-        private int GetNumberOfContacts(TimespanParameter timespan, string pathogen, LabDataReceiveModel pat)
-        {
-            try
-            {
-                ContactParameter contact = new ContactParameter { PatientID = pat.PatientID, Starttime = timespan.Starttime, Endtime = timespan.Endtime };
-                contacts = _contactFac.Process(contact);
-                int numberofCon = 0;
-                if (contacts is not null)
-                {
-                    numberofCon = contacts.PatientMovements.Select(x => x.PatientID).Distinct().Count();
-                }
-                numberOfContacts = numberOfContacts + numberofCon;
-                return numberOfContacts;
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning("Can not get number of Contacts " + e.Message);
-                return 0;
-            }
-
-        }
-
-        private (int, int) GetNumberOfNosCases(List<string> patientList)
-        {
-            try
-            {
-                PatientListParameter patList = new PatientListParameter { patientList = patientList };
-                List<PatientModel> list = _infecFac.Process(patList);
-                if (list is not null)
-                {
-                    numberOfMaybeNosCases = list.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-                    numberOfNosCases = list.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-                }
-
-                return (numberOfMaybeNosCases, numberOfNosCases);
-            }catch (Exception e)
-            {
-                _logger.LogWarning("Can not get number of nosokomial cases " + e.Message);
-                return (0, 0);
-            }
-  
         }
 
         private void InitializeGlobalVariables()
@@ -201,49 +70,214 @@ namespace SmICSCoreLib.Factories.NUMNode
             NUMNodeList = new NUMNodeModel();
             receiveLabDataListnegativ = new List<LabDataReceiveModel>();
             countStays = new List<NUMNodeCountModel>();
-            contacts = new ContactModel();
+            labPatient = new LabPatientModel();
+            labPatientList = new List<LabPatientModel>();
+            receiveLabDataListpositiv = new List<LabDataReceiveModel>();
         }
 
-        public (double, double, double, double) GetAverage((int, int, int, int) parameter, int quanti)
+        private async void Process(TimespanParameter timespan)
+        {
+            try
+            {
+                Task getPatList = Task.Run(() =>GetLabPatientList(timespan));
+                await getPatList;
+
+                var tasks = new Task[]
+                {
+                    GetNumberOfStays(),
+                    GetNumberOfNosCases(),
+                    GetNumberOfContacts()
+                };
+
+                foreach(var task in tasks)
+                {
+                    await task;
+                    //save in JSON
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("Can not get aggregated Data " + e.Message);
+            }
+        }
+
+        private void GetLabPatientList(TimespanParameter timespan)
+        {
+            receiveLabDataListpositiv = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborPositivData(timespan, pathogen));
+            if(receiveLabDataListpositiv is not null)
+            {
+                foreach(var pat in receiveLabDataListpositiv)
+                {
+                    receiveLabDataListnegativ = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborNegativData(timespan, pathogen, pat));
+                    if (receiveLabDataListnegativ is null | receiveLabDataListnegativ.Count < 2)
+                    {
+                        episodeOfCareParameter = new EpsiodeOfCareParameter { PatientID = pat.PatientID, CaseID = pat.FallID };
+                        List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter));
+                        if (discharge is not null)
+                        {
+                            labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = discharge.First().Ende };
+                        }
+                        else
+                        {
+                            labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
+                        }
+                    }
+                    else if (receiveLabDataListnegativ is not null && receiveLabDataListnegativ.Count > 1)
+                    {
+                        labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = receiveLabDataListnegativ.ElementAt(1).Befunddatum };
+                    }
+                    labPatientList.Add(labPatient);
+                    countPatient++;
+                }
+                
+            }
+        }
+
+        private async Task GetNumberOfStays()
+        {
+            foreach(var labPatient in labPatientList)
+            {
+                if(labPatient.Endtime is null)
+                {
+                    labPatient.Endtime = DateTime.Now;
+                }
+                countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetStaysCount(labPatient));
+                foreach (NUMNodeCountModel count in countStays)
+                {
+                    numberOfStays += count.Count;
+                }
+            }
+
+            averageNumberOfStays = GetAverage(numberOfStays, countPatient);
+
+            await Task.CompletedTask;
+        }
+
+        private async Task GetNumberOfNosCases()
+        {
+            List<string> patlist = new();
+
+            foreach (var labPatient in labPatientList)
+            {
+                patlist.Add(labPatient.PatientID);
+            }
+
+            PatientListParameter patList = new() { patientList = patlist };
+            List<PatientModel> list = _infecFac.Process(patList);
+
+            if (list is not null)
+            {
+                numberOfMaybeNosCases = list.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+                numberOfNosCases = list.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+            }
+
+            averageNumberOfMaybeNosCases = GetAverage(numberOfMaybeNosCases, countPatient);
+            averageNumberOfNosCases = GetAverage(numberOfNosCases, countPatient);
+
+            await Task.CompletedTask;
+        }
+
+        private async Task GetNumberOfContacts()
+        {
+            _ = new List<ContactParameter>();
+            foreach (var labPatient in labPatientList)
+            {
+                if (labPatient.Endtime is null)
+                {
+                    labPatient.Endtime = DateTime.Now;
+                }
+                List<ContactParameter> patStay = RestDataAccess.AQLQuery<ContactParameter>(GetStays(labPatient));
+                foreach(var stay in patStay)
+                {
+                    countContacts = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetContactsCount(labPatient, stay));
+                    foreach (NUMNodeCountModel count in countContacts)
+                    {
+                        numberOfContacts += count.Count;
+                    }
+                }
+
+            }
+
+            averageNumberOfContacts = GetAverage(numberOfContacts, countPatient);
+
+            await Task.CompletedTask;
+        }
+
+        private double GetAverage(int parameter, int quanti)
         {
             try
             {
                 if (quanti != 0)
                 {
-                    double average1 = (double)parameter.Item1 / (double)quanti;
-                    double average2 = (double)parameter.Item2 / (double)quanti;
-                    double average3 = (double)parameter.Item3 / (double)quanti;
-                    double average4 = (double)parameter.Item4 / (double)quanti;
-                    average = (average1, average2, average3, average4);
+                    double average = (double)parameter / (double)quanti;
                     return average;
                 }
                 else
                 {
-                    return average = (0, 0, 0, 0);
+                    return 0;
                 }
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
                 _logger.LogWarning("Can not get average " + e.Message);
-                return (0, 0, 0, 0);
+                return 0;
             }
-            
-            
-
         }
 
-        private AQLQuery getStaysCount(LabDataReceiveModel labDataListnegativ, LabDataReceiveModel labDataListpositiv)
+        private AQLQuery GetContactsCount(LabPatientModel labpatient, ContactParameter patStay)
         {
-            AQLQuery aql = new AQLQuery()
+            AQLQuery aql = new()
             {
-                Name = "LaborNegativData",
+                Name = "getStaysCount",
+                Query = $@"SELECT COUNT(Distinct g/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value) AS Count
+                        FROM EHR e
+                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
+                        CONTAINS (CLUSTER g[openEHR-EHR-CLUSTER.case_identification.v0] and ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]) 
+                        WHERE c/name/value='Patientenaufenthalt'
+                        AND a/data[at0001]/items[at0004]/value/value <= '{patStay.End?.ToString("yyyy-MM-dd")}' 
+                        AND a/data[at0001]/items[at0005]/value/value >='{patStay.Start?.ToString("yyyy-MM-dd")}' 
+                        AND e/ehr_status/subject/external_ref/id/value IS NOT '{labpatient.PatientID}'"
+            };
+            return aql;
+        }
+
+        private AQLQuery GetStays(LabPatientModel labpatient)
+        {
+            AQLQuery aql = new()
+            {
+                Name = "getStays",
+                Query = $@"SELECT h/data[at0001]/items[at0004]/value/value as Start,
+                                h/data[at0001]/items[at0005]/value/value as End,
+                                s/items[at0027]/value/value as Ward
+                                FROM EHR e 
+                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] 
+                                CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0]
+                                AND ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]
+                                CONTAINS (CLUSTER s[openEHR-EHR-CLUSTER.location.v1]
+                                AND CLUSTER f[openEHR-EHR-CLUSTER.organization.v0]))
+                                WHERE c/name/value = 'Patientenaufenthalt'
+                                AND i/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)'
+                                AND i/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)' = '{labpatient.CaseID}'
+                                AND h/data[at0001]/items[at0004]/value/value <= '{labpatient.Endtime?.ToString("yyyy-MM-dd")}' 
+                                AND (h/data[at0001]/items[at0005]/value/value >='{labpatient.Starttime.ToString("yyyy-MM-dd")}'
+                                OR NOT EXISTS h/data[at0001]/items[at0005]/value/value)"
+            };
+            return aql;
+        }
+
+        private AQLQuery GetStaysCount(LabPatientModel labpatient)
+        {
+            AQLQuery aql = new()
+            {
+                Name = "getStaysCount",
                 Query = $@"SELECT COUNT(g/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value) AS Count
                         FROM EHR e
                         CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
                         CONTAINS (CLUSTER g[openEHR-EHR-CLUSTER.case_identification.v0] and ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]) 
                         WHERE c/name/value='Patientenaufenthalt'
-                        AND g/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value = '{labDataListpositiv.FallID}'
-                        AND a/data[at0001]/items[at0004]/value/value <= '{labDataListnegativ.Befunddatum.ToString("yyyy-MM-dd")}' 
-                        AND (a/data[at0001]/items[at0005]/value/value >='{labDataListpositiv.Befunddatum.ToString("yyyy-MM-dd")}' 
+                        AND g/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value = '{labpatient.CaseID}'
+                        AND a/data[at0001]/items[at0004]/value/value <= '{labpatient.Endtime?.ToString("yyyy-MM-dd")}' 
+                        AND (a/data[at0001]/items[at0005]/value/value >='{labpatient.Starttime.ToString("yyyy-MM-dd")}' 
                         OR NOT EXISTS a/data[at0001]/items[at0005]/value/value)"
             };
             return aql;
@@ -251,7 +285,7 @@ namespace SmICSCoreLib.Factories.NUMNode
 
         private AQLQuery LaborPositivData(TimespanParameter timespan, string pathogen)
         {
-            AQLQuery aql = new AQLQuery()
+            AQLQuery aql = new()
             {
                 Name = "LaborPositivData",
                 Query = $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
@@ -269,16 +303,16 @@ namespace SmICSCoreLib.Factories.NUMNode
                                 WHERE c/name/value='Virologischer Befund' 
                                 AND d/items[at0001]/name/value='Nachweis'
                                 AND d/items[at0001,'Nachweis']/value/defining_code/code_string = '260373001'
-                                AND d/items[at0024]/value/defining_code/code_string = '{ pathogen }'
-                                AND m/items[at0015]/value/value>='{ timespan.Starttime.ToString("yyyy-MM-dd") }' 
-                                AND m/items[at0015]/value/value<'{ timespan.Endtime.ToString("yyyy-MM-dd") }'"
+                                AND d/items[at0024]/value/defining_code/code_string = '{pathogen}'
+                                AND m/items[at0015]/value/value>='{timespan.Starttime.ToString("yyyy-MM-dd")}' 
+                                AND m/items[at0015]/value/value<'{timespan.Endtime.ToString("yyyy-MM-dd")}'"
             };
             return aql;
         }
 
         private AQLQuery LaborNegativData(TimespanParameter timespan, string pathogen, LabDataReceiveModel lab)
         {
-            AQLQuery aql = new AQLQuery()
+            AQLQuery aql = new()
             {
                 Name = "LaborNegativData",
                 Query = $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
@@ -296,10 +330,10 @@ namespace SmICSCoreLib.Factories.NUMNode
                                 WHERE c/name/value='Virologischer Befund' 
                                 AND d/items[at0001]/name/value='Nachweis'
                                 AND d/items[at0001,'Nachweis']/value/defining_code/code_string = '260415000'
-                                AND d/items[at0024]/value/defining_code/code_string = '{ pathogen }'
-                                AND m/items[at0015]/value/value>='{ timespan.Starttime.ToString("yyyy-MM-dd") }' 
-                                AND m/items[at0015]/value/value<'{ timespan.Endtime.ToString("yyyy-MM-dd") }'
-                                AND  i/items[at0001]/value/value = '{ lab.FallID }'"
+                                AND d/items[at0024]/value/defining_code/code_string = '{pathogen}'
+                                AND m/items[at0015]/value/value>='{timespan.Starttime.ToString("yyyy-MM-dd")}' 
+                                AND m/items[at0015]/value/value<'{timespan.Endtime.ToString("yyyy-MM-dd")}'
+                                AND  i/items[at0001]/value/value = '{lab.FallID}'"
             };
             return aql;
         }

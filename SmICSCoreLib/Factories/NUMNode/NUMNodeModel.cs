@@ -16,5 +16,10 @@ namespace SmICSCoreLib.Factories.NUMNode
         [JsonProperty(PropertyName = "DateTime")]
         public DateTime DateTime { get; set; }
 
+        public NUMNodeModel()
+        {
+
+        }
+
     }
 }
