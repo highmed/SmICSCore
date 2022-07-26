@@ -11,6 +11,7 @@ using SmICSCoreLib.StatistikDataModels;
 using System.Threading.Tasks;
 using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.Factories.PatientMovement.ReceiveModels;
+using System.Reflection;
 
 namespace SmICSCoreLib.Factories.NUMNode
 {
@@ -19,7 +20,6 @@ namespace SmICSCoreLib.Factories.NUMNode
         private NUMNodeModel NUMNodeList;
         private LabPatientModel labPatient;
         private List<LabPatientModel> labPatientList;
-        private List<NUMNodeModel> dataAggregationStorage;
         private List<LabDataReceiveModel> receiveLabDataListpositiv;
         private List<LabDataReceiveModel> receiveLabDataListnegativ;
         private List<NUMNodeCountModel> countStays;
@@ -36,6 +36,8 @@ namespace SmICSCoreLib.Factories.NUMNode
         private static int numberOfNosCases;
         private static int numberOfMaybeNosCases;
         private static int numberOfContacts;
+
+        private string jsonStorage;
 
         private readonly string pathogen = "94500-6";
         private readonly string path = @"../SmICSWebApp/Resources/NUMNode.json";
@@ -66,7 +68,6 @@ namespace SmICSCoreLib.Factories.NUMNode
 
         private void InitializeGlobalVariables()
         {
-            dataAggregationStorage = new List<NUMNodeModel>();
             NUMNodeList = new NUMNodeModel();
             receiveLabDataListnegativ = new List<LabDataReceiveModel>();
             countStays = new List<NUMNodeCountModel>();
@@ -92,8 +93,25 @@ namespace SmICSCoreLib.Factories.NUMNode
                 foreach(var task in tasks)
                 {
                     await task;
-                    //save in JSON
                 }
+
+                PropertyInfo[] props = NUMNodeList.GetType().GetProperties();
+                foreach(var prop in props)
+                {
+                    if(jsonStorage is not null)
+                    {
+                        jsonStorage += ",";
+                    }
+                    switch (prop.Name.ToLower())
+                    {
+                        case "averagenumberofstays": jsonStorage += prop.Name + ":" + averageNumberOfStays; break;
+                        case "averagenumberofnoscases": jsonStorage += prop.Name + ":" + averageNumberOfNosCases; break;
+                        case "averagenumberofmaybenoscases": jsonStorage += prop.Name + ":" + averageNumberOfMaybeNosCases; break;
+                        case "averagenumberofcontacts": jsonStorage += prop.Name + ":" + averageNumberOfContacts; break;
+                        case "datetime": jsonStorage += prop.Name + ":" + DateTime.Now.ToString(); break;
+                    }
+                }
+                Console.WriteLine(jsonStorage);
             }
             catch (Exception e)
             {
@@ -109,7 +127,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                 foreach(var pat in receiveLabDataListpositiv)
                 {
                     receiveLabDataListnegativ = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborNegativData(timespan, pathogen, pat));
-                    if (receiveLabDataListnegativ is null | receiveLabDataListnegativ.Count < 2)
+                    if (receiveLabDataListnegativ is null || receiveLabDataListnegativ.Count < 2)
                     {
                         episodeOfCareParameter = new EpsiodeOfCareParameter { PatientID = pat.PatientID, CaseID = pat.FallID };
                         List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter));
@@ -187,15 +205,17 @@ namespace SmICSCoreLib.Factories.NUMNode
                     labPatient.Endtime = DateTime.Now;
                 }
                 List<ContactParameter> patStay = RestDataAccess.AQLQuery<ContactParameter>(GetStays(labPatient));
-                foreach(var stay in patStay)
+                if(patStay is not null)
                 {
-                    countContacts = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetContactsCount(labPatient, stay));
-                    foreach (NUMNodeCountModel count in countContacts)
+                    foreach (var stay in patStay)
                     {
-                        numberOfContacts += count.Count;
+                        countContacts = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetContactsCount(labPatient, stay));
+                        foreach (NUMNodeCountModel count in countContacts)
+                        {
+                            numberOfContacts += count.Count;
+                        }
                     }
                 }
-
             }
 
             averageNumberOfContacts = GetAverage(numberOfContacts, countPatient);
@@ -232,11 +252,13 @@ namespace SmICSCoreLib.Factories.NUMNode
                 Query = $@"SELECT COUNT(Distinct g/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value) AS Count
                         FROM EHR e
                         CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
-                        CONTAINS (CLUSTER g[openEHR-EHR-CLUSTER.case_identification.v0] and ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]) 
+                        CONTAINS (CLUSTER g[openEHR-EHR-CLUSTER.case_identification.v0] and ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]
+                        CONTAINS (CLUSTER z[openEHR-EHR-CLUSTER.location.v1])) 
                         WHERE c/name/value='Patientenaufenthalt'
-                        AND a/data[at0001]/items[at0004]/value/value <= '{patStay.End?.ToString("yyyy-MM-dd")}' 
-                        AND a/data[at0001]/items[at0005]/value/value >='{patStay.Start?.ToString("yyyy-MM-dd")}' 
-                        AND e/ehr_status/subject/external_ref/id/value IS NOT '{labpatient.PatientID}'"
+                        AND (a/data[at0001]/items[at0004]/value/value <= '{patStay.End?.ToString("yyyy-MM-dd")}' 
+                        AND a/data[at0001]/items[at0005]/value/value >='{patStay.Start?.ToString("yyyy-MM-dd")}') 
+                        AND NOT e/ehr_status/subject/external_ref/id/value = '{labpatient.PatientID}'
+                        AND z/items[at0027]/value = '{patStay.Ward}'"
             };
             return aql;
         }
@@ -246,21 +268,18 @@ namespace SmICSCoreLib.Factories.NUMNode
             AQLQuery aql = new()
             {
                 Name = "getStays",
-                Query = $@"SELECT h/data[at0001]/items[at0004]/value/value as Start,
-                                h/data[at0001]/items[at0005]/value/value as End,
-                                s/items[at0027]/value/value as Ward
-                                FROM EHR e 
-                                CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0] 
-                                CONTAINS (CLUSTER i[openEHR-EHR-CLUSTER.case_identification.v0]
-                                AND ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]
-                                CONTAINS (CLUSTER s[openEHR-EHR-CLUSTER.location.v1]
-                                AND CLUSTER f[openEHR-EHR-CLUSTER.organization.v0]))
+                Query = $@"SELECT p/data[at0001]/items[at0004]/value/value AS Start,
+                                p/data[at0001]/items[at0005]/value/value AS End,
+                                y/items[at0027]/value/value AS Ward
+                                FROM EHR e
+                                CONTAINS COMPOSITION c
+                                CONTAINS (CLUSTER h[openEHR-EHR-CLUSTER.case_identification.v0] AND ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] 
+                                CONTAINS (CLUSTER y[openEHR-EHR-CLUSTER.location.v1] and CLUSTER a[openEHR-EHR-CLUSTER.organization.v0])) 
                                 WHERE c/name/value = 'Patientenaufenthalt'
-                                AND i/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)'
-                                AND i/items[at0001]/name/value = 'Zugehöriger Versorgungsfall (Kennung)' = '{labpatient.CaseID}'
-                                AND h/data[at0001]/items[at0004]/value/value <= '{labpatient.Endtime?.ToString("yyyy-MM-dd")}' 
-                                AND (h/data[at0001]/items[at0005]/value/value >='{labpatient.Starttime.ToString("yyyy-MM-dd")}'
-                                OR NOT EXISTS h/data[at0001]/items[at0005]/value/value)"
+                                AND h/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value = '{labpatient.CaseID}'
+                                AND p/data[at0001]/items[at0004]/value/value <= '{labpatient.Endtime?.ToString("yyyy-MM-dd")}' 
+                                AND (p/data[at0001]/items[at0005]/value/value >='{labpatient.Starttime.ToString("yyyy-MM-dd")}'
+                                OR NOT EXISTS p/data[at0001]/items[at0005]/value/value)"
             };
             return aql;
         }

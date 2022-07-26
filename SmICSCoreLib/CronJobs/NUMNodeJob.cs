@@ -10,7 +10,7 @@ namespace SmICSCoreLib.CronJobs
     public class NUMNodeJob : IJob
     {
         private INUMNodeFactory _listFac;
-        private readonly string path = @"../SmICSWebApp/Resources/NUMNode.csv";
+        private readonly string path = @"../SmICSWebApp/Resources/NUMNode.json";
 
         public NUMNodeJob(INUMNodeFactory listFac)
         {
