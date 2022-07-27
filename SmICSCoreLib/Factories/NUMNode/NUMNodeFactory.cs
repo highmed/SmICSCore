@@ -18,6 +18,7 @@ namespace SmICSCoreLib.Factories.NUMNode
     public class NUMNodeFactory : INUMNodeFactory
     {
         private NUMNodeModel NUMNodeList;
+        private List<NUMNodeModel> dataAggregationStorage;
         private LabPatientModel labPatient;
         private List<LabPatientModel> labPatientList;
         private List<LabDataReceiveModel> receiveLabDataListpositiv;
@@ -41,6 +42,7 @@ namespace SmICSCoreLib.Factories.NUMNode
 
         private readonly string pathogen = "94500-6";
         private readonly string path = @"../SmICSWebApp/Resources/NUMNode.json";
+        private readonly string readpath = @"../SmICSWebApp/Resources/";
 
         public IRestDataAccess RestDataAccess { get; set; }
         private readonly ILogger<NUMNodeFactory> _logger;
@@ -69,6 +71,7 @@ namespace SmICSCoreLib.Factories.NUMNode
         private void InitializeGlobalVariables()
         {
             NUMNodeList = new NUMNodeModel();
+            dataAggregationStorage = new List<NUMNodeModel>();
             receiveLabDataListnegativ = new List<LabDataReceiveModel>();
             countStays = new List<NUMNodeCountModel>();
             labPatient = new LabPatientModel();
@@ -95,23 +98,10 @@ namespace SmICSCoreLib.Factories.NUMNode
                     await task;
                 }
 
-                PropertyInfo[] props = NUMNodeList.GetType().GetProperties();
-                foreach(var prop in props)
-                {
-                    if(jsonStorage is not null)
-                    {
-                        jsonStorage += ",";
-                    }
-                    switch (prop.Name.ToLower())
-                    {
-                        case "averagenumberofstays": jsonStorage += prop.Name + ":" + averageNumberOfStays; break;
-                        case "averagenumberofnoscases": jsonStorage += prop.Name + ":" + averageNumberOfNosCases; break;
-                        case "averagenumberofmaybenoscases": jsonStorage += prop.Name + ":" + averageNumberOfMaybeNosCases; break;
-                        case "averagenumberofcontacts": jsonStorage += prop.Name + ":" + averageNumberOfContacts; break;
-                        case "datetime": jsonStorage += prop.Name + ":" + DateTime.Now.ToString(); break;
-                    }
-                }
-                Console.WriteLine(jsonStorage);
+                NUMNodeList = new NUMNodeModel() { AverageNumberOfStays = averageNumberOfStays, AverageNumberOfNosCases = averageNumberOfNosCases, AverageNumberOfMaybeNosCases = averageNumberOfMaybeNosCases, AverageNumberOfContacts = averageNumberOfContacts, DateTime = DateTime.Now };
+                dataAggregationStorage.Add(NUMNodeList);
+
+                JSONFileStream.JSONWriter.Write(dataAggregationStorage, readpath, "NUMNode");
             }
             catch (Exception e)
             {
