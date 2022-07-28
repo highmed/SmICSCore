@@ -153,10 +153,6 @@ namespace SmICSCoreLib.Factories.NUMNode
             {
                 _logger.LogWarning("No positiv patient data has been found.");
             }
-            else
-            {
-                _logger.LogWarning("No positiv patient data has been found.");
-            }
         }
 
         private async Task GetNumberOfStays()
