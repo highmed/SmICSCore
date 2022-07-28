@@ -147,8 +147,11 @@ namespace SmICSCoreLib.Factories.NUMNode
                     }
                     labPatientList.Add(labPatient);
                     countPatient++;
-                }
-                
+                }  
+            }
+            else
+            {
+                _logger.LogWarning("No positiv patient data has been found.");
             }
             else
             {
@@ -207,7 +210,6 @@ namespace SmICSCoreLib.Factories.NUMNode
 
         private async Task GetNumberOfContacts()
         {
-            _ = new List<ContactParameter>();
             foreach (var labPatient in labPatientList)
             {
                 if (labPatient.Endtime is null)
