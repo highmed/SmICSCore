@@ -11,7 +11,6 @@ using SmICSCoreLib.StatistikDataModels;
 using System.Threading.Tasks;
 using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.Factories.PatientMovement.ReceiveModels;
-using System.Reflection;
 
 namespace SmICSCoreLib.Factories.NUMNode
 {
@@ -38,11 +37,8 @@ namespace SmICSCoreLib.Factories.NUMNode
         private static int numberOfMaybeNosCases;
         private static int numberOfContacts;
 
-        private string jsonStorage;
-
         private readonly string pathogen = "94500-6";
-        private readonly string path = @"../SmICSWebApp/Resources/NUMNode.json";
-        private readonly string readpath = @"../SmICSWebApp/Resources/";
+        private readonly string path = @"../SmICSWebApp/Resources/";
 
         public IRestDataAccess RestDataAccess { get; set; }
         private readonly ILogger<NUMNodeFactory> _logger;
@@ -98,10 +94,25 @@ namespace SmICSCoreLib.Factories.NUMNode
                     await task;
                 }
 
-                NUMNodeList = new NUMNodeModel() { AverageNumberOfStays = averageNumberOfStays, AverageNumberOfNosCases = averageNumberOfNosCases, AverageNumberOfMaybeNosCases = averageNumberOfMaybeNosCases, AverageNumberOfContacts = averageNumberOfContacts, DateTime = DateTime.Now };
+                NUMNodeList = new NUMNodeModel(){ 
+                    Provider = "MHH", 
+                    CDDV = "1.0", 
+                    Timestamp = DateTime.Now, 
+                    Author = "SmICS", 
+                    Dataitems = new NUMNodeDataItems(){
+                        Itemname = "current.aggregateddatasets",
+                        Itemtype = "aggregated",
+                        Data = new NUMNodeData(){
+                            AverageNumberOfStays = averageNumberOfStays,
+                            AverageNumberOfNosCases = averageNumberOfNosCases,
+                            AverageNumberOfMaybeNosCases = averageNumberOfMaybeNosCases,
+                            AverageNumberOfContacts = averageNumberOfContacts
+                        }
+                    }
+                };
                 dataAggregationStorage.Add(NUMNodeList);
 
-                JSONFileStream.JSONWriter.Write(dataAggregationStorage, readpath, "NUMNode");
+                JSONFileStream.JSONWriter.Write(dataAggregationStorage, path, "NUMNode");
             }
             catch (Exception e)
             {
@@ -138,6 +149,10 @@ namespace SmICSCoreLib.Factories.NUMNode
                     countPatient++;
                 }
                 
+            }
+            else
+            {
+                _logger.LogWarning("No positiv patient data has been found.");
             }
         }
 
@@ -178,6 +193,11 @@ namespace SmICSCoreLib.Factories.NUMNode
                 numberOfMaybeNosCases = list.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
                 numberOfNosCases = list.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
             }
+            else
+            {
+                numberOfMaybeNosCases = 0;
+                numberOfNosCases = 0;
+            }
 
             averageNumberOfMaybeNosCases = GetAverage(numberOfMaybeNosCases, countPatient);
             averageNumberOfNosCases = GetAverage(numberOfNosCases, countPatient);
@@ -205,6 +225,9 @@ namespace SmICSCoreLib.Factories.NUMNode
                             numberOfContacts += count.Count;
                         }
                     }
+                }else
+                {
+                    _logger.LogWarning("No patient movements has been found.");
                 }
             }
 

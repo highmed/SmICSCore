@@ -1,9 +1,18 @@
 [
   {
-    "AverageNumberOfStays": 1.3275862068965518,
-    "AverageNumberOfNosCases": 0.0,
-    "AverageNumberOfMaybeNosCases": 0.13793103448275862,
-    "AverageNumberOfContacts": 4.810344827586207,
-    "DateTime": "2022-07-27T11:35:42.2577385+02:00"
+    "provider": "MHH",
+    "corona_dashboard_dataset_version": "1.0",
+    "exporttimestamp": "2022-07-28T12:15:07.4608112+02:00",
+    "author": "SmICS",
+    "dataitems": {
+      "itemname": "current.aggregateddatasets",
+      "itemtype": "aggregated",
+      "data": {
+        "average_number_of_stays": 1.3275862068965518,
+        "average_number_of_nos_cases": 0.0,
+        "average_number_of_maybe_nos_cases": 0.13793103448275862,
+        "average_number_of_contacts": 4.810344827586207
+      }
+    }
   }
 ]
