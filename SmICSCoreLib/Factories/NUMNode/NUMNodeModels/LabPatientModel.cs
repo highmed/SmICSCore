@@ -13,6 +13,13 @@ namespace SmICSCoreLib.Factories.NUMNode
         public DateTime Starttime { get; set; }
         [JsonProperty(PropertyName = "Endtime")]
         public DateTime? Endtime { get; set; }
-
+        [JsonProperty(PropertyName = "CountStays")]
+        public int CountStays { get; set; }
+        [JsonProperty(PropertyName = "CountNosCases")]
+        public int CountNosCases { get; set; }
+        [JsonProperty(PropertyName = "CountMaybeNosCases")]
+        public int CountMaybeNosCases { get; set; }
+        [JsonProperty(PropertyName = "CountContacts")]
+        public int CountContacts { get; set; }
     }
 }

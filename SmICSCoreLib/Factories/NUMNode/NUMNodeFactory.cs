@@ -31,6 +31,21 @@ namespace SmICSCoreLib.Factories.NUMNode
         private double averageNumberOfMaybeNosCases;
         private double averageNumberOfContacts;
 
+        private double medianNumberOfStays;
+        private double medianNumberOfNosCases;
+        private double medianNumberOfMaybeNosCases;
+        private double medianNumberOfContacts;
+
+        private double underQuartilNumberOfStays;
+        private double underQuartilNumberOfNosCases;
+        private double underQuartilNumberOfMaybeNosCases;
+        private double underQuartilNumberOfContacts;
+
+        private double upperQuartilNumberOfStays;
+        private double upperQuartilNumberOfNosCases;
+        private double upperQuartilNumberOfMaybeNosCases;
+        private double upperQuartilNumberOfContacts;
+
         private static int countPatient;
         private static int numberOfStays;
         private static int numberOfNosCases;
@@ -166,11 +181,15 @@ namespace SmICSCoreLib.Factories.NUMNode
                 countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetStaysCount(labPatient));
                 foreach (NUMNodeCountModel count in countStays)
                 {
+                    labPatient.CountStays = count.Count;
                     numberOfStays += count.Count;
                 }
             }
 
-            averageNumberOfStays = GetAverage(numberOfStays, countPatient);
+            averageNumberOfStays = NUMNodeStatistics.GetAverage(numberOfStays, countPatient);
+            medianNumberOfStays = NUMNodeStatistics.GetMedian(labPatientList, countPatient, "stay");
+            underQuartilNumberOfStays = NUMNodeStatistics.GetUnderQuartil(labPatientList, countPatient, "stay");
+            upperQuartilNumberOfStays = NUMNodeStatistics.GetUpperQuartil(labPatientList, countPatient, "stay");
 
             await Task.CompletedTask;
         }
@@ -198,8 +217,20 @@ namespace SmICSCoreLib.Factories.NUMNode
                 numberOfNosCases = 0;
             }
 
-            averageNumberOfMaybeNosCases = GetAverage(numberOfMaybeNosCases, countPatient);
-            averageNumberOfNosCases = GetAverage(numberOfNosCases, countPatient);
+            foreach(var pat in list)
+            {
+                labPatientList.Where(x => x.PatientID == pat.PatientID).Select(a => a.CountMaybeNosCases = pat.Infektion.Where(b => b.ToString() == "Moegliche Nosokomiale Infektion").Count());
+                labPatientList.Where(x => x.PatientID == pat.PatientID).Select(a => a.CountNosCases = pat.Infektion.Where(b => b.ToString() == "Wahrscheinliche Nosokomiale Infektion").Count());
+            }
+
+            averageNumberOfMaybeNosCases = NUMNodeStatistics.GetAverage(numberOfMaybeNosCases, countPatient);
+            averageNumberOfNosCases = NUMNodeStatistics.GetAverage(numberOfNosCases, countPatient);
+            medianNumberOfMaybeNosCases = NUMNodeStatistics.GetMedian(labPatientList, countPatient, "maybeNosCase");
+            medianNumberOfNosCases = NUMNodeStatistics.GetMedian(labPatientList, countPatient, "nosCase");
+            underQuartilNumberOfMaybeNosCases = NUMNodeStatistics.GetUnderQuartil(labPatientList, countPatient, "maybeNosCase");
+            underQuartilNumberOfNosCases = NUMNodeStatistics.GetUnderQuartil(labPatientList, countPatient, "nosCase");
+            upperQuartilNumberOfMaybeNosCases = NUMNodeStatistics.GetUpperQuartil(labPatientList, countPatient, "maybeNosCase");
+            upperQuartilNumberOfNosCases = NUMNodeStatistics.GetUpperQuartil(labPatientList, countPatient, "nosCase");
 
             await Task.CompletedTask;
         }
@@ -221,6 +252,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                         foreach (NUMNodeCountModel count in countContacts)
                         {
                             numberOfContacts += count.Count;
+                            labPatient.CountContacts = count.Count;
                         }
                     }
                 }else
@@ -229,30 +261,12 @@ namespace SmICSCoreLib.Factories.NUMNode
                 }
             }
 
-            averageNumberOfContacts = GetAverage(numberOfContacts, countPatient);
+            averageNumberOfContacts = NUMNodeStatistics.GetAverage(numberOfContacts, countPatient);
+            medianNumberOfContacts = NUMNodeStatistics.GetMedian(labPatientList, countPatient, "contact");
+            underQuartilNumberOfContacts = NUMNodeStatistics.GetUnderQuartil(labPatientList, countPatient, "contact");
+            upperQuartilNumberOfContacts = NUMNodeStatistics.GetUpperQuartil(labPatientList, countPatient, "contact");
 
             await Task.CompletedTask;
-        }
-
-        private double GetAverage(int parameter, int quanti)
-        {
-            try
-            {
-                if (quanti != 0)
-                {
-                    double average = (double)parameter / (double)quanti;
-                    return average;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning("Can not get average " + e.Message);
-                return 0;
-            }
         }
 
         private AQLQuery GetContactsCount(LabPatientModel labpatient, ContactParameter patStay)
