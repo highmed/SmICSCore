@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace SmICSCoreLib.Factories.NUMNode
 {
@@ -14,7 +15,7 @@ namespace SmICSCoreLib.Factories.NUMNode
         [JsonProperty(PropertyName = "author")]
         public string Author { get; set; }
         [JsonProperty(PropertyName = "dataitems")]
-        public NUMNodeDataItems Dataitems { get; set; }
+        public List<NUMNodeDataItems> Dataitems { get; set; }
 
     }
 }

@@ -109,19 +109,62 @@ namespace SmICSCoreLib.Factories.NUMNode
                     await task;
                 }
 
-                NUMNodeList = new NUMNodeModel(){ 
-                    Provider = "MHH", 
-                    CDDV = "1.0", 
-                    Timestamp = DateTime.Now, 
-                    Author = "SmICS", 
-                    Dataitems = new NUMNodeDataItems(){
-                        Itemname = "current.aggregateddatasets",
-                        Itemtype = "aggregated",
-                        Data = new NUMNodeData(){
-                            AverageNumberOfStays = averageNumberOfStays,
-                            AverageNumberOfNosCases = averageNumberOfNosCases,
-                            AverageNumberOfMaybeNosCases = averageNumberOfMaybeNosCases,
-                            AverageNumberOfContacts = averageNumberOfContacts
+                NUMNodeList = new NUMNodeModel() {
+                    Provider = "MHH",
+                    CDDV = "0.3.0",
+                    Timestamp = DateTime.Now,
+                    Author = "SmICS",
+                    Dataitems = new List<NUMNodeDataItems>(){
+                        new NUMNodeDataItems(){
+                            Itemname = "current.patientstays",
+                            Itemtype = "aggregated",
+                            Data = new NUMNodeData(){
+                                average = averageNumberOfStays,
+                                median = medianNumberOfStays,
+                                underquartil = underQuartilNumberOfStays,
+                                upperquartil = upperQuartilNumberOfStays,
+                                max = labPatientList.Max(a => a.CountStays),
+                                min = labPatientList.Min(a => a.CountStays)
+                            }
+                        },
+                        new NUMNodeDataItems()
+                        {
+                            Itemname = "current.patientmaybenoscases",
+                            Itemtype = "aggregated",
+                            Data = new NUMNodeData(){
+                                average = averageNumberOfMaybeNosCases,
+                                median = medianNumberOfMaybeNosCases,
+                                underquartil = underQuartilNumberOfMaybeNosCases,
+                                upperquartil = upperQuartilNumberOfMaybeNosCases,
+                                max = labPatientList.Max(a => a.CountMaybeNosCases),
+                                min = labPatientList.Min(a => a.CountMaybeNosCases)
+                            }
+                        },
+                        new NUMNodeDataItems()
+                        {
+                            Itemname = "current.patientnoscases",
+                            Itemtype = "aggregated",
+                            Data = new NUMNodeData(){
+                                average = averageNumberOfNosCases,
+                                median = medianNumberOfNosCases,
+                                underquartil = underQuartilNumberOfNosCases,
+                                upperquartil = upperQuartilNumberOfNosCases,
+                                max = labPatientList.Max(a => a.CountNosCases),
+                                min = labPatientList.Min(a => a.CountNosCases)
+                            }
+                        },
+                        new NUMNodeDataItems()
+                        {
+                            Itemname = "current.patientcontacts",
+                            Itemtype = "aggregated",
+                            Data = new NUMNodeData(){
+                                average = averageNumberOfContacts,
+                                median = medianNumberOfContacts,
+                                underquartil = underQuartilNumberOfContacts,
+                                upperquartil = upperQuartilNumberOfContacts,
+                                max = labPatientList.Max(a => a.CountContacts),
+                                min = labPatientList.Min(a => a.CountContacts)
+                            }
                         }
                     }
                 };

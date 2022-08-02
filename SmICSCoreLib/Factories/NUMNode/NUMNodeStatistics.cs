@@ -43,8 +43,9 @@ namespace SmICSCoreLib.Factories.NUMNode
                         case "contact":
                             list.OrderBy(a => a.CountContacts);
                             return (list.ElementAt(getplace + 1).CountContacts + list.ElementAt(getplace + 2).CountContacts) / 2;
-                    } 
-                }else
+                    }
+                }
+                else
                 {
                     switch (name)
                     {
