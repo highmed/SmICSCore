@@ -209,7 +209,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                     }
                     else if (receiveLabDataListnegativ is not null && receiveLabDataListnegativ.Count > 1)
                     {
-                        labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = receiveLabDataListnegativ.ElementAt(1).Befunddatum };
+                        labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = receiveLabDataListnegativ.OrderBy(a => a.Befunddatum).ElementAt(1).Befunddatum };
                         countPatient++;
                     }
                     labPatientList.Add(labPatient);
@@ -227,12 +227,12 @@ namespace SmICSCoreLib.Factories.NUMNode
             {
                 if(labPatient.Endtime is null)
                 {
-                    labPatient.Endtime = DateTime.Now;
+                    labPatient.Endtime = DateTime.Today;
                 }
                 countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetStaysCount(labPatient));
                 foreach (NUMNodeCountModel count in countStays)
                 {
-                    if(labPatient.Endtime == DateTime.Now)
+                    if(labPatient.Endtime == DateTime.Today)
                     {
                         currentnumberOfStays += count.Count;
                     }else
@@ -256,9 +256,14 @@ namespace SmICSCoreLib.Factories.NUMNode
             List<string> patlist = new();
             List<string> currentpatlist = new();
 
+            if (labPatient.Endtime is null)
+            {
+                labPatient.Endtime = DateTime.Today;
+            }
+
             foreach (var labPatient in labPatientList)
             {
-                if(labPatient.Endtime is null)
+                if(labPatient.Endtime == DateTime.Today)
                 {
                     currentpatlist.Add(labPatient.PatientID);
                 }
@@ -277,13 +282,16 @@ namespace SmICSCoreLib.Factories.NUMNode
             {
                 numberOfMaybeNosCases = list.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
                 numberOfNosCases = list.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-                currentnumberOfMaybeNosCases = list.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-                currentnumberOfNosCases = list.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+                currentnumberOfMaybeNosCases = currentlist.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+                currentnumberOfNosCases = currentlist.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
 
                 foreach (var pat in list)
                 {
-                    labPatientList.Where(x => x.PatientID == pat.PatientID).Select(a => a.CountMaybeNosCases += pat.Infektion.Where(b => b.ToString() == "Moegliche Nosokomiale Infektion").Count());
-                    labPatientList.Where(x => x.PatientID == pat.PatientID).Select(a => a.CountNosCases += pat.Infektion.Where(b => b.ToString() == "Wahrscheinliche Nosokomiale Infektion").Count());
+                    //bug
+
+                    labPatientList.Where(x => x.PatientID == pat.PatientID).Select(a => a.CountMaybeNosCases = pat.Infektion.Where(b => b.ToString() == "Moegliche Nosokomiale Infektion").Count());
+                    labPatientList.Where(x => x.PatientID == pat.PatientID).Select(a => a.CountNosCases = pat.Infektion.Where(b => b.ToString() == "Wahrscheinliche Nosokomiale Infektion").Count());
+
                 }
             }
             else
@@ -312,7 +320,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             {
                 if (labPatient.Endtime is null)
                 {
-                    labPatient.Endtime = DateTime.Now;
+                    labPatient.Endtime = DateTime.Today;
                 }
                 List<ContactParameter> patStay = RestDataAccess.AQLQuery<ContactParameter>(GetStays(labPatient));
                 if(patStay is not null)
@@ -322,7 +330,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                         countContacts = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetContactsCount(labPatient, stay));
                         foreach (NUMNodeCountModel count in countContacts)
                         {
-                            if(labPatient.Endtime == DateTime.Now)
+                            if(labPatient.Endtime == DateTime.Today)
                             {
                                 currentnumberOfContacts += count.Count;
                             }
@@ -338,7 +346,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                     _logger.LogWarning("No patient movements has been found.");
                 }
             }
-
+            //bug
             averageNumberOfContacts = NUMNodeStatistics.GetAverage(numberOfContacts + currentnumberOfContacts, countPatient + currentcountPatient);
             medianNumberOfContacts = NUMNodeStatistics.GetMedian(labPatientList, countPatient + currentcountPatient, "contact");
             underQuartilNumberOfContacts = NUMNodeStatistics.GetUnderQuartil(labPatientList, countPatient + currentcountPatient, "contact");
