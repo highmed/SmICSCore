@@ -52,6 +52,12 @@ namespace SmICSCoreLib.Factories.NUMNode
         private static int numberOfMaybeNosCases;
         private static int numberOfContacts;
 
+        private static int currentcountPatient;
+        private static int currentnumberOfStays;
+        private static int currentnumberOfNosCases;
+        private static int currentnumberOfMaybeNosCases;
+        private static int currentnumberOfContacts;
+
         private readonly string pathogen = "94500-6";
         private readonly string path = @"../SmICSWebApp/Resources/";
 
@@ -193,18 +199,20 @@ namespace SmICSCoreLib.Factories.NUMNode
                         if (discharge is not null)
                         {
                             labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = discharge.First().Ende };
+                            countPatient++;
                         }
                         else
                         {
                             labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
+                            currentcountPatient++;
                         }
                     }
                     else if (receiveLabDataListnegativ is not null && receiveLabDataListnegativ.Count > 1)
                     {
                         labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = receiveLabDataListnegativ.ElementAt(1).Befunddatum };
+                        countPatient++;
                     }
                     labPatientList.Add(labPatient);
-                    countPatient++;
                 }  
             }
             else
@@ -224,15 +232,21 @@ namespace SmICSCoreLib.Factories.NUMNode
                 countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetStaysCount(labPatient));
                 foreach (NUMNodeCountModel count in countStays)
                 {
-                    labPatient.CountStays = count.Count;
-                    numberOfStays += count.Count;
+                    if(labPatient.Endtime == DateTime.Now)
+                    {
+                        currentnumberOfStays += count.Count;
+                    }else
+                    {
+                        numberOfStays += count.Count;
+                    }
+                    labPatient.CountStays = count.Count;  
                 }
             }
 
-            averageNumberOfStays = NUMNodeStatistics.GetAverage(numberOfStays, countPatient);
-            medianNumberOfStays = NUMNodeStatistics.GetMedian(labPatientList, countPatient, "stay");
-            underQuartilNumberOfStays = NUMNodeStatistics.GetUnderQuartil(labPatientList, countPatient, "stay");
-            upperQuartilNumberOfStays = NUMNodeStatistics.GetUpperQuartil(labPatientList, countPatient, "stay");
+            averageNumberOfStays = NUMNodeStatistics.GetAverage(numberOfStays + currentnumberOfStays, countPatient + currentcountPatient);
+            medianNumberOfStays = NUMNodeStatistics.GetMedian(labPatientList, countPatient + currentcountPatient, "stay");
+            underQuartilNumberOfStays = NUMNodeStatistics.GetUnderQuartil(labPatientList, countPatient + currentcountPatient, "stay");
+            upperQuartilNumberOfStays = NUMNodeStatistics.GetUpperQuartil(labPatientList, countPatient + currentcountPatient, "stay");
 
             await Task.CompletedTask;
         }
@@ -240,40 +254,54 @@ namespace SmICSCoreLib.Factories.NUMNode
         private async Task GetNumberOfNosCases()
         {
             List<string> patlist = new();
+            List<string> currentpatlist = new();
 
             foreach (var labPatient in labPatientList)
             {
-                patlist.Add(labPatient.PatientID);
+                if(labPatient.Endtime is null)
+                {
+                    currentpatlist.Add(labPatient.PatientID);
+                }
+                else
+                {
+                    patlist.Add(labPatient.PatientID);
+                }
             }
 
             PatientListParameter patList = new() { patientList = patlist };
+            PatientListParameter currentpatList = new() { patientList = currentpatlist };
             List<PatientModel> list = _infecFac.Process(patList);
+            List<PatientModel> currentlist = _infecFac.Process(currentpatList);
 
-            if (list is not null)
+            if (list is not null & currentlist is not null)
             {
                 numberOfMaybeNosCases = list.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
                 numberOfNosCases = list.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+                currentnumberOfMaybeNosCases = list.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+                currentnumberOfNosCases = list.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+
+                foreach (var pat in list)
+                {
+                    labPatientList.Where(x => x.PatientID == pat.PatientID).Select(a => a.CountMaybeNosCases += pat.Infektion.Where(b => b.ToString() == "Moegliche Nosokomiale Infektion").Count());
+                    labPatientList.Where(x => x.PatientID == pat.PatientID).Select(a => a.CountNosCases += pat.Infektion.Where(b => b.ToString() == "Wahrscheinliche Nosokomiale Infektion").Count());
+                }
             }
             else
             {
                 numberOfMaybeNosCases = 0;
                 numberOfNosCases = 0;
+                currentnumberOfMaybeNosCases = 0;
+                currentnumberOfNosCases = 0;
             }
 
-            foreach(var pat in list)
-            {
-                labPatientList.Where(x => x.PatientID == pat.PatientID).Select(a => a.CountMaybeNosCases = pat.Infektion.Where(b => b.ToString() == "Moegliche Nosokomiale Infektion").Count());
-                labPatientList.Where(x => x.PatientID == pat.PatientID).Select(a => a.CountNosCases = pat.Infektion.Where(b => b.ToString() == "Wahrscheinliche Nosokomiale Infektion").Count());
-            }
-
-            averageNumberOfMaybeNosCases = NUMNodeStatistics.GetAverage(numberOfMaybeNosCases, countPatient);
-            averageNumberOfNosCases = NUMNodeStatistics.GetAverage(numberOfNosCases, countPatient);
-            medianNumberOfMaybeNosCases = NUMNodeStatistics.GetMedian(labPatientList, countPatient, "maybeNosCase");
-            medianNumberOfNosCases = NUMNodeStatistics.GetMedian(labPatientList, countPatient, "nosCase");
-            underQuartilNumberOfMaybeNosCases = NUMNodeStatistics.GetUnderQuartil(labPatientList, countPatient, "maybeNosCase");
-            underQuartilNumberOfNosCases = NUMNodeStatistics.GetUnderQuartil(labPatientList, countPatient, "nosCase");
-            upperQuartilNumberOfMaybeNosCases = NUMNodeStatistics.GetUpperQuartil(labPatientList, countPatient, "maybeNosCase");
-            upperQuartilNumberOfNosCases = NUMNodeStatistics.GetUpperQuartil(labPatientList, countPatient, "nosCase");
+            averageNumberOfMaybeNosCases = NUMNodeStatistics.GetAverage(numberOfMaybeNosCases + currentnumberOfMaybeNosCases, countPatient + currentcountPatient);
+            averageNumberOfNosCases = NUMNodeStatistics.GetAverage(numberOfNosCases + currentnumberOfNosCases, countPatient + currentcountPatient);
+            medianNumberOfMaybeNosCases = NUMNodeStatistics.GetMedian(labPatientList, countPatient + currentcountPatient, "maybeNosCase");
+            medianNumberOfNosCases = NUMNodeStatistics.GetMedian(labPatientList, countPatient + currentcountPatient, "nosCase");
+            underQuartilNumberOfMaybeNosCases = NUMNodeStatistics.GetUnderQuartil(labPatientList, countPatient + currentcountPatient, "maybeNosCase");
+            underQuartilNumberOfNosCases = NUMNodeStatistics.GetUnderQuartil(labPatientList, countPatient + currentcountPatient, "nosCase");
+            upperQuartilNumberOfMaybeNosCases = NUMNodeStatistics.GetUpperQuartil(labPatientList, countPatient + currentcountPatient, "maybeNosCase");
+            upperQuartilNumberOfNosCases = NUMNodeStatistics.GetUpperQuartil(labPatientList, countPatient + currentcountPatient, "nosCase");
 
             await Task.CompletedTask;
         }
@@ -294,7 +322,14 @@ namespace SmICSCoreLib.Factories.NUMNode
                         countContacts = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetContactsCount(labPatient, stay));
                         foreach (NUMNodeCountModel count in countContacts)
                         {
-                            numberOfContacts += count.Count;
+                            if(labPatient.Endtime == DateTime.Now)
+                            {
+                                currentnumberOfContacts += count.Count;
+                            }
+                            else
+                            {
+                                numberOfContacts += count.Count;
+                            }
                             labPatient.CountContacts = count.Count;
                         }
                     }
@@ -304,10 +339,10 @@ namespace SmICSCoreLib.Factories.NUMNode
                 }
             }
 
-            averageNumberOfContacts = NUMNodeStatistics.GetAverage(numberOfContacts, countPatient);
-            medianNumberOfContacts = NUMNodeStatistics.GetMedian(labPatientList, countPatient, "contact");
-            underQuartilNumberOfContacts = NUMNodeStatistics.GetUnderQuartil(labPatientList, countPatient, "contact");
-            upperQuartilNumberOfContacts = NUMNodeStatistics.GetUpperQuartil(labPatientList, countPatient, "contact");
+            averageNumberOfContacts = NUMNodeStatistics.GetAverage(numberOfContacts + currentnumberOfContacts, countPatient + currentcountPatient);
+            medianNumberOfContacts = NUMNodeStatistics.GetMedian(labPatientList, countPatient + currentcountPatient, "contact");
+            underQuartilNumberOfContacts = NUMNodeStatistics.GetUnderQuartil(labPatientList, countPatient + currentcountPatient, "contact");
+            upperQuartilNumberOfContacts = NUMNodeStatistics.GetUpperQuartil(labPatientList, countPatient + currentcountPatient, "contact");
 
             await Task.CompletedTask;
         }
