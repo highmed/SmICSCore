@@ -324,6 +324,9 @@ namespace SmICSCoreLib.Factories.NUMNode
                         {
                             stay.Start.AddHours(3);
                             stay.End.AddHours(3);
+                        }else if (stay.End == DateTime.MinValue)
+                        {
+                            stay.End = DateTime.Today;
                         }
 
                         countContacts = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetContactsCount(labPatient, stay));
@@ -370,7 +373,8 @@ namespace SmICSCoreLib.Factories.NUMNode
                         AND NOT e/ehr_status/subject/external_ref/id/value = '{labpatient.PatientID}'
                         AND (y/items[at0027]/value = '{patStay.Ward}' 
                         OR NOT EXISTS y/items[at0027]/value 
-                        OR l/items[at0024,'Fachabteilungsschlüssel']/value/defining_code/code_string = '{patStay.DepartementID}')"
+                        OR (l/items[at0024,'Fachabteilungsschlüssel']/value/defining_code/code_string = '{patStay.DepartementID}'
+                        OR NOT EXISTS l/items[at0024,'Fachabteilungsschlüssel']/value/defining_code/code_string))"
             };
             return aql;
         }
