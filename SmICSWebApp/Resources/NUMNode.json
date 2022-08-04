@@ -2,7 +2,7 @@
   {
     "provider": "MHH",
     "corona_dashboard_dataset_version": "0.3.0",
-    "exporttimestamp": "2022-08-04T12:10:39.8704551+02:00",
+    "exporttimestamp": "2022-08-04T15:53:06.7441624+02:00",
     "author": "SmICS",
     "dataitems": [
       {
@@ -45,11 +45,11 @@
         "itemname": "current.patientcontacts",
         "itemtype": "aggregated",
         "data": {
-          "average": 4.810344827586207,
-          "median": 5.0,
+          "average": 6.017241379310345,
+          "median": 0.0,
           "underquartil": 0.0,
-          "upperquartil": 12.0,
-          "max": 12.0,
+          "upperquartil": 24.0,
+          "max": 26.0,
           "min": 0.0
         }
       }

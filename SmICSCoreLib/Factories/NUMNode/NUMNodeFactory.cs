@@ -5,12 +5,12 @@ using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SmICSCoreLib.Factories.MiBi.Contact;
 using SmICSCoreLib.Factories.InfectionSituation;
 using SmICSCoreLib.StatistikDataModels;
 using System.Threading.Tasks;
 using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.Factories.PatientMovement.ReceiveModels;
+using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 
 namespace SmICSCoreLib.Factories.NUMNode
 {
@@ -306,7 +306,7 @@ namespace SmICSCoreLib.Factories.NUMNode
 
             await Task.CompletedTask;
         }
-        //not sure if it works right
+
         private async Task GetNumberOfContacts()
         {
             foreach (var labPatient in labPatientList)
@@ -315,11 +315,17 @@ namespace SmICSCoreLib.Factories.NUMNode
                 {
                     labPatient.Endtime = DateTime.Today;
                 }
-                List<ContactParameter> patStay = RestDataAccess.AQLQuery<ContactParameter>(GetStays(labPatient));
+                List<WardParameter> patStay = RestDataAccess.AQLQuery<WardParameter>(GetStays(labPatient));
                 if(patStay is not null)
                 {
                     foreach (var stay in patStay)
                     {
+                        if(stay.Start == stay.End)
+                        {
+                            stay.Start.AddHours(3);
+                            stay.End.AddHours(3);
+                        }
+
                         countContacts = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetContactsCount(labPatient, stay));
                         foreach (NUMNodeCountModel count in countContacts)
                         {
@@ -346,21 +352,25 @@ namespace SmICSCoreLib.Factories.NUMNode
             await Task.CompletedTask;
         }
 
-        private AQLQuery GetContactsCount(LabPatientModel labpatient, ContactParameter patStay)
+        private AQLQuery GetContactsCount(LabPatientModel labpatient, WardParameter patStay)
         {
             AQLQuery aql = new()
             {
-                Name = "getStaysCount",
-                Query = $@"SELECT COUNT(Distinct g/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value) AS Count
+                Name = "GetContactsCount",
+                Query = $@"SELECT COUNT(Distinct k/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value) AS Count
                         FROM EHR e
                         CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
-                        CONTAINS (CLUSTER g[openEHR-EHR-CLUSTER.case_identification.v0] and ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]
-                        CONTAINS (CLUSTER z[openEHR-EHR-CLUSTER.location.v1])) 
-                        WHERE c/name/value='Patientenaufenthalt'
-                        AND (a/data[at0001]/items[at0004]/value/value <= '{patStay.End?.ToString("yyyy-MM-dd")}' 
-                        AND a/data[at0001]/items[at0005]/value/value >='{patStay.Start?.ToString("yyyy-MM-dd")}') 
+                        CONTAINS (CLUSTER k[openEHR-EHR-CLUSTER.case_identification.v0] 
+                        AND ADMIN_ENTRY s[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] 
+                        CONTAINS (CLUSTER y[openEHR-EHR-CLUSTER.location.v1] 
+                        AND CLUSTER l[openEHR-EHR-CLUSTER.organization.v0])) 
+                        WHERE c/name/value = 'Patientenaufenthalt'
+                        AND (s/data[at0001]/items[at0004]/value/value <= '{patStay.End}' 
+                        AND s/data[at0001]/items[at0005]/value/value >='{patStay.Start}') 
                         AND NOT e/ehr_status/subject/external_ref/id/value = '{labpatient.PatientID}'
-                        AND z/items[at0027]/value = '{patStay.Ward}'"
+                        AND (y/items[at0027]/value = '{patStay.Ward}' 
+                        OR NOT EXISTS y/items[at0027]/value 
+                        OR l/items[at0024,'Fachabteilungsschlüssel']/value/defining_code/code_string = '{patStay.DepartementID}')"
             };
             return aql;
         }
@@ -369,19 +379,22 @@ namespace SmICSCoreLib.Factories.NUMNode
         {
             AQLQuery aql = new()
             {
-                Name = "getStays",
-                Query = $@"SELECT p/data[at0001]/items[at0004]/value/value AS Start,
-                                p/data[at0001]/items[at0005]/value/value AS End,
-                                y/items[at0027]/value/value AS Ward
+                Name = "GetStays",
+                Query = $@"SELECT s/data[at0001]/items[at0004]/value/value AS Start,
+                                s/data[at0001]/items[at0005]/value/value AS End,
+                                y/items[at0027]/value/value AS Ward,
+                                l/items[at0024,'Fachabteilungsschlüssel']/value/defining_code/code_string AS DepartementID
                                 FROM EHR e
                                 CONTAINS COMPOSITION c
-                                CONTAINS (CLUSTER h[openEHR-EHR-CLUSTER.case_identification.v0] AND ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] 
-                                CONTAINS (CLUSTER y[openEHR-EHR-CLUSTER.location.v1] and CLUSTER a[openEHR-EHR-CLUSTER.organization.v0])) 
+                                CONTAINS (CLUSTER k[openEHR-EHR-CLUSTER.case_identification.v0] 
+                                AND ADMIN_ENTRY s[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] 
+                                CONTAINS (CLUSTER y[openEHR-EHR-CLUSTER.location.v1] 
+                                AND CLUSTER l[openEHR-EHR-CLUSTER.organization.v0])) 
                                 WHERE c/name/value = 'Patientenaufenthalt'
-                                AND h/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value = '{labpatient.CaseID}'
-                                AND p/data[at0001]/items[at0004]/value/value <= '{labpatient.Endtime?.ToString("yyyy-MM-dd")}' 
-                                AND (p/data[at0001]/items[at0005]/value/value >='{labpatient.Starttime.ToString("yyyy-MM-dd")}'
-                                OR NOT EXISTS p/data[at0001]/items[at0005]/value/value)"
+                                AND k/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value = '{labpatient.CaseID}'
+                                AND s/data[at0001]/items[at0004]/value/value <= '{labpatient.Endtime?.ToString("yyyy-MM-dd")}' 
+                                AND (s/data[at0001]/items[at0005]/value/value >='{labpatient.Starttime.ToString("yyyy-MM-dd")}'
+                                OR NOT EXISTS s/data[at0001]/items[at0005]/value/value)"
             };
             return aql;
         }
@@ -390,7 +403,7 @@ namespace SmICSCoreLib.Factories.NUMNode
         {
             AQLQuery aql = new()
             {
-                Name = "getStaysCount",
+                Name = "GetStaysCount",
                 Query = $@"SELECT COUNT(g/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value) AS Count
                         FROM EHR e
                         CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
