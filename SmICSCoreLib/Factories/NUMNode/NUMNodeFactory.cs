@@ -74,7 +74,7 @@ namespace SmICSCoreLib.Factories.NUMNode
         public void FirstDataEntry()
         {
             InitializeGlobalVariables();
-            TimespanParameter timespan = new() { Starttime = DateTime.MinValue, Endtime = DateTime.Now };
+            TimespanParameter timespan = new() { Starttime = DateTime.Now.AddYears(-10), Endtime = DateTime.Now };
             Process(timespan);
         }
 
@@ -96,12 +96,11 @@ namespace SmICSCoreLib.Factories.NUMNode
             receiveLabDataListpositiv = new List<LabDataReceiveModel>();
         }
 
-        private async void Process(TimespanParameter timespan)
+        private async Task Process(TimespanParameter timespan)
         {
             try
             {
-                Task getPatList = Task.Run(() =>GetLabPatientList(timespan));
-                await getPatList;
+                await GetLabPatientList(timespan);
 
                 var tasks = new Task[]
                 {
@@ -184,7 +183,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             }
         }
 
-        private void GetLabPatientList(TimespanParameter timespan)
+        private async Task GetLabPatientList(TimespanParameter timespan)
         {
             receiveLabDataListpositiv = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborPositivData(timespan, pathogen));
             if(receiveLabDataListpositiv is not null)
@@ -219,6 +218,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             {
                 _logger.LogWarning("No positiv patient data has been found.");
             }
+            await Task.CompletedTask;
         }
 
         private async Task GetNumberOfStays()
@@ -320,11 +320,12 @@ namespace SmICSCoreLib.Factories.NUMNode
                 {
                     foreach (var stay in patStay)
                     {
+                        //raus
                         if(stay.Start == stay.End)
                         {
                             stay.Start.AddHours(3);
                             stay.End.AddHours(3);
-                        }else if (stay.End == DateTime.MinValue)
+                        }else if (stay.End == DateTime.Now.AddYears(-10))
                         {
                             stay.End = DateTime.Today;
                         }

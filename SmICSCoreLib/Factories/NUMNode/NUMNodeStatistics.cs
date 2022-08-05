@@ -39,24 +39,24 @@ namespace SmICSCoreLib.Factories.NUMNode
                     switch (name)
                     {
                         case "stay":
-                            median = (list.OrderBy(a => a.CountStays).ElementAt(getplace_median + 1).CountStays + list.OrderBy(a => a.CountStays).ElementAt(getplace_median + 2).CountStays) / 2;
-                            underquartil = list.OrderBy(a => a.CountStays).ElementAt(getplace_underquartil + 1).CountStays;
-                            upperquartil = list.OrderBy(a => a.CountStays).ElementAt(getplace_upperquartil + 1).CountStays;
+                            median = (list.OrderBy(a => a.CountStays).ElementAt(getplace_median - 1).CountStays + list.OrderBy(a => a.CountStays).ElementAt(getplace_median).CountStays) / 2;
+                            underquartil = list.OrderBy(a => a.CountStays).ElementAt(getplace_underquartil - 1).CountStays;
+                            upperquartil = list.OrderBy(a => a.CountStays).ElementAt(getplace_upperquartil - 1).CountStays;
                             return (median, underquartil, upperquartil);
                         case "nosCase":
-                            median = (list.OrderBy(a => a.CountNosCases).ElementAt(getplace_median + 1).CountNosCases + list.OrderBy(a => a.CountNosCases).ElementAt(getplace_median + 2).CountNosCases) / 2;
-                            underquartil = list.OrderBy(a => a.CountNosCases).ElementAt(getplace_underquartil + 1).CountNosCases;
-                            upperquartil = list.OrderBy(a => a.CountNosCases).ElementAt(getplace_upperquartil + 1).CountNosCases;
+                            median = (list.OrderBy(a => a.CountNosCases).ElementAt(getplace_median - 1).CountNosCases + list.OrderBy(a => a.CountNosCases).ElementAt(getplace_median).CountNosCases) / 2;
+                            underquartil = list.OrderBy(a => a.CountNosCases).ElementAt(getplace_underquartil - 1).CountNosCases;
+                            upperquartil = list.OrderBy(a => a.CountNosCases).ElementAt(getplace_upperquartil - 1).CountNosCases;
                             return (median, underquartil, upperquartil);
                         case "maybeNosCase":
-                            median = (list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_median + 1).CountMaybeNosCases + list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_median + 2).CountMaybeNosCases) / 2;
-                            underquartil = list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_underquartil + 1).CountMaybeNosCases;
-                            upperquartil = list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_upperquartil + 1).CountMaybeNosCases;
+                            median = (list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_median - 1).CountMaybeNosCases + list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_median).CountMaybeNosCases) / 2;
+                            underquartil = list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_underquartil - 1).CountMaybeNosCases;
+                            upperquartil = list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_upperquartil - 1).CountMaybeNosCases;
                             return (median, underquartil, upperquartil);
                         case "contact":
-                            median = (list.OrderBy(a => a.CountContacts).ElementAt(getplace_median + 1).CountContacts + list.OrderBy(a => a.CountContacts).ElementAt(getplace_median + 2).CountContacts) / 2;
-                            underquartil = list.OrderBy(a => a.CountContacts).ElementAt(getplace_underquartil + 1).CountContacts;
-                            upperquartil = list.OrderBy(a => a.CountContacts).ElementAt(getplace_upperquartil + 1).CountContacts;
+                            median = (list.OrderBy(a => a.CountContacts).ElementAt(getplace_median - 1).CountContacts + list.OrderBy(a => a.CountContacts).ElementAt(getplace_median).CountContacts) / 2;
+                            underquartil = list.OrderBy(a => a.CountContacts).ElementAt(getplace_underquartil - 1).CountContacts;
+                            upperquartil = list.OrderBy(a => a.CountContacts).ElementAt(getplace_upperquartil - 1).CountContacts;
                             return (median, underquartil, upperquartil);
                     }
                 }
@@ -65,24 +65,24 @@ namespace SmICSCoreLib.Factories.NUMNode
                     switch (name)
                     {
                         case "stay":
-                            median = list.OrderBy(a => a.CountStays).ElementAt(getplace_median + 1).CountStays;
-                            underquartil = list.OrderBy(a => a.CountStays).ElementAt(getplace_underquartil + 1).CountStays;
-                            upperquartil = list.OrderBy(a => a.CountStays).ElementAt(getplace_upperquartil + 1).CountStays;
+                            median = list.OrderBy(a => a.CountStays).ElementAt(getplace_median - 1).CountStays;
+                            underquartil = list.OrderBy(a => a.CountStays).ElementAt(getplace_underquartil - 1).CountStays;
+                            upperquartil = list.OrderBy(a => a.CountStays).ElementAt(getplace_upperquartil - 1).CountStays;
                             return (median, underquartil, upperquartil);
                         case "nosCase":
-                            median = list.OrderBy(a => a.CountNosCases).ElementAt(getplace_median + 1).CountNosCases;
-                            underquartil = list.OrderBy(a => a.CountNosCases).ElementAt(getplace_underquartil + 1).CountNosCases;
-                            upperquartil = list.OrderBy(a => a.CountNosCases).ElementAt(getplace_upperquartil + 1).CountNosCases;
+                            median = list.OrderBy(a => a.CountNosCases).ElementAt(getplace_median - 1).CountNosCases;
+                            underquartil = list.OrderBy(a => a.CountNosCases).ElementAt(getplace_underquartil - 1).CountNosCases;
+                            upperquartil = list.OrderBy(a => a.CountNosCases).ElementAt(getplace_upperquartil - 1).CountNosCases;
                             return (median, underquartil, upperquartil);
                         case "maybeNosCase":
-                            median = list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_median + 1).CountMaybeNosCases;
-                            underquartil = list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_underquartil + 1).CountMaybeNosCases;
-                            upperquartil = list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_upperquartil + 1).CountMaybeNosCases;
+                            median = list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_median - 1).CountMaybeNosCases;
+                            underquartil = list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_underquartil - 1).CountMaybeNosCases;
+                            upperquartil = list.OrderBy(a => a.CountMaybeNosCases).ElementAt(getplace_upperquartil - 1).CountMaybeNosCases;
                             return (median, underquartil, upperquartil);
                         case "contact":
-                            median = list.OrderBy(a => a.CountContacts).ElementAt(getplace_median + 1).CountContacts;
-                            underquartil = list.OrderBy(a => a.CountContacts).ElementAt(getplace_underquartil + 1).CountContacts;
-                            upperquartil = list.OrderBy(a => a.CountContacts).ElementAt(getplace_upperquartil + 1).CountContacts;
+                            median = list.OrderBy(a => a.CountContacts).ElementAt(getplace_median - 1).CountContacts;
+                            underquartil = list.OrderBy(a => a.CountContacts).ElementAt(getplace_underquartil - 1).CountContacts;
+                            upperquartil = list.OrderBy(a => a.CountContacts).ElementAt(getplace_upperquartil - 1).CountContacts;
                             return (median, underquartil, upperquartil);
                     }
                 }
