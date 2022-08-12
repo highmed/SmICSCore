@@ -75,14 +75,14 @@ namespace SmICSCoreLib.Factories.NUMNode
         {
             InitializeGlobalVariables();
             TimespanParameter timespan = new() { Starttime = DateTime.Now.AddYears(-10), Endtime = DateTime.Now };
-            Process(timespan);
+            _ = Process(timespan);
         }
 
         public void RegularDataEntry()
         {
             InitializeGlobalVariables();
             TimespanParameter timespan = new() { Starttime = DateTime.Now.AddDays(-7), Endtime = DateTime.Now };
-            Process(timespan);
+            _ = Process(timespan);
         }
 
         private void InitializeGlobalVariables()
@@ -188,9 +188,11 @@ namespace SmICSCoreLib.Factories.NUMNode
             receiveLabDataListpositiv = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborPositivData(timespan, pathogen));
             if(receiveLabDataListpositiv is not null)
             {
-                foreach(var pat in receiveLabDataListpositiv)
+                foreach (var pat in receiveLabDataListpositiv)
                 {
+                    
                     receiveLabDataListnegativ = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborNegativData(timespan, pathogen, pat));
+
                     if (receiveLabDataListnegativ is null || receiveLabDataListnegativ.Count < 2)
                     {
                         episodeOfCareParameter = new EpsiodeOfCareParameter { PatientID = pat.PatientID, CaseID = pat.FallID };
@@ -199,19 +201,66 @@ namespace SmICSCoreLib.Factories.NUMNode
                         {
                             labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = discharge.First().Ende };
                             countPatient++;
+                            labPatientList.Add(labPatient);
                         }
                         else
                         {
                             labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
                             currentcountPatient++;
+                            labPatientList.Add(labPatient);
                         }
                     }
                     else if (receiveLabDataListnegativ is not null && receiveLabDataListnegativ.Count > 1)
                     {
-                        labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = receiveLabDataListnegativ.OrderBy(a => a.Befunddatum).ElementAt(1).Befunddatum };
-                        countPatient++;
+                        List<DateTime> posdates = (List<DateTime>)receiveLabDataListpositiv.Where(x => x.FallID == pat.FallID).Select(a => a.Befunddatum).ToList().OrderBy(b => b.Date);
+                        List<DateTime> negdates = (List<DateTime>)receiveLabDataListnegativ.Select(x => x.Befunddatum).ToList().OrderBy(a => a.Date);
+                        SortedList<DateTime, bool> alldates = new SortedList<DateTime, bool>();
+
+                        foreach(var item in posdates)
+                        {
+                            alldates.Add(item, true);
+                        }
+                        foreach (var item in negdates)
+                        {
+                            alldates.Add(item, false);
+                        }
+                        int dateTimeNegCount = 0;
+                        bool newPosTimeframe = false;
+
+                        foreach(var item in alldates)
+                        {
+                            if(item.Value == false)
+                            {
+                                if(dateTimeNegCount == 1)
+                                {
+                                    labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = item.Key };
+                                    countPatient++;
+                                    labPatientList.Add(labPatient);
+                                    newPosTimeframe = true;
+                                }
+                                dateTimeNegCount++;
+                            }
+                            else
+                            {
+                                dateTimeNegCount = 0;
+                                if(newPosTimeframe == true)
+                                {
+                                    labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = item.Key, Endtime = null };
+                                    currentcountPatient++;
+                                    labPatientList.Add(labPatient);
+                                    newPosTimeframe = false;
+                                }
+                            }
+                        }
+
+                    }else
+                    {
+                        labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
+                        currentcountPatient++;
+                        labPatientList.Add(labPatient);
                     }
-                    labPatientList.Add(labPatient);
+                    
+                    receiveLabDataListpositiv.RemoveAll(x => x.FallID == pat.FallID);
                 }  
             }
             else
