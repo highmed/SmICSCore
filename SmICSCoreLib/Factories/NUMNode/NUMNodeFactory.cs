@@ -46,19 +46,18 @@ namespace SmICSCoreLib.Factories.NUMNode
         private double upperQuartilNumberOfMaybeNosCases;
         private double upperQuartilNumberOfContacts;
 
-        private static int countPatient;
-        private static int numberOfStays;
-        private static int numberOfNosCases;
-        private static int numberOfMaybeNosCases;
-        private static int numberOfContacts;
+        private int countPatient;
+        private int numberOfStays;
+        private int numberOfNosCases;
+        private int numberOfMaybeNosCases;
+        private int numberOfContacts;
 
-        private static int currentcountPatient;
-        private static int currentnumberOfStays;
-        private static int currentnumberOfNosCases;
-        private static int currentnumberOfMaybeNosCases;
-        private static int currentnumberOfContacts;
-
-        private List<LabDataReceiveModel> modifiedList;
+        private int currentcountPatient;
+        private int currentnumberOfStays;
+        private int currentnumberOfNosCases;
+        private int currentnumberOfMaybeNosCases;
+        private int currentnumberOfContacts;
+        private NUMNodeSaveModel saveData;
 
         private readonly string pathogen = "94500-6";
         private readonly string path = @"../SmICSWebApp/Resources/";
@@ -83,6 +82,14 @@ namespace SmICSCoreLib.Factories.NUMNode
         public void RegularDataEntry()
         {
             InitializeGlobalVariables();
+            saveData = JSONFileStream.JSONReader<NUMNodeSaveModel>.ReadObject(path + "NumNodeSave.json");
+
+            countPatient = saveData.CountPatient;
+            numberOfStays = saveData.NumberOfStays;
+            numberOfNosCases = saveData.NumberOfNosCases;
+            numberOfMaybeNosCases = saveData.NumberOfMaybeNosCases;
+            numberOfContacts = saveData.NumberOfContacts;
+
             TimespanParameter timespan = new() { Starttime = DateTime.Now.AddDays(-7), Endtime = DateTime.Now };
             _ = Process(timespan);
         }
@@ -96,7 +103,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             labPatient = new LabPatientModel();
             labPatientList = new List<LabPatientModel>();
             receiveLabDataListpositiv = new List<LabDataReceiveModel>();
-            modifiedList = new List<LabDataReceiveModel>();
+            saveData = new NUMNodeSaveModel();
         }
 
         private async Task Process(TimespanParameter timespan)
@@ -116,6 +123,8 @@ namespace SmICSCoreLib.Factories.NUMNode
                 {
                     await task;
                 }
+
+                SaveStaticData();
 
                 NUMNodeList = new NUMNodeModel() {
                     Provider = "MHH",
@@ -374,12 +383,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                 {
                     foreach (var stay in patStay)
                     {
-                        //raus
-                        if(stay.Start == stay.End)
-                        {
-                            stay.Start.AddHours(3);
-                            stay.End.AddHours(3);
-                        }else if (stay.End == DateTime.Now.AddYears(-10))
+                        if (stay.End == DateTime.Now.AddYears(-10))
                         {
                             stay.End = DateTime.Today;
                         }
@@ -410,6 +414,20 @@ namespace SmICSCoreLib.Factories.NUMNode
             await Task.CompletedTask;
         }
 
+        private void SaveStaticData()
+        {
+            saveData = new NUMNodeSaveModel
+            {
+                CountPatient = countPatient,
+                NumberOfMaybeNosCases = numberOfMaybeNosCases,
+                NumberOfNosCases = numberOfNosCases,
+                NumberOfContacts = numberOfContacts,
+                NumberOfStays = numberOfStays
+            };
+
+            JSONFileStream.JSONWriter.Write(saveData, path, "NUMNodeSave");
+        }
+
         private AQLQuery GetContactsCount(LabPatientModel labpatient, WardParameter patStay)
         {
             AQLQuery aql = new()
@@ -423,8 +441,8 @@ namespace SmICSCoreLib.Factories.NUMNode
                         CONTAINS (CLUSTER y[openEHR-EHR-CLUSTER.location.v1] 
                         AND CLUSTER l[openEHR-EHR-CLUSTER.organization.v0])) 
                         WHERE c/name/value = 'Patientenaufenthalt'
-                        AND (s/data[at0001]/items[at0004]/value/value <= '{patStay.End}' 
-                        AND s/data[at0001]/items[at0005]/value/value >='{patStay.Start}') 
+                        AND (s/data[at0001]/items[at0004]/value/value <= '{patStay.End.ToString("yyyy-MM-dd")}' 
+                        AND s/data[at0001]/items[at0005]/value/value >='{patStay.Start.ToString("yyyy-MM-dd")}') 
                         AND NOT e/ehr_status/subject/external_ref/id/value = '{labpatient.PatientID}'
                         AND (y/items[at0027]/value = '{patStay.Ward}' 
                         OR NOT EXISTS y/items[at0027]/value 
