@@ -58,6 +58,8 @@ namespace SmICSCoreLib.Factories.NUMNode
         private static int currentnumberOfMaybeNosCases;
         private static int currentnumberOfContacts;
 
+        private List<LabDataReceiveModel> modifiedList;
+
         private readonly string pathogen = "94500-6";
         private readonly string path = @"../SmICSWebApp/Resources/";
 
@@ -94,6 +96,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             labPatient = new LabPatientModel();
             labPatientList = new List<LabPatientModel>();
             receiveLabDataListpositiv = new List<LabDataReceiveModel>();
+            modifiedList = new List<LabDataReceiveModel>();
         }
 
         private async Task Process(TimespanParameter timespan)
@@ -190,77 +193,79 @@ namespace SmICSCoreLib.Factories.NUMNode
             {
                 foreach (var pat in receiveLabDataListpositiv)
                 {
-                    
-                    receiveLabDataListnegativ = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborNegativData(timespan, pathogen, pat));
-
-                    if (receiveLabDataListnegativ is null || receiveLabDataListnegativ.Count < 2)
+                    if (!labPatientList.Select(x => x.CaseID).Contains(pat.FallID))
                     {
-                        episodeOfCareParameter = new EpsiodeOfCareParameter { PatientID = pat.PatientID, CaseID = pat.FallID };
-                        List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter));
-                        if (discharge is not null)
+                        receiveLabDataListnegativ = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborNegativData(timespan, pathogen, pat));
+
+                        if (receiveLabDataListnegativ is null || receiveLabDataListnegativ.Count < 2)
                         {
-                            labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = discharge.First().Ende };
-                            countPatient++;
-                            labPatientList.Add(labPatient);
+                            episodeOfCareParameter = new EpsiodeOfCareParameter { PatientID = pat.PatientID, CaseID = pat.FallID };
+                            List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter));
+                            if (discharge is not null)
+                            {
+                                labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = discharge.First().Ende };
+                                countPatient++;
+                                labPatientList.Add(labPatient);
+                            }
+                            else
+                            {
+                                labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
+                                currentcountPatient++;
+                                labPatientList.Add(labPatient);
+                            }
+                        }
+                        else if (receiveLabDataListnegativ is not null && receiveLabDataListnegativ.Count > 1)
+                        {
+                            List<DateTime> posdates = receiveLabDataListpositiv.Where(x => x.FallID == pat.FallID).Select(a => a.Befunddatum).OrderBy(b => b.Date).ToList();
+                            List<DateTime> negdates = receiveLabDataListnegativ.Select(x => x.Befunddatum).OrderBy(a => a.Date).ToList();
+                            SortedList<DateTime, bool> alldates = new SortedList<DateTime, bool>();
+
+                            foreach (var item in posdates)
+                            {
+                                alldates.Add(item, true);
+                            }
+                            foreach (var item in negdates)
+                            {
+                                alldates.Add(item, false);
+                            }
+                            int dateTimeNegCount = 0;
+                            bool newPosTimeframe = false;
+
+                            foreach (var item in alldates)
+                            {
+                                if (item.Value == false)
+                                {
+                                    if (dateTimeNegCount == 1)
+                                    {
+                                        labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = item.Key };
+                                        countPatient++;
+                                        labPatientList.Add(labPatient);
+                                        newPosTimeframe = true;
+                                    }
+                                    dateTimeNegCount++;
+                                }
+                                else
+                                {
+                                    dateTimeNegCount = 0;
+                                    if (newPosTimeframe == true)
+                                    {
+                                        labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = item.Key, Endtime = null };
+                                        currentcountPatient++;
+                                        labPatientList.Add(labPatient);
+                                        newPosTimeframe = false;
+                                    }
+                                }
+                            }
+
                         }
                         else
                         {
                             labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
                             currentcountPatient++;
                             labPatientList.Add(labPatient);
-                        }
+                        }  
+                        
                     }
-                    else if (receiveLabDataListnegativ is not null && receiveLabDataListnegativ.Count > 1)
-                    {
-                        List<DateTime> posdates = (List<DateTime>)receiveLabDataListpositiv.Where(x => x.FallID == pat.FallID).Select(a => a.Befunddatum).ToList().OrderBy(b => b.Date);
-                        List<DateTime> negdates = (List<DateTime>)receiveLabDataListnegativ.Select(x => x.Befunddatum).ToList().OrderBy(a => a.Date);
-                        SortedList<DateTime, bool> alldates = new SortedList<DateTime, bool>();
-
-                        foreach(var item in posdates)
-                        {
-                            alldates.Add(item, true);
-                        }
-                        foreach (var item in negdates)
-                        {
-                            alldates.Add(item, false);
-                        }
-                        int dateTimeNegCount = 0;
-                        bool newPosTimeframe = false;
-
-                        foreach(var item in alldates)
-                        {
-                            if(item.Value == false)
-                            {
-                                if(dateTimeNegCount == 1)
-                                {
-                                    labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = item.Key };
-                                    countPatient++;
-                                    labPatientList.Add(labPatient);
-                                    newPosTimeframe = true;
-                                }
-                                dateTimeNegCount++;
-                            }
-                            else
-                            {
-                                dateTimeNegCount = 0;
-                                if(newPosTimeframe == true)
-                                {
-                                    labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = item.Key, Endtime = null };
-                                    currentcountPatient++;
-                                    labPatientList.Add(labPatient);
-                                    newPosTimeframe = false;
-                                }
-                            }
-                        }
-
-                    }else
-                    {
-                        labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
-                        currentcountPatient++;
-                        labPatientList.Add(labPatient);
-                    }
-                    
-                    receiveLabDataListpositiv.RemoveAll(x => x.FallID == pat.FallID);
                 }  
             }
             else
