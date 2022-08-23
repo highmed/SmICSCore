@@ -28,6 +28,7 @@ using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.MenuList;
 using SmICSCoreLib.Factories.Feasability;
 using SmICSCoreLib.Factories.NUMNode;
+using SmICSCoreLib.Factories.RKIStatistics;
 using SmICSCoreLib.DB;
 using SmICSCoreLib.DB.MenuItems;
 using SmICSCoreLib.Factories.Helpers;
@@ -47,6 +48,7 @@ namespace SmICS
             services.AddSingleton<IMenuListFactory, MenuListFactory>();
 
             services.AddSingleton<INUMNodeFactory, NUMNodeFactory>();
+            services.AddSingleton<IRKIReportFactory, RKIReportFactory>();
 
             services.AddTransient<IPatientMovementFactory, PatientMovementFactory>();
             services.AddTransient<IViroLabDataFactory, ViroLabDataFactory>();
