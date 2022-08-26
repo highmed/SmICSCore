@@ -3,10 +3,8 @@ using System;
 
 namespace SmICSCoreLib.Factories.RKIStatistics.Models
 {
-    public class RKIReportDataModel
+    public class RKIReportCaseModel
     {
-        [JsonProperty(PropertyName = "Location")]
-        public RKIReportLocationModel Location { get; set; }
         [JsonProperty(PropertyName = "Timestamp")]
         public DateTime Timestamp { get; set; }
         [JsonProperty(PropertyName = "CaseNumber")]

@@ -89,15 +89,17 @@ namespace SmICSWebApp
             services.AddSingleton<PersInfoInfectCtrlService>();
 
             //CronJob UpdateRkidata
-            services.AddSingleton<JobUpdateRkidata>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
+            //services.AddSingleton<JobUpdateRkidata>();
+            //services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
 
-            services.AddScoped<OutbreakDetectionService>();
+            //services.AddScoped<OutbreakDetectionService>();
 
             services.AddSingleton<MenuItemsJob>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(MenuItemsJob), "MenuItems", "0 0 1 ? * *"));
             services.AddSingleton<NUMNodeJob>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(NUMNodeJob), "NumNode", "0 48 11 ? * *"));
+            services.AddSingleton<RKIStatisticsJob>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(RKIStatisticsJob), "RKIStatistics", "0 48 11 ? * *"));
             //OpenehrConfig.OutbreakDetectionRuntime = Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME");
             //Console.WriteLine("Transformed: OUTBREAK_DETECTION_TIME " + Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME") + "to CONFIG: " + OpenehrConfig.OutbreakDetectionRuntime);
             //string[] runtimeArr = OpenehrConfig.OutbreakDetectionRuntime.Split(":");

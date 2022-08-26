@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Quartz;
 using SmICSCoreLib.Factories.RKIStatistics;
 
@@ -16,9 +18,21 @@ namespace SmICSCoreLib.CronJobs
         }
         public Task Execute(IJobExecutionContext context)
         {
-            _listFac.Process(path);           
+            bool items = IsDirectoryEmpty(path);
+            if(items == true)
+            {
+                _listFac.FirstDataEntry();
+            }
+            else
+            {
+                _listFac.RegularDataEntry();
+            }
+        
             return Task.CompletedTask;
         }
-
+        private bool IsDirectoryEmpty(string path)
+        {
+            return !Directory.EnumerateFileSystemEntries(path).Any();
+        }
     }
 }

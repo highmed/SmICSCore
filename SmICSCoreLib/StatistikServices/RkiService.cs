@@ -21,7 +21,7 @@ namespace SmICSCoreLib.StatistikServices
             _logger = logger;
         }
 
-
+        //done
         //Get Data From RKI REST API
         public StateData GetStateData(int blId)
         {
@@ -117,7 +117,7 @@ namespace SmICSCoreLib.StatistikServices
                 return null;
             }
         }
-
+        //done
         public DataSet GetDataSetFromLink(String url)
         {
             var client = new WebClient();
@@ -140,7 +140,7 @@ namespace SmICSCoreLib.StatistikServices
                 return null;
             }
         }
-
+        //done
         public DataSet GetCsvDataSet(String url)
         {
             var client = new WebClient();

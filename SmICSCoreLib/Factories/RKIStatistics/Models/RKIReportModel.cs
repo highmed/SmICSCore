@@ -9,7 +9,7 @@ namespace SmICSCoreLib.Factories.RKIStatistics.Models
         [JsonProperty(PropertyName = "Timestamp")]
         public DateTime Timestamp { get; set; }
         [JsonProperty(PropertyName = "Data")]
-        public List<RKIReportDataModel> Data { get; set; }
+        public List<RKIReportLocationModel> Data { get; set; }
 
     }
 }

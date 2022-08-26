@@ -9,6 +9,7 @@ namespace SmICSCoreLib.Factories.RKIStatistics
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        public void Process(string path);
+        public void FirstDataEntry();
+        public void RegularDataEntry();
     }
 }
