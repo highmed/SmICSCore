@@ -57,9 +57,6 @@ namespace SmICSCoreLib.Factories.RKIStatistics.Models
         [JsonProperty(PropertyName = "State")]
         public List<RKIDailyReporStateModel> State { get; set; }
 
-        [JsonProperty(PropertyName = "District")]
-        public List<RKIDailyReporDistrictModel> District { get; set; }
-
         [JsonProperty(PropertyName = "BLCurrentStatus")]
         public bool BLCurrentStatus { get; set; }
 

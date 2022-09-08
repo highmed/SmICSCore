@@ -1,8 +1,15 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Quartz;
 using SmICSCoreLib.Factories.RKIStatistics;
+using SmICSCoreLib.Factories.RKIStatistics.Models;
+using SmICSCoreLib.Factories.RKIStatistics.ReceiveModels;
 
 namespace SmICSCoreLib.CronJobs
 {
@@ -10,29 +17,324 @@ namespace SmICSCoreLib.CronJobs
     public class RKIStatisticsJob : IJob
     {
         private readonly IRKIReportFactory _listFac;
+        private readonly ILogger<RKIStatisticsJob> _logger;
         private readonly string path = @"../SmICSWebApp/Resources/RKIReportData";
 
-        public RKIStatisticsJob(IRKIReportFactory listFac)
+        public RKIDailyReportModel dailyReport;
+        public RKIDailyReporStateModel dailyReportState;
+        public List<RKIDailyReporStateModel> dailyReportStateList;
+        public RKIDailyReporDistrictModel dailyReportDistrict;
+        public List<RKIDailyReporDistrictModel> dailyReportDistrictList;
+        public string[] states;
+
+        private readonly string url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab_aktuell.xlsx?__blob=publicationFile";
+        private readonly string urlImpfung = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Impfquotenmonitoring.xlsx?__blob=publicationFile";
+        
+        private Task<RKIReportFeatures<RKIReportStateCaseModel>> stateCaseData;
+        private Task<List<RKIReportFeatures<RKIReportStateModel>>> stateData;
+        private Task<List<RKIReportFeatures<RKIReportDistrictModel>>> districtData;
+
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_1;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_2;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_3;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_4;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_5;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_6;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_7;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_8;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_9;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_10;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_11;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_12;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_13;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_14;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_15;
+        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_16;
+        private List<List<RKIReportFeatures<RKIReportDistrictModel>>> LK_lists;
+
+        public RKIStatisticsJob(IRKIReportFactory listFac, ILogger<RKIStatisticsJob> logger)
         {
             _listFac = listFac;
+            _logger = logger;
         }
         public Task Execute(IJobExecutionContext context)
         {
+            _ = FillDailyReport();
             bool items = IsDirectoryEmpty(path);
             if(items == true)
             {
-                _listFac.FirstDataEntry();
+                
             }
             else
             {
-                _listFac.RegularDataEntry();
+                
             }
         
             return Task.CompletedTask;
         }
-        private bool IsDirectoryEmpty(string path)
+        private static bool IsDirectoryEmpty(string path)
         {
             return !Directory.EnumerateFileSystemEntries(path).Any();
+        }
+
+        private void InitializeGlobalVariables()
+        {
+            dailyReport = new RKIDailyReportModel();
+            dailyReportState = new RKIDailyReporStateModel();
+            dailyReportDistrict = new RKIDailyReporDistrictModel();
+            states = new string[] { "Baden-Württemberg", "Bayern", "Berlin","Brandenburg", "Bremen", "Hamburg",
+                        "Hessen", "Mecklenburg-Vorpommern", "Niedersachsen", "Nordrhein-Westfalen", "Rheinland-Pfalz", "Saarland",
+                        "Sachsen", "Sachsen-Anhalt", "Schleswig-Holstein", "Thüringen"};
+        }
+
+        public async Task FillDailyReport()
+        {
+            InitializeGlobalVariables();
+            try
+            {
+                List<string> list = new List<string>();
+                list = GetLKNames();
+                dailyReport.Timestamp = DateTime.Now;
+                dailyReport.CurrentStatus = true;
+
+                var tasks = new Task[]
+                {
+                    stateCaseData = _listFac.GetStateData(0),
+                    _listFac.GetAllStates(),
+                    stateData = _listFac.GetStateByName(),
+                    districtData = _listFac.GetDistrictByName(list)
+                };
+
+                foreach (var task in tasks)
+                {
+                    await task;
+                }
+
+                if (stateCaseData is not null)
+                {
+                    dailyReport.CaseNumbers = stateCaseData.Result.features[0].attributes.AnzFallNeu;
+                    dailyReport.PreCaseNumbers = stateCaseData.Result.features[0].attributes.AnzFall;
+                    dailyReport.DeathCases = stateCaseData.Result.features[0].attributes.AnzTodesfallNeu;
+                    dailyReport.PreDeathCases = stateCaseData.Result.features[0].attributes.AnzTodesfall;
+                    dailyReport.Inzidenz7Days = stateCaseData.Result.features[0].attributes.Inz7T;
+
+                    dailyReport.RValue7Days = _listFac.GetRValue(2);
+                    dailyReport.RValue7PreDays = _listFac.GetRValue(3);
+                }
+
+                DataTable resultImpfung = DownloadFile.DownloadFile.GetInstance(urlImpfung).Sheets[1];
+
+                if (resultImpfung != null)
+                {
+                    dailyReport.AllVaccinations = Convert.ToDouble(resultImpfung.Rows[20][2]);
+                    dailyReport.FirstVaccination = Convert.ToDouble(resultImpfung.Rows[20][3]);
+                    dailyReport.SecondVaccination = Convert.ToDouble(resultImpfung.Rows[20][4]);
+                    dailyReport.FirstBooster = Convert.ToDouble(resultImpfung.Rows[20][5]);
+                    dailyReport.SecondBooster = Convert.ToDouble(resultImpfung.Rows[20][6]);
+                    dailyReport.VaccinStatus = true;
+                }
+
+                var stateDataList = await stateData;
+                await SortLKsAsync();
+
+                if (stateDataList != null)
+                {
+                    dailyReportStateList = new List<RKIDailyReporStateModel>();
+                    int i = 0;
+                    foreach (var state in stateDataList)
+                    {                      
+                        dailyReportState = new RKIDailyReporStateModel();
+                        dailyReportState.Name = state.features[0].attributes.Bundesland;
+
+                        dailyReportState.CaseNumbers = state.features[0].attributes.Fallzahl;
+                        dailyReportState.Cases7BL = state.features[0].attributes.Cases7_bl;
+                        dailyReportState.CasesPer100000Citizens = state.features[0].attributes.FaellePro100000Ew;
+                        dailyReportState.Deathcases = state.features[0].attributes.Todesfaelle;
+                        dailyReportState.Deathcases7BL = state.features[0].attributes.Death7_bl;
+                        dailyReportState.Inzidenz7Days = state.features[0].attributes.Faelle7BlPro100K;
+                        dailyReportState.Color = SetMapColor(dailyReportState.Inzidenz7Days);
+
+                        var getRightList = LK_lists[i];
+                        dailyReportDistrictList = new List<RKIDailyReporDistrictModel>();
+
+                        foreach (var itemList in getRightList)
+                        {
+                            dailyReportDistrict = new RKIDailyReporDistrictModel();
+                            dailyReportDistrict.City = itemList.features[0].attributes.County;
+                            dailyReportDistrict.DistrictName = itemList.features[0].attributes.GEN;
+                            dailyReportDistrict.CaseNumbers = itemList.features[0].attributes.Cases;
+                            dailyReportDistrict.Cases7LK = itemList.features[0].attributes.Cases7_lk;
+                            dailyReportDistrict.CasesPer100000Citizens = itemList.features[0].attributes.Cases_per_100k;
+                            dailyReportDistrict.Inzidenz7Days = itemList.features[0].attributes.Cases7_per_100k;
+                            dailyReportDistrict.Deathcases = itemList.features[0].attributes.Deaths;
+                            dailyReportDistrict.Deathcases7LK = itemList.features[0].attributes.Death7_lk;
+                            dailyReportDistrict.AdmUnitID = itemList.features[0].attributes.AdmUnitId;
+
+                            dailyReportDistrictList.Add(dailyReportDistrict);
+                        }
+                        dailyReportState.District = dailyReportDistrictList;
+                        dailyReportStateList.Add(dailyReportState);
+
+                        i++;
+                    }
+                    dailyReport.State = dailyReportStateList;
+                }
+
+                dailyReport.BLCurrentStatus = true;
+                var finish = dailyReport;
+            }
+            catch
+            {
+                _logger.LogError("DailyReport could not be proceed");
+            }
+        }
+        //need to adjust more colors
+        public string SetMapColor(double inzidenz)
+        {
+            string farbe;
+            try
+            {
+                int zahl = (int)Convert.ToInt64(Math.Floor(inzidenz));
+
+                if (zahl >= 100)
+                {
+                    farbe = "#671212";
+                    return farbe;
+                }
+                if (zahl < 100 && zahl >= 75)
+                {
+                    farbe = "#951214";
+                    return farbe;
+                }
+                if (zahl < 75 && zahl >= 50)
+                {
+                    farbe = "#D43624";
+                    return farbe;
+                }
+                if (zahl < 50 && zahl >= 25)
+                {
+                    farbe = "#FFB534";
+                    return farbe;
+                }
+                if (zahl < 25 && zahl >= 5)
+                {
+                    farbe = "#FFF380";
+                    return farbe;
+                }
+                if (zahl < 5 && zahl > 0)
+                {
+                    farbe = "#FFFCCD";
+                    return farbe;
+                }
+                else
+                {
+                    farbe = "#FFFFFF";
+                    return farbe;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("SetMapColor " + e.Message);
+                farbe = "#FFFFFF";
+                return farbe;
+            }
+        }
+
+        private List<string> GetLKNames()
+        {
+            DataTable result = DownloadFile.DownloadFile.GetInstance(url).Sheets[4];
+            if (result != null)
+            {
+                var endResult = result.AsEnumerable().Skip(5).Take(418).CopyToDataTable();
+
+                List<string> list = new List<string>(endResult.Rows.Count);
+                foreach (DataRow row in endResult.Rows)
+                {
+                    list.Add(row[0].ToString().Replace("LK", "").Replace("SK", "").Trim());
+                }                   
+                return list;
+            }
+            return null;
+        }
+
+        private async Task SortLKsAsync()
+        {
+            var districtList = await districtData;
+            list_BL_1 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_2 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_3 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_4 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_5 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_6 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_7 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_8 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_9 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_10 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_11 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_12 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_13 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_14 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_15 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            list_BL_16 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+
+            foreach (var district in districtList)
+            {
+
+                switch (district.features[0].attributes.BL)
+                {
+                    case "Baden-Württemberg":
+                        list_BL_1.Add(district); break;
+                    case "Bayern":
+                        list_BL_2.Add(district); break;
+                    case "Berlin":
+                        list_BL_3.Add(district); break;
+                    case "Brandenburg":
+                        list_BL_4.Add(district); break;
+                    case "Bremen":
+                        list_BL_5.Add(district); break;
+                    case "Hamburg":
+                        list_BL_6.Add(district); break;
+                    case "Hessen":
+                        list_BL_7.Add(district); break;
+                    case "Mecklenburg-Vorpommern":
+                        list_BL_8.Add(district); break;
+                    case "Niedersachsen":
+                        list_BL_9.Add(district); break;
+                    case "Nordrhein-Westfalen":
+                        list_BL_10.Add(district); break;
+                    case "Rheinland-Pfalz":
+                        list_BL_11.Add(district); break;
+                    case "Saarland":
+                        list_BL_12.Add(district); break;
+                    case "Sachsen":
+                        list_BL_13.Add(district); break;
+                    case "Sachsen-Anhalt":
+                        list_BL_14.Add(district); break;
+                    case "Schleswig-Holstein":
+                        list_BL_15.Add(district); break;
+                    case "Thüringen":
+                        list_BL_16.Add(district); break;
+                    case "": break;
+                    case null: break;
+                }
+            }
+            LK_lists = new List<List<RKIReportFeatures<RKIReportDistrictModel>>>();
+            LK_lists.Add(list_BL_1);
+            LK_lists.Add(list_BL_2);
+            LK_lists.Add(list_BL_3);
+            LK_lists.Add(list_BL_4);
+            LK_lists.Add(list_BL_5);
+            LK_lists.Add(list_BL_6);
+            LK_lists.Add(list_BL_7);
+            LK_lists.Add(list_BL_8);
+            LK_lists.Add(list_BL_9);
+            LK_lists.Add(list_BL_10);
+            LK_lists.Add(list_BL_11);
+            LK_lists.Add(list_BL_12);
+            LK_lists.Add(list_BL_13);
+            LK_lists.Add(list_BL_14);
+            LK_lists.Add(list_BL_15);
+            LK_lists.Add(list_BL_16);
         }
     }
 }

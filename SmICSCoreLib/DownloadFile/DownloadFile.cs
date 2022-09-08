@@ -1,53 +1,62 @@
 ﻿using ExcelDataReader;
-using System;
 using System.Data;
 using System.IO;
 using System.Net;
 
 namespace SmICSCoreLib.DownloadFile
 {
-    public static class DownloadFile
+    public class DownloadFile
     {
-        public static DataSet GetDataSetFromLink(String url)
+        public DataTableCollection Sheets;
+        private static DownloadFile instance = new DownloadFile();
+
+        public static DownloadFile GetInstance(string url)
         {
-            var client = new WebClient();
-            try
-            {
-                var fullPath = Path.GetTempFileName();
-                client.DownloadFile(url, fullPath);
+            _ = new DownloadFile(url);
+            return instance;
+        }
+        private DownloadFile()
+        {
 
-                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-                using var stream = File.Open(fullPath, FileMode.Open, FileAccess.Read);
-                using var reader = ExcelReaderFactory.CreateReader(stream);
-                var result = reader.AsDataSet();
-
-                return result;
-            }
-            catch
-            {
-                return null;
-            }
         }
 
-        public static DataSet GetCsvDataSet(String url)
+        public DownloadFile(string url) :this()
+        { 
+            var client = new WebClient();
+            var fullPath = Path.GetTempFileName();
+            client.DownloadFile(url, fullPath);
+
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            FileStream stream = File.Open(fullPath, FileMode.Open, FileAccess.Read);
+            IExcelDataReader reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+            DataSet result = reader.AsDataSet();
+
+            instance.Sheets = result.Tables;
+
+            reader.Close();
+        }
+
+        public static DataSet GetDataSetFromLink(string url, string useCase)
         {
             var client = new WebClient();
-            try
-            {
-                var fullPath = Path.GetTempFileName();
-                client.DownloadFile(url, fullPath);
+            var fullPath = Path.GetTempFileName();
+            client.DownloadFile(url, fullPath);
 
-                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-                using var stream = File.Open(fullPath, FileMode.Open, FileAccess.Read);
-                using var reader = ExcelReaderFactory.CreateCsvReader(stream);
-                var result = reader.AsDataSet();
-
-                return result;
-            }
-            catch
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            using var stream = File.Open(fullPath, FileMode.Open, FileAccess.Read);
+            switch (useCase)
             {
-                return null;
+                case "link": 
+                    var reader = ExcelReaderFactory.CreateReader(stream); 
+                    var result = reader.AsDataSet();
+                    return result;
+                case "csv":
+                    var csvreader = ExcelReaderFactory.CreateCsvReader(stream);
+                    var csvresult = csvreader.AsDataSet();
+                    return csvresult;
             }
+            return null;
         }
+        
     }
 }

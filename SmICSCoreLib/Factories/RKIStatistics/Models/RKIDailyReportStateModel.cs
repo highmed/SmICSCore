@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace SmICSCoreLib.Factories.RKIStatistics.Models
 {
@@ -27,6 +28,9 @@ namespace SmICSCoreLib.Factories.RKIStatistics.Models
 
         [JsonProperty(PropertyName = "Color")]
         public string Color { get; set; }
+
+        [JsonProperty(PropertyName = "District")]
+        public List<RKIDailyReporDistrictModel> District { get; set; }
 
     }
 }
