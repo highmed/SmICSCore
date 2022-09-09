@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Quartz;
 using SmICSCoreLib.Factories.RKIStatistics;
 using SmICSCoreLib.Factories.RKIStatistics.Models;
 using SmICSCoreLib.Factories.RKIStatistics.ReceiveModels;
+using SmICSCoreLib.JSONFileStream;
 
 namespace SmICSCoreLib.CronJobs
 {
@@ -34,22 +34,6 @@ namespace SmICSCoreLib.CronJobs
         private Task<List<RKIReportFeatures<RKIReportStateModel>>> stateData;
         private Task<List<RKIReportFeatures<RKIReportDistrictModel>>> districtData;
 
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_1;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_2;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_3;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_4;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_5;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_6;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_7;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_8;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_9;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_10;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_11;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_12;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_13;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_14;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_15;
-        private List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_16;
         private List<List<RKIReportFeatures<RKIReportDistrictModel>>> LK_lists;
 
         public RKIStatisticsJob(IRKIReportFactory listFac, ILogger<RKIStatisticsJob> logger)
@@ -59,22 +43,26 @@ namespace SmICSCoreLib.CronJobs
         }
         public Task Execute(IJobExecutionContext context)
         {
-            _ = FillDailyReport();
-            bool items = IsDirectoryEmpty(path);
-            if(items == true)
+            try
             {
-                
-            }
-            else
+                _ = FillDailyReport();
+                _logger.LogInformation("RKIDailyReport could succefully been created.");
+
+            }catch
             {
-                
+                _logger.LogError("RKIDailyReport could not been created.");
             }
-        
+            
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+                //need to get old data
+            }
+            string filename = "RKI_DailyReport_" + DateTime.Now.ToString("yyyy-MM-dd");
+
+            JSONWriter.Write(dailyReport, path, filename);
+
             return Task.CompletedTask;
-        }
-        private static bool IsDirectoryEmpty(string path)
-        {
-            return !Directory.EnumerateFileSystemEntries(path).Any();
         }
 
         private void InitializeGlobalVariables()
@@ -92,7 +80,7 @@ namespace SmICSCoreLib.CronJobs
             InitializeGlobalVariables();
             try
             {
-                List<string> list = new List<string>();
+                List<string> list = new();
                 list = GetLKNames();
                 dailyReport.Timestamp = DateTime.Now;
                 dailyReport.CurrentStatus = true;
@@ -122,17 +110,26 @@ namespace SmICSCoreLib.CronJobs
                     dailyReport.RValue7PreDays = _listFac.GetRValue(3);
                 }
 
-                DataTable resultImpfung = DownloadFile.DownloadFile.GetInstance(urlImpfung).Sheets[1];
-
-                if (resultImpfung != null)
+                try
                 {
-                    dailyReport.AllVaccinations = Convert.ToDouble(resultImpfung.Rows[20][2]);
-                    dailyReport.FirstVaccination = Convert.ToDouble(resultImpfung.Rows[20][3]);
-                    dailyReport.SecondVaccination = Convert.ToDouble(resultImpfung.Rows[20][4]);
-                    dailyReport.FirstBooster = Convert.ToDouble(resultImpfung.Rows[20][5]);
-                    dailyReport.SecondBooster = Convert.ToDouble(resultImpfung.Rows[20][6]);
-                    dailyReport.VaccinStatus = true;
+                    DataTable resultImpfung = DownloadFile.DownloadFile.GetInstance(urlImpfung).Sheets[1];
+
+                    if (resultImpfung != null)
+                    {
+                        dailyReport.AllVaccinations = Convert.ToDouble(resultImpfung.Rows[20][2]);
+                        dailyReport.FirstVaccination = Convert.ToDouble(resultImpfung.Rows[20][3]);
+                        dailyReport.SecondVaccination = Convert.ToDouble(resultImpfung.Rows[20][4]);
+                        dailyReport.FirstBooster = Convert.ToDouble(resultImpfung.Rows[20][5]);
+                        dailyReport.SecondBooster = Convert.ToDouble(resultImpfung.Rows[20][6]);
+                        dailyReport.VaccinStatus = true;
+                    }
+                    _logger.LogInformation("RKI vaccination data could been aquired");
                 }
+                catch
+                {
+                    _logger.LogError("RKI vaccination data could not been aquired");
+                }
+                
 
                 var stateDataList = await stateData;
                 await SortLKsAsync();
@@ -142,16 +139,18 @@ namespace SmICSCoreLib.CronJobs
                     dailyReportStateList = new List<RKIDailyReporStateModel>();
                     int i = 0;
                     foreach (var state in stateDataList)
-                    {                      
-                        dailyReportState = new RKIDailyReporStateModel();
-                        dailyReportState.Name = state.features[0].attributes.Bundesland;
+                    {
+                        dailyReportState = new RKIDailyReporStateModel
+                        {
+                            Name = state.features[0].attributes.Bundesland,
 
-                        dailyReportState.CaseNumbers = state.features[0].attributes.Fallzahl;
-                        dailyReportState.Cases7BL = state.features[0].attributes.Cases7_bl;
-                        dailyReportState.CasesPer100000Citizens = state.features[0].attributes.FaellePro100000Ew;
-                        dailyReportState.Deathcases = state.features[0].attributes.Todesfaelle;
-                        dailyReportState.Deathcases7BL = state.features[0].attributes.Death7_bl;
-                        dailyReportState.Inzidenz7Days = state.features[0].attributes.Faelle7BlPro100K;
+                            CaseNumbers = state.features[0].attributes.Fallzahl,
+                            Cases7BL = state.features[0].attributes.Cases7_bl,
+                            CasesPer100000Citizens = state.features[0].attributes.FaellePro100000Ew,
+                            Deathcases = state.features[0].attributes.Todesfaelle,
+                            Deathcases7BL = state.features[0].attributes.Death7_bl,
+                            Inzidenz7Days = state.features[0].attributes.Faelle7BlPro100K
+                        };
                         dailyReportState.Color = SetMapColor(dailyReportState.Inzidenz7Days);
 
                         var getRightList = LK_lists[i];
@@ -159,16 +158,18 @@ namespace SmICSCoreLib.CronJobs
 
                         foreach (var itemList in getRightList)
                         {
-                            dailyReportDistrict = new RKIDailyReporDistrictModel();
-                            dailyReportDistrict.City = itemList.features[0].attributes.County;
-                            dailyReportDistrict.DistrictName = itemList.features[0].attributes.GEN;
-                            dailyReportDistrict.CaseNumbers = itemList.features[0].attributes.Cases;
-                            dailyReportDistrict.Cases7LK = itemList.features[0].attributes.Cases7_lk;
-                            dailyReportDistrict.CasesPer100000Citizens = itemList.features[0].attributes.Cases_per_100k;
-                            dailyReportDistrict.Inzidenz7Days = itemList.features[0].attributes.Cases7_per_100k;
-                            dailyReportDistrict.Deathcases = itemList.features[0].attributes.Deaths;
-                            dailyReportDistrict.Deathcases7LK = itemList.features[0].attributes.Death7_lk;
-                            dailyReportDistrict.AdmUnitID = itemList.features[0].attributes.AdmUnitId;
+                            dailyReportDistrict = new RKIDailyReporDistrictModel
+                            {
+                                City = itemList.features[0].attributes.County,
+                                DistrictName = itemList.features[0].attributes.GEN,
+                                CaseNumbers = itemList.features[0].attributes.Cases,
+                                Cases7LK = itemList.features[0].attributes.Cases7_lk,
+                                CasesPer100000Citizens = itemList.features[0].attributes.Cases_per_100k,
+                                Inzidenz7Days = itemList.features[0].attributes.Cases7_per_100k,
+                                Deathcases = itemList.features[0].attributes.Deaths,
+                                Deathcases7LK = itemList.features[0].attributes.Death7_lk,
+                                AdmUnitID = itemList.features[0].attributes.AdmUnitId
+                            };
 
                             dailyReportDistrictList.Add(dailyReportDistrict);
                         }
@@ -182,13 +183,14 @@ namespace SmICSCoreLib.CronJobs
 
                 dailyReport.BLCurrentStatus = true;
                 var finish = dailyReport;
+
             }
             catch
             {
                 _logger.LogError("DailyReport could not be proceed");
             }
         }
-        //need to adjust more colors
+
         public string SetMapColor(double inzidenz)
         {
             string farbe;
@@ -196,41 +198,32 @@ namespace SmICSCoreLib.CronJobs
             {
                 int zahl = (int)Convert.ToInt64(Math.Floor(inzidenz));
 
-                if (zahl >= 100)
+                if (zahl >= 600)
                 {
-                    farbe = "#671212";
-                    return farbe;
-                }
-                if (zahl < 100 && zahl >= 75)
+                    farbe = "#483259";
+                }else if (zahl < 600 && zahl >= 500)
                 {
-                    farbe = "#951214";
-                    return farbe;
-                }
-                if (zahl < 75 && zahl >= 50)
+                    farbe = "#8f63b0";
+                }else if (zahl < 500 && zahl >= 400)
                 {
-                    farbe = "#D43624";
-                    return farbe;
-                }
-                if (zahl < 50 && zahl >= 25)
+                    farbe = "#c161a7";
+                }else if (zahl < 400 && zahl >= 300)
                 {
-                    farbe = "#FFB534";
-                    return farbe;
-                }
-                if (zahl < 25 && zahl >= 5)
+                    farbe = "#e56379";
+                }else if (zahl < 300 && zahl >= 200)
                 {
-                    farbe = "#FFF380";
-                    return farbe;
-                }
-                if (zahl < 5 && zahl > 0)
+                    farbe = "#fb8f5d";
+                }else if (zahl < 200 && zahl > 100)
                 {
-                    farbe = "#FFFCCD";
-                    return farbe;
-                }
-                else
+                    farbe = "#f9ba78";
+                }else if (zahl < 100)
+                {
+                    farbe = "#ffe7b9";
+                }else
                 {
                     farbe = "#FFFFFF";
-                    return farbe;
                 }
+                return farbe;
             }
             catch (Exception e)
             {
@@ -247,7 +240,7 @@ namespace SmICSCoreLib.CronJobs
             {
                 var endResult = result.AsEnumerable().Skip(5).Take(418).CopyToDataTable();
 
-                List<string> list = new List<string>(endResult.Rows.Count);
+                List<string> list = new(endResult.Rows.Count);
                 foreach (DataRow row in endResult.Rows)
                 {
                     list.Add(row[0].ToString().Replace("LK", "").Replace("SK", "").Trim());
@@ -260,22 +253,22 @@ namespace SmICSCoreLib.CronJobs
         private async Task SortLKsAsync()
         {
             var districtList = await districtData;
-            list_BL_1 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_2 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_3 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_4 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_5 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_6 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_7 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_8 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_9 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_10 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_11 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_12 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_13 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_14 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_15 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
-            list_BL_16 = new List<RKIReportFeatures<RKIReportDistrictModel>>();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_1 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_2 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_3 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_4 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_5 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_6 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_7 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_8 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_9 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_10 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_11 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_12 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_13 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_14 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_15 = new();
+            List<RKIReportFeatures<RKIReportDistrictModel>> list_BL_16 = new();
 
             foreach (var district in districtList)
             {
@@ -318,23 +311,25 @@ namespace SmICSCoreLib.CronJobs
                     case null: break;
                 }
             }
-            LK_lists = new List<List<RKIReportFeatures<RKIReportDistrictModel>>>();
-            LK_lists.Add(list_BL_1);
-            LK_lists.Add(list_BL_2);
-            LK_lists.Add(list_BL_3);
-            LK_lists.Add(list_BL_4);
-            LK_lists.Add(list_BL_5);
-            LK_lists.Add(list_BL_6);
-            LK_lists.Add(list_BL_7);
-            LK_lists.Add(list_BL_8);
-            LK_lists.Add(list_BL_9);
-            LK_lists.Add(list_BL_10);
-            LK_lists.Add(list_BL_11);
-            LK_lists.Add(list_BL_12);
-            LK_lists.Add(list_BL_13);
-            LK_lists.Add(list_BL_14);
-            LK_lists.Add(list_BL_15);
-            LK_lists.Add(list_BL_16);
+            LK_lists = new List<List<RKIReportFeatures<RKIReportDistrictModel>>>
+            {
+                list_BL_1,
+                list_BL_2,
+                list_BL_3,
+                list_BL_4,
+                list_BL_5,
+                list_BL_6,
+                list_BL_7,
+                list_BL_8,
+                list_BL_9,
+                list_BL_10,
+                list_BL_11,
+                list_BL_12,
+                list_BL_13,
+                list_BL_14,
+                list_BL_15,
+                list_BL_16
+            };
         }
     }
 }
