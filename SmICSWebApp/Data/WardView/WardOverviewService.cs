@@ -261,7 +261,7 @@ namespace SmICSWebApp.Data.WardView
 
         private DateTime? GetFirstPositveLabResultDate(List<LabResult> labResults, PatientStay patStay)
         {
-            DateTime last = DateTime.MaxValue;
+            DateTime? last = DateTime.MaxValue;
             if (labResults is not null)
             {
                 foreach (LabResult labResult in labResults)
@@ -273,7 +273,7 @@ namespace SmICSWebApp.Data.WardView
                         Select(s => s.SpecimenCollectionDateTime);
 
                     DateTime? tmp = dates.Count() > 0 ? dates.First() : null;
-                    if (tmp.HasValue && last > tmp.Value)
+                    if (tmp.HasValue && last.Value > tmp.Value)
                     {
                         last = tmp.Value;
                     }
@@ -289,12 +289,15 @@ namespace SmICSWebApp.Data.WardView
             {
                 foreach (LabResult labResult in labResults)
                 {
-                    DateTime tmp = labResult.Specimens.Where(s => s.Pathogens.Any(p => p.Result))
-                        .OrderBy(s => s.SpecimenCollectionDateTime)
-                        .Last().SpecimenCollectionDateTime;
-                    if (last < tmp)
+                    IEnumerable<Specimen> sorted = labResult.Specimens.Where(s => s.Pathogens.Any(p => p.Result))
+                        .OrderBy(s => s.SpecimenCollectionDateTime);
+                    if(sorted is not null)
                     {
-                        last = tmp;
+                        DateTime tmp = sorted.Last().SpecimenCollectionDateTime;
+                        if (last < tmp)
+                        {
+                            last = tmp;
+                        }
                     }
                 }
             }
