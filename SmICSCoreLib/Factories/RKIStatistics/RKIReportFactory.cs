@@ -106,7 +106,7 @@ namespace SmICSCoreLib.Factories.RKIStatistics
                         {
                             list.Add(obj);
                         }
-                    }catch (IndexOutOfRangeException ex)
+                    }catch (IndexOutOfRangeException)
                     {
                         _logger.LogWarning("District {i} does not have data", g);
                     }

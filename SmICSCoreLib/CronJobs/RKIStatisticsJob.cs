@@ -18,7 +18,8 @@ namespace SmICSCoreLib.CronJobs
     {
         private readonly IRKIReportFactory _listFac;
         private readonly ILogger<RKIStatisticsJob> _logger;
-        private readonly string path = @"../SmICSWebApp/Resources/RKIReportData";
+        private readonly string path = @"../SmICSWebApp/Resources/RKIReportData/DailyReport";
+        private readonly string shortPath = @"../SmICSWebApp/Resources/RKIReportData/";
 
         public RKIDailyReportModel dailyReport;
         public RKIDailyReporStateModel dailyReportState;
@@ -29,7 +30,8 @@ namespace SmICSCoreLib.CronJobs
 
         private readonly string url = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab_aktuell.xlsx?__blob=publicationFile";
         private readonly string urlImpfung = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Impfquotenmonitoring.xlsx?__blob=publicationFile";
-        
+        private readonly string archivUrl = "https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Fallzahlen_Kum_Tab_Archiv.xlsx?__blob=publicationFile";
+
         private Task<RKIReportFeatures<RKIReportStateCaseModel>> stateCaseData;
         private Task<List<RKIReportFeatures<RKIReportStateModel>>> stateData;
         private Task<List<RKIReportFeatures<RKIReportDistrictModel>>> districtData;
@@ -43,6 +45,17 @@ namespace SmICSCoreLib.CronJobs
         }
         public Task Execute(IJobExecutionContext context)
         {
+            if (!Directory.Exists(shortPath))
+            {
+                Directory.CreateDirectory(shortPath);
+            }
+            if (IsDirectoryEmpty(shortPath))
+            {
+                _ = CreateReport(archivUrl);
+                
+            }
+            _ = CreateReport(url);
+
             try
             {
                 _ = FillDailyReport();
@@ -63,6 +76,10 @@ namespace SmICSCoreLib.CronJobs
             JSONWriter.Write(dailyReport, path, filename);
 
             return Task.CompletedTask;
+        }
+        private static bool IsDirectoryEmpty(string path)
+        {
+            return !Directory.EnumerateFileSystemEntries(path).Any();
         }
 
         private void InitializeGlobalVariables()
@@ -182,7 +199,6 @@ namespace SmICSCoreLib.CronJobs
                 }
 
                 dailyReport.BLCurrentStatus = true;
-                var finish = dailyReport;
 
             }
             catch
@@ -330,6 +346,125 @@ namespace SmICSCoreLib.CronJobs
                 list_BL_15,
                 list_BL_16
             };
+        }
+
+        private async Task CreateReport(string link)
+        {
+            DataTable resultSetBL;
+            DataTable resultSetLK;
+            DataTable resultHeader;
+
+            if (link == archivUrl)
+            {
+                resultSetBL = DownloadFile.DownloadFile.GetInstance(link).Sheets[1];
+                resultSetLK = DownloadFile.DownloadFile.GetInstance(link).Sheets[3];
+            }else
+            {
+                resultSetLK = DownloadFile.DownloadFile.GetInstance(link).Sheets[4];
+                resultSetBL = DownloadFile.DownloadFile.GetInstance(link).Sheets[2];
+            }
+            var endresultSetBL = resultSetBL.AsEnumerable().Skip(5).CopyToDataTable();
+            var endresultSetLK = resultSetBL.AsEnumerable().Skip(5).CopyToDataTable();
+            resultHeader = resultSetBL;
+            resultHeader.Columns.RemoveAt(0);
+            var resultheader = resultHeader.AsEnumerable().ElementAt(4);
+            
+            RKIReportModel model = new()
+            {
+                Timestamp = DateTime.Now
+            };
+
+            if (resultSetBL != null)
+            {
+                string filename = "RKI_BLReport";
+                string filePath = shortPath + "/" + filename + ".json";
+                var result = endresultSetBL.Rows;
+                RKIReportModel oldModel = new();
+
+                if (File.Exists(filePath))
+                {
+                    oldModel = JSONReader<RKIReportModel>.ReadObject(filePath);
+                }
+
+                List<RKIReportLocationModel> rKIReportLocationModels = FillLocationModel(result, oldModel, "Bundesland", filePath, resultheader);
+                model.Data = rKIReportLocationModels;
+
+                JSONWriter.Write(model, shortPath, filename);
+            }
+
+            if (resultSetLK != null)
+            {
+                string filename = "RKI_LKReport";
+                string filePath = shortPath + "/" + filename + ".json";
+
+                if (link == archivUrl)
+                {
+                    resultSetLK.Columns.RemoveAt(0);
+                }
+
+                var result = endresultSetLK.Rows;
+                RKIReportModel oldModel = new();
+
+                if (File.Exists(filePath))
+                {
+                    oldModel = JSONReader<RKIReportModel>.ReadObject(filePath);
+                }
+
+                List<RKIReportLocationModel> rKIReportLocationModels = FillLocationModel(result, oldModel, "Landkreis", filePath, resultheader);
+                model.Data = rKIReportLocationModels;
+
+                JSONWriter.Write(model, shortPath, filename);
+            }
+
+            await Task.CompletedTask;
+        }
+
+        private static List<RKIReportLocationModel> FillLocationModel(DataRowCollection dataRowCollection, RKIReportModel rKIReportModel, string description, string file, DataRow header)
+        {
+            List<RKIReportLocationModel> rKIReportLocationModels = new();
+            RKIReportLocationModel rKIReportLocationModel = new();
+            List<RKIReportCaseModel> rKIReportCaseModels = new();
+
+            dataRowCollection.RemoveAt(dataRowCollection.Count);
+
+            foreach (DataRow row in dataRowCollection)
+            {
+                rKIReportLocationModel.Description = description;
+                rKIReportLocationModel.Name = row[0].ToString();
+                if(description == "Landkreis")
+                {
+                    rKIReportLocationModel.ID = row[1].ToString();
+                }
+                
+                if (File.Exists(file))
+                {
+                    foreach (RKIReportLocationModel item in rKIReportModel.Data.Where(x => x.Name == row[0].ToString()))
+                    {
+                        foreach (RKIReportCaseModel caseModel in item.CaseNumbers)
+                        {
+                            RKIReportCaseModel rKIReportCaseModel = new()
+                            {
+                                Timestamp = caseModel.Timestamp,
+                                CaseNumber = caseModel.CaseNumber
+                            };
+                            rKIReportCaseModels.Add(rKIReportCaseModel);
+                        }
+                    }
+                }
+
+                for (int i = 1; i < row.Table.Columns.Count; i++)
+                {
+                    RKIReportCaseModel rKIReportCaseModel = new()
+                    {
+                        Timestamp = Convert.ToDateTime(header[i-1]),
+                        CaseNumber = Convert.ToInt32(row[i])
+                    };
+                    rKIReportCaseModels.Add(rKIReportCaseModel);
+                }
+                rKIReportLocationModel.CaseNumbers = rKIReportCaseModels;
+                rKIReportLocationModels.Add(rKIReportLocationModel);
+            }
+            return rKIReportLocationModels;
         }
     }
 }

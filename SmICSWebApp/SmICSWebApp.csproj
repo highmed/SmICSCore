@@ -58,7 +58,6 @@
   <ItemGroup>
     <Folder Include="Resources\nec\json\" />
     <Folder Include="Resources\db\" />
-    <Folder Include="Resources\RKIReportData\" />
   </ItemGroup>
 
   <ItemGroup>

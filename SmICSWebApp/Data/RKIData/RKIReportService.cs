@@ -16,6 +16,7 @@ namespace SmICSWebApp.Data.RKIData
     {      
         private readonly ILogger<RKIReportService> _logger;
         private readonly IRKIReportFactory _listFac;
+        private readonly string path = "";
         
         public RKIReportService(ILogger<RKIReportService> logger, IRKIReportFactory listFac)
         {
@@ -23,5 +24,36 @@ namespace SmICSWebApp.Data.RKIData
             _listFac = listFac;
         }
 
+        public string SetCaseColor(double day, double daybefore)
+        {
+            string color = "#b0bec5";
+            try
+            {
+                if (day < daybefore)
+                {
+                    color = "#66C166";
+                }else if (day == daybefore)
+                {
+                    color = "#FFC037";
+                }else if (day > daybefore)
+                {
+                    color = "#F35C58";
+                }else
+                {
+                    color = "#8CA2AE";
+                }
+                return color;
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("SetCaseColor " + e.Message);
+                return color;
+            }
+        }
+
+        public void GetBLReport()
+        {
+
+        }
     }
 }

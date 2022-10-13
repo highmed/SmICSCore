@@ -189,7 +189,7 @@ namespace SmICSCoreLib.StatistikServices
                 return null;
             }
         }
-
+        //done
         public Bericht GetBerichtFromUrl(string url)
         {
             Bericht bericht = new();
@@ -420,7 +420,7 @@ namespace SmICSCoreLib.StatistikServices
                 return null;
             }
         }
-
+        //done
         public string SetMapColor(string inzidenz)
         {
             string farbe;
@@ -483,7 +483,7 @@ namespace SmICSCoreLib.StatistikServices
                 return farbe;
             }
         }
-
+        //done
         public string SetCaseColor(string tag, string vortag)
         {
             string color;

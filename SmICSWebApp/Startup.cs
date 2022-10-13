@@ -99,7 +99,7 @@ namespace SmICSWebApp
             services.AddSingleton<NUMNodeJob>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(NUMNodeJob), "NumNode", "0 52 11 ? * *"));
             services.AddSingleton<RKIStatisticsJob>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(RKIStatisticsJob), "RKIStatistics", "0 13 18 ? * *"));
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(RKIStatisticsJob), "RKIStatistics", "0 07 15 ? * *"));
             //OpenehrConfig.OutbreakDetectionRuntime = Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME");
             //Console.WriteLine("Transformed: OUTBREAK_DETECTION_TIME " + Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME") + "to CONFIG: " + OpenehrConfig.OutbreakDetectionRuntime);
             //string[] runtimeArr = OpenehrConfig.OutbreakDetectionRuntime.Split(":");
