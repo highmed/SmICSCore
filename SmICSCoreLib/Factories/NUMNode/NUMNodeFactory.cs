@@ -210,15 +210,16 @@ namespace SmICSCoreLib.Factories.NUMNode
                         {
                             episodeOfCareParameter = new EpsiodeOfCareParameter { PatientID = pat.PatientID, CaseID = pat.FallID };
                             List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter));
-                            if (discharge is not null)
+                            List<EpisodeOfCareModel> admission = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParameter));
+                            if (discharge is not null && admission is not null)
                             {
-                                labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = discharge.First().Ende };
+                                LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = discharge.First().Ende };
                                 countPatient++;
                                 labPatientList.Add(labPatient);
                             }
-                            else
+                            else if (admission is not null)
                             {
-                                labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
+                                LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
                                 currentcountPatient++;
                                 labPatientList.Add(labPatient);
                             }
@@ -227,15 +228,17 @@ namespace SmICSCoreLib.Factories.NUMNode
                         {
                             List<DateTime> posdates = receiveLabDataListpositiv.Where(x => x.FallID == pat.FallID).Select(a => a.Befunddatum).OrderBy(b => b.Date).ToList();
                             List<DateTime> negdates = receiveLabDataListnegativ.Select(x => x.Befunddatum).OrderBy(a => a.Date).ToList();
-                            SortedList<DateTime, bool> alldates = new SortedList<DateTime, bool>();
+                            SortedList<DateTime, bool> alldates = new();
 
                             foreach (var item in posdates)
                             {
-                                alldates.Add(item, true);
+                                if(!alldates.ContainsKey(item))
+                                    alldates.Add(item, true);
                             }
                             foreach (var item in negdates)
                             {
-                                alldates.Add(item, false);
+                                if (!alldates.ContainsKey(item))
+                                    alldates.Add(item, false);
                             }
                             int dateTimeNegCount = 0;
                             bool newPosTimeframe = false;
@@ -246,7 +249,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                                 {
                                     if (dateTimeNegCount == 1)
                                     {
-                                        labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = item.Key };
+                                        LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = item.Key };
                                         countPatient++;
                                         labPatientList.Add(labPatient);
                                         newPosTimeframe = true;
@@ -258,9 +261,21 @@ namespace SmICSCoreLib.Factories.NUMNode
                                     dateTimeNegCount = 0;
                                     if (newPosTimeframe == true)
                                     {
-                                        labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = item.Key, Endtime = null };
-                                        currentcountPatient++;
-                                        labPatientList.Add(labPatient);
+                                        episodeOfCareParameter = new EpsiodeOfCareParameter { PatientID = pat.PatientID, CaseID = pat.FallID };
+                                        List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter));
+                                        List<EpisodeOfCareModel> admission = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParameter));
+                                        if (discharge is not null && admission is not null)
+                                        {
+                                            LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = item.Key, Endtime = discharge.First().Ende };
+                                            countPatient++;
+                                            labPatientList.Add(labPatient);
+                                        }
+                                        else if (admission is not null)
+                                        {
+                                            LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = item.Key, Endtime = null };
+                                            currentcountPatient++;
+                                            labPatientList.Add(labPatient);
+                                        }
                                         newPosTimeframe = false;
                                     }
                                 }
@@ -269,7 +284,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                         }
                         else
                         {
-                            labPatient = new LabPatientModel { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
+                            LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
                             currentcountPatient++;
                             labPatientList.Add(labPatient);
                         }  
@@ -389,18 +404,21 @@ namespace SmICSCoreLib.Factories.NUMNode
                         }
 
                         countContacts = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetContactsCount(labPatient, stay));
-                        foreach (NUMNodeCountModel count in countContacts)
+                        if(countContacts is not null)
                         {
-                            if(labPatient.Endtime == DateTime.Today)
+                            foreach (NUMNodeCountModel count in countContacts)
                             {
-                                currentnumberOfContacts += count.Count;
+                                if (labPatient.Endtime == DateTime.Today)
+                                {
+                                    currentnumberOfContacts += count.Count;
+                                }
+                                else
+                                {
+                                    numberOfContacts += count.Count;
+                                }
+                                labPatient.CountContacts += count.Count;
                             }
-                            else
-                            {
-                                numberOfContacts += count.Count;
-                            }
-                            labPatient.CountContacts += count.Count;
-                        }
+                        }                       
                     }
                 }else
                 {
