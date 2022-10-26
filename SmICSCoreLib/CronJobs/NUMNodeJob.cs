@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Quartz;
@@ -9,8 +10,8 @@ namespace SmICSCoreLib.CronJobs
     [DisallowConcurrentExecution]
     public class NUMNodeJob : IJob
     {
-        private INUMNodeFactory _listFac;
-        private readonly string path = @"../SmICSWebApp/Resources/NUMNode.json";
+        private readonly INUMNodeFactory _listFac;
+        private readonly string path = @"../SmICSWebApp/Resources/NUMNode_1_" + DateTime.Today.ToString("yyyy_mm_dd") + ".json";
 
         public NUMNodeJob(INUMNodeFactory listFac)
         {

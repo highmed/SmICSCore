@@ -17,13 +17,11 @@ namespace SmICSCoreLib.Factories.NUMNode
     public class NUMNodeFactory : INUMNodeFactory
     {
         private NUMNodeModel NUMNodeList;
-        private List<NUMNodeModel> dataAggregationStorage;
         private LabPatientModel labPatient;
         private List<LabPatientModel> labPatientList;
         private List<LabDataReceiveModel> receiveLabDataListpositiv;
         private List<LabDataReceiveModel> receiveLabDataListnegativ;
         private List<NUMNodeCountModel> countStays;
-        private List<NUMNodeCountModel> countContacts;
         private EpsiodeOfCareParameter episodeOfCareParameter;
 
         private double averageNumberOfStays;
@@ -97,7 +95,6 @@ namespace SmICSCoreLib.Factories.NUMNode
         private void InitializeGlobalVariables()
         {
             NUMNodeList = new NUMNodeModel();
-            dataAggregationStorage = new List<NUMNodeModel>();
             receiveLabDataListnegativ = new List<LabDataReceiveModel>();
             countStays = new List<NUMNodeCountModel>();
             labPatient = new LabPatientModel();
@@ -125,69 +122,40 @@ namespace SmICSCoreLib.Factories.NUMNode
                 }
 
                 SaveStaticData();
+                List<string> itemNames = new() { "current.patientstays", "current.patientmaybenoscases", "current.patientnoscases", "current.patientcontacts" };
+                List<double> averageList = new() { averageNumberOfStays, averageNumberOfMaybeNosCases, averageNumberOfNosCases, averageNumberOfContacts };
+                List<double> medianList = new() { medianNumberOfStays, medianNumberOfMaybeNosCases, medianNumberOfNosCases, medianNumberOfContacts };
+                List<double> underquartilList = new() { underQuartilNumberOfStays, underQuartilNumberOfMaybeNosCases, underQuartilNumberOfNosCases, underQuartilNumberOfContacts };
+                List<double> upperquartilList = new() { upperQuartilNumberOfStays, upperQuartilNumberOfMaybeNosCases, upperQuartilNumberOfNosCases, upperQuartilNumberOfContacts };
+                List<double> maxList = new() { labPatientList.Max(a => a.CountStays), labPatientList.Max(a => a.CountMaybeNosCases), labPatientList.Max(a => a.CountNosCases), labPatientList.Max(a => a.CountContacts) };
+                List<double> minList = new() { labPatientList.Min(a => a.CountStays), labPatientList.Min(a => a.CountMaybeNosCases), labPatientList.Min(a => a.CountNosCases), labPatientList.Min(a => a.CountContacts) };
 
-                NUMNodeList = new NUMNodeModel() {
-                    Provider = "MHH",
-                    CDDV = "0.3.0",
-                    Timestamp = DateTime.Now,
-                    Author = "SmICS",
-                    Dataitems = new List<NUMNodeDataItems>(){
-                        new NUMNodeDataItems(){
-                            Itemname = "current.patientstays",
-                            Itemtype = "aggregated",
-                            Data = new NUMNodeData(){
-                                average = averageNumberOfStays,
-                                median = medianNumberOfStays,
-                                underquartil = underQuartilNumberOfStays,
-                                upperquartil = upperQuartilNumberOfStays,
-                                max = labPatientList.Max(a => a.CountStays),
-                                min = labPatientList.Min(a => a.CountStays)
-                            }
-                        },
-                        new NUMNodeDataItems()
-                        {
-                            Itemname = "current.patientmaybenoscases",
-                            Itemtype = "aggregated",
-                            Data = new NUMNodeData(){
-                                average = averageNumberOfMaybeNosCases,
-                                median = medianNumberOfMaybeNosCases,
-                                underquartil = underQuartilNumberOfMaybeNosCases,
-                                upperquartil = upperQuartilNumberOfMaybeNosCases,
-                                max = labPatientList.Max(a => a.CountMaybeNosCases),
-                                min = labPatientList.Min(a => a.CountMaybeNosCases)
-                            }
-                        },
-                        new NUMNodeDataItems()
-                        {
-                            Itemname = "current.patientnoscases",
-                            Itemtype = "aggregated",
-                            Data = new NUMNodeData(){
-                                average = averageNumberOfNosCases,
-                                median = medianNumberOfNosCases,
-                                underquartil = underQuartilNumberOfNosCases,
-                                upperquartil = upperQuartilNumberOfNosCases,
-                                max = labPatientList.Max(a => a.CountNosCases),
-                                min = labPatientList.Min(a => a.CountNosCases)
-                            }
-                        },
-                        new NUMNodeDataItems()
-                        {
-                            Itemname = "current.patientcontacts",
-                            Itemtype = "aggregated",
-                            Data = new NUMNodeData(){
-                                average = averageNumberOfContacts,
-                                median = medianNumberOfContacts,
-                                underquartil = underQuartilNumberOfContacts,
-                                upperquartil = upperQuartilNumberOfContacts,
-                                max = labPatientList.Max(a => a.CountContacts),
-                                min = labPatientList.Min(a => a.CountContacts)
+                for (int i = 0; i < itemNames.Count; i++)
+                {
+                    NUMNodeList = new NUMNodeModel()
+                    {
+                        Provider = "MHH",
+                        CDDV = "0.3.0",
+                        Timestamp = DateTime.Now,
+                        Author = "SmICS",
+                        Dataitems = new List<NUMNodeDataItems>(){
+                            new NUMNodeDataItems(){
+                                Itemname = itemNames[i],
+                                Itemtype = "aggregated",
+                                Data = new NUMNodeData(){
+                                    average = averageList[i],
+                                    median = medianList[i],
+                                    underquartil = underquartilList[i],
+                                    upperquartil = upperquartilList[i],
+                                    max = maxList[i],
+                                    min = minList[i]
+                                }
                             }
                         }
-                    }
-                };
-                dataAggregationStorage.Add(NUMNodeList);
+                    };
 
-                JSONFileStream.JSONWriter.Write(dataAggregationStorage, path, "NUMNode");
+                    JSONFileStream.JSONWriter.Write(NUMNodeList, path, "NUMNode_" + i + "_R" + DateTime.Today.ToString("yyyy_mm_dd"));
+                }
             }
             catch (Exception e)
             {
@@ -396,33 +364,82 @@ namespace SmICSCoreLib.Factories.NUMNode
                 List<WardParameter> patStay = RestDataAccess.AQLQuery<WardParameter>(GetStays(labPatient));
                 if(patStay is not null)
                 {
-                    foreach (var stay in patStay)
+                    List<WardParameter> distinctList = new();
+                    foreach(var pat in patStay)
                     {
-                        if (stay.End == DateTime.Now.AddYears(-10))
+                        if (!distinctList.Contains(pat))
                         {
-                            stay.End = DateTime.Today;
+                            distinctList.Add(pat);
                         }
-
-                        countContacts = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetContactsCount(labPatient, stay));
-                        if(countContacts is not null)
-                        {
-                            foreach (NUMNodeCountModel count in countContacts)
-                            {
-                                if (labPatient.Endtime == DateTime.Today)
-                                {
-                                    currentnumberOfContacts += count.Count;
-                                }
-                                else
-                                {
-                                    numberOfContacts += count.Count;
-                                }
-                                labPatient.CountContacts += count.Count;
-                            }
-                        }                       
                     }
-                }else
-                {
-                    _logger.LogWarning("No patient movements has been found.");
+                    List<WardParameter> sortedList = distinctList.OrderBy(p => p.Start).ToList();
+
+                    List<LabPatientModel> patListStationary = RestDataAccess.AQLQuery<LabPatientModel>(GetStationaryPatientList(sortedList.First(), sortedList.Last()));
+                    List<LabPatientModel> distinctListStationary = new();
+
+                    if (patListStationary is not null && sortedList is not null)
+                    {
+                        foreach (var pat in patListStationary)
+                        {
+                            if (!distinctListStationary.Contains(pat))
+                            {
+                                distinctListStationary.Add(pat);
+                            }
+                            if (pat.PatientID != labPatient.PatientID && distinctListStationary.Contains(pat))
+                            {
+                                foreach (var labPat in sortedList)
+                                {
+                                    pat.Starttime = labPat.Start;
+                                    pat.Endtime = labPat.End;
+                                    if (pat.Endtime is null)
+                                    {
+                                        pat.Endtime = DateTime.Today;
+                                    }
+                                    List<WardParameter> contactStay = RestDataAccess.AQLQuery<WardParameter>(GetStays(pat));
+                                    List<WardParameter> distinctContact = new();
+
+                                    if (contactStay is not null)
+                                    {
+                                        foreach (var contact in contactStay)
+                                        {
+                                            if (!distinctContact.Contains(contact) && contact.PatientID != labPatient.PatientID)
+                                            {
+                                                distinctContact.Add(contact);
+                                            }
+                                            if (contact.Ward == labPat.Ward && distinctContact.Contains(contact))
+                                            {
+                                                if (pat.Endtime == DateTime.Today)
+                                                {
+                                                    currentnumberOfContacts++;
+                                                }
+                                                else
+                                                {
+                                                    numberOfContacts++;
+                                                }
+                                                labPatient.CountContacts++;
+                                            }
+                                            else if (contact.DepartementID is not null
+                                                && contact.DepartementID == labPat.DepartementID
+                                                && distinctContact.Contains(contact)
+                                                && contact.Ward is null)
+                                            {
+                                                if (pat.Endtime == DateTime.Today)
+                                                {
+                                                    currentnumberOfContacts++;
+                                                }
+                                                else
+                                                {
+                                                    numberOfContacts++;
+                                                }
+                                                labPatient.CountContacts++;
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -446,30 +463,6 @@ namespace SmICSCoreLib.Factories.NUMNode
             JSONFileStream.JSONWriter.Write(saveData, path, "NUMNodeSave");
         }
 
-        private AQLQuery GetContactsCount(LabPatientModel labpatient, WardParameter patStay)
-        {
-            AQLQuery aql = new()
-            {
-                Name = "GetContactsCount",
-                Query = $@"SELECT COUNT(Distinct k/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value) AS Count
-                        FROM EHR e
-                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
-                        CONTAINS (CLUSTER k[openEHR-EHR-CLUSTER.case_identification.v0] 
-                        AND ADMIN_ENTRY s[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0] 
-                        CONTAINS (CLUSTER y[openEHR-EHR-CLUSTER.location.v1] 
-                        AND CLUSTER l[openEHR-EHR-CLUSTER.organization.v0])) 
-                        WHERE c/name/value = 'Patientenaufenthalt'
-                        AND (s/data[at0001]/items[at0004]/value/value <= '{patStay.End.ToString("yyyy-MM-dd")}' 
-                        AND s/data[at0001]/items[at0005]/value/value >='{patStay.Start.ToString("yyyy-MM-dd")}') 
-                        AND NOT e/ehr_status/subject/external_ref/id/value = '{labpatient.PatientID}'
-                        AND (y/items[at0027]/value = '{patStay.Ward}' 
-                        OR NOT EXISTS y/items[at0027]/value 
-                        OR (l/items[at0024,'Fachabteilungsschlüssel']/value/defining_code/code_string = '{patStay.DepartementID}'
-                        OR NOT EXISTS l/items[at0024,'Fachabteilungsschlüssel']/value/defining_code/code_string))"
-            };
-            return aql;
-        }
-
         private AQLQuery GetStays(LabPatientModel labpatient)
         {
             AQLQuery aql = new()
@@ -487,8 +480,9 @@ namespace SmICSCoreLib.Factories.NUMNode
                                 AND CLUSTER l[openEHR-EHR-CLUSTER.organization.v0])) 
                                 WHERE c/name/value = 'Patientenaufenthalt'
                                 AND k/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value = '{labpatient.CaseID}'
+                                AND e/ehr_status/subject/external_ref/id/value = '{labpatient.PatientID}'
                                 AND s/data[at0001]/items[at0004]/value/value <= '{labpatient.Endtime?.ToString("yyyy-MM-dd")}' 
-                                AND (s/data[at0001]/items[at0005]/value/value >='{labpatient.Starttime.ToString("yyyy-MM-dd")}'
+                                AND (s/data[at0001]/items[at0005]/value/value >='{labpatient.Starttime:yyyy-MM-dd}'
                                 OR NOT EXISTS s/data[at0001]/items[at0005]/value/value)"
             };
             return aql;
@@ -505,8 +499,9 @@ namespace SmICSCoreLib.Factories.NUMNode
                         CONTAINS (CLUSTER g[openEHR-EHR-CLUSTER.case_identification.v0] and ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]) 
                         WHERE c/name/value='Patientenaufenthalt'
                         AND g/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value = '{labpatient.CaseID}'
+                        AND e/ehr_status/subject/external_ref/id/value = '{labpatient.PatientID}'
                         AND a/data[at0001]/items[at0004]/value/value <= '{labpatient.Endtime?.ToString("yyyy-MM-dd")}' 
-                        AND (a/data[at0001]/items[at0005]/value/value >='{labpatient.Starttime.ToString("yyyy-MM-dd")}' 
+                        AND (a/data[at0001]/items[at0005]/value/value >='{labpatient.Starttime:yyyy-MM-dd}' 
                         OR NOT EXISTS a/data[at0001]/items[at0005]/value/value)"
             };
             return aql;
@@ -533,8 +528,8 @@ namespace SmICSCoreLib.Factories.NUMNode
                                 AND d/items[at0001]/name/value='Nachweis'
                                 AND d/items[at0001,'Nachweis']/value/defining_code/code_string = '260373001'
                                 AND d/items[at0024]/value/defining_code/code_string = '{pathogen}'
-                                AND m/items[at0015]/value/value>='{timespan.Starttime.ToString("yyyy-MM-dd")}' 
-                                AND m/items[at0015]/value/value<'{timespan.Endtime.ToString("yyyy-MM-dd")}'"
+                                AND m/items[at0015]/value/value>='{timespan.Starttime:yyyy-MM-dd}' 
+                                AND m/items[at0015]/value/value<'{timespan.Endtime:yyyy-MM-dd}'"
             };
             return aql;
         }
@@ -560,12 +555,29 @@ namespace SmICSCoreLib.Factories.NUMNode
                                 AND d/items[at0001]/name/value='Nachweis'
                                 AND d/items[at0001,'Nachweis']/value/defining_code/code_string = '260415000'
                                 AND d/items[at0024]/value/defining_code/code_string = '{pathogen}'
-                                AND m/items[at0015]/value/value>='{timespan.Starttime.ToString("yyyy-MM-dd")}' 
-                                AND m/items[at0015]/value/value<'{timespan.Endtime.ToString("yyyy-MM-dd")}'
+                                AND m/items[at0015]/value/value>='{timespan.Starttime:yyyy-MM-dd}' 
+                                AND m/items[at0015]/value/value<'{timespan.Endtime:yyyy-MM-dd}'
                                 AND  i/items[at0001]/value/value = '{lab.FallID}'"
             };
             return aql;
         }
 
+        private AQLQuery GetStationaryPatientList(WardParameter stay_first, WardParameter stay_last)
+        {
+            AQLQuery aql = new()
+            {
+                Name = "GetStationaryPatientList",
+                Query = $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
+                        c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value AS CaseID
+                        FROM EHR e
+                        CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1]
+                        CONTAINS (ADMIN_ENTRY f[openEHR-EHR-ADMIN_ENTRY.admission.v0] and ADMIN_ENTRY h[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0]) 
+                        WHERE c/name/value='Stationärer Versorgungsfall'
+                        AND f/data[at0001]/items[at0071]/value/value >= '{stay_first.Start:yyyy-MM-dd}' 
+                        AND (h/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value <= '{stay_last.End:yyyy-MM-dd}'
+                        OR NOT EXISTS h/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value)"
+            };
+            return aql;
+        }
     }
 }
