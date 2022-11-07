@@ -15,7 +15,6 @@ using SmICSCoreLib.Factories.Employees.PersInfoInfecCtrl;
 using SmICSCoreLib.Factories.Employees.ContactTracing;
 using SmICSCoreLib.Factories.Employees.PersonData;
 using SmICSCoreLib.Factories.InfectionSituation;
-using SmICSCoreLib.Factories.RKIConfig;
 using SmICSCoreLib.Factories.OutbreakDetection;
 using SmICSCoreLib.OutbreakDetection;
 using SmICSCoreLib.Factories.PatientInformation.PatientData;
@@ -38,7 +37,7 @@ namespace SmICS
     {
         public static IServiceCollection AddSmICSLibrary(this IServiceCollection services)
         {
-            services.AddSingleton<RestClientConnector>();
+            services.AddSingleton<RestClientConnector>();           
             services.AddSingleton<SmICSCoreLib.REST.IRestDataAccess, RestDataAccess>();
             services.AddSingleton<DapperContext>();
             services.AddSingleton<IDataAccess, DataAccess>();
@@ -47,6 +46,7 @@ namespace SmICS
             services.AddSingleton<IMenuListFactory, MenuListFactory>();
 
             services.AddSingleton<INUMNodeFactory, NUMNodeFactory>();
+            services.AddSingleton<DashboardRestClientConnector>();
 
             services.AddTransient<IPatientMovementFactory, PatientMovementFactory>();
             services.AddTransient<IViroLabDataFactory, ViroLabDataFactory>();

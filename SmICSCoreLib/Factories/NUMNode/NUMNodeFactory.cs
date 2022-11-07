@@ -58,7 +58,7 @@ namespace SmICSCoreLib.Factories.NUMNode
         private NUMNodeSaveModel saveData;
 
         private readonly string pathogen = "94500-6";
-        private readonly string path = @"../SmICSWebApp/Resources/";
+        private readonly string path = @"../SmICSWebApp/Resources/NUMNode/";
 
         public IRestDataAccess RestDataAccess { get; set; }
         private readonly ILogger<NUMNodeFactory> _logger;
@@ -80,13 +80,19 @@ namespace SmICSCoreLib.Factories.NUMNode
         public void RegularDataEntry()
         {
             InitializeGlobalVariables();
-            saveData = JSONFileStream.JSONReader<NUMNodeSaveModel>.ReadObject(path + "NumNodeSave.json");
+            try
+            {
+                saveData = JSONFileStream.JSONReader<NUMNodeSaveModel>.ReadObject(path + "NumNodeSave.json");
 
-            countPatient = saveData.CountPatient;
-            numberOfStays = saveData.NumberOfStays;
-            numberOfNosCases = saveData.NumberOfNosCases;
-            numberOfMaybeNosCases = saveData.NumberOfMaybeNosCases;
-            numberOfContacts = saveData.NumberOfContacts;
+                countPatient = saveData.CountPatient;
+                numberOfStays = saveData.NumberOfStays;
+                numberOfNosCases = saveData.NumberOfNosCases;
+                numberOfMaybeNosCases = saveData.NumberOfMaybeNosCases;
+                numberOfContacts = saveData.NumberOfContacts;
+            }catch (Exception e)
+            {
+                _logger.LogWarning("Cannot read saved data :" + e);
+            }
 
             TimespanParameter timespan = new() { Starttime = DateTime.Now.AddDays(-7), Endtime = DateTime.Now };
             _ = Process(timespan);
@@ -165,275 +171,303 @@ namespace SmICSCoreLib.Factories.NUMNode
 
         private async Task GetLabPatientList(TimespanParameter timespan)
         {
-            receiveLabDataListpositiv = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborPositivData(timespan, pathogen));
-            if(receiveLabDataListpositiv is not null)
+            try
             {
-                foreach (var pat in receiveLabDataListpositiv)
+                receiveLabDataListpositiv = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborPositivData(timespan, pathogen));
+                if (receiveLabDataListpositiv is not null)
                 {
-                    if (!labPatientList.Select(x => x.CaseID).Contains(pat.FallID))
+                    foreach (var pat in receiveLabDataListpositiv)
                     {
-                        receiveLabDataListnegativ = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborNegativData(timespan, pathogen, pat));
-
-                        if (receiveLabDataListnegativ is null || receiveLabDataListnegativ.Count < 2)
+                        if (!labPatientList.Select(x => x.CaseID).Contains(pat.FallID))
                         {
-                            episodeOfCareParameter = new EpsiodeOfCareParameter { PatientID = pat.PatientID, CaseID = pat.FallID };
-                            List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter));
-                            List<EpisodeOfCareModel> admission = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParameter));
-                            if (discharge is not null && admission is not null)
+                            receiveLabDataListnegativ = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborNegativData(timespan, pathogen, pat));
+
+                            if (receiveLabDataListnegativ is null || receiveLabDataListnegativ.Count < 2)
                             {
-                                LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = discharge.First().Ende };
-                                countPatient++;
-                                labPatientList.Add(labPatient);
+                                episodeOfCareParameter = new EpsiodeOfCareParameter { PatientID = pat.PatientID, CaseID = pat.FallID };
+                                List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter));
+                                List<EpisodeOfCareModel> admission = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParameter));
+                                if (discharge is not null && admission is not null)
+                                {
+                                    LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = discharge.First().Ende };
+                                    countPatient++;
+                                    labPatientList.Add(labPatient);
+                                }
+                                else if (admission is not null)
+                                {
+                                    LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
+                                    currentcountPatient++;
+                                    labPatientList.Add(labPatient);
+                                }
                             }
-                            else if (admission is not null)
+                            else if (receiveLabDataListnegativ is not null && receiveLabDataListnegativ.Count > 1)
+                            {
+                                List<DateTime> posdates = receiveLabDataListpositiv.Where(x => x.FallID == pat.FallID).Select(a => a.Befunddatum).OrderBy(b => b.Date).ToList();
+                                List<DateTime> negdates = receiveLabDataListnegativ.Select(x => x.Befunddatum).OrderBy(a => a.Date).ToList();
+                                SortedList<DateTime, bool> alldates = new();
+
+                                foreach (var item in posdates)
+                                {
+                                    if (!alldates.ContainsKey(item))
+                                        alldates.Add(item, true);
+                                }
+                                foreach (var item in negdates)
+                                {
+                                    if (!alldates.ContainsKey(item))
+                                        alldates.Add(item, false);
+                                }
+                                int dateTimeNegCount = 0;
+                                bool newPosTimeframe = false;
+
+                                foreach (var item in alldates)
+                                {
+                                    if (item.Value == false)
+                                    {
+                                        if (dateTimeNegCount == 1)
+                                        {
+                                            LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = item.Key };
+                                            countPatient++;
+                                            labPatientList.Add(labPatient);
+                                            newPosTimeframe = true;
+                                        }
+                                        dateTimeNegCount++;
+                                    }
+                                    else
+                                    {
+                                        dateTimeNegCount = 0;
+                                        if (newPosTimeframe == true)
+                                        {
+                                            episodeOfCareParameter = new EpsiodeOfCareParameter { PatientID = pat.PatientID, CaseID = pat.FallID };
+                                            List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter));
+                                            List<EpisodeOfCareModel> admission = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParameter));
+                                            if (discharge is not null && admission is not null)
+                                            {
+                                                LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = item.Key, Endtime = discharge.First().Ende };
+                                                countPatient++;
+                                                labPatientList.Add(labPatient);
+                                            }
+                                            else if (admission is not null)
+                                            {
+                                                LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = item.Key, Endtime = null };
+                                                currentcountPatient++;
+                                                labPatientList.Add(labPatient);
+                                            }
+                                            newPosTimeframe = false;
+                                        }
+                                    }
+                                }
+
+                            }
+                            else
                             {
                                 LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
                                 currentcountPatient++;
                                 labPatientList.Add(labPatient);
                             }
-                        }
-                        else if (receiveLabDataListnegativ is not null && receiveLabDataListnegativ.Count > 1)
-                        {
-                            List<DateTime> posdates = receiveLabDataListpositiv.Where(x => x.FallID == pat.FallID).Select(a => a.Befunddatum).OrderBy(b => b.Date).ToList();
-                            List<DateTime> negdates = receiveLabDataListnegativ.Select(x => x.Befunddatum).OrderBy(a => a.Date).ToList();
-                            SortedList<DateTime, bool> alldates = new();
-
-                            foreach (var item in posdates)
-                            {
-                                if(!alldates.ContainsKey(item))
-                                    alldates.Add(item, true);
-                            }
-                            foreach (var item in negdates)
-                            {
-                                if (!alldates.ContainsKey(item))
-                                    alldates.Add(item, false);
-                            }
-                            int dateTimeNegCount = 0;
-                            bool newPosTimeframe = false;
-
-                            foreach (var item in alldates)
-                            {
-                                if (item.Value == false)
-                                {
-                                    if (dateTimeNegCount == 1)
-                                    {
-                                        LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = item.Key };
-                                        countPatient++;
-                                        labPatientList.Add(labPatient);
-                                        newPosTimeframe = true;
-                                    }
-                                    dateTimeNegCount++;
-                                }
-                                else
-                                {
-                                    dateTimeNegCount = 0;
-                                    if (newPosTimeframe == true)
-                                    {
-                                        episodeOfCareParameter = new EpsiodeOfCareParameter { PatientID = pat.PatientID, CaseID = pat.FallID };
-                                        List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter));
-                                        List<EpisodeOfCareModel> admission = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParameter));
-                                        if (discharge is not null && admission is not null)
-                                        {
-                                            LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = item.Key, Endtime = discharge.First().Ende };
-                                            countPatient++;
-                                            labPatientList.Add(labPatient);
-                                        }
-                                        else if (admission is not null)
-                                        {
-                                            LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = item.Key, Endtime = null };
-                                            currentcountPatient++;
-                                            labPatientList.Add(labPatient);
-                                        }
-                                        newPosTimeframe = false;
-                                    }
-                                }
-                            }
 
                         }
-                        else
-                        {
-                            LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = null };
-                            currentcountPatient++;
-                            labPatientList.Add(labPatient);
-                        }  
-                        
                     }
-                }  
+                }
+                else
+                {
+                    _logger.LogWarning("No positiv patient data has been found.");
+                }
+                await Task.CompletedTask;
             }
-            else
+            catch (Exception e)
             {
-                _logger.LogWarning("No positiv patient data has been found.");
-            }
-            await Task.CompletedTask;
+                _logger.LogError("Cannot get positiv patient list :" + e);
+            }          
         }
 
         private async Task GetNumberOfStays()
         {
-            foreach(var labPatient in labPatientList)
+            try
             {
-                if(labPatient.Endtime is null)
+                foreach (var labPatient in labPatientList)
                 {
-                    labPatient.Endtime = DateTime.Today;
-                }
-                countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetStaysCount(labPatient));
-                foreach (NUMNodeCountModel count in countStays)
-                {
-                    if(labPatient.Endtime == DateTime.Today)
+                    if (labPatient.Endtime is null)
                     {
-                        currentnumberOfStays += count.Count;
-                    }else
-                    {
-                        numberOfStays += count.Count;
+                        labPatient.Endtime = DateTime.Today;
                     }
-                    labPatient.CountStays += count.Count;  
+                    countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetStaysCount(labPatient));
+                    foreach (NUMNodeCountModel count in countStays)
+                    {
+                        if (labPatient.Endtime == DateTime.Today)
+                        {
+                            currentnumberOfStays += count.Count;
+                        }
+                        else
+                        {
+                            numberOfStays += count.Count;
+                        }
+                        labPatient.CountStays += count.Count;
+                    }
                 }
+
+                averageNumberOfStays = NUMNodeStatistics.GetAverage(numberOfStays + currentnumberOfStays, countPatient + currentcountPatient);
+                (medianNumberOfStays, underQuartilNumberOfStays, upperQuartilNumberOfStays) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "stay");
+
+                await Task.CompletedTask;
             }
-
-            averageNumberOfStays = NUMNodeStatistics.GetAverage(numberOfStays + currentnumberOfStays, countPatient + currentcountPatient);
-            (medianNumberOfStays, underQuartilNumberOfStays, upperQuartilNumberOfStays) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "stay");
-
-            await Task.CompletedTask;
+            catch (Exception e)
+            {
+                _logger.LogError("Cannot get aggregated dataset for patient stays :" + e);
+                await Task.CompletedTask;
+            }         
         }
 
         private async Task GetNumberOfNosCases()
         {
-            List<string> patlist = new();
-            List<string> currentpatlist = new();
-
-            if (labPatient.Endtime is null)
+            try
             {
-                labPatient.Endtime = DateTime.Today;
-            }
+                List<string> patlist = new();
+                List<string> currentpatlist = new();
 
-            foreach (var labPatient in labPatientList)
-            {
-                if(labPatient.Endtime == DateTime.Today)
-                {
-                    currentpatlist.Add(labPatient.PatientID);
-                }
-                else
-                {
-                    patlist.Add(labPatient.PatientID);
-                }
-            }
-
-            PatientListParameter patList = new() { patientList = patlist };
-            PatientListParameter currentpatList = new() { patientList = currentpatlist };
-            List<PatientModel> list = _infecFac.Process(patList);
-            List<PatientModel> currentlist = _infecFac.Process(currentpatList);
-
-            if (list is not null & currentlist is not null)
-            {
-                numberOfMaybeNosCases = list.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-                numberOfNosCases = list.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-                currentnumberOfMaybeNosCases = currentlist.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-                currentnumberOfNosCases = currentlist.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-
-                foreach(LabPatientModel labPatient in labPatientList)
-                {
-                    labPatient.CountMaybeNosCases = (list.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count())
-                        + (currentlist.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count());
-                    labPatient.CountNosCases = (list.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count())
-                        + (currentlist.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count());
-                }
-            }
-            else
-            {
-                numberOfMaybeNosCases = 0;
-                numberOfNosCases = 0;
-                currentnumberOfMaybeNosCases = 0;
-                currentnumberOfNosCases = 0;
-            }
-
-            averageNumberOfMaybeNosCases = NUMNodeStatistics.GetAverage(numberOfMaybeNosCases + currentnumberOfMaybeNosCases, countPatient + currentcountPatient);
-            averageNumberOfNosCases = NUMNodeStatistics.GetAverage(numberOfNosCases + currentnumberOfNosCases, countPatient + currentcountPatient);
-            (medianNumberOfMaybeNosCases, underQuartilNumberOfMaybeNosCases, upperQuartilNumberOfMaybeNosCases) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "maybeNosCase");
-            (medianNumberOfNosCases, underQuartilNumberOfNosCases, upperQuartilNumberOfNosCases) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "nosCase");
-
-            await Task.CompletedTask;
-        }
-
-        private async Task GetNumberOfContacts()
-        {
-            foreach (var labPatient in labPatientList)
-            {
                 if (labPatient.Endtime is null)
                 {
                     labPatient.Endtime = DateTime.Today;
                 }
-                List<WardParameter> patStay = RestDataAccess.AQLQuery<WardParameter>(GetStays(labPatient));
-                if(patStay is not null)
+
+                foreach (var labPatient in labPatientList)
                 {
-                    List<WardParameter> distinctList = new();
-                    foreach(var pat in patStay)
+                    if (labPatient.Endtime == DateTime.Today)
                     {
-                        if (!distinctList.Contains(pat))
-                        {
-                            distinctList.Add(pat);
-                        }
+                        currentpatlist.Add(labPatient.PatientID);
                     }
-                    List<WardParameter> sortedList = distinctList.OrderBy(p => p.Start).ToList();
-
-                    List<LabPatientModel> patListStationary = RestDataAccess.AQLQuery<LabPatientModel>(GetStationaryPatientList(sortedList.First(), sortedList.Last()));
-                    List<LabPatientModel> distinctListStationary = new();
-
-                    if (patListStationary is not null && sortedList is not null)
+                    else
                     {
-                        foreach (var pat in patListStationary)
+                        patlist.Add(labPatient.PatientID);
+                    }
+                }
+
+                PatientListParameter patList = new() { patientList = patlist };
+                PatientListParameter currentpatList = new() { patientList = currentpatlist };
+                List<PatientModel> list = _infecFac.Process(patList);
+                List<PatientModel> currentlist = _infecFac.Process(currentpatList);
+
+                if (list is not null & currentlist is not null)
+                {
+                    numberOfMaybeNosCases = list.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+                    numberOfNosCases = list.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+                    currentnumberOfMaybeNosCases = currentlist.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+                    currentnumberOfNosCases = currentlist.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+
+                    foreach (LabPatientModel labPatient in labPatientList)
+                    {
+                        labPatient.CountMaybeNosCases = (list.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count())
+                            + (currentlist.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count());
+                        labPatient.CountNosCases = (list.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count())
+                            + (currentlist.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count());
+                    }
+                }
+                else
+                {
+                    numberOfMaybeNosCases = 0;
+                    numberOfNosCases = 0;
+                    currentnumberOfMaybeNosCases = 0;
+                    currentnumberOfNosCases = 0;
+                }
+
+                averageNumberOfMaybeNosCases = NUMNodeStatistics.GetAverage(numberOfMaybeNosCases + currentnumberOfMaybeNosCases, countPatient + currentcountPatient);
+                averageNumberOfNosCases = NUMNodeStatistics.GetAverage(numberOfNosCases + currentnumberOfNosCases, countPatient + currentcountPatient);
+                (medianNumberOfMaybeNosCases, underQuartilNumberOfMaybeNosCases, upperQuartilNumberOfMaybeNosCases) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "maybeNosCase");
+                (medianNumberOfNosCases, underQuartilNumberOfNosCases, upperQuartilNumberOfNosCases) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "nosCase");
+
+                await Task.CompletedTask;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Cannot get aggregated dataset for nosokomial infections :" + e);
+                await Task.CompletedTask;
+            }
+            
+        }
+
+        private async Task GetNumberOfContacts()
+        {
+            try
+            {
+                foreach (var labPatient in labPatientList)
+                {
+                    if (labPatient.Endtime is null)
+                    {
+                        labPatient.Endtime = DateTime.Today;
+                    }
+                    List<WardParameter> patStay = RestDataAccess.AQLQuery<WardParameter>(GetStays(labPatient));
+                    if (patStay is not null)
+                    {
+                        List<WardParameter> distinctList = new();
+                        foreach (var pat in patStay)
                         {
-                            if (!distinctListStationary.Contains(pat))
+                            if (!distinctList.Contains(pat))
                             {
-                                distinctListStationary.Add(pat);
+                                distinctList.Add(pat);
                             }
-                            if (pat.PatientID != labPatient.PatientID && distinctListStationary.Contains(pat))
+                        }
+                        List<WardParameter> sortedList = distinctList.OrderBy(p => p.Start).ToList();
+
+                        List<LabPatientModel> patListStationary = RestDataAccess.AQLQuery<LabPatientModel>(GetStationaryPatientList(sortedList.First(), sortedList.Last()));
+                        List<LabPatientModel> distinctListStationary = new();
+
+                        if (patListStationary is not null && sortedList is not null)
+                        {
+                            foreach (var pat in patListStationary)
                             {
-                                foreach (var labPat in sortedList)
+                                if (!distinctListStationary.Contains(pat))
                                 {
-                                    pat.Starttime = labPat.Start;
-                                    pat.Endtime = labPat.End;
-                                    if (pat.Endtime is null)
+                                    distinctListStationary.Add(pat);
+                                }
+                                if (pat.PatientID != labPatient.PatientID && distinctListStationary.Contains(pat))
+                                {
+                                    foreach (var labPat in sortedList)
                                     {
-                                        pat.Endtime = DateTime.Today;
-                                    }
-                                    List<WardParameter> contactStay = RestDataAccess.AQLQuery<WardParameter>(GetStays(pat));
-                                    List<WardParameter> distinctContact = new();
-
-                                    if (contactStay is not null)
-                                    {
-                                        foreach (var contact in contactStay)
+                                        pat.Starttime = labPat.Start;
+                                        pat.Endtime = labPat.End;
+                                        if (pat.Endtime is null)
                                         {
-                                            if (!distinctContact.Contains(contact) && contact.PatientID != labPatient.PatientID)
-                                            {
-                                                distinctContact.Add(contact);
-                                            }
-                                            if (contact.Ward == labPat.Ward && distinctContact.Contains(contact))
-                                            {
-                                                if (pat.Endtime == DateTime.Today)
-                                                {
-                                                    currentnumberOfContacts++;
-                                                }
-                                                else
-                                                {
-                                                    numberOfContacts++;
-                                                }
-                                                labPatient.CountContacts++;
-                                            }
-                                            else if (contact.DepartementID is not null
-                                                && contact.DepartementID == labPat.DepartementID
-                                                && distinctContact.Contains(contact)
-                                                && contact.Ward is null)
-                                            {
-                                                if (pat.Endtime == DateTime.Today)
-                                                {
-                                                    currentnumberOfContacts++;
-                                                }
-                                                else
-                                                {
-                                                    numberOfContacts++;
-                                                }
-                                                labPatient.CountContacts++;
-                                            }
+                                            pat.Endtime = DateTime.Today;
+                                        }
+                                        List<WardParameter> contactStay = RestDataAccess.AQLQuery<WardParameter>(GetStays(pat));
+                                        List<WardParameter> distinctContact = new();
 
+                                        if (contactStay is not null)
+                                        {
+                                            foreach (var contact in contactStay)
+                                            {
+                                                if (!distinctContact.Contains(contact) && contact.PatientID != labPatient.PatientID)
+                                                {
+                                                    distinctContact.Add(contact);
+                                                }
+                                                if (contact.Ward == labPat.Ward && distinctContact.Contains(contact))
+                                                {
+                                                    if (pat.Endtime == DateTime.Today)
+                                                    {
+                                                        currentnumberOfContacts++;
+                                                    }
+                                                    else
+                                                    {
+                                                        numberOfContacts++;
+                                                    }
+                                                    labPatient.CountContacts++;
+                                                }
+                                                else if (contact.DepartementID is not null
+                                                    && contact.DepartementID == labPat.DepartementID
+                                                    && distinctContact.Contains(contact)
+                                                    && contact.Ward is null)
+                                                {
+                                                    if (pat.Endtime == DateTime.Today)
+                                                    {
+                                                        currentnumberOfContacts++;
+                                                    }
+                                                    else
+                                                    {
+                                                        numberOfContacts++;
+                                                    }
+                                                    labPatient.CountContacts++;
+                                                }
+
+                                            }
                                         }
                                     }
                                 }
@@ -441,26 +475,39 @@ namespace SmICSCoreLib.Factories.NUMNode
                         }
                     }
                 }
+
+                averageNumberOfContacts = NUMNodeStatistics.GetAverage(numberOfContacts + currentnumberOfContacts, countPatient + currentcountPatient);
+                (medianNumberOfContacts, underQuartilNumberOfContacts, upperQuartilNumberOfContacts) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "contact");
+
+                await Task.CompletedTask;
             }
-
-            averageNumberOfContacts = NUMNodeStatistics.GetAverage(numberOfContacts + currentnumberOfContacts, countPatient + currentcountPatient);
-            (medianNumberOfContacts, underQuartilNumberOfContacts, upperQuartilNumberOfContacts) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "contact");
-
-            await Task.CompletedTask;
+            catch (Exception e)
+            {
+                _logger.LogError("Cannot get aggregated dataset for patient contacts :" + e);
+                await Task.CompletedTask;
+            }
+            
         }
 
         private void SaveStaticData()
         {
-            saveData = new NUMNodeSaveModel
+            try
             {
-                CountPatient = countPatient,
-                NumberOfMaybeNosCases = numberOfMaybeNosCases,
-                NumberOfNosCases = numberOfNosCases,
-                NumberOfContacts = numberOfContacts,
-                NumberOfStays = numberOfStays
-            };
+                saveData = new NUMNodeSaveModel
+                {
+                    CountPatient = countPatient,
+                    NumberOfMaybeNosCases = numberOfMaybeNosCases,
+                    NumberOfNosCases = numberOfNosCases,
+                    NumberOfContacts = numberOfContacts,
+                    NumberOfStays = numberOfStays
+                };
 
-            JSONFileStream.JSONWriter.Write(saveData, path, "NUMNodeSave");
+                JSONFileStream.JSONWriter.Write(saveData, path, "NUMNodeSave");
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("Data cannot be saved :" + e);
+            }           
         }
 
         private AQLQuery GetStays(LabPatientModel labpatient)
