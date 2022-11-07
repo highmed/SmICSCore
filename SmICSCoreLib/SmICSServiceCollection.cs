@@ -19,6 +19,7 @@ using SmICSCoreLib.Factories.InfectionSituation;
 using SmICSCoreLib.Factories.RKIConfig;
 using SmICSCoreLib.Factories.OutbreakDetection;
 using SmICSCoreLib.OutbreakDetection;
+using SmICSCoreLib.Factories.NUMNode;
 
 namespace SmICS
 {
@@ -34,6 +35,9 @@ namespace SmICS
             services.AddTransient<IMibiPatientLaborDataFactory, MibiPatientLaborDataFactory>();
             services.AddTransient<ISymptomFactory, SymptomFactory>();
             services.AddTransient<IVaccinationFactory, VaccinationFactory>();
+
+            services.AddSingleton<INUMNodeFactory, NUMNodeFactory>();
+            services.AddSingleton<DashboardRestClientConnector>();
 
             services.AddTransient<IContactNetworkFactory, ContactNetworkFactory>();
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();

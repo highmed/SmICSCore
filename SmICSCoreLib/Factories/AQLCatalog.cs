@@ -383,8 +383,7 @@ namespace SmICSCoreLib.Factories
                                 r/data[at0001]/items[at0013]/value/value as Versorgungsfallgrund 
                                 FROM EHR e 
                                 CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1] 
-                                CONTAINS (ADMIN_ENTRY r[openEHR-EHR-ADMIN_ENTRY.admission.v0] 
-                                CONTAINS (CLUSTER w[openEHR-EHR-CLUSTER.location.v1]) 
+                                CONTAINS (ADMIN_ENTRY r[openEHR-EHR-ADMIN_ENTRY.admission.v0]
                                 AND ADMIN_ENTRY p[openEHR-EHR-ADMIN_ENTRY.discharge_summary.v0])  
                                 WHERE e/ehr_status/subject/external_ref/id/value ='{patientId}' 
                                 AND r/data[at0001]/items[at0071]/value/value < '{datum.Date.AddDays(-3).ToString("yyyy-MM-dd")}' 

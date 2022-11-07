@@ -17,6 +17,7 @@ using Quartz.Impl;
 using SmICSCoreLib.StatistikServices.CronJob;
 using SmICSCoreLib.StatistikServices;
 using SmICSWebApp.Data.OutbreakDetection;
+using SmICSCoreLib.CronJobs;
 
 namespace SmICSWebApp
 {
@@ -63,6 +64,9 @@ namespace SmICSWebApp
             //CronJob UpdateRkidata
             services.AddSingleton<JobUpdateRkidata>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
+
+            services.AddSingleton<NUMNodeJob>();
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(NUMNodeJob), "NumNode", "0 01 00 ? * 0"));
 
             services.AddScoped<OutbreakDetectionService>();
 
