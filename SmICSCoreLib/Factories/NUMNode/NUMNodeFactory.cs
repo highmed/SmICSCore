@@ -10,7 +10,6 @@ using SmICSCoreLib.StatistikDataModels;
 using System.Threading.Tasks;
 using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.Factories.PatientMovement.ReceiveModels;
-using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 
 namespace SmICSCoreLib.Factories.NUMNode
 {
@@ -512,10 +511,7 @@ namespace SmICSCoreLib.Factories.NUMNode
 
         private AQLQuery GetStays(LabPatientModel labpatient)
         {
-            AQLQuery aql = new()
-            {
-                Name = "GetStays",
-                Query = $@"SELECT s/data[at0001]/items[at0004]/value/value AS Start,
+            return new AQLQuery("GetStays", $@"SELECT s/data[at0001]/items[at0004]/value/value AS Start,
                                 s/data[at0001]/items[at0005]/value/value AS End,
                                 y/items[at0027]/value/value AS Ward,
                                 l/items[at0024,'Fachabteilungsschlüssel']/value/defining_code/code_string AS DepartementID
@@ -530,17 +526,12 @@ namespace SmICSCoreLib.Factories.NUMNode
                                 AND e/ehr_status/subject/external_ref/id/value = '{labpatient.PatientID}'
                                 AND s/data[at0001]/items[at0004]/value/value <= '{labpatient.Endtime?.ToString("yyyy-MM-dd")}' 
                                 AND (s/data[at0001]/items[at0005]/value/value >='{labpatient.Starttime:yyyy-MM-dd}'
-                                OR NOT EXISTS s/data[at0001]/items[at0005]/value/value)"
-            };
-            return aql;
+                                OR NOT EXISTS s/data[at0001]/items[at0005]/value/value)");
         }
 
         private AQLQuery GetStaysCount(LabPatientModel labpatient)
         {
-            AQLQuery aql = new()
-            {
-                Name = "GetStaysCount",
-                Query = $@"SELECT COUNT(g/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value) AS Count
+            return new AQLQuery("GetStaysCount", $@"SELECT COUNT(g/items[at0001,'Zugehöriger Versorgungsfall (Kennung)']/value) AS Count
                         FROM EHR e
                         CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.event_summary.v0]
                         CONTAINS (CLUSTER g[openEHR-EHR-CLUSTER.case_identification.v0] and ADMIN_ENTRY a[openEHR-EHR-ADMIN_ENTRY.hospitalization.v0]) 
@@ -549,17 +540,12 @@ namespace SmICSCoreLib.Factories.NUMNode
                         AND e/ehr_status/subject/external_ref/id/value = '{labpatient.PatientID}'
                         AND a/data[at0001]/items[at0004]/value/value <= '{labpatient.Endtime?.ToString("yyyy-MM-dd")}' 
                         AND (a/data[at0001]/items[at0005]/value/value >='{labpatient.Starttime:yyyy-MM-dd}' 
-                        OR NOT EXISTS a/data[at0001]/items[at0005]/value/value)"
-            };
-            return aql;
+                        OR NOT EXISTS a/data[at0001]/items[at0005]/value/value)");
         }
 
         private AQLQuery LaborPositivData(TimespanParameter timespan, string pathogen)
         {
-            AQLQuery aql = new()
-            {
-                Name = "LaborPositivData",
-                Query = $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
+            return new AQLQuery("LaborPositivData", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
                                 i/items[at0001]/value/value as FallID,
                                 d/items[at0001]/value/defining_code/code_string as BefundCode,
                                 d/items[at0024]/value/defining_code/code_string as ProbeID,
@@ -576,17 +562,12 @@ namespace SmICSCoreLib.Factories.NUMNode
                                 AND d/items[at0001,'Nachweis']/value/defining_code/code_string = '260373001'
                                 AND d/items[at0024]/value/defining_code/code_string = '{pathogen}'
                                 AND m/items[at0015]/value/value>='{timespan.Starttime:yyyy-MM-dd}' 
-                                AND m/items[at0015]/value/value<'{timespan.Endtime:yyyy-MM-dd}'"
-            };
-            return aql;
+                                AND m/items[at0015]/value/value<'{timespan.Endtime:yyyy-MM-dd}'");
         }
 
         private AQLQuery LaborNegativData(TimespanParameter timespan, string pathogen, LabDataReceiveModel lab)
         {
-            AQLQuery aql = new()
-            {
-                Name = "LaborNegativData",
-                Query = $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
+            return new AQLQuery("LaborNegativData", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
                                 i/items[at0001]/value/value as FallID,
                                 d/items[at0001]/value/defining_code/code_string as BefundCode,
                                 d/items[at0024]/value/defining_code/code_string as ProbeID,
@@ -604,17 +585,12 @@ namespace SmICSCoreLib.Factories.NUMNode
                                 AND d/items[at0024]/value/defining_code/code_string = '{pathogen}'
                                 AND m/items[at0015]/value/value>='{timespan.Starttime:yyyy-MM-dd}' 
                                 AND m/items[at0015]/value/value<'{timespan.Endtime:yyyy-MM-dd}'
-                                AND  i/items[at0001]/value/value = '{lab.FallID}'"
-            };
-            return aql;
+                                AND  i/items[at0001]/value/value = '{lab.FallID}'");
         }
 
         private AQLQuery GetStationaryPatientList(WardParameter stay_first, WardParameter stay_last)
         {
-            AQLQuery aql = new()
-            {
-                Name = "GetStationaryPatientList",
-                Query = $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
+            return new AQLQuery("GetStationaryPatientList", $@"SELECT e/ehr_status/subject/external_ref/id/value as PatientID,
                         c/context/other_context[at0001]/items[at0003,'Fall-Kennung']/value/value AS CaseID
                         FROM EHR e
                         CONTAINS COMPOSITION c[openEHR-EHR-COMPOSITION.fall.v1]
@@ -622,9 +598,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                         WHERE c/name/value='Stationärer Versorgungsfall'
                         AND f/data[at0001]/items[at0071]/value/value >= '{stay_first.Start:yyyy-MM-dd}' 
                         AND (h/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value <= '{stay_last.End:yyyy-MM-dd}'
-                        OR NOT EXISTS h/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value)"
-            };
-            return aql;
+                        OR NOT EXISTS h/data[at0001]/items[at0011,'Datum/Uhrzeit der Entlassung']/value/value)");
         }
     }
 }
