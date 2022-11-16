@@ -173,20 +173,20 @@ namespace SmICSCoreLib.Factories.NUMNode
         {
             try
             {
-                receiveLabDataListpositiv = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborPositivData(timespan, pathogen));
+                receiveLabDataListpositiv = RestDataAccess.AQLQueryAsync<LabDataReceiveModel>(LaborPositivData(timespan, pathogen)).GetAwaiter().GetResult();
                 if (receiveLabDataListpositiv is not null)
                 {
                     foreach (var pat in receiveLabDataListpositiv)
                     {
                         if (!labPatientList.Select(x => x.CaseID).Contains(pat.FallID))
                         {
-                            receiveLabDataListnegativ = RestDataAccess.AQLQuery<LabDataReceiveModel>(LaborNegativData(timespan, pathogen, pat));
+                            receiveLabDataListnegativ = RestDataAccess.AQLQueryAsync<LabDataReceiveModel>(LaborNegativData(timespan, pathogen, pat)).GetAwaiter().GetResult();
 
                             if (receiveLabDataListnegativ is null || receiveLabDataListnegativ.Count < 2)
                             {
                                 episodeOfCareParameter = new EpsiodeOfCareParameter { PatientID = pat.PatientID, CaseID = pat.FallID };
-                                List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter));
-                                List<EpisodeOfCareModel> admission = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParameter));
+                                List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQueryAsync<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter)).GetAwaiter().GetResult();
+                                List<EpisodeOfCareModel> admission = RestDataAccess.AQLQueryAsync<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParameter)).GetAwaiter().GetResult();
                                 if (discharge is not null && admission is not null)
                                 {
                                     LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = pat.Befunddatum, Endtime = discharge.First().Ende };
@@ -238,8 +238,8 @@ namespace SmICSCoreLib.Factories.NUMNode
                                         if (newPosTimeframe == true)
                                         {
                                             episodeOfCareParameter = new EpsiodeOfCareParameter { PatientID = pat.PatientID, CaseID = pat.FallID };
-                                            List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter));
-                                            List<EpisodeOfCareModel> admission = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParameter));
+                                            List<EpisodeOfCareModel> discharge = RestDataAccess.AQLQueryAsync<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParameter)).GetAwaiter().GetResult();
+                                            List<EpisodeOfCareModel> admission = RestDataAccess.AQLQueryAsync<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParameter)).GetAwaiter().GetResult();
                                             if (discharge is not null && admission is not null)
                                             {
                                                 LabPatientModel labPatient = new() { PatientID = pat.PatientID, CaseID = pat.FallID, Starttime = item.Key, Endtime = discharge.First().Ende };
@@ -290,7 +290,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                     {
                         labPatient.Endtime = DateTime.Today;
                     }
-                    countStays = RestDataAccess.AQLQuery<NUMNodeCountModel>(GetStaysCount(labPatient));
+                    countStays = RestDataAccess.AQLQueryAsync<NUMNodeCountModel>(GetStaysCount(labPatient)).GetAwaiter().GetResult();
                     foreach (NUMNodeCountModel count in countStays)
                     {
                         if (labPatient.Endtime == DateTime.Today)
@@ -394,7 +394,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                     {
                         labPatient.Endtime = DateTime.Today;
                     }
-                    List<WardParameter> patStay = RestDataAccess.AQLQuery<WardParameter>(GetStays(labPatient));
+                    List<WardParameter> patStay = RestDataAccess.AQLQueryAsync<WardParameter>(GetStays(labPatient)).GetAwaiter().GetResult();
                     if (patStay is not null)
                     {
                         List<WardParameter> distinctList = new();
@@ -407,7 +407,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                         }
                         List<WardParameter> sortedList = distinctList.OrderBy(p => p.Start).ToList();
 
-                        List<LabPatientModel> patListStationary = RestDataAccess.AQLQuery<LabPatientModel>(GetStationaryPatientList(sortedList.First(), sortedList.Last()));
+                        List<LabPatientModel> patListStationary = RestDataAccess.AQLQueryAsync<LabPatientModel>(GetStationaryPatientList(sortedList.First(), sortedList.Last())).GetAwaiter().GetResult();
                         List<LabPatientModel> distinctListStationary = new();
 
                         if (patListStationary is not null && sortedList is not null)
@@ -428,7 +428,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                                         {
                                             pat.Endtime = DateTime.Today;
                                         }
-                                        List<WardParameter> contactStay = RestDataAccess.AQLQuery<WardParameter>(GetStays(pat));
+                                        List<WardParameter> contactStay = RestDataAccess.AQLQueryAsync<WardParameter>(GetStays(pat)).GetAwaiter().GetResult();
                                         List<WardParameter> distinctContact = new();
 
                                         if (contactStay is not null)
@@ -510,7 +510,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             }           
         }
 
-        private AQLQuery GetStays(LabPatientModel labpatient)
+        private static AQLQuery GetStays(LabPatientModel labpatient)
         {
             AQLQuery aql = new()
             {
@@ -535,7 +535,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             return aql;
         }
 
-        private AQLQuery GetStaysCount(LabPatientModel labpatient)
+        private static AQLQuery GetStaysCount(LabPatientModel labpatient)
         {
             AQLQuery aql = new()
             {
@@ -554,7 +554,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             return aql;
         }
 
-        private AQLQuery LaborPositivData(TimespanParameter timespan, string pathogen)
+        private static AQLQuery LaborPositivData(TimespanParameter timespan, string pathogen)
         {
             AQLQuery aql = new()
             {
@@ -581,7 +581,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             return aql;
         }
 
-        private AQLQuery LaborNegativData(TimespanParameter timespan, string pathogen, LabDataReceiveModel lab)
+        private static AQLQuery LaborNegativData(TimespanParameter timespan, string pathogen, LabDataReceiveModel lab)
         {
             AQLQuery aql = new()
             {
@@ -609,7 +609,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             return aql;
         }
 
-        private AQLQuery GetStationaryPatientList(WardParameter stay_first, WardParameter stay_last)
+        private static AQLQuery GetStationaryPatientList(WardParameter stay_first, WardParameter stay_last)
         {
             AQLQuery aql = new()
             {

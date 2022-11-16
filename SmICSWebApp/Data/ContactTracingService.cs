@@ -12,8 +12,8 @@ namespace SmICSWebApp.Data
 {
     public class ContactTracingService
     {
-        private IRestDataAccess _restData;
-        private ILogger<ContactTracingFactory> _logger;
+        private readonly IRestDataAccess _restData;
+        private readonly ILogger<ContactTracingFactory> _logger;
 
         public ContactTracingService(IRestDataAccess restData, ILogger<ContactTracingFactory> logger)
         {
@@ -135,21 +135,21 @@ namespace SmICSWebApp.Data
 
             if (responseMessage.StatusCode != System.Net.HttpStatusCode.Created)
             {
-                string returnValue = responseMessage.Content.ReadAsStringAsync().Result;
+                _ = responseMessage.Content.ReadAsStringAsync().Result;
                 throw new Exception($"Failed to POST data: ({responseMessage.StatusCode})");
             }
             else
             {
-                string returnValue = responseMessage.Content.ReadAsStringAsync().Result;
+                _ = responseMessage.Content.ReadAsStringAsync().Result;
                 _logger.LogInformation($"Succeded to POST data: ({responseMessage.StatusCode})");
             }
 
         }
 
-        private string ExistsSubject(IRestDataAccess _data, string subjectID)
+        private static string ExistsSubject(IRestDataAccess _data, string subjectID)
         {
             List<Employee> subject = _data.AQLQueryAsync<Employee>(AQLCatalog.GetEHRID(subjectID)).GetAwaiter().GetResult();
-            return subject != null ? subject[0].ID : null;
+            return subject?[0].ID;
         }
 
 

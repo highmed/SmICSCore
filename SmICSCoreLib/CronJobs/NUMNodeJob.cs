@@ -15,9 +15,9 @@ namespace SmICSCoreLib.CronJobs
     [DisallowConcurrentExecution]
     public class NUMNodeJob : IJob
     {
-        private DashboardRestClientConnector _client;
+        private readonly DashboardRestClientConnector _client;
         private readonly INUMNodeFactory _listFac;
-        private ILogger<NUMNodeFactory> _logger;
+        private readonly ILogger<NUMNodeFactory> _logger;
         private readonly string path = @"../SmICSWebApp/Resources/NUMNode/NUMNode_1_" + DateTime.Today.ToString("yyyy_mm_dd") + ".json";
 
         public NUMNodeJob(INUMNodeFactory listFac, ILogger<NUMNodeFactory> logger)
@@ -65,9 +65,7 @@ namespace SmICSCoreLib.CronJobs
 
         private void PostSmICSResults(string path)
         {
-            string restPath = "";
             Uri dashboard = new(DashboardConfig.dashboardEndpoint);
-            Uri RestPath = new(dashboard, restPath);
             if (File.Exists(path))
             {
                 var json = JSONFileStream.JSONReader<NUMNodeSaveModel>.ReadObject(path);
@@ -75,7 +73,7 @@ namespace SmICSCoreLib.CronJobs
                 HttpContent content = new StringContent(finishedJson, Encoding.UTF8, "application/json");
                 content.Headers.Add("Prefer", "return=representation");
 
-                HttpResponseMessage response = _client.Client.PostAsync(RestPath.ToString(), content).Result;
+                HttpResponseMessage response = _client.Client.PostAsync(dashboard.ToString(), content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     _logger.LogInformation("Data has been send successfully");

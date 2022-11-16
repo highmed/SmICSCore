@@ -2,21 +2,18 @@
 using System;
 using System.Collections.Generic;
 using SmICSCoreLib.Factories.RKIConfig;
-using SmICSCoreLib.Factories.PatientMovement;
 using System.IO;
-using System.Linq;
 using SmICSCoreLib.Factories.MiBi.Nosocomial;
 
 namespace SmICSWebApp.Data
 {
     public class RKIConfigService
     {
-        private readonly IPatientMovementFactory _patientInformation;
         private readonly string path = @"./Resources/OutbreakDetection/RKIConfig.json";
 
-        public RKIConfigService(IPatientMovementFactory patientInfo)
+        public RKIConfigService()
         {
-            _patientInformation = patientInfo;
+
         }
 
         public void StoreRules(List<RKIConfigTemplate> storedValues)
