@@ -3,6 +3,7 @@ using SmICSCoreLib.Factories.MiBi.PatientView;
 using SmICSCoreLib.Factories.PatientMovementNew;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmICSWebApp.Data.PatientView
 {
@@ -17,25 +18,32 @@ namespace SmICSWebApp.Data.PatientView
             _hospFac = hospFac;
         }
 
-        public SortedDictionary<Hospitalization, List<LabResult>> GetData(SmICSCoreLib.Factories.General.Patient patient)
+        public async Task<SortedDictionary<Hospitalization, List<LabResult>>> GetData(SmICSCoreLib.Factories.General.Patient patient)
         {
-            SortedDictionary<Hospitalization, List<LabResult>> patientHistory = new SortedDictionary<Hospitalization, List<LabResult>>();
-            List<Hospitalization> hospitalizations = _hospFac.Process(patient);
-            if (hospitalizations is not null)
+            try
             {
-                hospitalizations = hospitalizations.OrderByDescending(h => h.Admission.Date).ToList();
-                foreach (Hospitalization hosp in hospitalizations)
+                SortedDictionary<Hospitalization, List<LabResult>> patientHistory = new SortedDictionary<Hospitalization, List<LabResult>>();
+                List<Hospitalization> hospitalizations = await _hospFac.ProcessAsync(patient);
+                if (hospitalizations is not null)
                 {
-                    List<LabResult> labs = _labDataFac.Process(hosp, MedicalField.MICROBIOLOGY);
-                    if (labs is not null)
+                    hospitalizations = hospitalizations.OrderByDescending(h => h.Admission.Date).ToList();
+                    foreach (Hospitalization hosp in hospitalizations)
                     {
-                        labs = labs.OrderByDescending(l => l.Specimens.Min(s => s.SpecimenCollectionDateTime)).ToList();
-                        patientHistory.Add(hosp, labs);
+                        List<LabResult> labs = await _labDataFac.ProcessAsync(hosp, MedicalField.MICROBIOLOGY);
+                        if (labs is not null)
+                        {
+                            labs = labs.OrderByDescending(l => l.Specimens.Min(s => s.SpecimenCollectionDateTime)).ToList();
+                            patientHistory.Add(hosp, labs);
+                        }
                     }
+                    return patientHistory;
                 }
-                return patientHistory;
+                return null;
             }
-            return null;
+            catch 
+            {
+                throw;
+            }
         }
     }
 }

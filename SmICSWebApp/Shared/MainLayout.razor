@@ -1,6 +1,15 @@
-﻿@inherits LayoutComponentBase
+﻿@using Blazored.Toast.Configuration
+
+@inherits LayoutComponentBase
 
 <NavMenu />
+
+<BlazoredToasts Position="ToastPosition.BottomRight"
+                Timeout="7"
+                IconType="IconType.FontAwesome"
+                SuccessClass="success-toast-override"
+                SuccessIcon="fa fa-thumbs-up"
+                ErrorIcon="fa fa-bug" />
 
 <div class="main">
     <div class="content" style="margin-top: 7.5rem; margin-bottom:7.5rem;">

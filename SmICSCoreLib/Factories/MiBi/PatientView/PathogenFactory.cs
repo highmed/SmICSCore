@@ -3,6 +3,7 @@ using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi.PatientView
 {
@@ -10,31 +11,38 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
     {
         public IRestDataAccess RestDataAccess { get; set; }
         private readonly IAntibiogramFactory _antibiogramFac;
+
         public PathogenFactory(IRestDataAccess restDataAccess, IAntibiogramFactory antibiogramFac)
         {
             RestDataAccess = restDataAccess;
             _antibiogramFac = antibiogramFac;
         }
 
-        public List<Pathogen> Process(PathogenParameter pathogenParameter)
+        public async Task<List<Pathogen>> ProcessAsync(PathogenParameter pathogenParameter)
         {
-            List<Pathogen> pathogens = RestDataAccess.AQLQuery<Pathogen>(PathogenQuery(pathogenParameter));
-            if (pathogens != null)
-            {
-                if (pathogenParameter.MedicalField == MedicalField.MICROBIOLOGY)
+            try { 
+                List<Pathogen> pathogens = await RestDataAccess.AQLQueryAsync<Pathogen>(PathogenQuery(pathogenParameter));
+                if (pathogens != null)
                 {
-                    foreach (Pathogen pathogen in pathogens)
+                    if (pathogenParameter.MedicalField == MedicalField.MICROBIOLOGY)
                     {
-                        AntibiogramParameter parameter = new AntibiogramParameter(pathogenParameter);
-                        parameter.IsolatNo = pathogen.IsolatNr;
-                        parameter.Pathogen = pathogen.Name;
-                        pathogen.Antibiograms = _antibiogramFac.Process(parameter);
+                        foreach (Pathogen pathogen in pathogens)
+                        {
+                            AntibiogramParameter parameter = new AntibiogramParameter(pathogenParameter);
+                            parameter.IsolatNo = pathogen.IsolatNr;
+                            parameter.Pathogen = pathogen.Name;
+                            pathogen.Antibiograms = await _antibiogramFac.ProcessAsync(parameter);
+                        }
                     }
+                    return pathogens;
                 }
-                return pathogens;
+                return null;
             }
-            return null;
-        }
+            catch
+            {
+                throw;
+            }
+}
 
         /*As prototypic organisms, methicillin-resistant S.aureus (MRSA) and carbapenem-resistant bacteria (CPB:
 Klebsiella pneumoniae, E.coli, and Acinetobacter baumannii complex; for which mandatory reporting is

@@ -30,31 +30,39 @@ namespace SmICSWebApp.Data.ContactNetwork
 
         public ContactModel GetContactNetwork(ContactNetworkParameter parameter)
         {
-            ContactStack = new Stack<ContactNetworkParameter>();
-            ContactStack.Push(parameter);
-
-            contacts = new ContactModel() { PatientMovements = new List<VisuPatientMovement>(), LaborData = new List<VisuLabResult>() };
-
-            int maxDegree = Convert.ToInt32(ContactStack.Peek().Degree);
-            int currentDegree = 1;
-
-            while (currentDegree <= maxDegree)
+            try
             {
-                nextDegree = new Stack<ContactNetworkParameter>();
-                while (ContactStack.Count > 0)
+                ContactStack = new Stack<ContactNetworkParameter>();
+                ContactStack.Push(parameter);
+
+                contacts = new ContactModel() { PatientMovements = new List<VisuPatientMovement>(), LaborData = new List<VisuLabResult>() };
+
+                int maxDegree = Convert.ToInt32(ContactStack.Peek().Degree);
+                int currentDegree = 1;
+
+                while (currentDegree <= maxDegree)
                 {
-                    FindWardsQuery();
+                    nextDegree = new Stack<ContactNetworkParameter>();
+                    while (ContactStack.Count > 0)
+                    {
+                        FindWardsQuery();
+                    }
+                    currentDegree += 1;
+                    ContactStack = nextDegree;
                 }
-                currentDegree += 1;
-                ContactStack = nextDegree;
+                return contacts;
             }
-            return contacts;
+            catch
+            {
+                throw;
+
+            }
         }
 
         private void FindWardsQuery()
         {
             ContactNetworkParameter parameter = ContactStack.Pop();
-            List<VisuPatientMovement> patientWardList = _movementService.GetPatientMovements(parameter);
+            List<VisuPatientMovement> patientWardList = _movementService.GetPatientMovements(parameter).GetAwaiter().GetResult();
             patientWardList = patientWardList.Where(w => w.MovementTypeID != (int)MovementType.ADMISSION && w.MovementTypeID != (int)MovementType.DISCHARGE).ToList();
 
             if (patientWardList is null)
@@ -71,7 +79,7 @@ namespace SmICSWebApp.Data.ContactNetwork
 
             foreach (VisuPatientMovement patientWard in PatientWardList)
             {
-                List<PatientStay> contactStays = _patStayFac.Process(new WardParameter() { Ward = patientWard.Ward, Start = patientWard.Admission, End = patientWard.Discharge });
+                List<PatientStay> contactStays = _patStayFac.ProcessAsync(new WardParameter() { Ward = patientWard.Ward, Start = patientWard.Admission, End = patientWard.Discharge }).GetAwaiter().GetResult();
                 if (contactStays is not null)
                 {
                     foreach (PatientStay contact in contactStays)
@@ -79,8 +87,8 @@ namespace SmICSWebApp.Data.ContactNetwork
                         if (contacts.PatientMovements.Where(c => c.PatientID == contact.PatientID).Count() == 0)
                         {
                             List<VisuLabResult> contactLabResults = _medicalFinding.GetMedicalFinding(contact, new SmICSCoreLib.Factories.MiBi.PatientView.Parameter.PathogenParameter() { PathogenCodes
-                                = new List<string> { parameter.pathogen }    });
-                            List<VisuPatientMovement> contactMovements = _movementService.GetPatientMovements(contact);
+                                = new List<string> { parameter.pathogen }    }).GetAwaiter().GetResult();
+                            List<VisuPatientMovement> contactMovements = _movementService.GetPatientMovements(contact).GetAwaiter().GetResult();
 
                             contacts.LaborData.AddRange(contactLabResults);
                             contacts.PatientMovements.AddRange(contactMovements);

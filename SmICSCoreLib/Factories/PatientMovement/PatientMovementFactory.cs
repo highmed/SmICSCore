@@ -19,70 +19,83 @@ namespace SmICSCoreLib.Factories.PatientMovement
         }
         public List<PatientMovementModel> Process(PatientListParameter parameter)
         {
-            List<PatientStayModel> patientStayList = RestDataAccess.AQLQuery<PatientStayModel>(AQLCatalog.PatientStay(parameter));
-            if (patientStayList is null)
+            try
             {
-                return new List<PatientMovementModel>();
-            }
+                List<PatientStayModel> patientStayList = RestDataAccess.AQLQueryAsync<PatientStayModel>(AQLCatalog.PatientStay(parameter)).GetAwaiter().GetResult();
+                if (patientStayList is null)
+                {
+                    return new List<PatientMovementModel>();
+                }
 
-            return ReturValueConstrutor(patientStayList);
+                return ReturValueConstrutor(patientStayList);
+            }
+            catch { throw; }
         }
 
         public List<PatientMovementModel> Process(Patient patient)
         {
-            List<PatientStayModel> patientStayList = RestDataAccess.AQLQuery<PatientStayModel>(AQLCatalog.PatientStay(patient));
+            try { 
+            List<PatientStayModel> patientStayList = RestDataAccess.AQLQueryAsync<PatientStayModel>(AQLCatalog.PatientStay(patient)).GetAwaiter().GetResult();
             if (patientStayList is null)
             {
                 return new List<PatientMovementModel>();
             }
 
             return ReturValueConstrutor(patientStayList);
+            }
+            catch { throw; }
         }
 
         public List<PatientMovementModel> ProcessFromStation(PatientListParameter parameter, string station, DateTime starttime, DateTime endtime)
         {
-            List<PatientStayModel> patientStayList = RestDataAccess.AQLQuery<PatientStayModel>(AQLCatalog.PatientStayFromStation(parameter, station, starttime, endtime));
-            if (patientStayList is null)
-            {
-                return new List<PatientMovementModel>();
-            }
+            try { 
+                List<PatientStayModel> patientStayList = RestDataAccess.AQLQueryAsync<PatientStayModel>(AQLCatalog.PatientStayFromStation(parameter, station, starttime, endtime)).GetAwaiter().GetResult();
+                if (patientStayList is null)
+                {
+                    return new List<PatientMovementModel>();
+                }
 
-            return ReturValueConstrutor(patientStayList);
+                return ReturValueConstrutor(patientStayList);
+            }
+            catch { throw; }
         }
 
         private List<PatientMovementModel> ReturValueConstrutor(List<PatientStayModel> patientStayList)
         {
-            List<PatientMovementModel> patientMovementList = new List<PatientMovementModel>();
-            List<string> PatID_CaseId_Combination = new List<string>();
-            EpisodeOfCareModel episodeOfCare = null;
+            try { 
+                List<PatientMovementModel> patientMovementList = new List<PatientMovementModel>();
+                List<string> PatID_CaseId_Combination = new List<string>();
+                EpisodeOfCareModel episodeOfCare = null;
 
-            foreach (PatientStayModel patientStay in patientStayList)
-            {
-                string patfallID = createPatIDCaseIDCombination(patientStay);
-
-                EpsiodeOfCareParameter episodeOfCareParam = createParameterOfMovement(patientStay);
-
-                if (!PatID_CaseId_Combination.Contains(patfallID))
+                foreach (PatientStayModel patientStay in patientStayList)
                 {
+                    string patfallID = createPatIDCaseIDCombination(patientStay);
 
-                    List<EpisodeOfCareModel> episodeOfCareList = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParam));
-                    List<EpisodeOfCareModel> discharges = RestDataAccess.AQLQuery<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParam));
-                    if (!(episodeOfCareList is null))
+                    EpsiodeOfCareParameter episodeOfCareParam = createParameterOfMovement(patientStay);
+
+                    if (!PatID_CaseId_Combination.Contains(patfallID))
                     {
-                        //result.First because there can be just one admission/discharge timestamp for each case
-                        episodeOfCare = episodeOfCareList[0];
-                        if(discharges != null)
+
+                        List<EpisodeOfCareModel> episodeOfCareList = RestDataAccess.AQLQueryAsync<EpisodeOfCareModel>(AQLCatalog.PatientAdmission(episodeOfCareParam)).GetAwaiter().GetResult();
+                        List<EpisodeOfCareModel> discharges = RestDataAccess.AQLQueryAsync<EpisodeOfCareModel>(AQLCatalog.PatientDischarge(episodeOfCareParam)).GetAwaiter().GetResult();
+                        if (!(episodeOfCareList is null))
                         {
-                            episodeOfCare.Ende = discharges[0].Ende;
+                            //result.First because there can be just one admission/discharge timestamp for each case
+                            episodeOfCare = episodeOfCareList[0];
+                            if(discharges != null)
+                            {
+                                episodeOfCare.Ende = discharges[0].Ende;
+                            }
                         }
+                        PatID_CaseId_Combination.Add(patfallID);
                     }
-                    PatID_CaseId_Combination.Add(patfallID);
+
+                    transformToPatientMovementData(patientStay, episodeOfCare, patientMovementList);
                 }
 
-                transformToPatientMovementData(patientStay, episodeOfCare, patientMovementList);
+                return patientMovementList;
             }
-
-            return patientMovementList;
+            catch { throw; }
         }
 
         private void transformToPatientMovementData(PatientStayModel patientStay, EpisodeOfCareModel episodeOfCare, List<PatientMovementModel> patientMovementList)
@@ -153,5 +166,18 @@ namespace SmICSCoreLib.Factories.PatientMovement
             return epsiodeOfCareParameter;
         }
 
+        public List<PatientMovementModel> ProcessGetStations()
+        {
+            try { 
+                List<PatientMovementModel> stationList = RestDataAccess.AQLQueryAsync<PatientMovementModel>(AQLCatalog.GetAllStationsForConfig()).GetAwaiter().GetResult();
+                if (stationList is null)
+                {
+                    return new List<PatientMovementModel>();
+                }
+
+                return stationList;
+            }
+            catch { throw; }
+        }
     }
 }

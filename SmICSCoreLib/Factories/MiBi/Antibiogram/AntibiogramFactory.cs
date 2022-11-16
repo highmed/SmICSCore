@@ -1,5 +1,6 @@
 ﻿using SmICSCoreLib.REST;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi
 {
@@ -12,14 +13,22 @@ namespace SmICSCoreLib.Factories.MiBi
             _rest = rest;
         }
 
-        public List<Antibiogram> Process(AntibiogramParameter parameters)
+        public async Task<List<Antibiogram>> ProcessAsync(AntibiogramParameter parameters)
         {
-            List<Antibiogram> antibiograms = _rest.AQLQuery<Antibiogram>(AntibiogramFromPathogen(parameters));
-            if (antibiograms == null)
+            try
             {
-                return null;
+                List<Antibiogram> antibiograms = await _rest.AQLQueryAsync<Antibiogram>(AntibiogramFromPathogen(parameters));
+                if (antibiograms == null)
+                {
+                    return null;
+                }
+                return antibiograms;
             }
-            return antibiograms;
+            catch
+            {
+                throw;
+            }
+            
         }
 
         private AQLQuery AntibiogramFromPathogen(AntibiogramParameter parameter)

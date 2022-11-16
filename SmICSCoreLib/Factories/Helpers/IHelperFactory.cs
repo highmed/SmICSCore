@@ -2,6 +2,7 @@
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.REST;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.Helpers
 {
@@ -9,6 +10,6 @@ namespace SmICSCoreLib.Factories.Helpers
     {
         IRestDataAccess RestDataAccess { get; set; }
 
-        List<Case> GetPatientOnWardsFromFiltered(List<HospStay> cases, string ward);
+        Task<List<Case>> GetPatientOnWardsFromFilteredAsync(List<HospStay> cases, string ward);
     }
 }

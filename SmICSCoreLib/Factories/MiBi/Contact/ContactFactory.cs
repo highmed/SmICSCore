@@ -2,9 +2,9 @@
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 using SmICSCoreLib.REST;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi.Contact
 {
@@ -20,85 +20,104 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
             _patientStayFac = patientStayFac;
         }
 
-        public Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>> Process(Patient parameter)
+        public async Task<Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>>> ProcessAsync(Patient parameter)
         {
-            Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>> contacts = new Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>>();
-
-            List<Hospitalization> Hospitalizations = _hospitalizationFac.Process(parameter);
-            Hospitalizations.ForEach(h => contacts.Add(h, null));
-
-            Hospitalization hospitalization = Hospitalizations.Last();
-
-            List<PatientMovementNew.PatientStays.PatientStay> patientStays = _patientStayFac.Process(hospitalization);
-            List<PatientMovementNew.PatientStays.PatientStay> contactCases = DetermineContacts(Hospitalizations.Last());
-             
-            if (contacts[hospitalization] == null)
+            try
             {
-                contacts[hospitalization] = contactCases;
-            }
-            
-            return contacts;
-        }
+                Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>> contacts = new Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>>();
 
-        public List<PatientMovementNew.PatientStays.PatientStay> Process(Hospitalization hospitalization)
-        {
-           return DetermineContacts(hospitalization);
-        }
+                List<Hospitalization> Hospitalizations = await _hospitalizationFac.ProcessAsync(parameter);
+                Hospitalizations.ForEach(h => contacts.Add(h, null));
 
-        private List<PatientMovementNew.PatientStays.PatientStay> DetermineContacts(Hospitalization hospitalization)
-        {
-            List<PatientMovementNew.PatientStays.PatientStay> patientStays = _patientStayFac.Process(hospitalization);
-            RemoveDoubleStays(patientStays);
-            List<HospStay> possibleContactHosp = _hospitalizationFac.Process(hospitalization.Admission.Date, hospitalization.Discharge.Date);
-            List<PatientMovementNew.PatientStays.PatientStay> cases = new List<PatientMovementNew.PatientStays.PatientStay>();
-            if (possibleContactHosp is not null)
-            {
-                foreach (HospStay _case in possibleContactHosp)
+                Hospitalization hospitalization = Hospitalizations.Last();
+
+                List<PatientMovementNew.PatientStays.PatientStay> patientStays = await _patientStayFac.ProcessAsync(hospitalization);
+                List<PatientMovementNew.PatientStays.PatientStay> contactCases = await DetermineContacts(Hospitalizations.Last());
+
+                if (contacts[hospitalization] == null)
                 {
-                    List<HospitalizationWard> wards = RestDataAccess.AQLQuery<HospitalizationWard>(GetsAllWardsFromHospitalization(_case));
-                    if (wards is not null)
+                    contacts[hospitalization] = contactCases;
+                }
+
+                return contacts;
+            }
+            catch
+            {
+                throw;
+            }
+           
+        }
+
+        public async Task<List<PatientMovementNew.PatientStays.PatientStay>> ProcessAsync(Hospitalization hospitalization)
+        {
+            try
+            {
+                return await DetermineContacts(hospitalization);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        private async Task<List<PatientMovementNew.PatientStays.PatientStay>> DetermineContacts(Hospitalization hospitalization)
+        {
+            try
+            {
+                List<PatientMovementNew.PatientStays.PatientStay> patientStays = await _patientStayFac.ProcessAsync(hospitalization);
+                RemoveDoubleStays(patientStays);
+                List<HospStay> possibleContactHosp = await _hospitalizationFac.ProcessAsync(hospitalization.Admission.Date, hospitalization.Discharge.Date);
+                List<PatientMovementNew.PatientStays.PatientStay> cases = new List<PatientMovementNew.PatientStays.PatientStay>();
+                if (possibleContactHosp is not null)
+                {
+                    foreach (HospStay _case in possibleContactHosp)
                     {
-                        foreach (PatientMovementNew.PatientStays.PatientStay patientStay in patientStays)
+                        List<HospitalizationWard> wards = await RestDataAccess.AQLQueryAsync<HospitalizationWard>(GetsAllWardsFromHospitalization(_case));
+                        if (wards is not null)
                         {
-
-                            if (((_case.Discharge.HasValue && _case.Discharge.Value >= patientStay.Admission) ||
-                                (patientStay.Discharge.HasValue && _case.Admission <= patientStay.Discharge.Value)))
+                            foreach (PatientMovementNew.PatientStays.PatientStay patientStay in patientStays)
                             {
-                                bool hasPotentialLocationContact = false;
-                                if (string.IsNullOrEmpty(patientStay.Ward))
+
+                                if (((_case.Discharge.HasValue && _case.Discharge.Value >= patientStay.Admission) ||
+                                    (patientStay.Discharge.HasValue && _case.Admission <= patientStay.Discharge.Value)))
                                 {
-                                    hasPotentialLocationContact = wards.Where(w => string.IsNullOrEmpty(w.Ward) && w.DepartementID == patientStay.DepartementID).Count() > 0;
-                                }
-                                else
-                                {
-                                    hasPotentialLocationContact = wards.Where(w => w.Ward == patientStay.Ward).Count() > 0;
-                                }
-                                if (hasPotentialLocationContact)
-                                {
-                                    WardParameter wardParameter = new WardParameter
+                                    bool hasPotentialLocationContact = false;
+                                    if (string.IsNullOrEmpty(patientStay.Ward))
                                     {
-                                        Ward = patientStay.Ward,
-                                        DepartementID = patientStay.DepartementID,
-                                        Start = patientStay.Admission,
-                                        End = patientStay.Discharge.Value,
-                                        PatientID = _case.PatientID,
-                                        CaseID = _case.CaseID
-                                    };
+                                        hasPotentialLocationContact = wards.Where(w => string.IsNullOrEmpty(w.Ward) && w.DepartementID == patientStay.DepartementID).Count() > 0;
+                                    }
+                                    else
+                                    {
+                                        hasPotentialLocationContact = wards.Where(w => w.Ward == patientStay.Ward).Count() > 0;
+                                    }
+                                    if (hasPotentialLocationContact)
+                                    {
+                                        WardParameter wardParameter = new WardParameter
+                                        {
+                                            Ward = patientStay.Ward,
+                                            DepartementID = patientStay.DepartementID,
+                                            Start = patientStay.Admission,
+                                            End = patientStay.Discharge.Value,
+                                            PatientID = _case.PatientID,
+                                            CaseID = _case.CaseID
+                                        };
 
 
-                                    List<PatientMovementNew.PatientStays.PatientStay> casesOnWard = _patientStayFac.Process(wardParameter);
-                                    if (casesOnWard is not null)
-                                    {
-                                        cases.AddRange(casesOnWard);
+                                        List<PatientMovementNew.PatientStays.PatientStay> casesOnWard = await _patientStayFac.ProcessAsync(wardParameter);
+                                        if (casesOnWard is not null)
+                                        {
+                                            cases.AddRange(casesOnWard);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+                RemoveDoubleStays(cases);
+                return cases;
             }
-            RemoveDoubleStays(cases);
-            return cases;
+            catch { throw; }
         }
 
         private void RemoveDoubleStays(List<PatientMovementNew.PatientStays.PatientStay> patientStays)

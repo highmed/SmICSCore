@@ -29,9 +29,9 @@ namespace SmICSCoreLib.CronJobs
             await Task.WhenAll(wards);
         }
 
-        public async Task UpdateWards()
+        public void UpdateWards()
         {
-            List<Ward> wards = await _dataAccess.GetWards();
+            List<Ward> wards = _dataAccess.GetWards().GetAwaiter().GetResult();
             List<WardMenuEntry> wardMenuEntries = null;
             if (wards.Count == 0)
             {
@@ -44,11 +44,11 @@ namespace SmICSCoreLib.CronJobs
                 { 
                     Console.WriteLine(string.Format("ENV FIRST_DATA_ENRTY_YEAR couldn't be read. Instead {0} was set as FIRST_DATA_ENRTY_YEAR!", date.Year));
                 }
-                wardMenuEntries = _menuListFac.Wards(JobType.FIRST_STARTUP, date);
+                wardMenuEntries = _menuListFac.WardsAsync(JobType.FIRST_STARTUP, date).GetAwaiter().GetResult();
             }
             else
             {
-                wardMenuEntries = _menuListFac.Wards(JobType.DAILY, DateTime.Now.Date.AddDays(-1.0));
+                wardMenuEntries = _menuListFac.WardsAsync(JobType.DAILY, DateTime.Now.Date.AddDays(-1.0)).GetAwaiter().GetResult();
             }
             if (wardMenuEntries is not null)
             {
@@ -71,10 +71,10 @@ namespace SmICSCoreLib.CronJobs
             }
         }
 
-        public async Task UpdatePathogens()
+        public void UpdatePathogens()
         {
             List<PathogenMenuEntry> pathoMenu = null;
-            List<Pathogen> pathogens = await _dataAccess.GetPathogens();
+            List<Pathogen> pathogens = _dataAccess.GetPathogens().GetAwaiter().GetResult();
             if(pathogens.Count == 0)
             {
                 DateTime date = new DateTime((DateTime.Now.Year - 10), 1, 1);
@@ -87,11 +87,11 @@ namespace SmICSCoreLib.CronJobs
                 {
                     Console.WriteLine(string.Format("ENV FIRST_DATA_ENRTY_YEAR couldn't be read. Instead {0} was set as FIRST_DATA_ENRTY_YEAR!", date.Year));
                 }
-                pathoMenu = _menuListFac.Pathogens(JobType.FIRST_STARTUP, date);
+                pathoMenu = _menuListFac.PathogensAsync(JobType.FIRST_STARTUP, date).GetAwaiter().GetResult();
             }
             else
             {
-                pathoMenu = _menuListFac.Pathogens(JobType.DAILY, DateTime.Now.Date.AddDays(-1.0));
+                pathoMenu = _menuListFac.PathogensAsync(JobType.DAILY, DateTime.Now.Date.AddDays(-1.0)).GetAwaiter().GetResult();
             }
             if (pathoMenu is not null)
             {

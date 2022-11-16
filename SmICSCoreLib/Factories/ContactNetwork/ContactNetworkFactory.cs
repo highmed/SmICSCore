@@ -64,7 +64,7 @@ namespace SmICSCoreLib.Factories.ContactNetwork
         private void FindWardsQuery()
         {
             ContactParameter parameter = patientStack.Pop();
-            List<PatientWardModel> patientWardList = RestDataAccess.AQLQuery<PatientWardModel>(AQLCatalog.ContactPatientWards(parameter));
+            List<PatientWardModel> patientWardList = RestDataAccess.AQLQueryAsync<PatientWardModel>(AQLCatalog.ContactPatientWards(parameter)).GetAwaiter().GetResult();
 
             if (patientWardList is null)
             {
@@ -86,11 +86,11 @@ namespace SmICSCoreLib.Factories.ContactNetwork
                 {
                     _logger.LogInformation("ContactNetworkFactory.FindContactPatients(): No WardID From ContactNetworkFactory.FindWardsQuery(). Set DepartementID to WardID.");
                     secondQueryParameter.WardID = patientWard.Fachabteilung;
-                    contactPatientList = RestDataAccess.AQLQuery<ContactPatientModel>(AQLCatalog.ContactPatients_WithoutWardInformation(secondQueryParameter));
+                    contactPatientList = RestDataAccess.AQLQueryAsync<ContactPatientModel>(AQLCatalog.ContactPatients_WithoutWardInformation(secondQueryParameter)).GetAwaiter().GetResult();
                 }
                 else
                 {
-                    contactPatientList = RestDataAccess.AQLQuery<ContactPatientModel>(AQLCatalog.ContactPatients(secondQueryParameter));
+                    contactPatientList = RestDataAccess.AQLQueryAsync<ContactPatientModel>(AQLCatalog.ContactPatients(secondQueryParameter)).GetAwaiter().GetResult();
                 }
                 if (contactPatientList == null)
                 {

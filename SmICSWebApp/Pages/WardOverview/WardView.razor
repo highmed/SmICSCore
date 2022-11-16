@@ -31,13 +31,13 @@
                         }
                     </select>
                     <label for="pathogenDropdown" class="mr-1">Erreger</label>
-                    <input type="text" list="pathogenList" class="col-1 mr-2" id="pathogenDropdown" @onchange="PathogenChanged">
-                    <datalist id="pathogenList">
+                    <select id="pathogenDropdown" class="col-2 mr-2" @onchange="PathogenChanged">
+                        <option value="" selected disabled hidden>Bitte wählen</option>
                         @foreach (PathogenEntry entry in _pathogenMenuEntries)
                         {
-                            <option value="@string.Join(",", entry.Codes)" label="@entry.Name"></option>
+                            <option value="@string.Join(",", entry.Codes)">@entry.Name</option>
                         }
-                    </datalist>
+                    </select>
                     <label for="startdate" class="mr-1">Start</label>
                     <InputDate id="startdate" class="col-1 mr-2" @bind-Value="parameter.Start" />
                     <label for="enddate" class="mr-1">Ende</label>
@@ -48,11 +48,19 @@
         </div>
     </div>
 
-    @if (isLoading)
+    @if (isLoading && !emptyResult)
     {
         <div class="spinner"></div>
     }
-    else if (filteredData != null && chartEntries != null && _filterMRE != null && !isLoading)
+    else if (!isLoading && emptyResult)
+    {
+        <div>
+            <span class="text-danger">
+                Es wurden keine Daten zu den gewählten Parametern gefunden.
+            </span>
+        </div>
+    }
+    else if (filteredData != null && chartEntries != null && _filterMRE != null && !isLoading && !emptyResult)
     {
         <div class="row">
             <div class="card card-table">
@@ -99,6 +107,8 @@
 }
 
 @code {
+    [CascadingParameter]
+    public Error Error { get; set; }
     private WardParameter parameter = new WardParameter() { Start = DateTime.Now.AddDays(-7.0).Date, End = DateTime.Now.Date };
 
     private List<WardPatient> data = null;
@@ -119,30 +129,37 @@
     private bool isLoading = false;
     private string LoadingMessage;
 
+    private bool emptyResult = false;
+
     private IDataset<int> Nosocomial;
 
     private IDataset<int> Known;
 
     private IDataset<int> Stress;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitializedAsync();
-        return Task.Run(LoadMenu);
+        await base.OnInitializedAsync();
+        await LoadMenu();
     }
 
-    private void LoadMenu()
+    private async Task LoadMenu()
     {
-        _pathogenMenuEntries = _menuService.GetPathogens();
-        List<Ward> wards = _menuService.GetWards().Result;
-        _wardMenuEntries = wards.ToArray();
+        _pathogenMenuEntries = await _menuService.GetPathogens();
+        _pathogenMenuEntries = _pathogenMenuEntries.OrderBy(p => p.Name).ToList();
+        List<Ward> wards = await _menuService.GetWards();
+        _wardMenuEntries = wards.OrderBy(w => w.Name).ToArray();
     }
 
     private async Task Submit()
     {
+
+        emptyResult = false;
         isLoading = true;
-        await Task.Run(LoadData);
+        await Task.Delay(1);
+        await LoadDataAsync();
         isLoading = false;
+
     }
 
     public void c_Progress(object sender, EventArgs eventArgs)
@@ -151,43 +168,67 @@
         Console.WriteLine(LoadingMessage);
     }
 
-    private void LoadData()
+    private async Task LoadDataAsync()
     {
-        _service.Progress += c_Progress;
-        data = _service.GetData(parameter);
-        filteredData = data;
-        chartEntries = _service.GetChartEntries(parameter);
-        _filterMRE = _service.GetFilter(parameter);
 
-        _chart = EpiCurveConfig("Epidemiologische Kurve der Station: " + parameter.Ward, "Neue Fälle");
-        _accumChart = EpiCurveConfig("", "Last der Station");
-
-        Nosocomial = new BarDataset<int>()
+        //_service.Progress += c_Progress;
+        try
         {
-            Label = "Nosokomial",
-            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Red)
-        };
+            data = await _service.GetData(parameter);
+            if (data is null)
+            {
+                emptyResult = true;
+            }
+            else
+            {
+                if (data.Count == 0)
+                {
+                    data = null;
+                    emptyResult = true;
+                }
+                else
+                {
+                    filteredData = data;
+                    chartEntries = _service.GetChartEntries(parameter, filteredData);
+                    _filterMRE = _service.GetFilter(parameter);
 
-        Known = new BarDataset<int>()
+                    _chart = EpiCurveConfig("Epidemiologische Kurve der Station: " + parameter.Ward, "Neue Fälle");
+                    _accumChart = EpiCurveConfig("", "Last der Station");
+
+                    Nosocomial = new BarDataset<int>()
+                        {
+                            Label = "Nosokomial",
+                            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Red)
+                        };
+
+                    Known = new BarDataset<int>()
+                        {
+                            Label = "Bekannt",
+                            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue)
+                        };
+
+                    Stress = new BarDataset<int>()
+                        {
+                            Label = "Last",
+                            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.DarkGray)
+                        };
+
+                    GetXAxisLabels();
+                    _chart.Data.Datasets.Add(Nosocomial);
+                    _chart.Data.Datasets.Add(Known);
+                    _accumChart.Data.Datasets.Add(Stress);
+
+                    FillDataset(Nosocomial, chartEntries["Nosokomial"]);
+                    FillDataset(Known, chartEntries["Known"]);
+                    FillDataset(Stress, chartEntries["Stress"]);
+                }
+
+            }
+        }
+        catch (Exception e)
         {
-            Label = "Bekannt",
-            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue)
-        };
-
-        Stress = new BarDataset<int>()
-        {
-            Label = "Last",
-            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.DarkGray)
-        };
-
-        GetXAxisLabels();
-        _chart.Data.Datasets.Add(Nosocomial);
-        _chart.Data.Datasets.Add(Known);
-        _accumChart.Data.Datasets.Add(Stress);
-
-        FillDataset(Nosocomial, chartEntries["Nosokomial"]);
-        FillDataset(Known, chartEntries["Known"]);
-        FillDataset(Stress, chartEntries["Stress"]);
+            Error.ProcessError(e);
+        }
     }
 
     private void GetXAxisLabels()
@@ -243,7 +284,8 @@
                             {
                                 StepSize = 1,
                                 BeginAtZero = true,
-                                Min = 0
+                                Min = 0,
+                                SuggestedMax = 5
                             }
                         }
                     }
@@ -303,7 +345,7 @@
                 filteredData = filteredData.Where(view => view.InfectionStatus != null && view.InfectionStatus.Values.Any(x => x.Known == true || (x.Nosocomial && x.NosocomialDate.Value < view.Admission))).ToList();
             }
         }
-        chartEntries = _service.GetChartEntries(parameter, _selectedMREFilter, _selectedNosokomialFilter);
+        chartEntries = _service.GetChartEntries(parameter, filteredData);
 
         Nosocomial.Clear();
         Known.Clear();

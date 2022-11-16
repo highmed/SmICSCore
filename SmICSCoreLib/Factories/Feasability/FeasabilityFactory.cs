@@ -1,6 +1,7 @@
 ﻿using SmICSCoreLib.REST;
+using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.Feasability
 {
@@ -13,9 +14,17 @@ namespace SmICSCoreLib.Factories.Feasability
             RestDataAccess = restDataAccess;
         }
 
-        public Feasability GetPersonMovementCount(SmICSCoreLib.Factories.General.Patient patient)
+        public async Task<Feasability> GetPersonMovementCountAsync(SmICSCoreLib.Factories.General.Patient patient)
         {
-            return RestDataAccess.AQLQuery<Feasability>(PersonMovementCount(patient)).First();
+            try
+            {
+                List<Feasability> feasability = await RestDataAccess.AQLQueryAsync<Feasability>(PersonMovementCount(patient));
+                return feasability.First();
+            }
+            catch 
+            {
+                throw;
+            }
         }
 
         //public Feasability GetPersonWardCount(SmICSCoreLib.Factories.General.Patient patient)

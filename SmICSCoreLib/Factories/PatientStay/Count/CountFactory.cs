@@ -18,7 +18,7 @@ namespace SmICSCoreLib.Factories.PatientStay.Count
 
         public List<CountDataModel> Process(string nachweis)
         {
-            List<CountDataReceiveModel> countDataReceiveModels = _restData.AQLQuery<CountDataReceiveModel>(AQLCatalog.CovidPat(nachweis));
+            List<CountDataReceiveModel> countDataReceiveModels = _restData.AQLQueryAsync<CountDataReceiveModel>(AQLCatalog.CovidPat(nachweis)).GetAwaiter().GetResult();
 
             if (countDataReceiveModels is null )
             {
@@ -30,7 +30,7 @@ namespace SmICSCoreLib.Factories.PatientStay.Count
         public List<CountDataModel> ProcessFromID(string nachweis, PatientListParameter parameter)
         {
 
-            List<CountDataReceiveModel> countDataReceiveModels = _restData.AQLQuery<CountDataReceiveModel>(AQLCatalog.CovidPatByID(nachweis, parameter));
+            List<CountDataReceiveModel> countDataReceiveModels = _restData.AQLQueryAsync<CountDataReceiveModel>(AQLCatalog.CovidPatByID(nachweis, parameter)).GetAwaiter().GetResult();
 
             if (countDataReceiveModels is null)
             {

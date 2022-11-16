@@ -2,6 +2,7 @@
 using SmICSCoreLib.REST;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
 {
@@ -14,25 +15,32 @@ namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
             RestDataAccess = restDataAccess;
         }
 
-        public List<PatientStay> Process(Case Case)
+        public async Task<List<PatientStay>> ProcessAsync(Case Case)
         {
-            List<PatientStay> patientStays = RestDataAccess.AQLQuery<PatientStay>(PatientStay(Case));
-            patientStays = MergeConsectiveStaysAndSetMovementType(patientStays);
-
-            return patientStays;
-        }
-
-        public List<PatientStay> Process(WardParameter wardParameter)
-        {
-            List<PatientStay> patientStays = RestDataAccess.AQLQuery<PatientStay>(PatientStayByWard(wardParameter));
-
-            if (patientStays is not null)
+            try
             {
-                patientStays = patientStays.OrderBy(stay => stay.Admission).ToList();
+                List<PatientStay> patientStays = await RestDataAccess.AQLQueryAsync<PatientStay>(PatientStay(Case));
                 patientStays = MergeConsectiveStaysAndSetMovementType(patientStays);
+
                 return patientStays;
             }
-            return null;
+            catch { throw; }
+        }
+
+        public async Task<List<PatientStay>> ProcessAsync(WardParameter wardParameter)
+        {
+            try{
+                List<PatientStay> patientStays = await RestDataAccess.AQLQueryAsync<PatientStay>(PatientStayByWard(wardParameter));
+
+                if (patientStays is not null)
+                {
+                    patientStays = patientStays.OrderBy(stay => stay.Admission).ToList();
+                    patientStays = MergeConsectiveStaysAndSetMovementType(patientStays);
+                    return patientStays;
+                }
+                return null;
+            }
+            catch { throw; }
         }
 
         private List<PatientStay> MergeConsectiveStaysAndSetMovementType(List<PatientStay> patientStays)

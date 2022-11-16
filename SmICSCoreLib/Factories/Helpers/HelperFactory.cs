@@ -18,10 +18,25 @@ namespace SmICSCoreLib.Factories.Helpers
             RestDataAccess = restDataAccess;
         }
 
-        public List<Case> GetPatientOnWardsFromFiltered(List<HospStay> cases, string ward)
+        public async Task<List<Case>> GetPatientOnWardsFromFilteredAsync (List<HospStay> cases, string ward)
         {
-            List<Case> casesOnWard = RestDataAccess.AQLQuery<Case>(GetsAllWardsFromHospitalization(cases, ward));
-            if (casesOnWard is not null)
+            List<Case> casesOnWard = new List<Case>();
+            int i = 0;
+            int count = 999;
+            while (i < cases.Count)
+            {
+                if((i + 999) >= cases.Count)
+                {
+                    count = cases.Count - i;
+                }
+                List<Case> tmpCasesOnWard = await RestDataAccess.AQLQueryAsync<Case>(GetsAllWardsFromHospitalization(cases.GetRange(i, count), ward));
+                if (tmpCasesOnWard is not null)
+                {
+                    casesOnWard.AddRange(tmpCasesOnWard);
+                }
+                i += count;
+            }
+            if(casesOnWard.Count > 0)
             {
                 return casesOnWard;
             }

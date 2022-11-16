@@ -68,22 +68,26 @@ namespace SmICSWebApp
                 dbStartup.CreatePathogenTable();
                 dbStartup.CreateWardTable();
                 RestClientConnector conn = new RestClientConnector();
-                IRestDataAccess rest = new RestDataAccess(NullLogger<RestDataAccess>.Instance, conn);
+                IRestDataAccess rest = new RestDataAccess(new NullLogger<RestDataAccess>(), conn);
                 IMenuListFactory menu = new MenuListFactory(rest);
                 MenuItemsJob job = new MenuItemsJob(dbStartup, menu);
-                Task wardtask = new Task(delegate() { 
-                    _ = job.UpdateWards(); 
-                });
-                wardtask.RunSynchronously();
+                //Task wardtask = new Task(delegate() { 
+                //    _ = job.UpdateWards(); 
+                //});
+                //wardtask.RunSynchronously();
 
-                Task pathotask = new Task(delegate () {
-                    _ = job.UpdatePathogens();
-                });
-                pathotask.RunSynchronously();
+                //Task pathotask = new Task(delegate () {
+                //    _ = job.UpdatePathogens();
+                //});
+                //pathotask.RunSynchronously();
+                job.UpdateWards();
+                job.UpdatePathogens();
+
             }
             catch(Exception e)
             {
                 Console.WriteLine("Failed Database Configuration: \n" + e.Message);
+                throw;
             }
         }
 

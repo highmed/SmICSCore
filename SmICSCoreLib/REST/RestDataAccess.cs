@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -22,14 +24,13 @@ namespace SmICSCoreLib.REST
             _logger = logger;
         }
 
-        public List<T> AQLQuery<T>(AQLQuery query) where T : new()
+        public async Task<List<T>> AQLQueryAsync<T>(AQLQuery query) where T : new()
         {
             try{
                 _logger.LogInformation("Posted Query: {Query}", query.Name);
                 string restPath = "rest/openehr/v1/query/aql";
-                Uri openehr = new Uri(OpenehrConfig.openehrEndpoint);
-                Uri RestPath = new Uri(openehr, restPath);
-                HttpResponseMessage response = _client.Client.PostAsync(RestPath.ToString(), GetHttpContentQuery(query.ToString())).Result;
+                Uri RestPath = GetRequestUri(restPath);
+                HttpResponseMessage response = await _client.Client.PostAsync(RestPath, GetHttpContentQuery(query.ToString()));
                 //System.Diagnostics.Debug.Print(response.RequestMessage.ToString());
                 if (response.IsSuccessStatusCode)
                 {
@@ -43,21 +44,36 @@ namespace SmICSCoreLib.REST
                 }
                 else
                 {
-                    _logger.LogInformation("NO AQL Result Received {Query}", query.Name);
-                    _logger.LogDebug("No Success Code: {statusCode} \n {responsePhrase}", response.StatusCode, response.ReasonPhrase);
-                    return null;
+                    _logger.LogInformation("NO AQL Result Received {Query} \n {QueryComplete}", query.Name, query.Query);
+                    if(response.StatusCode == HttpStatusCode.RequestTimeout || response.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        HttpError error = response.Content.ReadAsAsync<HttpError>().GetAwaiter().GetResult();
+                        _logger.LogError("No Success Code: {status} \n {msg}", response.StatusCode, error.Message);
+                        throw new HttpRequestException("No Success StatusCode: " + response.StatusCode + "\n" + error.Message);
+                    }
+                    else if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        _logger.LogError("No Success StatusCode: {status} \n Couldn't connect to {server}", response.StatusCode, RestPath.ToString());
+                        throw new HttpRequestException("Couldn't connect to " + RestPath.ToString());
+                    }
+                    else if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        _logger.LogError("No Success StatusCode: {status} \n Couldn't connect to {server}: Unauthorized", response.StatusCode, RestPath.ToString());
+                        throw new HttpRequestException("Couldn't connect to " + RestPath.ToString() + ": Unauthorized");
+                    }
+                    throw new HttpRequestException("Unknown Error " + response.StatusCode);
                 }
             }
             catch(Exception e)
             {
                 Console.WriteLine("RestDataAccess.AQLQuery:\n" + e.Message);
-                return null;
+                throw;
             }
         }
         public List<string> GetTemplates()
         {
             string restPath = "/definition/template/adl1.4";
-            HttpResponseMessage response = _client.Client.GetAsync(OpenehrConfig.openehrEndpoint + restPath).Result;
+            HttpResponseMessage response = _client.Client.GetAsync(GetRequestUri(restPath)).Result;
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 List<string> templateIDs = new List<string>();
@@ -80,17 +96,17 @@ namespace SmICSCoreLib.REST
         public Task<HttpResponseMessage> SetTemplate(string value)
         {
             string restPath = "/definition/template/adl1.4";
-            return _client.Client.PostAsync(OpenehrConfig.openehrEndpoint + restPath, GetHttpContentADL(value));
+            return _client.Client.PostAsync(GetRequestUri(restPath), GetHttpContentADL(value));
         }
         public Task<HttpResponseMessage> CreateComposition(string ehr_id, string json)
         {
             string restPath = "/ehr/" + ehr_id + "/composition";
-            return _client.Client.PostAsync(OpenehrConfig.openehrEndpoint + restPath, GetHttpContent(json));
+            return _client.Client.PostAsync(GetRequestUri(restPath), GetHttpContent(json));
         }
         public Task<HttpResponseMessage> CreateEhrIDWithStatus(string Namespace, string ID)
         {
             string restPath = "/ehr";
-            return  _client.Client.PostAsync(OpenehrConfig.openehrEndpoint + restPath, GetEHRStatus(Namespace, ID));
+            return  _client.Client.PostAsync(GetRequestUri(restPath), GetEHRStatus(Namespace, ID));
         }
 
         public void SetAuthenticationHeader(string token)
@@ -110,7 +126,7 @@ namespace SmICSCoreLib.REST
         private HttpContent GetHttpContent(string json)
         {
             HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
-            content.Headers.Add("Prefer", "return=representation");
+            //content.Headers.Add("Prefer", "return=representation");
             return content;
         }
 
@@ -120,6 +136,7 @@ namespace SmICSCoreLib.REST
             //obj.Add("aql", query);
             obj.Add("q", query);
             string json = JsonConvert.SerializeObject(obj, Formatting.Indented);
+            //_client.Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
             HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
             return content;
@@ -138,6 +155,11 @@ namespace SmICSCoreLib.REST
             HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
             content.Headers.Add("Prefer", "return=representation");
             return content;
+        }
+
+        private Uri GetRequestUri(string relativePath)
+        {
+            return new Uri(string.Join("/", OpenehrConfig.openehrEndpoint.TrimEnd('/'), relativePath.TrimStart('/')));
         }
         #endregion
     }

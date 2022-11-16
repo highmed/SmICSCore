@@ -1,9 +1,11 @@
-﻿using SmICSCoreLib.Factories.General;
+﻿using Microsoft.Extensions.Logging;
+using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi.PatientView
 {
@@ -17,79 +19,115 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         {
             RestDataAccess = restDataAccess;
             _specimenFac = specimenFac;
+
         }
 
-        public List<LabResult> Process(Patient patient, PathogenParameter pathogen)
+        public async Task<List<LabResult>> ProcessAsync(Patient patient, PathogenParameter pathogen)
         {
-            List<LabResult> results = new List<LabResult>();
-            List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
-            foreach(Case c in cases)
+            try
             {
-                List<LabResult> tmpResult = Process(c, pathogen.MedicalField, pathogen);
-                if (tmpResult is not null)
+                List<LabResult> results = new List<LabResult>();
+                List<Case> cases = await RestDataAccess.AQLQueryAsync<Case>(AQLCatalog.Cases(patient));
+                foreach(Case c in cases)
                 {
+                    List<LabResult> tmpResult = await ProcessAsync(c, pathogen.MedicalField, pathogen);
+                    if (tmpResult is not null)
+                    {
+                        results.AddRange(tmpResult);
+                    }
+                }
+                return results;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<LabResult>> ProcessAsync(Patient patient, string MedicalField)
+        {
+            try
+            {
+                List<LabResult> results = new List<LabResult>();
+                List<Case> cases = await RestDataAccess.AQLQueryAsync<Case>(AQLCatalog.Cases(patient));
+                foreach (Case c in cases)
+                {
+                    List<LabResult> tmpResult = await ProcessAsync(c, MedicalField);
                     results.AddRange(tmpResult);
                 }
+                return results;
             }
-            return results;
-        }
-
-        public List<LabResult> Process(Patient patient, string MedicalField)
-        {
-            List<LabResult> results = new List<LabResult>();
-            List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
-            foreach (Case c in cases)
+            catch 
             {
-                List<LabResult> tmpResult = Process(c, MedicalField);
-                results.AddRange(tmpResult);
+                throw;
             }
-            return results;
         }
 
-        public List<LabResult> Process(Case Case, string MedicalField)
+        public async Task<List<LabResult>> ProcessAsync(Case Case, string MedicalField)
         {
-            return Process(Case, MedicalField, null);
-        }
-
-        public List<LabResult> Process(Case Case, PathogenParameter pathogen)
-        {
-            return Process(Case, pathogen.MedicalField, pathogen);
-        }
-
-        private List<LabResult> Process(Case Case, string MedicalField, PathogenParameter pathogen = null)
-        {
-            List<UID> uids = null;
-            if (pathogen != null)
+            try
             {
-                uids = RestDataAccess.AQLQuery<UID>(GetPathogenCompositionsUIDs(Case, pathogen));
+                return await ProcessAsync(Case, MedicalField, null);
             }
-            List<LabResult> results = RestDataAccess.AQLQuery<LabResult>(MetaDataQuery(Case, MedicalField, uids));
-            if (results is not null)
-            { 
-                foreach (LabResult result in results)
+            catch 
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<LabResult>> ProcessAsync(Case Case, PathogenParameter pathogen)
+        {
+            try
+            {
+                return await ProcessAsync(Case, pathogen.MedicalField, pathogen);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        private async Task<List<LabResult>> ProcessAsync(Case Case, string MedicalField, PathogenParameter pathogen = null)
+        {
+            try
+            {
+                List<UID> uids = null;
+                if (pathogen != null)
                 {
-                    SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID, MedicalField = MedicalField };
-                    result.Specimens = _specimenFac.Process(parameter, pathogen);
-                    if(result.Specimens is not null)
-                    {
-                        result.Specimens.RemoveAll(spec => spec.Pathogens == null);
-                    }
-                    if (result.Specimens.Count > 0)
-                    {
-                        List<PatientLocation> patLocation = RestDataAccess.AQLQuery<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID));
-                        if(patLocation is not null)
-                        {
-                            result.Sender = patLocation.FirstOrDefault();
-                        }
-                        else 
-                        {
-                            result.Sender = new PatientLocation() { Departement = "N.A", Ward = "N.A"};
-                        }
-                    }
+                    uids = await RestDataAccess.AQLQueryAsync<UID>(GetPathogenCompositionsUIDs(Case, pathogen));
                 }
-                results.RemoveAll(lab => lab.Specimens.Count == 0);
+                List<LabResult> results = await RestDataAccess.AQLQueryAsync<LabResult>(MetaDataQuery(Case, MedicalField, uids));
+                if (results is not null)
+                {
+                    foreach (LabResult result in results)
+                    {
+                        SpecimenParameter parameter = new SpecimenParameter() { UID = result.UID, MedicalField = MedicalField };
+                        result.Specimens = await _specimenFac.ProcessAsync(parameter, pathogen);
+                        if (result.Specimens is not null)
+                        {
+                            result.Specimens.RemoveAll(spec => spec.Pathogens == null);
+                            if (result.Specimens.Count > 0)
+                            {
+                                List<PatientLocation> patLocation = await RestDataAccess.AQLQueryAsync<PatientLocation>(AQLCatalog.PatientLocation(result.Specimens[0].SpecimenCollectionDateTime, Case.PatientID));
+                                if (patLocation is not null)
+                                {
+                                    result.Sender = patLocation.FirstOrDefault();
+                                }
+                                else
+                                {
+                                    result.Sender = new PatientLocation() { Departement = "N.A", Ward = "N.A" };
+                                }
+                            }
+                        }
+                    }
+                    results.RemoveAll(lab => lab.Specimens.Count == 0);
+                }
+                return results;
             }
-            return results;
+            catch
+            {
+                throw;
+            }
         }
 
 
@@ -104,7 +142,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                             CONTAINS CLUSTER m[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] 
                             WHERE c/name/value='{pathogen.MedicalField}'
                             and m/items[at0001]/name/value = 'Erregername'
-                            and m/items[at0001]/value/defining_code/code_string = {pathogen.PathogenCodesToAqlMatchString() }
+                            and m/items[at0001]/value/defining_code/code_string MATCHES {pathogen.PathogenCodesToAqlMatchString() }
                             and e/ehr_status/subject/external_ref/id/value='{Case.PatientID}'"
             };
         }

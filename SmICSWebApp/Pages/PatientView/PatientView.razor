@@ -10,17 +10,6 @@
 
 @inject IPatientDataFactory _patientData;
 @inject PatientViewService  _service;
-<!--<Card Border="Border.Is0" Padding="Padding.Is2.FromLeft">
-    <CardBody Padding="Padding.Is0.FromTop">
-        <CardTitle TextColor="TextColor.Dark">
-            <h1 class="welcome-header-patient">Patientenansicht</h1>
-        </CardTitle>
-        <CardText Background="Background.Info" TextColor="TextColor.White" Margin="Margin.Is5.Is3.FromTop.Is3.FromBottom">
-            <span class="oi oi-info p-2" aria-hidden="true">&nbsp;&nbsp;</span>
-            Hier könnte Ihr Text stehen!
-        </CardText>
-    </CardBody>
-</Card>-->
 <div style="margin-left: 2%; margin-right: 2%;">
     <Card Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromLeft">
         <CardBody Padding="Padding.Is2" Background="Background.Light" Class="box-style">
@@ -44,14 +33,20 @@
 
 <div style="margin-bottom:7.5em;">
 
-    @if (Loading)
+    @if (Loading & !emptyResult)
     {
         <div class="spinner"></div>
     }
 
-    else
+    else if (!Loading)
     {
-        @if (patientResults is not null)
+        @if (emptyResult)
+        { 
+            <div>
+                <span class="text-danger">Keine Einträge für den Patienten gefunden!</span>
+            </div>
+        }
+        else if (patientResults is not null && !emptyResult)
         {
             @if (patient == null)
             {
@@ -71,6 +66,9 @@
 </div>
 
 @code {
+
+    [CascadingParameter]
+    public Error Error { get; set; }
     [Parameter]
     public string PatientID { get; set; }
 
@@ -80,6 +78,7 @@
     private bool Collapsed { get; set; } = false;
 
     private bool Loading = false;
+    private bool emptyResult = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -92,15 +91,28 @@
 
     private async Task Submit()
     {
+        emptyResult = false;
         Loading = true;
+        await Task.Delay(1);
         await Task.Run(GetData);
         Loading = false;
     }
 
-    private void GetData()
+    private async Task GetData()
     {
         selectedPatient.PatientID = PatientID;
-        patientResults = _service.GetData(selectedPatient);
+        try
+        {
+            patientResults = await _service.GetData(selectedPatient);
+            if (patientResults is null)
+            {
+                emptyResult = true;
+            }
+        }
+        catch (Exception e)
+        {
+            Error.ProcessError(e);
+        }
     }
 }
 

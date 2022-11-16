@@ -18,17 +18,17 @@
                         <label for="patID">PatientID:</label>
                         <input type="text" @bind="contact.PatientID" id="patID" />
                         <label for="pathogen">Erreger:</label>
-                        <input type="text" id="pathogen" list="pathogenList" @onchange="GetFilter" />
-                        <datalist id="pathogenList">
+                        <select id="pathogenDropdown" class="col-2 mr-2" @onchange="GetFilter">
+                            <option value="" selected disabled hidden>Bitte wählen</option>
                             @foreach (PathogenEntry entry in _pathogenMenuEntries)
                             {
                                 <option value="@string.Join(",", entry.Codes)">@entry.Name</option>
                             }
-                            <option value="sars-cov-2">SARS-CoV-2</option>
-                        </datalist>
+                        </select>
                         <label for="res">Resistenz:</label>
-                        <input type="text" id="res" list="resistanceList" @bind="contact.Resistence" />
-                        <datalist id="resistanceList">
+                        <select id="res" class="col-2 mr-2" @bind="contact.Resistence">
+                            <option value="" selected disabled hidden>Bitte wählen</option>
+                            <option value="keine">keine</option>
                             @if (_filterMRE is not null)
                             {
                                 @foreach (string filter in _filterMRE)
@@ -36,17 +36,23 @@
                                     <option value="@filter">@filter</option>
                                 }
                             }
-                        </datalist>
+                        </select>
                         <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button>
                     </EditForm>
                 </div>
             </div>
         </div>
-        @if (Loading)
+        @if (Loading && !EmptyResult)
         {
             <div class="spinner"></div>
         }
-        else if (root is not null && !Loading)
+        else if (!Loading && EmptyResult)
+        {
+            <div>
+                <span class="text-danger">Es wurden keine Daten zu den gewählten Parametern gefunden.</span>
+            </div>
+        }
+        else if (root is not null && !Loading && !EmptyResult)
         {
             <div class="row">
                 <div class="card">
@@ -179,8 +185,12 @@
     [Parameter]
     public string Resistence { get; set; }
 
+    [CascadingParameter]
+    public Error Error { get; set; }
+
     private ContactRoot root = null;
     private bool Loading = false;
+    private bool EmptyResult = false;
 
     private List<string> _filterMRE;
 
@@ -191,27 +201,41 @@
 
     private DateTime? FirstInfection = null;
 
-    private void GetData()
+    private async Task GetData()
     {
         _filterParameter = new FilterParameter();
         _filterParameter.ContactDetail = _filterParameter.ContactOptions[0];
         _filterParameter.ResistenceDetail = _filterParameter.ResistanceOptions[0];
         _filterParameter.ResistanceOptions.Add(_pathogenMenuEntries.Where(p => p.Codes[0] == contact.PathogenCodes[0]).Select(p => p.Name).First());
         _filterParameter.ResistanceOptions.Add(contact.Resistence);
-        root = _contactService.LoadContactData(contact);
-        if (root is null)
+        try
         {
-            Console.WriteLine("Keine Daten für das Kontaktnetzwerk gefunden!");
+            root = await _contactService.LoadContactData(contact);
+            if (root is null)
+            {
+                EmptyResult = true;
+                Console.WriteLine("Keine Daten für das Kontaktnetzwerk gefunden!");
+            }
+            else
+            {
+                DetermineRootFirstInfection();
+                contacts = root.Contacts[root.CurrentHospitalization];
+                contactDetails = GetContactDetails(contacts);
+            }
         }
-        DetermineRootFirstInfection();
-        contacts = root.Contacts[root.CurrentHospitalization];
-        contactDetails = GetContactDetails(contacts);
+        catch (Exception ex)
+        {
+            Error.ProcessError(ex);
+        }
+
     }
 
     private async Task Submit()
     {
+        EmptyResult = false;
         Loading = true;
-        await Task.Run(GetData);
+        await Task.Delay(1);
+        await GetData();
         Loading = false;
     }
 
@@ -247,15 +271,25 @@
 
     private void LoadMenu()
     {
-        _pathogenMenuEntries = _menuService.GetPathogens();
+        _pathogenMenuEntries = _menuService.GetPathogens().GetAwaiter().GetResult();
+        _pathogenMenuEntries = _pathogenMenuEntries.OrderBy(p => p.Name).ToList();
     }
 
-    private void GetPrevious()
+    private async Task GetPrevious()
     {
-        ResetFilter();
-        _contactService.GetPreviousHospitalizationContacts(ref root, contact);
-        contacts = root.Contacts[root.CurrentHospitalization];
-        contactDetails = GetContactDetails(contacts);
+        try
+        {
+            ResetFilter();
+            await _contactService.GetPreviousHospitalizationContacts(root, contact);
+            contacts = root.Contacts[root.CurrentHospitalization];
+            contactDetails = GetContactDetails(contacts);
+
+        }
+        catch (Exception ex)
+        {
+            
+            Error.ProcessError(ex);
+        }
     }
 
     private void GetNext()
@@ -265,6 +299,7 @@
         root.CurrentHospitalization = root.Hospitalizations[index + 1];
         contacts = root.Contacts[root.CurrentHospitalization];
         contactDetails = GetContactDetails(contacts);
+
     }
 
     private void GetFilter(ChangeEventArgs e)
@@ -327,7 +362,7 @@
         DateTime? tmpFirstKnownAppearance = null;
         if (root.InfectionStatus.Count > 0)
         {
-            for (int i = root.Hospitalizations.Count - 1; i == 0; i--)
+            for (int i = root.Hospitalizations.Count - 1; i >= 0; i--)
             {
                 if (root.InfectionStatus.ContainsKey(root.Hospitalizations[i]))
                 {
@@ -412,4 +447,5 @@
         }
         return details;
     }
+
 }

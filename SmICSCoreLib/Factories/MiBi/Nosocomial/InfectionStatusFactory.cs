@@ -6,6 +6,7 @@ using SmICSCoreLib.REST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi.Nosocomial
 {
@@ -22,83 +23,106 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
             _hospitalizationFac = hospitalizationFac;
         }
 
-        public SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, string MedicalField)
+        public async Task<SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>> ProcessAsync(Patient patient, string MedicalField)
         {
-           return Process(patient, MedicalField, null);
-        }
-
-        public SortedList<Hospitalization, Dictionary<string, InfectionStatus>> Process(Patient patient, PathogenParameter pathogen)
-        {
-            SortedList<Hospitalization, Dictionary<string, InfectionStatus>> retVal = retVal = new SortedList<Hospitalization, Dictionary<string, InfectionStatus>>();
-            SortedList <Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = Process(patient, null, pathogen);
-            for (int i = 0; i < tmp.Keys.Count; i++)
-            {
-                foreach (string code in pathogen.PathogenCodes)
-                {
-                    if (tmp[tmp.Keys[i]].Count > 0 && tmp[tmp.Keys[i]].ContainsKey(code))
-                    {
-                        retVal.Add(tmp.Keys[i], tmp[tmp.Keys[i]][code]);
-                    }
-                }
+            try
+            { 
+                return await ProcessAsync(patient, MedicalField, null);
             }
-            return retVal;
+            catch { throw; }
         }
 
-        public SortedList<Hospitalization, InfectionStatus> Process(Patient patient, PathogenParameter pathogen, string Resistence)
+        public async Task<SortedList<Hospitalization, Dictionary<string, InfectionStatus>>> ProcessAsync(Patient patient, PathogenParameter pathogen)
         {
-            SortedList<Hospitalization, InfectionStatus> retVal = new SortedList<Hospitalization, InfectionStatus>();
-            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = Process(patient, null, pathogen);
-            for(int i = 0; i < tmp.Keys.Count; i++)
+            try
             {
-                foreach(string code in pathogen.PathogenCodes)
+                SortedList<Hospitalization, Dictionary<string, InfectionStatus>> retVal = retVal = new SortedList<Hospitalization, Dictionary<string, InfectionStatus>>();
+                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = await ProcessAsync(patient, null, pathogen);
+                for (int i = 0; i < tmp.Keys.Count; i++)
                 {
-                    if (tmp[tmp.Keys[i]].ContainsKey(code))
+                    foreach (string code in pathogen.PathogenCodes)
                     {
-                        if (tmp[tmp.Keys[i]][code].ContainsKey(Resistence))
+                        if (tmp[tmp.Keys[i]].Count > 0 && tmp[tmp.Keys[i]].ContainsKey(code))
                         {
-                            retVal.Add(tmp.Keys[i], tmp[tmp.Keys[i]][code][Resistence]);
+                            retVal.Add(tmp.Keys[i], tmp[tmp.Keys[i]][code]);
                         }
                     }
                 }
+                return retVal;
             }
-            return retVal;
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<SortedList<Hospitalization, InfectionStatus>> ProcessAsync(Patient patient, PathogenParameter pathogen, string Resistence)
+        {
+            try
+            {
+                SortedList<Hospitalization, InfectionStatus> retVal = new SortedList<Hospitalization, InfectionStatus>();
+                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> tmp = await ProcessAsync(patient, null, pathogen);
+                for (int i = 0; i < tmp.Keys.Count; i++)
+                {
+                    foreach (string code in pathogen.PathogenCodes)
+                    {
+                        if (tmp[tmp.Keys[i]].ContainsKey(code))
+                        {
+                            if (tmp[tmp.Keys[i]][code].ContainsKey(Resistence))
+                            {
+                                retVal.Add(tmp.Keys[i], tmp[tmp.Keys[i]][code][Resistence]);
+                            }
+                        }
+                    }
+                }
+                return retVal;
+            }
+            catch
+            {
+
+                throw;
+            }
+            
         }
 
         //Hospitalization, Pathogen, Resitance, InfectionStatus
-        private SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> Process(Patient patient, string MedicalField = null, PathogenParameter pathogen = null)
+        private async Task<SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>> ProcessAsync(Patient patient, string MedicalField = null, PathogenParameter pathogen = null)
         {
-            List<Case> cases = RestDataAccess.AQLQuery<Case>(AQLCatalog.Cases(patient));
-            SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase = new SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>();
-            if(cases is not null)
-            { 
-                foreach (Case c in cases)
+            try
+            {
+                List<Case> cases = await RestDataAccess.AQLQueryAsync<Case>(AQLCatalog.Cases(patient));
+                SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase = new SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>>();
+                if (cases is not null)
                 {
-                    if (c.PatientID == "4100948488")
+                    foreach (Case c in cases)
                     {
-                        string i = "";
-                    }
-                    List<LabResult> results = null;
-                    Hospitalization hospitalization = _hospitalizationFac.Process(c);
-                    if (MedicalField == null)
-                    {
-                        results = _mibiResultFac.Process(c, pathogen);
-                    }
-                    else if (pathogen == null)
-                    {
-                        results = _mibiResultFac.Process(c, MedicalField);
-                    }
-                    if(results is not null)
-                    {
-                        results = results.OrderBy(l => l.Specimens.First().SpecimenCollectionDateTime).ToList();
-                    
-                        Dictionary<string, Dictionary<string, InfectionStatus>>infectionInformation = new Dictionary<string, Dictionary<string, InfectionStatus>>();
+                        List<LabResult> results = null;
+                        Hospitalization hospitalization = await _hospitalizationFac.ProcessAsync(c);
+                        if (MedicalField == null)
+                        {
+                            results = await _mibiResultFac.ProcessAsync(c, pathogen);
+                        }
+                        else if (pathogen == null)
+                        {
+                            results = await _mibiResultFac.ProcessAsync(c, MedicalField);
+                        }
+                        if (results is not null)
+                        {
+                            results = results.OrderBy(l => l.Specimens.First().SpecimenCollectionDateTime).ToList();
 
-                        DetermineInfectionInformation(ref infectionInformation, results, hospitalization, infectionInformationByCase);
-                        infectionInformationByCase.Add(hospitalization, infectionInformation);
+                            Dictionary<string, Dictionary<string, InfectionStatus>> infectionInformation = new Dictionary<string, Dictionary<string, InfectionStatus>>();
+
+                            DetermineInfectionInformation(ref infectionInformation, results, hospitalization, infectionInformationByCase);
+                            infectionInformationByCase.Add(hospitalization, infectionInformation);
+                        }
                     }
                 }
+                return infectionInformationByCase;
             }
-            return infectionInformationByCase;
+            catch
+            {
+                throw;
+            } 
         }
 
         private void DetermineInfectionInformation(ref Dictionary<string, Dictionary<string, InfectionStatus>> infectionInformation, List<LabResult> results, Hospitalization hospitalization, SortedList<Hospitalization, Dictionary<string, Dictionary<string, InfectionStatus>>> infectionInformationByCase)

@@ -21,6 +21,12 @@ The openEHR Repository needs to be prefilled with following templates and compos
 - [Symptome](https://ckm.highmed.org/ckm/templates/1246.169.1109)
 - [Mikrobiologischer Befund](https://ckm.highmed.org/ckm/templates/1246.169.69)
 
+**IMPORTANT:** The current version supports the named pathogens from the HiGHmed proposal
+ - Staphylococcus aureus
+ - Escherichia coli 
+ - Klebsiella pneumoniae
+ - Acinetobacter baumannii complex
+ 
 ### Hardware
 
 #### Server 
@@ -74,7 +80,7 @@ mkdir SmICSCore/Certificates
 Create a "SmICSData" folder at the same path where the SmICSCore is located.
 
 ```
-mkdir SmICSData
+mkdir -p SmICSData/db/ && touch SmICSData/db/SmICS.db
 ```
 
 ### 4. Editing docker-compose.yml

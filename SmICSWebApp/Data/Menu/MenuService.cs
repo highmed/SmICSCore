@@ -16,51 +16,65 @@ namespace SmICSWebApp.Data.Menu
             _menuDataAccess = menuDataAccess;
         }
 
-        public List<PathogenEntry> GetPathogens()
+        public async Task<List<PathogenEntry>> GetPathogens()
         {
-            List<Pathogen> pathogens = _menuDataAccess.GetPathogens().Result;
-            List<PathogenEntry> pathogenEntries = new List<PathogenEntry>();
-            foreach (Pathogen pat in pathogens)
+            try
             {
-                if (pat.Name.ToLower().Contains("sars-cov-2"))
+                List<Pathogen> pathogens = await _menuDataAccess.GetPathogens();
+                List<PathogenEntry> pathogenEntries = new List<PathogenEntry>();
+                foreach (Pathogen pat in pathogens)
                 {
-                    IEnumerable<PathogenEntry> tmp = pathogenEntries.Where(p => p.Name == "SARS-CoV-2");
-                    if (tmp.Count() == 0)
+                    if (pat.Name.ToLower().Contains("sars-cov-2"))
                     {
-                        PathogenEntry patho = new PathogenEntry()
+                        IEnumerable<PathogenEntry> tmp = pathogenEntries.Where(p => p.Name == "SARS-CoV-2");
+                        if (tmp.Count() == 0)
                         {
-                            Name = "SARS-CoV-2",
-                            Codes = new List<string>()
+                            PathogenEntry patho = new PathogenEntry()
+                            {
+                                Name = "SARS-CoV-2",
+                                Codes = new List<string>()
                             {
                                 pat.Code
                             }
-                        };
-                        pathogenEntries.Add(patho);
+                            };
+                            pathogenEntries.Add(patho);
+                        }
+                        else if (tmp.Count() == 1)
+                        {
+                            tmp.First().Codes.Add(pat.Code);
+                        }
                     }
-                    else if (tmp.Count() == 1)
+                    else
                     {
-                        tmp.First().Codes.Add(pat.Code);
-                    }
-                }
-                else
-                {
-                    PathogenEntry patho = new PathogenEntry()
-                    {
-                        Name = pat.Name,
-                        Codes = new List<string>()
+                        PathogenEntry patho = new PathogenEntry()
+                        {
+                            Name = pat.Name,
+                            Codes = new List<string>()
                         {
                             pat.Code
                         }
-                    };
-                    pathogenEntries.Add(patho);
+                        };
+                        pathogenEntries.Add(patho);
+                    }
                 }
+                return pathogenEntries;
             }
-            return pathogenEntries;
+            catch
+            {
+                throw;
+            } 
         }
 
         public async Task<List<Ward>> GetWards()
         {
-            return await _menuDataAccess.GetWards();
+            try
+            {
+                return await _menuDataAccess.GetWards();
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

@@ -46,122 +46,147 @@
 </div>
 
 
-    @code {
+@code {
 
-        private List<SmICSCoreLib.Factories.General.Patient> patientList = new List<SmICSCoreLib.Factories.General.Patient>();
+    [CascadingParameter]
+    public Error Error { get; set; }
 
-        private List<RenderFragment> patEntries = new List<RenderFragment>();
+    private List<SmICSCoreLib.Factories.General.Patient> patientList = new List<SmICSCoreLib.Factories.General.Patient>();
 
-        private bool IsValidSubmit = true;
-        private List<string> unvalidEntries = null;
-        private UnvalidMessageType unvalidMessageType;
+    private List<RenderFragment> patEntries = new List<RenderFragment>();
 
-        private bool isLoading = false;
+    private bool IsValidSubmit = true;
+    private List<string> unvalidEntries = null;
+    private UnvalidMessageType unvalidMessageType;
 
-        private List<ComparedContact> contacts = null;
+    private bool isLoading = false;
 
-        protected override Task OnInitializedAsync()
+    private List<ComparedContact> contacts = null;
+
+    protected override Task OnInitializedAsync()
+    {
+        for (int i = 0; i < 10; i++)
         {
-            for (int i = 0; i < 10; i++)
+            EntryList();
+        }
+        return base.OnInitializedAsync();
+    }
+
+    private RenderFragment AddEntry(SmICSCoreLib.Factories.General.Patient patient) => builder =>
+    {
+        builder.OpenComponent<PatientEntry>(0);
+        builder.AddAttribute(0, "Patient", patient);
+        builder.CloseComponent();
+    };
+
+    private void EntryList()
+    {
+        SmICSCoreLib.Factories.General.Patient patient = new SmICSCoreLib.Factories.General.Patient() { PatientID = "" };
+        patientList.Add(patient);
+
+        patEntries.Add(AddEntry(patient));
+    }
+
+    private async Task Submit()
+    {
+        await Validate();
+        if (IsValidSubmit)
+        {
+            isLoading = true;
+            await Task.Delay(1)
+;           await Task.Run(GetData);
+            isLoading = false;
+        }
+    }
+
+    private async Task GetData()
+    {
+        List<SmICSCoreLib.Factories.General.Patient> copy = new List<SmICSCoreLib.Factories.General.Patient>(patientList.Count);
+
+        patientList.ForEach((item) =>
+        {
+            if(!string.IsNullOrEmpty(item.PatientID))
             {
-                EntryList();
+                copy.Add((SmICSCoreLib.Factories.General.Patient)item.Clone());
+
             }
-            return base.OnInitializedAsync();
-        }
-
-        private RenderFragment AddEntry(SmICSCoreLib.Factories.General.Patient patient) => builder =>
+        });
+        try
         {
-            builder.OpenComponent<PatientEntry>(0);
-            builder.AddAttribute(0, "Patient", patient);
-            builder.CloseComponent();
-        };
-
-        private void EntryList()
-        {
-            SmICSCoreLib.Factories.General.Patient patient = new SmICSCoreLib.Factories.General.Patient() { PatientID = "" };
-            patientList.Add(patient);
-
-            patEntries.Add(AddEntry(patient));
+            contacts = await _service.Compare(copy);
         }
-
-        private async Task Submit()
+        catch (Exception e)
         {
-            Validate();
-            if (IsValidSubmit)
-            {
-                isLoading = true;
-                await Task.Run(GetData);
-                isLoading = false;
-            }
+            Error.ProcessError(e);
         }
+    }
 
-        private void GetData()
-        {
-            contacts = _service.Compare(patientList);
-        }
-
-        private void Validate()
+    private async Task Validate()
+    {
+        try
         {
             IsValidSubmit = true;
             CheckForDouble();
             if (IsValidSubmit)
             {
-                ExistsPatients();
-            }
-            if (IsValidSubmit)
-            {
-                RemoveEmpty();
+                await ExistsPatients();
             }
         }
-
-        private void CheckForDouble()
+        catch(Exception e)
         {
-            List<string> multiplePat = new List<string>();
-            foreach (SmICSCoreLib.Factories.General.Patient pat in patientList)
+            Error.ProcessError(e);
+        }
+
+    }
+
+    private void CheckForDouble()
+    {
+        List<string> multiplePat = new List<string>();
+        foreach (SmICSCoreLib.Factories.General.Patient pat in patientList)
+        {
+            if (!string.IsNullOrEmpty(pat.PatientID))
             {
-                if (!string.IsNullOrEmpty(pat.PatientID))
+                if (!multiplePat.Contains(pat.PatientID))
                 {
-                    if (!multiplePat.Contains(pat.PatientID))
+                    List<string> multipleID = patientList.Where(p => pat.PatientID.Trim() == p.PatientID.Trim()).Select(p => p.PatientID).ToList();
+                    if (multipleID.Count > 1)
                     {
-                        List<string> multipleID = patientList.Where(p => pat.PatientID.Trim() == p.PatientID.Trim()).Select(p => p.PatientID).ToList();
-                        if (multipleID.Count > 1)
-                        {
-                            multiplePat.Add(multipleID[0]);
-                        }
+                        multiplePat.Add(multipleID[0]);
                     }
                 }
             }
-            if (multiplePat.Count > 0)
-            {
-                IsValidSubmit = false;
-                unvalidEntries = multiplePat;
-                unvalidMessageType = UnvalidMessageType.DOUBLED_ENTRIES;
-            }
         }
-
-        private void ExistsPatients()
+        if (multiplePat.Count > 0)
         {
-            List<string> notExisting = new List<string>();
-            foreach (SmICSCoreLib.Factories.General.Patient pat in patientList)
-            {
-                if (!string.IsNullOrEmpty(pat.PatientID.Trim()))
-                {
-                    if (!_service.ExistsPatient(pat))
-                    {
-                        notExisting.Add(pat.PatientID);
-                    }
-                }
-            }
-            if (notExisting.Count > 0)
-            {
-                IsValidSubmit = false;
-                unvalidEntries = notExisting;
-                unvalidMessageType = UnvalidMessageType.NOT_EXISTING;
-            }
-        }
-
-        private void RemoveEmpty()
-        {
-            patientList.RemoveAll(p => string.IsNullOrEmpty(p.PatientID));
+            IsValidSubmit = false;
+            unvalidEntries = multiplePat;
+            unvalidMessageType = UnvalidMessageType.DOUBLED_ENTRIES;
         }
     }
+
+    private async Task ExistsPatients()
+    {
+        List<string> notExisting = new List<string>();
+        foreach (SmICSCoreLib.Factories.General.Patient pat in patientList)
+        {
+            if (!string.IsNullOrEmpty(pat.PatientID.Trim()))
+            {
+                if (!await _service.ExistsPatient(pat))
+                {
+                    notExisting.Add(pat.PatientID);
+                }
+            }
+        }
+        if (notExisting.Count > 0)
+        {
+            IsValidSubmit = false;
+            unvalidEntries = notExisting;
+            unvalidMessageType = UnvalidMessageType.NOT_EXISTING;
+        }
+    }
+
+    private void RemoveEmpty()
+    {
+        patientList.RemoveAll(p => string.IsNullOrEmpty(p.PatientID));
+    }
+}
