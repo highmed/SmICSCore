@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿
 using System.Threading.Tasks;
 using Quartz;
 using System;
-using Microsoft.Extensions.Logging.Abstractions;
 using SmICSCoreLib.DB.MenuItems;
 using SmICSCoreLib.DB.Models;
 using SmICSCoreLib.Factories.MenuList;

@@ -125,9 +125,9 @@
         await Task.Run(LoadMenu);
     }
 
-    private void LoadMenu()
+    private async Task LoadMenu()
     {
-        _pathogenMenuEntries = _menuService.GetPathogens();
+        _pathogenMenuEntries = await _menuService.GetPathogens();
         _wardMenuEntries = _menuService.GetWards().Result;
     }
 
