@@ -18,7 +18,7 @@ namespace SmICSCoreLib.CronJobs
         private DashboardRestClientConnector _client;
         private readonly INUMNodeFactory _listFac;
         private ILogger<NUMNodeFactory> _logger;
-        private readonly string path = @"../SmICSWebApp/Resources/NUMNode/NUMNode_1_" + DateTime.Today.ToString("yyyy_mm_dd") + ".json";
+        private readonly string path = @"../SmICSWebApp/Resources/NUMNode/NUMNode_1_R" + DateTime.Today.ToString("yyyy_MM_dd") + ".json";
 
         public NUMNodeJob(INUMNodeFactory listFac, ILogger<NUMNodeFactory> logger)
         {

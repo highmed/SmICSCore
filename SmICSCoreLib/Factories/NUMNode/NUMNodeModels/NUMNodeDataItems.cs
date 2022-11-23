@@ -5,11 +5,11 @@ namespace SmICSCoreLib.Factories.NUMNode
     public class NUMNodeDataItems
     {
         [JsonProperty(PropertyName = "itemname")]
-        public string Itemname { get; set; }
+        public string itemname { get; set; }
         [JsonProperty(PropertyName = "itemtype")]
-        public string Itemtype { get; set; }
+        public string itemtype { get; set; }
         [JsonProperty(PropertyName = "data")]
-        public NUMNodeData Data { get; set; }
+        public NUMNodeData data { get; set; }
 
     }
 }

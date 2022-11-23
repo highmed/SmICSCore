@@ -7,15 +7,15 @@ namespace SmICSCoreLib.Factories.NUMNode
     public class NUMNodeModel
     {
         [JsonProperty(PropertyName = "provider")]
-        public string Provider { get; set; }
+        public string provider { get; set; }
         [JsonProperty(PropertyName = "corona_dashboard_dataset_version")]
-        public string CDDV { get; set; }
+        public string corona_dashboard_dataset_version { get; set; }
         [JsonProperty(PropertyName = "exporttimestamp")]
-        public DateTime Timestamp { get; set; }
+        public DateTime exporttimestamp { get; set; }
         [JsonProperty(PropertyName = "author")]
-        public string Author { get; set; }
+        public string author { get; set; }
         [JsonProperty(PropertyName = "dataitems")]
-        public List<NUMNodeDataItems> Dataitems { get; set; }
+        public List<NUMNodeDataItems> dataitems { get; set; }
 
     }
 }

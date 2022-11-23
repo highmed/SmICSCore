@@ -73,6 +73,7 @@ namespace SmICSCoreLib.Factories.NUMNode
         {
             InitializeGlobalVariables();
             TimespanParameter timespan = new() { Starttime = DateTime.Now.AddYears(-10), Endtime = DateTime.Now };
+            //TimespanParameter timespan = new() { Starttime = DateTime.Now.AddYears(-10), Endtime = DateTime.Now.AddYears(-1) };
             _ = Process(timespan);
         }
 
@@ -118,7 +119,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                 {
                     GetNumberOfStays(),
                     GetNumberOfNosCases(),
-                    GetNumberOfContacts()
+                    //GetNumberOfContacts()
                 };
 
                 foreach(var task in tasks)
@@ -132,22 +133,33 @@ namespace SmICSCoreLib.Factories.NUMNode
                 List<double> medianList = new() { medianNumberOfStays, medianNumberOfMaybeNosCases, medianNumberOfNosCases, medianNumberOfContacts };
                 List<double> underquartilList = new() { underQuartilNumberOfStays, underQuartilNumberOfMaybeNosCases, underQuartilNumberOfNosCases, underQuartilNumberOfContacts };
                 List<double> upperquartilList = new() { upperQuartilNumberOfStays, upperQuartilNumberOfMaybeNosCases, upperQuartilNumberOfNosCases, upperQuartilNumberOfContacts };
-                List<double> maxList = new() { labPatientList.Max(a => a.CountStays), labPatientList.Max(a => a.CountMaybeNosCases), labPatientList.Max(a => a.CountNosCases), labPatientList.Max(a => a.CountContacts) };
-                List<double> minList = new() { labPatientList.Min(a => a.CountStays), labPatientList.Min(a => a.CountMaybeNosCases), labPatientList.Min(a => a.CountNosCases), labPatientList.Min(a => a.CountContacts) };
+                List<double> maxList;
+                List<double> minList;
+                if (labPatientList.Count != 0)
+                {
+                    maxList = new() { labPatientList.Max(a => a.CountStays), labPatientList.Max(a => a.CountMaybeNosCases), labPatientList.Max(a => a.CountNosCases), labPatientList.Max(a => a.CountContacts) };
+                    minList = new() { labPatientList.Min(a => a.CountStays), labPatientList.Min(a => a.CountMaybeNosCases), labPatientList.Min(a => a.CountNosCases), labPatientList.Min(a => a.CountContacts) };
+                }
+                else
+                {
+                    maxList = new() { 0, 0, 0, 0 };
+                    minList = new() { 0, 0, 0, 0 };
+                }
+                
 
                 for (int i = 0; i < itemNames.Count; i++)
                 {
                     NUMNodeList = new NUMNodeModel()
                     {
-                        Provider = "MHH",
-                        CDDV = "0.3.0",
-                        Timestamp = DateTime.Now,
-                        Author = "SmICS",
-                        Dataitems = new List<NUMNodeDataItems>(){
+                        provider = "MHH-SmICS",
+                        corona_dashboard_dataset_version = "0.3.0",
+                        exporttimestamp = DateTime.Now,
+                        author = "SmICS",
+                        dataitems = new List<NUMNodeDataItems>(){
                             new NUMNodeDataItems(){
-                                Itemname = itemNames[i],
-                                Itemtype = "aggregated",
-                                Data = new NUMNodeData(){
+                                itemname = itemNames[i],
+                                itemtype = "aggregated",
+                                data = new NUMNodeData(){
                                     average = averageList[i],
                                     median = medianList[i],
                                     underquartil = underquartilList[i],
@@ -159,7 +171,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                         }
                     };
 
-                    JSONFileStream.JSONWriter.Write(NUMNodeList, path, "NUMNode_" + i + "_R" + DateTime.Today.ToString("yyyy_mm_dd"));
+                    JSONFileStream.JSONWriter.Write(NUMNodeList, path, "NUMNode_" + i + "_R" + DateTime.Today.ToString("yyyy_MM_dd"));
                 }
             }
             catch (Exception e)
@@ -322,50 +334,52 @@ namespace SmICSCoreLib.Factories.NUMNode
             {
                 List<string> patlist = new();
                 List<string> currentpatlist = new();
-
-                if (labPatient.Endtime is null)
+                if(labPatientList.Count != 0)
                 {
-                    labPatient.Endtime = DateTime.Today;
-                }
-
-                foreach (var labPatient in labPatientList)
-                {
-                    if (labPatient.Endtime == DateTime.Today)
+                    if (labPatient.Endtime is null)
                     {
-                        currentpatlist.Add(labPatient.PatientID);
+                        labPatient.Endtime = DateTime.Today;
+                    }
+
+                    foreach (var labPatient in labPatientList)
+                    {
+                        if (labPatient.Endtime == DateTime.Today)
+                        {
+                            currentpatlist.Add(labPatient.PatientID);
+                        }
+                        else
+                        {
+                            patlist.Add(labPatient.PatientID);
+                        }
+                    }
+
+                    PatientListParameter patList = new() { patientList = patlist };
+                    PatientListParameter currentpatList = new() { patientList = currentpatlist };
+                    List<PatientModel> list = _infecFac.Process(patList);
+                    List<PatientModel> currentlist = _infecFac.Process(currentpatList);
+
+                    if (list is not null & currentlist is not null)
+                    {
+                        numberOfMaybeNosCases = list.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+                        numberOfNosCases = list.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+                        currentnumberOfMaybeNosCases = currentlist.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+                        currentnumberOfNosCases = currentlist.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
+
+                        foreach (LabPatientModel labPatient in labPatientList)
+                        {
+                            labPatient.CountMaybeNosCases = (list.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count())
+                                + (currentlist.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count());
+                            labPatient.CountNosCases = (list.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count())
+                                + (currentlist.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count());
+                        }
                     }
                     else
                     {
-                        patlist.Add(labPatient.PatientID);
+                        numberOfMaybeNosCases = 0;
+                        numberOfNosCases = 0;
+                        currentnumberOfMaybeNosCases = 0;
+                        currentnumberOfNosCases = 0;
                     }
-                }
-
-                PatientListParameter patList = new() { patientList = patlist };
-                PatientListParameter currentpatList = new() { patientList = currentpatlist };
-                List<PatientModel> list = _infecFac.Process(patList);
-                List<PatientModel> currentlist = _infecFac.Process(currentpatList);
-
-                if (list is not null & currentlist is not null)
-                {
-                    numberOfMaybeNosCases = list.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-                    numberOfNosCases = list.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-                    currentnumberOfMaybeNosCases = currentlist.Where(x => x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-                    currentnumberOfNosCases = currentlist.Where(x => x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count();
-
-                    foreach (LabPatientModel labPatient in labPatientList)
-                    {
-                        labPatient.CountMaybeNosCases = (list.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count())
-                            + (currentlist.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Moegliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count());
-                        labPatient.CountNosCases = (list.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count())
-                            + (currentlist.Where(x => x.PatientID == labPatient.PatientID && x.Infektion == "Wahrscheinliche Nosokomiale Infektion").Select(x => x.PatientID).Distinct().Count());
-                    }
-                }
-                else
-                {
-                    numberOfMaybeNosCases = 0;
-                    numberOfNosCases = 0;
-                    currentnumberOfMaybeNosCases = 0;
-                    currentnumberOfNosCases = 0;
                 }
 
                 averageNumberOfMaybeNosCases = NUMNodeStatistics.GetAverage(numberOfMaybeNosCases + currentnumberOfMaybeNosCases, countPatient + currentcountPatient);
@@ -387,85 +401,89 @@ namespace SmICSCoreLib.Factories.NUMNode
         {
             try
             {
+                TimespanParameter currenttimespan = new() { Starttime = DateTime.Now.AddDays(-7), Endtime = DateTime.Now };
                 foreach (var labPatient in labPatientList)
                 {
-                    if (labPatient.Endtime is null)
+                    if(labPatient.Starttime >= currenttimespan.Starttime && (labPatient.Endtime < currenttimespan.Endtime || labPatient.Endtime is null))
                     {
-                        labPatient.Endtime = DateTime.Today;
-                    }
-                    List<WardParameter> patStay = RestDataAccess.AQLQuery<WardParameter>(GetStays(labPatient));
-                    if (patStay is not null)
-                    {
-                        List<WardParameter> distinctList = new();
-                        foreach (var pat in patStay)
+                        if (labPatient.Endtime is null)
                         {
-                            if (!distinctList.Contains(pat))
-                            {
-                                distinctList.Add(pat);
-                            }
+                            labPatient.Endtime = DateTime.Today;
                         }
-                        List<WardParameter> sortedList = distinctList.OrderBy(p => p.Start).ToList();
-
-                        List<LabPatientModel> patListStationary = RestDataAccess.AQLQuery<LabPatientModel>(GetStationaryPatientList(sortedList.First(), sortedList.Last()));
-                        List<LabPatientModel> distinctListStationary = new();
-
-                        if (patListStationary is not null && sortedList is not null)
+                        List<WardParameter> patStay = RestDataAccess.AQLQuery<WardParameter>(GetStays(labPatient));
+                        if (patStay is not null)
                         {
-                            foreach (var pat in patListStationary)
+                            List<WardParameter> distinctList = new();
+                            foreach (var pat in patStay)
                             {
-                                if (!distinctListStationary.Contains(pat))
+                                if (!distinctList.Contains(pat))
                                 {
-                                    distinctListStationary.Add(pat);
+                                    distinctList.Add(pat);
                                 }
-                                if (pat.PatientID != labPatient.PatientID && distinctListStationary.Contains(pat))
+                            }
+                            List<WardParameter> sortedList = distinctList.OrderBy(p => p.Start).ToList();
+
+                            List<LabPatientModel> patListStationary = RestDataAccess.AQLQuery<LabPatientModel>(GetStationaryPatientList(sortedList.First(), sortedList.Last()));
+                            List<LabPatientModel> distinctListStationary = new();
+
+                            if (patListStationary is not null && sortedList is not null)
+                            {
+                                foreach (var pat in patListStationary)
                                 {
-                                    foreach (var labPat in sortedList)
+                                    if (!distinctListStationary.Contains(pat))
                                     {
-                                        pat.Starttime = labPat.Start;
-                                        pat.Endtime = labPat.End;
-                                        if (pat.Endtime is null)
+                                        distinctListStationary.Add(pat);
+                                    }
+                                    if (pat.PatientID != labPatient.PatientID && distinctListStationary.Contains(pat))
+                                    {
+                                        foreach (var labPat in sortedList)
                                         {
-                                            pat.Endtime = DateTime.Today;
-                                        }
-                                        List<WardParameter> contactStay = RestDataAccess.AQLQuery<WardParameter>(GetStays(pat));
-                                        List<WardParameter> distinctContact = new();
-
-                                        if (contactStay is not null)
-                                        {
-                                            foreach (var contact in contactStay)
+                                            pat.Starttime = labPat.Start;
+                                            pat.Endtime = labPat.End;
+                                            if (pat.Endtime is null)
                                             {
-                                                if (!distinctContact.Contains(contact) && contact.PatientID != labPatient.PatientID)
-                                                {
-                                                    distinctContact.Add(contact);
-                                                }
-                                                if (contact.Ward == labPat.Ward && distinctContact.Contains(contact))
-                                                {
-                                                    if (pat.Endtime == DateTime.Today)
-                                                    {
-                                                        currentnumberOfContacts++;
-                                                    }
-                                                    else
-                                                    {
-                                                        numberOfContacts++;
-                                                    }
-                                                    labPatient.CountContacts++;
-                                                }
-                                                else if (contact.DepartementID is not null
-                                                    && contact.DepartementID == labPat.DepartementID
-                                                    && distinctContact.Contains(contact)
-                                                    && contact.Ward is null)
-                                                {
-                                                    if (pat.Endtime == DateTime.Today)
-                                                    {
-                                                        currentnumberOfContacts++;
-                                                    }
-                                                    else
-                                                    {
-                                                        numberOfContacts++;
-                                                    }
-                                                    labPatient.CountContacts++;
-                                                }
+                                                pat.Endtime = DateTime.Today;
+                                            }
+                                            List<WardParameter> contactStay = RestDataAccess.AQLQuery<WardParameter>(GetStays(pat));
+                                            List<WardParameter> distinctContact = new();
 
+                                            if (contactStay is not null)
+                                            {
+                                                foreach (var contact in contactStay)
+                                                {
+                                                    if (!distinctContact.Contains(contact) && contact.PatientID != labPatient.PatientID)
+                                                    {
+                                                        distinctContact.Add(contact);
+                                                    }
+                                                    if (contact.Ward == labPat.Ward && distinctContact.Contains(contact))
+                                                    {
+                                                        if (pat.Endtime == DateTime.Today)
+                                                        {
+                                                            currentnumberOfContacts++;
+                                                        }
+                                                        else
+                                                        {
+                                                            numberOfContacts++;
+                                                        }
+                                                        labPatient.CountContacts++;
+                                                    }
+                                                    else if (contact.DepartementID is not null
+                                                        && contact.DepartementID == labPat.DepartementID
+                                                        && distinctContact.Contains(contact)
+                                                        && contact.Ward is null)
+                                                    {
+                                                        if (pat.Endtime == DateTime.Today)
+                                                        {
+                                                            currentnumberOfContacts++;
+                                                        }
+                                                        else
+                                                        {
+                                                            numberOfContacts++;
+                                                        }
+                                                        labPatient.CountContacts++;
+                                                    }
+
+                                                }
                                             }
                                         }
                                     }
@@ -473,6 +491,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                             }
                         }
                     }
+                    
                 }
 
                 averageNumberOfContacts = NUMNodeStatistics.GetAverage(numberOfContacts + currentnumberOfContacts, countPatient + currentcountPatient);
