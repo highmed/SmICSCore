@@ -1,27 +1,20 @@
-﻿using Newtonsoft.Json;
+﻿
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SmICSCoreLib.Factories.RKIStatistics.Models;
 using Microsoft.Extensions.Logging;
-using SmICSCoreLib.DownloadFile;
-using SmICSCoreLib.Factories.RKIStatistics;
-using System.Threading.Tasks;
-using SmICSCoreLib.Factories.RKIStatistics.ReceiveModels;
+using SmICSCoreLib.JSONFileStream;
 
 namespace SmICSWebApp.Data.RKIData
 {
     public class RKIReportService
     {      
         private readonly ILogger<RKIReportService> _logger;
-        private readonly IRKIReportFactory _listFac;
-        private readonly string path = "";
         
-        public RKIReportService(ILogger<RKIReportService> logger, IRKIReportFactory listFac)
+        public RKIReportService(ILogger<RKIReportService> logger)
         {
             _logger = logger;
-            _listFac = listFac;
         }
 
         public string SetCaseColor(double day, double daybefore)
@@ -51,9 +44,26 @@ namespace SmICSWebApp.Data.RKIData
             }
         }
 
-        public void GetBLReport()
+        public RKIDailyReportModel GetBLReport(string path)
         {
+            string file = path + "RKI_DailyReport_" + DateTime.Now.ToString("yyyy-MM-dd") + ".json";
+            if (!File.Exists(file))
+            {
+                return null;
+            }
+            RKIDailyReportModel report = JSONReader<RKIDailyReportModel>.ReadObject(file);
+            return report;
+        }
 
+        public RKIDailyReportModel GetOldBLReport(string path)
+        {
+            var directory = new DirectoryInfo(path);
+            var file = (from f in directory.GetFiles()
+                    orderby f.LastWriteTime descending
+                    select f).FirstOrDefault();
+            string filepath = path + file.Name;
+            RKIDailyReportModel report = JSONReader<RKIDailyReportModel>.ReadObject(filepath);
+            return report;
         }
     }
 }

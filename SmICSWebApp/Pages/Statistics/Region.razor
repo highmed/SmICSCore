@@ -1,0 +1,209 @@
+﻿@page "/region"
+
+@using System.ComponentModel.DataAnnotations
+@using System
+@using System.IO;
+@using ChartJs.Blazor.LineChart
+@using SmICSCoreLib.JSONFileStream;
+@using Microsoft.Extensions.Logging
+@using SmICSCoreLib.Factories.RKIStatistics
+@using SmICSCoreLib.Factories.RKIStatistics.Models
+@using SmICSWebApp.Data.RKIData
+@inject ILogger<Region> Logger
+@inject RKIReportService rkiReportService
+
+
+@*<div class="card">
+    <div class="row">
+        <StatistikNav>
+        </StatistikNav>
+
+        <div class="card-body col-10">
+            <div style="padding: 0px 0px 100px 0px;">
+                @if (dailyreportmodel == null)
+                {
+                    @if (status == false)
+                    {
+                        <p><em>Es stehen momentan leider keine Daten zu Verfügung!</em></p>
+                        <p><em>Versuchen Sie bitte später diese Seite aufzurufen!</em></p>
+                    }
+                    else
+                    {
+                        <p><em>Daten werden geladen...</em></p>
+                        <div class="spinner"></div>
+                    }
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="card flex-fill">
+                                <div class="card-header" style="padding-top: 10px;">
+                                    <h5 class="card-title">Vergleich Region-Bundesland</h5>
+                                    <EditForm Model="@data">
+                                        <div style="display: inline-flex; ">
+                                            <div>
+                                                <label>Bundesland: </label>
+                                                <InputSelect @bind-Value="state" @onclick="@GetChart">
+                                                    @foreach (var item in dailyreportmodel.State)
+                                                        {
+                                                        <option value="@item.Name"> @item.Name</option>}
+                                                    }
+                                                </InputSelect>
+                                            </div>
+
+                                            <div>
+                                                <label>Region: </label>
+                                                <InputSelect @bind-Value="district" @onclick="@GetChart">
+                                                    @foreach (var item in districtList)
+                                                        {
+                                                        <option value="@item">
+                                                            @item
+                                                        </option>
+                                                        }
+                                                </InputSelect>
+                                            </div>
+                                        </div>
+                                    </EditForm>
+                                </div>
+                                <div class="card-body">
+                                    <p> Stand @dailyreportmodel.Timestamp</p>
+                                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                                        <table class="table table-bordered table-hover mb-0">
+                                            <thead style="background-color: #7FBDD2;">
+                                                <tr>
+                                                    <th scope="col">Daten</th>
+                                                    <th scope="col">@district</th>
+                                                    <th scope="col">@state</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">Fallzahl</th>
+                                                    <td>@landkreis.FallzahlGesamt</td>
+                                                    <td>@bundesland.BlAttribute.FallzahlGesamt</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Fallzahl pro 100.000 Einwohner</th>
+                                                    <td>@landkreis.FaellePro100000Ew </td>
+                                                    <td>@bundesland.BlAttribute.FaellePro100000Ew</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th scope="row">Fälle in den letzten 7 Tagen</th>
+                                                    <td>@landkreis.Faelle7Lk</td>
+                                                    <td>@bundesland.BlAttribute.Faelle7BL</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">7-Tage-Inzidenz</th>
+                                                    <td>@landkreis.Inzidenz7Tage</td>
+                                                    <td>@bundesland.BlAttribute.Inzidenz7Tage</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">7-Tage-R-Wert</th>
+                                                    <td> @rValue</td>
+                                                    <td> @rValue</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Verstorben</th>
+                                                    <td>@landkreis.Todesfaelle</td>
+                                                    <td>@bundesland.BlAttribute.Todesfaelle</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Verstorben in den letzten 7 Tagen</th>
+                                                    <td>@landkreis.Todesfaelle7Lk</td>
+                                                    <td>@bundesland.BlAttribute.Todesfaelle7BL</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Genesen</th>
+                                                    <td> k.A.</td>
+                                                    <td> k.A.</td>
+                                                </tr>
+                                                @*<tr>
+                                                        <th scope="row">Nicht genesen</th>
+                                                        <td> .k.A </td>
+                                                        <td> .k.A</td>
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-7">
+                            <div class="card flex-fill">
+                                @if (@chartStatus == true)
+                                {
+                                    <Chart Config="config" @ref="_chart"></Chart>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>*@
+
+@code {
+    private StatistikData data = new();
+    private readonly string resourcepath = "Resources/RKIReportData/DailyReport/";
+    private RKIDailyReportModel dailyreportmodel = new();
+    private RKIReportModel report = new();
+
+    private bool status;
+    private bool chartStatus;
+    private Chart _chart;
+    private LineConfig config;
+    private List<string> districtList = new();
+
+    private class StatistikData
+    {
+        [Required]
+        public string state { get; set; }
+
+        [Required]
+        public string district { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        data.state = "Baden-Württemberg";
+        data.district = "Stuttgart";
+        status = false;
+        chartStatus = false;
+        dailyreportmodel = rkiReportService.GetBLReport(resourcepath);
+        if(dailyreportmodel is not null)
+        {
+            status = true;
+        }
+        else
+        {
+            await GetBLReportArchiv();
+        }
+        await GetDistrictList();
+        await Task.CompletedTask;
+    }
+
+    private async Task GetBLReportArchiv()
+    {
+        dailyreportmodel = rkiReportService.GetOldBLReport(resourcepath);
+        if(dailyreportmodel is not null)
+        {
+            status = true;
+        }
+        await Task.CompletedTask;
+    }
+
+    private async Task GetDistrictList()
+    {
+        //districtList = dailyreportmodel.State.Find(x => x.Name == state).District.ForEach(b => b.City);
+        await Task.CompletedTask;
+    }
+
+    private void GetChart()
+    {
+        
+    }
+}

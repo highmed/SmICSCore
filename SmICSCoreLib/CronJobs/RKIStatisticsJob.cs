@@ -364,7 +364,7 @@ namespace SmICSCoreLib.CronJobs
                 resultSetBL = DownloadFile.DownloadFile.GetInstance(link).Sheets[2];
             }
             var endresultSetBL = resultSetBL.AsEnumerable().Skip(5).CopyToDataTable();
-            var endresultSetLK = resultSetBL.AsEnumerable().Skip(5).CopyToDataTable();
+            var endresultSetLK = resultSetLK.AsEnumerable().Skip(5).CopyToDataTable();
             resultHeader = resultSetBL;
             resultHeader.Columns.RemoveAt(0);
             var resultheader = resultHeader.AsEnumerable().ElementAt(4);
@@ -377,8 +377,8 @@ namespace SmICSCoreLib.CronJobs
             if (resultSetBL != null)
             {
                 string filename = "RKI_BLReport";
-                string filePath = shortPath + "/" + filename + ".json";
-                var result = endresultSetBL.Rows;
+                string filePath = shortPath + filename + ".json";
+                var resultBL = endresultSetBL.Rows;
                 RKIReportModel oldModel = new();
 
                 if (File.Exists(filePath))
@@ -386,8 +386,8 @@ namespace SmICSCoreLib.CronJobs
                     oldModel = JSONReader<RKIReportModel>.ReadObject(filePath);
                 }
 
-                List<RKIReportLocationModel> rKIReportLocationModels = FillLocationModel(result, oldModel, "Bundesland", filePath, resultheader);
-                model.Data = rKIReportLocationModels;
+                List<RKIReportLocationModel> rKIReportLocationModelsBL = FillLocationModel(resultBL, oldModel, "Bundesland", filePath, resultheader);
+                model.Data = rKIReportLocationModelsBL;
 
                 JSONWriter.Write(model, shortPath, filename);
             }
@@ -395,14 +395,14 @@ namespace SmICSCoreLib.CronJobs
             if (resultSetLK != null)
             {
                 string filename = "RKI_LKReport";
-                string filePath = shortPath + "/" + filename + ".json";
+                string filePath = shortPath + filename + ".json";
 
                 if (link == archivUrl)
                 {
                     resultSetLK.Columns.RemoveAt(0);
                 }
 
-                var result = endresultSetLK.Rows;
+                var resultLK = endresultSetLK.Rows;
                 RKIReportModel oldModel = new();
 
                 if (File.Exists(filePath))
@@ -410,8 +410,8 @@ namespace SmICSCoreLib.CronJobs
                     oldModel = JSONReader<RKIReportModel>.ReadObject(filePath);
                 }
 
-                List<RKIReportLocationModel> rKIReportLocationModels = FillLocationModel(result, oldModel, "Landkreis", filePath, resultheader);
-                model.Data = rKIReportLocationModels;
+                List<RKIReportLocationModel> rKIReportLocationModelsLK = FillLocationModel(resultLK, oldModel, "Landkreis", filePath, resultheader);
+                model.Data = rKIReportLocationModelsLK;
 
                 JSONWriter.Write(model, shortPath, filename);
             }
@@ -421,19 +421,27 @@ namespace SmICSCoreLib.CronJobs
 
         private static List<RKIReportLocationModel> FillLocationModel(DataRowCollection dataRowCollection, RKIReportModel rKIReportModel, string description, string file, DataRow header)
         {
-            List<RKIReportLocationModel> rKIReportLocationModels = new();
-            RKIReportLocationModel rKIReportLocationModel = new();
+            List<RKIReportLocationModel> rKIReportLocationModels = new();            
             List<RKIReportCaseModel> rKIReportCaseModels = new();
-
-            dataRowCollection.RemoveAt(dataRowCollection.Count);
-
+            if(description == "Bundesland")
+            {
+                dataRowCollection.RemoveAt(dataRowCollection.Count - 1);
+            }
+            
             foreach (DataRow row in dataRowCollection)
             {
+                RKIReportLocationModel rKIReportLocationModel = new();
                 rKIReportLocationModel.Description = description;
                 rKIReportLocationModel.Name = row[0].ToString();
-                if(description == "Landkreis")
+                int i;
+                if (description == "Landkreis")
                 {
+                    i = 2;
                     rKIReportLocationModel.ID = row[1].ToString();
+                }
+                else
+                {
+                    i = 1;
                 }
                 
                 if (File.Exists(file))
@@ -451,16 +459,18 @@ namespace SmICSCoreLib.CronJobs
                         }
                     }
                 }
-
-                for (int i = 1; i < row.Table.Columns.Count; i++)
+                
+                do
                 {
                     RKIReportCaseModel rKIReportCaseModel = new()
                     {
-                        Timestamp = Convert.ToDateTime(header[i-1]),
+                        Timestamp = Convert.ToDateTime(header[i - 1]),
                         CaseNumber = Convert.ToInt32(row[i])
                     };
                     rKIReportCaseModels.Add(rKIReportCaseModel);
-                }
+                    i++;
+                    Console.WriteLine(i);
+                } while (i < row.Table.Columns.Count);
                 rKIReportLocationModel.CaseNumbers = rKIReportCaseModels;
                 rKIReportLocationModels.Add(rKIReportLocationModel);
             }

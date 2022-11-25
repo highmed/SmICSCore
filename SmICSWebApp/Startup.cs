@@ -28,6 +28,7 @@ using SmICSWebApp.Data.PatientMovement;
 using SmICSWebApp.Data.ContactNetwork;
 using SmICSWebApp.Data.ContactComparison;
 using SmICSWebApp.Data.Menu;
+using SmICSWebApp.Data.RKIData;
 using SmICSCoreLib.CronJobs;
 
 namespace SmICSWebApp
@@ -59,6 +60,7 @@ namespace SmICSWebApp
             services.AddBlazorContextMenu();
             services.AddLogging();
             services.AddSingleton<RkiService>();
+            services.AddSingleton<RKIReportService>();
             services.AddSingleton<SymptomService>();
             services.AddSingleton<EhrDataService>();
             services.AddScoped<WardOverviewService>();
@@ -99,7 +101,7 @@ namespace SmICSWebApp
             services.AddSingleton<NUMNodeJob>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(NUMNodeJob), "NumNode", "0 52 11 ? * *"));
             services.AddSingleton<RKIStatisticsJob>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(RKIStatisticsJob), "RKIStatistics", "0 07 15 ? * *"));
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(RKIStatisticsJob), "RKIStatistics", "0 05 17 ? * *"));
             //OpenehrConfig.OutbreakDetectionRuntime = Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME");
             //Console.WriteLine("Transformed: OUTBREAK_DETECTION_TIME " + Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME") + "to CONFIG: " + OpenehrConfig.OutbreakDetectionRuntime);
             //string[] runtimeArr = OpenehrConfig.OutbreakDetectionRuntime.Split(":");
