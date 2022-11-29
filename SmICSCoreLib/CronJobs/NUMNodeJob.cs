@@ -46,21 +46,12 @@ namespace SmICSCoreLib.CronJobs
         {
             try
             {
-                GetDashboardVariables();
-
                 PostSmICSResults(path);
             }
             catch (Exception e)
             {
                 _logger.LogError("Data cannot been send to the dashboard." + e);
             }       
-        }
-
-        private static void GetDashboardVariables()
-        {
-            DashboardConfig.dashboardEndpoint = Environment.GetEnvironmentVariable("DASHBOARD_DB");
-            DashboardConfig.dashboardUser = Environment.GetEnvironmentVariable("DASHBOARD_USER");
-            DashboardConfig.dashboardPassword = Environment.GetEnvironmentVariable("DASHBOARD_PASSWD");
         }
 
         private void PostSmICSResults(string path)

@@ -11,6 +11,9 @@ services:
       - OPENEHR_USER=<openEHR SmICS User>
       - OPENEHR_PASSWD=<openEHR SmICS User PW>
       - OUTBREAK_DETECTION_TIME=<Time in the format of hh:mm:ss>
+      - DASHBOARD_DB=<dashboard REST API URL>
+      - DASHBOARD_USER=<dashboard User>
+      - DASHBOARD_PASSWD=<dashboard User PW>
     ports:
       - 80:80
     networks: 
