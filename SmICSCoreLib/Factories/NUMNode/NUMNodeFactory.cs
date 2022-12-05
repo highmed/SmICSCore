@@ -73,7 +73,6 @@ namespace SmICSCoreLib.Factories.NUMNode
         {
             InitializeGlobalVariables();
             TimespanParameter timespan = new() { Starttime = DateTime.Now.AddYears(-10), Endtime = DateTime.Now };
-            //TimespanParameter timespan = new() { Starttime = DateTime.Now.AddYears(-10), Endtime = DateTime.Now.AddYears(-1) };
             _ = Process(timespan);
         }
 
