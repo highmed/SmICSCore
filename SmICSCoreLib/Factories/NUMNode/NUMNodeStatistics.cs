@@ -90,9 +90,17 @@ namespace SmICSCoreLib.Factories.NUMNode
                 }
             }else if(list.Count == 0)
             {
+                string itemname = "";
+                switch (name)
+                {
+                    case "stay": itemname = "current.patientstays"; break;
+                    case "nosCase": itemname = "current.patientnoscases"; break;
+                    case "maybeNosCase": itemname = "current.patientmaybenoscases"; break;
+                    case "contact": itemname = "current.patientcontacts"; break;
+                }
 
                 string path = @"../SmICSWebApp/Resources/NUMNode/";
-                return GetOldFile(path, name);
+                return GetOldFile(path, itemname);
 
             }
             return (0, 0, 0);
@@ -108,49 +116,17 @@ namespace SmICSCoreLib.Factories.NUMNode
             string filepath;
             NUMNodeModel report;
             double item_1 = 0, item_2 = 0, item_3 = 0;
-            switch (dataitem)
+
+            filepath = path + "NUMNode_R" + getDate;
+            report = JSONReader<NUMNodeModel>.ReadObject(filepath);
+            foreach (var item in report.dataitems)
             {
-                case "stay":
-                    filepath = path + "NUMNode_0_" + getDate;
-                    report = JSONReader<NUMNodeModel>.ReadObject(filepath);
-                    foreach (var item in report.dataitems)
-                    {
-
-                        (item_1, item_2, item_3) = (item.data.median, item.data.underquartil, item.data.upperquartil);
-
-                    }
-                    break;
-                case "nosCase":
-                    filepath = path + "NUMNode_2_" + getDate;
-                    report = JSONReader<NUMNodeModel>.ReadObject(filepath);
-                    foreach (var item in report.dataitems)
-                    {
-
-                        (item_1, item_2, item_3) = (item.data.median, item.data.underquartil, item.data.upperquartil);
-
-                    }
-                    break;
-                case "maybeNosCase":
-                    filepath = path + "NUMNode_1_" + getDate;
-                    report = JSONReader<NUMNodeModel>.ReadObject(filepath);
-                    foreach (var item in report.dataitems)
-                    {
-
-                        (item_1, item_2, item_3) = (item.data.median, item.data.underquartil, item.data.upperquartil);
-
-                    }
-                    break;
-                case "contact":
-                    filepath = path + "NUMNode_3_" + getDate;
-                    report = JSONReader<NUMNodeModel>.ReadObject(filepath);
-                    foreach (var item in report.dataitems)
-                    {
-
-                        (item_1, item_2, item_3) = (item.data.median, item.data.underquartil, item.data.upperquartil);
-
-                    }
-                    break;
+                if(item.itemname == dataitem)
+                {
+                    (item_1, item_2, item_3) = (item.data.median, item.data.underquartil, item.data.upperquartil);
+                }
             }
+                    
             return (item_1, item_2, item_3);
         }
 

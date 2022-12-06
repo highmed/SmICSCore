@@ -22,6 +22,7 @@ namespace SmICSCoreLib.Factories.NUMNode
         private List<LabDataReceiveModel> receiveLabDataListnegativ;
         private List<NUMNodeCountModel> countStays;
         private EpsiodeOfCareParameter episodeOfCareParameter;
+        private List<NUMNodeDataItems> nodeDataItems;
 
         private double averageNumberOfStays;
         private double averageNumberOfNosCases;
@@ -106,6 +107,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             labPatientList = new List<LabPatientModel>();
             receiveLabDataListpositiv = new List<LabDataReceiveModel>();
             saveData = new NUMNodeSaveModel();
+            nodeDataItems = new List<NUMNodeDataItems>();
         }
 
         private async Task Process(TimespanParameter timespan)
@@ -143,18 +145,11 @@ namespace SmICSCoreLib.Factories.NUMNode
                 {
                     maxList = new() { 0, 0, 0, 0 };
                     minList = new() { 0, 0, 0, 0 };
-                }
-                
+                }               
 
-                for (int i = 0; i < itemNames.Count; i++)
+                for (int i = 0; i < itemNames.Count-1; i++)
                 {
-                    NUMNodeList = new NUMNodeModel()
-                    {
-                        provider = "MHH-SmICS",
-                        corona_dashboard_dataset_version = "0.3.0",
-                        exporttimestamp = DateTime.Now,
-                        author = "SmICS",
-                        dataitems = new List<NUMNodeDataItems>(){
+                    nodeDataItems = new List<NUMNodeDataItems>(){
                             new NUMNodeDataItems(){
                                 itemname = itemNames[i],
                                 itemtype = "aggregated",
@@ -167,11 +162,18 @@ namespace SmICSCoreLib.Factories.NUMNode
                                     min = minList[i]
                                 }
                             }
-                        }
-                    };
-
-                    JSONFileStream.JSONWriter.Write(NUMNodeList, path, "NUMNode_" + i + "_R" + DateTime.Today.ToString("yyyy_MM_dd"));
+                        };
                 }
+
+                NUMNodeList = new NUMNodeModel()
+                {
+                    provider = "MHH-SmICS",
+                    corona_dashboard_dataset_version = "0.3.0",
+                    exporttimestamp = DateTime.Now,
+                    author = "SmICS",
+                    dataitems = nodeDataItems
+                };
+                JSONFileStream.JSONWriter.Write(NUMNodeList, path, "NUMNode_R" + DateTime.Today.ToString("yyyy_MM_dd"));
             }
             catch (Exception e)
             {
@@ -395,7 +397,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             }
             
         }
-
+        //to much server load
         private async Task GetNumberOfContacts()
         {
             try

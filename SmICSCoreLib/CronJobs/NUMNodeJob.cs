@@ -18,7 +18,7 @@ namespace SmICSCoreLib.CronJobs
         private DashboardRestClientConnector _client;
         private readonly INUMNodeFactory _listFac;
         private ILogger<NUMNodeFactory> _logger;
-        private readonly string path = @"../SmICSWebApp/Resources/NUMNode/NUMNode_1_R" + DateTime.Today.ToString("yyyy_MM_dd") + ".json";
+        private readonly string path = @"../SmICSWebApp/Resources/NUMNode/NUMNode_R" + DateTime.Today.ToString("yyyy_MM_dd") + ".json";
         private readonly string shortpath = @"../SmICSWebApp/Resources/NUMNode/";
 
         public NUMNodeJob(INUMNodeFactory listFac, ILogger<NUMNodeFactory> logger)
@@ -65,25 +65,22 @@ namespace SmICSCoreLib.CronJobs
             Uri RestPath = new(dashboard, restPath);
             if (File.Exists(path))
             {
-                for(int i = 0; i < 4; i++)
-                {
-                    string filepath = shortpath + "NUMNode_" + i + "_R" + DateTime.Today.ToString("yyyy_MM_dd") + ".json";
-                    var json = JSONFileStream.JSONReader<NUMNodeSaveModel>.ReadObject(filepath);
-                    var finishedJson = JsonConvert.SerializeObject(json, Formatting.Indented);
-                    HttpContent content = new StringContent(finishedJson, Encoding.UTF8, "application/json");
-                    content.Headers.Add("Prefer", "return=representation");
+                string filepath = shortpath + "NUMNode_R" + DateTime.Today.ToString("yyyy_MM_dd") + ".json";
+                var json = JSONFileStream.JSONReader<NUMNodeSaveModel>.ReadObject(filepath);
+                var finishedJson = JsonConvert.SerializeObject(json, Formatting.Indented);
+                HttpContent content = new StringContent(finishedJson, Encoding.UTF8, "application/json");
+                content.Headers.Add("Prefer", "return=representation");
 
-                    HttpResponseMessage response = _client.Client.PostAsync(RestPath.ToString(), content).Result;
-                    if (response.IsSuccessStatusCode)
-                    {
-                        _logger.LogInformation("Data has been send successfully");
-                        _logger.LogDebug("Result: {Result}", response.Content.ReadAsStringAsync().Result);
-                    }
-                    else
-                    {
-                        _logger.LogInformation("Data could not been send.");
-                        _logger.LogDebug("No Success Code: {statusCode} \n {responsePhrase}", response.StatusCode, response.ReasonPhrase);
-                    }
+                HttpResponseMessage response = _client.Client.PostAsync(RestPath.ToString(), content).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("Data has been send successfully");
+                    _logger.LogDebug("Result: {Result}", response.Content.ReadAsStringAsync().Result);
+                }
+                else
+                {
+                    _logger.LogInformation("Data could not been send.");
+                    _logger.LogDebug("No Success Code: {statusCode} \n {responsePhrase}", response.StatusCode, response.ReasonPhrase);
                 }
                 
             }
