@@ -44,6 +44,11 @@ namespace SmICSCoreLib.Factories.NUMNode
         private double upperQuartilNumberOfMaybeNosCases;
         private double upperQuartilNumberOfContacts;
 
+        private double standardDeviationNumberOfStays;
+        private double standardDeviationNumberOfNosCases;
+        private double standardDeviationNumberOfMaybeNosCases;
+        private double standardDeviationNumberOfContacts;
+
         private int countPatient;
         private int numberOfStays;
         private int numberOfNosCases;
@@ -136,6 +141,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                 List<double> upperquartilList = new() { upperQuartilNumberOfStays, upperQuartilNumberOfMaybeNosCases, upperQuartilNumberOfNosCases, upperQuartilNumberOfContacts };
                 List<double> maxList;
                 List<double> minList;
+                List<double> standardDeviationList = new() { standardDeviationNumberOfStays, standardDeviationNumberOfMaybeNosCases, standardDeviationNumberOfNosCases, standardDeviationNumberOfContacts };
                 if (labPatientList.Count != 0)
                 {
                     maxList = new() { labPatientList.Max(a => a.CountStays), labPatientList.Max(a => a.CountMaybeNosCases), labPatientList.Max(a => a.CountNosCases), labPatientList.Max(a => a.CountContacts) };
@@ -159,7 +165,9 @@ namespace SmICSCoreLib.Factories.NUMNode
                                     underquartil = underquartilList[i],
                                     upperquartil = upperquartilList[i],
                                     max = maxList[i],
-                                    min = minList[i]
+                                    min = minList[i],
+                                    standard_dev = standardDeviationList[i],
+                                    sample_size = countPatient + currentcountPatient
                                 }
                             }
                         };
@@ -319,7 +327,7 @@ namespace SmICSCoreLib.Factories.NUMNode
 
                 averageNumberOfStays = NUMNodeStatistics.GetAverage(numberOfStays + currentnumberOfStays, countPatient + currentcountPatient);
                 (medianNumberOfStays, underQuartilNumberOfStays, upperQuartilNumberOfStays) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "stay");
-
+                standardDeviationNumberOfStays = NUMNodeStatistics.GetStandardDeviation(labPatientList, countPatient + currentcountPatient, averageNumberOfStays, "stay");
                 await Task.CompletedTask;
             }
             catch (Exception e)
@@ -387,7 +395,8 @@ namespace SmICSCoreLib.Factories.NUMNode
                 averageNumberOfNosCases = NUMNodeStatistics.GetAverage(numberOfNosCases + currentnumberOfNosCases, countPatient + currentcountPatient);
                 (medianNumberOfMaybeNosCases, underQuartilNumberOfMaybeNosCases, upperQuartilNumberOfMaybeNosCases) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "maybeNosCase");
                 (medianNumberOfNosCases, underQuartilNumberOfNosCases, upperQuartilNumberOfNosCases) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "nosCase");
-
+                standardDeviationNumberOfNosCases = NUMNodeStatistics.GetStandardDeviation(labPatientList, countPatient + currentcountPatient, averageNumberOfNosCases, "nosCase");
+                standardDeviationNumberOfMaybeNosCases = NUMNodeStatistics.GetStandardDeviation(labPatientList, countPatient + currentcountPatient, averageNumberOfMaybeNosCases, "maybeNosCase");
                 await Task.CompletedTask;
             }
             catch (Exception e)
@@ -497,7 +506,7 @@ namespace SmICSCoreLib.Factories.NUMNode
 
                 averageNumberOfContacts = NUMNodeStatistics.GetAverage(numberOfContacts + currentnumberOfContacts, countPatient + currentcountPatient);
                 (medianNumberOfContacts, underQuartilNumberOfContacts, upperQuartilNumberOfContacts) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "contact");
-
+                standardDeviationNumberOfContacts = NUMNodeStatistics.GetStandardDeviation(labPatientList, countPatient + currentcountPatient, averageNumberOfContacts, "contact");
                 await Task.CompletedTask;
             }
             catch (Exception e)

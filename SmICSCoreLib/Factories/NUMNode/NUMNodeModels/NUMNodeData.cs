@@ -16,6 +16,10 @@ namespace SmICSCoreLib.Factories.NUMNode
         public double max { get; set; }
         [JsonProperty(PropertyName = "min")]
         public double min { get; set; }
+        [JsonProperty(PropertyName = "standard_dev")]
+        public double standard_dev { get; set; }
+        [JsonProperty(PropertyName = "sample_size")]
+        public double sample_size { get; set; }
 
     }
 }

@@ -106,6 +106,28 @@ namespace SmICSCoreLib.Factories.NUMNode
             return (0, 0, 0);
         }
 
+        public static double GetStandardDeviation(List<LabPatientModel> list, int quanti, double average, string name)
+        {
+            if(quanti != 0)
+            {
+                double cal = 0;
+                
+                foreach(LabPatientModel item in list)
+                {
+                    switch (name)
+                    {
+                        case "stay": cal += Math.Pow(item.CountStays - average, 2); ; break;
+                        case "nosCase": cal += Math.Pow(item.CountNosCases - average, 2); ; break;
+                        case "maybeNosCase": cal += Math.Pow(item.CountMaybeNosCases - average, 2); break;
+                        case "contact": cal += Math.Pow(item.CountContacts - average, 2); break;
+                    }
+                }
+
+                return Math.Round(Math.Sqrt(cal / (quanti - 1)), 2);
+            }
+            return 0;
+        }
+
         public static (double, double, double) GetOldFile(string path, string dataitem)
         {
             var directory = new DirectoryInfo(path);
