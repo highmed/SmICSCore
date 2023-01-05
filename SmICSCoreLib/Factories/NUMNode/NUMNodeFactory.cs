@@ -98,8 +98,17 @@ namespace SmICSCoreLib.Factories.NUMNode
             {
                 _logger.LogWarning("Cannot read saved data :" + e);
             }
+            DateTime date = DateTime.Now;
+            TimespanParameter timespan;
+            if (date.Day == 1)
+            {
+                timespan = new() { Starttime = DateTime.Now.AddMonths(-1).AddDays(14), Endtime = DateTime.Now };
+            }
+            else
+            {
+                timespan = new() { Starttime = DateTime.Now.AddDays(-14), Endtime = DateTime.Now };
+            }
 
-            TimespanParameter timespan = new() { Starttime = DateTime.Now.AddDays(-7), Endtime = DateTime.Now };
             _ = Process(timespan);
         }
 
@@ -134,7 +143,11 @@ namespace SmICSCoreLib.Factories.NUMNode
                 }
 
                 SaveStaticData();
-                List<string> itemNames = new() { "current.patientstays", "current.patientmaybenoscases", "current.patientnoscases", "current.patientcontacts" };
+                List<string> itemNames = new() {
+                    "current.wardsvisited",
+                    "current.nosocomialcases.possible",
+                    "current.nosocomialcases.probable" 
+                    /*"current.patientcontacts"*/ };
                 List<double> averageList = new() { averageNumberOfStays, averageNumberOfMaybeNosCases, averageNumberOfNosCases, averageNumberOfContacts };
                 List<double> medianList = new() { medianNumberOfStays, medianNumberOfMaybeNosCases, medianNumberOfNosCases, medianNumberOfContacts };
                 List<double> underquartilList = new() { underQuartilNumberOfStays, underQuartilNumberOfMaybeNosCases, underQuartilNumberOfNosCases, underQuartilNumberOfContacts };
@@ -158,14 +171,14 @@ namespace SmICSCoreLib.Factories.NUMNode
                     nodeDataItems = new List<NUMNodeDataItems>(){
                             new NUMNodeDataItems(){
                                 itemname = itemNames[i],
-                                itemtype = "aggregated",
+                                itemtype = "statsmean",
                                 data = new NUMNodeData(){
                                     average = averageList[i],
-                                    median = medianList[i],
-                                    underquartil = underquartilList[i],
-                                    upperquartil = upperquartilList[i],
-                                    max = maxList[i],
-                                    min = minList[i],
+                                    //median = medianList[i],
+                                    //underquartil = underquartilList[i],
+                                    //upperquartil = upperquartilList[i],
+                                    //max = maxList[i],
+                                    //min = minList[i],
                                     standard_dev = standardDeviationList[i],
                                     sample_size = countPatient + currentcountPatient
                                 }

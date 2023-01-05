@@ -39,10 +39,10 @@ namespace SmICSCoreLib.CronJobs
             {
                 _listFac.RegularDataEntry();
             }
-            if(DashboardConfig.dashboardEndpoint is not null)
-            {
-                ConnectToDashboard();
-            }           
+            //if(DashboardConfig.dashboardEndpoint is not null)
+            //{
+            //    ConnectToDashboard();
+            //}           
             return Task.CompletedTask;
         }
 

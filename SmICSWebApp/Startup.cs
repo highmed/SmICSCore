@@ -66,7 +66,7 @@ namespace SmICSWebApp
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
 
             services.AddSingleton<NUMNodeJob>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(NUMNodeJob), "NumNode", "0 01 00 ? * 0"));
+            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(NUMNodeJob), "NumNode", "0 01 1,15 ? * 0"));
             DashboardConfig.dashboardEndpoint = Environment.GetEnvironmentVariable("DASHBOARD_DB");
             DashboardConfig.dashboardUser = Environment.GetEnvironmentVariable("DASHBOARD_USER");
             DashboardConfig.dashboardPassword = Environment.GetEnvironmentVariable("DASHBOARD_PASSWD");
