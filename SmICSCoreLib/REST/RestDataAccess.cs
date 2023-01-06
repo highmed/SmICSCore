@@ -36,7 +36,7 @@ namespace SmICSCoreLib.REST
                 {
                     if (response.StatusCode == HttpStatusCode.NoContent)
                     {
-                        return null;
+                        return new List<T>();//return null;
                     }
                     _logger.LogInformation("Received AQL Result From {Query}", query.Name);
                     _logger.LogDebug("AQL Result: {Result}", response.Content.ReadAsStringAsync().Result);

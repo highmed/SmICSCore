@@ -3,6 +3,6 @@
     public enum UnvalidMessageType
     {
         DOUBLED_ENTRIES,
-        NOT_EXISTING 
+        NOT_EXISTING
     }
 }

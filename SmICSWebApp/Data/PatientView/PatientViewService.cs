@@ -40,7 +40,7 @@ namespace SmICSWebApp.Data.PatientView
                 }
                 return null;
             }
-            catch 
+            catch
             {
                 throw;
             }

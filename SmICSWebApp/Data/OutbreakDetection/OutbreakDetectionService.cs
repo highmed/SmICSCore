@@ -43,7 +43,7 @@ namespace SmICSWebApp.Data.OutbreakDetection
                 Console.WriteLine(e.Message);
                 return null;
             }
-            
+
         }
 
         public List<OutbreakDetectionStoringModel> GetsResultsInTimespan(OutbreakSavingInTimespan outbreak)

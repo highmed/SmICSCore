@@ -5,7 +5,6 @@ using SmICSWebApp.Data.PatientMovement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SmICSWebApp.Data.ContactNetwork
 {
@@ -86,8 +85,11 @@ namespace SmICSWebApp.Data.ContactNetwork
                     {
                         if (contacts.PatientMovements.Where(c => c.PatientID == contact.PatientID).Count() == 0)
                         {
-                            List<VisuLabResult> contactLabResults = _medicalFinding.GetMedicalFinding(contact, new SmICSCoreLib.Factories.MiBi.PatientView.Parameter.PathogenParameter() { PathogenCodes
-                                = new List<string> { parameter.pathogen }    }).GetAwaiter().GetResult();
+                            List<VisuLabResult> contactLabResults = _medicalFinding.GetMedicalFinding(contact, new SmICSCoreLib.Factories.MiBi.PatientView.Parameter.PathogenParameter()
+                            {
+                                PathogenCodes
+                                = new List<string> { parameter.pathogen }
+                            }).GetAwaiter().GetResult();
                             List<VisuPatientMovement> contactMovements = _movementService.GetPatientMovements(contact).GetAwaiter().GetResult();
 
                             contacts.LaborData.AddRange(contactLabResults);

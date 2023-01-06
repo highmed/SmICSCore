@@ -69,7 +69,6 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                        a/items[at0029]/value/defining_code/code_string as KindCode,
                        a/items[at0001]/value/id as LabID,
                        a/items[at0034]/value/value as SpecimenReceiptDate,
-                       'Abnahmestelle' as Location,
                        a/items[at0015]/value/value as SpecimenCollectionDateTime
                         FROM EHR e
                         CONTAINS COMPOSITION c

@@ -1,6 +1,5 @@
 ﻿using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,7 +43,7 @@ namespace SmICSWebApp.Data.PatientMovement
                 }
                 return null;
             }
-            catch 
+            catch
             {
                 throw;
             }

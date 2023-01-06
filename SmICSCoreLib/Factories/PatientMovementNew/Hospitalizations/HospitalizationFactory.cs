@@ -21,16 +21,12 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
             {
                 List<Hospitalization> hospitalizations = new List<Hospitalization>();
                 List<Case> cases = await RestDataAccess.AQLQueryAsync<Case>(HospitalizationCasesQuery(patient));
-                if (cases is not null)
-                {
-                    foreach (Case Case in cases)
+                foreach (Case Case in cases)
                     {
                         Hospitalization hospitalization = await ProcessAsync(Case);
                         hospitalizations.Add(hospitalization);
                     }
-                    return hospitalizations;
-                }
-                return null;
+                return hospitalizations;
             }
             catch
             {

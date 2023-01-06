@@ -1,35 +1,32 @@
+using Blazored.Toast;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SmICSCoreLib.REST;
-using SmICS;
-using System.IO;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
-using SmICSWebApp.Data;
-using Serilog;
-using Quartz.Spi;
 using Quartz;
 using Quartz.Impl;
+using Quartz.Spi;
+using Serilog;
+using SmICS;
+using SmICSCoreLib.CronJobs;
 using SmICSCoreLib.StatistikServices.CronJob;
-using SmICSCoreLib.StatistikServices;
+using SmICSWebApp.Data.Contact;
+using SmICSWebApp.Data.ContactComparison;
+using SmICSWebApp.Data.ContactNetwork;
+using SmICSWebApp.Data.MedicalFinding;
+using SmICSWebApp.Data.Menu;
 using SmICSWebApp.Data.OutbreakDetection;
+using SmICSWebApp.Data.PatientMovement;
 using SmICSWebApp.Data.PatientView;
 using SmICSWebApp.Data.WardView;
-using SmICSWebApp.Data.Contact;
-using SmICSWebApp.Data.MedicalFinding;
-using SmICSWebApp.Data.PatientMovement;
-using SmICSWebApp.Data.ContactNetwork;
-using SmICSWebApp.Data.ContactComparison;
-using SmICSWebApp.Data.Menu;
-using SmICSCoreLib.CronJobs;
-using Blazored.Toast;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace SmICSWebApp
 {
@@ -46,12 +43,12 @@ namespace SmICSWebApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-             services.AddBlazorise(options =>
-              {
-                  options.ChangeTextOnKeyPress = true; // optional
-                })
-            .AddBootstrapProviders()
-            .AddFontAwesomeIcons();
+            services.AddBlazorise(options =>
+             {
+                 options.Immediate = true;
+             })
+           .AddBootstrapProviders()
+           .AddFontAwesomeIcons();
             services.AddBlazoredToast();
             services.AddControllers();
             services.AddControllers().AddNewtonsoftJson();
@@ -59,11 +56,8 @@ namespace SmICSWebApp
             services.AddServerSideBlazor();
             services.AddBlazorContextMenu();
             services.AddLogging();
-            services.AddSingleton<RkiService>();
-            services.AddSingleton<SymptomService>();
-            services.AddSingleton<EhrDataService>();
-            services.AddScoped<WardOverviewService>();
             services.AddScoped<PatientViewService>();
+            services.AddScoped<WardOverviewService>();
             services.AddScoped<ContactService>();
             services.AddScoped<MedicalFindingService>();
             services.AddScoped<PatientMovementService>();
@@ -79,18 +73,9 @@ namespace SmICSWebApp
             //CronJob GetReport
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
-            services.AddSingleton<JobGetReport>();
+
             //services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 00 10 ? * *"));
             services.AddHostedService<QuartzHostedService>();
-
-            services.AddSingleton<RKIConfigService>();
-
-            services.AddSingleton<ContactTracingService>();
-            services.AddSingleton<PersonInformationService>();
-            services.AddSingleton<PersInfoInfectCtrlService>();
-
-            //CronJob UpdateRkidata
-            services.AddSingleton<JobUpdateRkidata>();
             //services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
 
             services.AddScoped<OutbreakDetectionService>();
@@ -111,7 +96,7 @@ namespace SmICSWebApp
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AQL API", Version = "v1" });
-                
+
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
@@ -122,9 +107,9 @@ namespace SmICSWebApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            
 
-            
+
+
 
             if (env.IsDevelopment())
             {

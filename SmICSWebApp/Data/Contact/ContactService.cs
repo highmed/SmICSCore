@@ -28,7 +28,7 @@ namespace SmICSWebApp.Data.Contact
         {
             try
             {
-                List<Hospitalization> hospitalizations =await _hospitalizationFac.ProcessAsync(parameter);
+                List<Hospitalization> hospitalizations = await _hospitalizationFac.ProcessAsync(parameter);
                 if (hospitalizations is not null)
                 {
                     Hospitalization latestHospitalization = hospitalizations.Last();
@@ -179,9 +179,9 @@ namespace SmICSWebApp.Data.Contact
         private List<PatientStay> GetRootStay(List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> patientStays, SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay patientLocation)
         {
             List<PatientStay> contactsPoint = new List<PatientStay>();
-            foreach(PatientStay stay in patientStays)
+            foreach (PatientStay stay in patientStays)
             {
-                if(patientLocation.MovementType == MovementType.PROCEDURE)
+                if (patientLocation.MovementType == MovementType.PROCEDURE)
                 {
                     if (stay.MovementType == MovementType.PROCEDURE)
                     {
@@ -214,12 +214,12 @@ namespace SmICSWebApp.Data.Contact
                             contactsPoint.Add(stay);
                         }
                     }
-                    else 
+                    else
                     {
                         contactsPoint.Add(stay);
                     }
                 }
-               
+
             }
             if (contactsPoint.Count > 0)
             {
@@ -230,7 +230,7 @@ namespace SmICSWebApp.Data.Contact
 
         private DateTime? GetContactEnd(DateTime? one, DateTime? other)
         {
-            if(one.HasValue && other.HasValue)
+            if (one.HasValue && other.HasValue)
             {
                 return one.Value <= other.Value ? one.Value : other.Value;
             }

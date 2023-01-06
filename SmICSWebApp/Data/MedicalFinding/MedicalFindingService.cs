@@ -42,7 +42,7 @@ namespace SmICSWebApp.Data.MedicalFinding
             List<VisuLabResult> results = new List<VisuLabResult>();
             foreach (Specimen specimen in result.Specimens)
             {
-                foreach(Pathogen pathogen in specimen.Pathogens)
+                foreach (Pathogen pathogen in specimen.Pathogens)
                 {
                     VisuLabResult labResult = new VisuLabResult
                     {
@@ -68,6 +68,6 @@ namespace SmICSWebApp.Data.MedicalFinding
                 }
             }
             return results;
-        } 
+        }
     }
 }

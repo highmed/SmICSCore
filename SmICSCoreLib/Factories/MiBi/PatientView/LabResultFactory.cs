@@ -170,7 +170,7 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
                         AND OBSERVATION d[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]) 
                         WHERE c/name/value = '{MedicalField}' 
                         AND e/ehr_status/subject/external_ref/id/value='{Case.PatientID}'
-                        AND v/items[at0001]/value='{Case.CaseID}'
+                        AND v/items[at0001]/value/value='{Case.CaseID}'
                         {uidMatch}
                         ORDER BY d/protocol[at0004]/items[at0094]/items[at0063]/value/id ASC"
             };

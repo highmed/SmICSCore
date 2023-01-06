@@ -4,7 +4,7 @@
 @using SmICSCoreLib.Factories.MiBi.PatientView;
 
 <Collapse Visible="@Collapsed">
-    <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
+    <CollapseHeader Padding="Padding.Is0.Is2.FromStart" Border="Border.Is0.OnBottom">
         <Heading Size="HeadingSize.Is6">
             <button @onclick="@(()=>Collapsed = !Collapsed)" class="w-100">
                 <table class="table-sm mb-0 w-100">
@@ -32,7 +32,7 @@
     </CollapseHeader>
     <CollapseBody>
         <Card Border="Border.Is0" Margin="Margin.Is0">
-            <CardBody Padding="Padding.Is0.Is2.FromLeft">
+            <CardBody Padding="Padding.Is0.Is2.FromStart">
                 <Fields Flex="Flex.AlignItems.Start">
                     <Field Horizontal="true">
                         <Span class="oi oi-fork" TextColor="TextColor.Info" style="width:auto;"></Span>

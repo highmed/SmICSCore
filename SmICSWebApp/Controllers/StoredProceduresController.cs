@@ -1,29 +1,16 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using SmICSCoreLib.Factories.ContactNetwork;
-using SmICSCoreLib.Factories.PatientMovement;
-using SmICSCoreLib.Factories.Lab.ViroLabData;
-using SmICSCoreLib.Factories.Symptome;
-using SmICSCoreLib.Factories.Vaccination;
-using SmICSCoreLib.Factories.Employees.ContactTracing;
-using SmICSCoreLib.Factories.Employees.PersInfoInfecCtrl;
-using SmICSCoreLib.Factories.Employees.PersonData;
-using SmICSCoreLib.Factories.Employees;
-using SmICSCoreLib.Factories.General;
-using SmICSCoreLib.Factories.EpiCurve;
-using SmICSCoreLib.Factories.PatientStay;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
-using SmICSCoreLib.StatistikDataModels;
-using SmICSCoreLib.Factories.InfectionSituation;
-using SmICSWebApp.Data.OutbreakDetection;
-using SmICSCoreLib.OutbreakDetection;
-using SmICSWebApp.Data.MedicalFinding;
-using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
-using SmICSWebApp.Data.PatientMovement;
-using SmICSWebApp.Data.ContactNetwork;
 using SmICSCoreLib.DB.MenuItems;
+using SmICSCoreLib.Factories.EpiCurve;
+using SmICSCoreLib.Factories.General;
+using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
+using SmICSCoreLib.OutbreakDetection;
+using SmICSWebApp.Data.ContactNetwork;
+using SmICSWebApp.Data.MedicalFinding;
+using SmICSWebApp.Data.OutbreakDetection;
+using SmICSWebApp.Data.PatientMovement;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SmICSWebApp.Controllers
@@ -34,33 +21,16 @@ namespace SmICSWebApp.Controllers
     public class StoredProceduresController : ControllerBase
     {
         private readonly ILogger<StoredProceduresController> _logger;
-        
-        private readonly IContactNetworkFactory _contact;
-        private readonly IPatientStay _patientStay;
-        private readonly IEmployeeInformation _employeeinformation;
-        private readonly IViroLabDataFactory _viroLabDataFac;
-        private readonly IPatientMovementFactory _patientMoveFac;
+
         private readonly IEpiCurveFactory _epiCurveFac;
-        private readonly IInfectionSituationFactory _infectionSituationFac;
-        private readonly ISymptomFactory _symptomFac;
-        private readonly IVaccinationFactory _vaccinationFac;
         private readonly OutbreakDetectionService _outbreakService;
         private readonly MedicalFindingService _medicalFindingService;
         private readonly PatientMovementService _movementService;
         private readonly ContactNetworkService _contactService;
         private readonly IMenuItemDataAccess _menuItemDataAccess;
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, IContactNetworkFactory contact, IPatientStay patientStay, IEmployeeInformation employeeInfo, IViroLabDataFactory viroLabDataFac, IPatientMovementFactory patientMoveFac, IEpiCurveFactory epiCurveFac, IInfectionSituationFactory infectionSituationFac, ISymptomFactory symptomFac, IVaccinationFactory vaccinationFac, OutbreakDetectionService outbreakService, MedicalFindingService medicalFindingService, PatientMovementService movementService, ContactNetworkService contactService, IMenuItemDataAccess menuItemDataAccess)
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, IEpiCurveFactory epiCurveFac, OutbreakDetectionService outbreakService, MedicalFindingService medicalFindingService, PatientMovementService movementService, ContactNetworkService contactService, IMenuItemDataAccess menuItemDataAccess)
         {
             _logger = logger;
-            _contact = contact;
-            _patientStay = patientStay;
-            _employeeinformation = employeeInfo;
-            _viroLabDataFac = viroLabDataFac;
-            _patientMoveFac = patientMoveFac;
-            _epiCurveFac = epiCurveFac;
-            _infectionSituationFac = infectionSituationFac;
-            _symptomFac = symptomFac;
-            _vaccinationFac = vaccinationFac;
             _outbreakService = outbreakService;
             _medicalFindingService = medicalFindingService;
             _movementService = movementService;
@@ -101,14 +71,14 @@ namespace SmICSWebApp.Controllers
         /// <returns></returns>
         [Route("Patient_Labordaten_Ps")]
         [HttpPost]
-        public ActionResult<List<VisuLabResult>> PatientLabData([FromBody] PatientLabDataParameter parameter,[FromHeader(Name = "Authorization")] string token = "NoToken")
+        public ActionResult<List<VisuLabResult>> PatientLabData([FromBody] PatientLabDataParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             try
             {
                 List<VisuLabResult> visuLabResults = new List<VisuLabResult>();
-                List<string> codes =_menuItemDataAccess.GetPathogendByName(parameter.Pathogen).Result.Select(p => p.Code).ToList();
+                List<string> codes = _menuItemDataAccess.GetPathogendByName(parameter.Pathogen).Result.Select(p => p.Code).ToList();
                 PathogenParameter pathogen = new PathogenParameter() { PathogenCodes = codes };
-                foreach(string pat in parameter.patientList)
+                foreach (string pat in parameter.patientList)
                 {
                     Patient patient = new Patient() { PatientID = pat };
                     List<VisuLabResult> labs = _medicalFindingService.GetMedicalFinding(patient, pathogen).GetAwaiter().GetResult();
@@ -174,63 +144,9 @@ namespace SmICSWebApp.Controllers
             }
         }
 
-        /// <summary></summary>
-        /// <remarks>
-        /// Gibt alle mögliche Nosokomiale Infektion. 
-        /// Regeln für eine mögliche Nosokomiale Infektion sind: SARS-CoV-2 negative Test und keine SARS-CoV-2 Symptome bei Aufnahme. 
-        /// Positive PCR von SARS-CoV-2 ab Tag 4 nach stationärer Aufnahme.
-        /// </remarks>
-        /// <returns></returns>
-        [Route("Infection_Situation")]
-        [HttpPost]
-        public ActionResult<List<PatientModel>> Infection_Situation([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
-        {
-            _logger.LogInformation("CALLED Infection_Situation without any parameters");
 
-            try
-            {
-                return _infectionSituationFac.Process(parameter);
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning("CALLED Infection_Situation:" + e.Message);
-                return ErrorHandling(e);
-            }
-        }
 
-        [Route("Patient_Symptom")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
-        [HttpPost]
-        public ActionResult<List<SymptomModel>> Patient_Symptom([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
-        {
-            try
-            {
-                _symptomFac.RestDataAccess.SetAuthenticationHeader(token);
-                return _symptomFac.Process(parameter);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }
 
-        [Route("Patient_Vaccination")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status412PreconditionFailed)]
-        [HttpPost]
-        public ActionResult<List<VaccinationModel>> Patient_Vaccination([FromBody] PatientListParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
-        {
-            try
-            {
-                _vaccinationFac.RestDataAccess.SetAuthenticationHeader(token);
-                return _vaccinationFac.Process(parameter);
-            }
-            catch (Exception e)
-            {
-                return ErrorHandling(e);
-            }
-        }
 
         [Route("OutbreakDetectionConfigurations")]
         [HttpPost]

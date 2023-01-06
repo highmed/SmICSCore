@@ -1,9 +1,8 @@
-﻿using System;
+﻿using SmICSCoreLib.DB.MenuItems;
+using SmICSCoreLib.DB.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SmICSCoreLib.DB.MenuItems;
-using SmICSCoreLib.DB.Models;
 
 namespace SmICSWebApp.Data.Menu
 {
@@ -62,7 +61,7 @@ namespace SmICSWebApp.Data.Menu
             catch
             {
                 throw;
-            } 
+            }
         }
 
         public async Task<List<Ward>> GetWards()

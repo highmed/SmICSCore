@@ -11,7 +11,12 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
 
         public int Compare(Hospitalization x, Hospitalization y)
         {
-            return x.Admission.Date.CompareTo(y.Admission.Date);
+            int admissionCompare = x.Admission.Date.CompareTo(y.Admission.Date);
+            if (admissionCompare == 0)
+            {
+                return x.CaseID.CompareTo(y.CaseID);
+            }
+            return admissionCompare;
         }
 
         public int CompareTo(object obj)
@@ -20,7 +25,9 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
 
             Hospitalization other = obj as Hospitalization;
             if (other != null)
-                return other.Admission.Date.CompareTo(Admission.Date);
+            {
+                return Compare(this, other);
+            }
             else
                 throw new ArgumentException("Object is not a Hospitalization");
         }

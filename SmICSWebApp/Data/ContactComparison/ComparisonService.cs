@@ -3,7 +3,6 @@ using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SmICSWebApp.Data.ContactComparison
@@ -66,7 +65,7 @@ namespace SmICSWebApp.Data.ContactComparison
             {
                 throw;
             }
-            
+
         }
 
         public async Task<bool> ExistsPatient(SmICSCoreLib.Factories.General.Patient Patient)
@@ -84,7 +83,7 @@ namespace SmICSWebApp.Data.ContactComparison
             {
                 throw;
             }
-            
+
         }
 
         private List<ContactPoint> FindContact(List<PatientStay> First, List<PatientStay> Second)
@@ -106,7 +105,7 @@ namespace SmICSWebApp.Data.ContactComparison
 
         private ContactPoint GetContact(PatientStay First, PatientStay Second)
         {
-                  
+
             ContactLevel lvl = GetContactLevel(First, Second);
             DateTime contactStart = First.Admission >= Second.Admission ? First.Admission : Second.Admission;
             DateTime? contactEnd = null;
@@ -146,12 +145,12 @@ namespace SmICSWebApp.Data.ContactComparison
             {
                 ContactPoint cp = new ContactPoint
                 {
-               
+
                     Departement = stay.Departement,
                     Start = contactStart,
                     End = contactEnd
                 };
-                if(level == ContactLevel.WARD || level == ContactLevel.ROOM)
+                if (level == ContactLevel.WARD || level == ContactLevel.ROOM)
                 {
                     cp.Ward = stay.Ward;
                     if (level == ContactLevel.ROOM)

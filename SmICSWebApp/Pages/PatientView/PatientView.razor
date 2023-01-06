@@ -11,7 +11,7 @@
 @inject IPatientDataFactory _patientData;
 @inject PatientViewService  _service;
 <div style="margin-left: 2%; margin-right: 2%;">
-    <Card Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromLeft">
+    <Card Margin="Margin.Is5.Is3.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromStart">
         <CardBody Padding="Padding.Is2" Background="Background.Light" Class="box-style">
             <Fields Flex="Flex.AlignItems.Start">
                 <Field Horizontal="true">
@@ -20,7 +20,7 @@
                         <TextEdit Placeholder="Bitte geben Sie eine valide Patientenbezeichnung ein..." @bind-text="@PatientID" Autofocus="false" />
                     </FieldBody>
                 </Field>
-                <Field Margin="Margin.Is4.FromLeft">
+                <Field Margin="Margin.Is4.FromStart">
                     <Button Clicked="@Submit" id="btn"><Span class="oi oi-magnifying-glass" TextColor="TextColor.White"></Span></Button>
                 </Field>
             </Fields>

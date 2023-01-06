@@ -39,7 +39,7 @@ namespace SmICSWebApp.Data.WardView
                 //throw new Exception("Ooops Somethhin went wrong. \n Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
                 wardPatients = new List<WardPatient>();
                 PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCode };
- 
+
                 List<HospStay> possibleContactHosp = await _hospitalizationFac.ProcessAsync(parameter.Start, parameter.End);
                 if (possibleContactHosp is not null)
                 {
@@ -82,7 +82,7 @@ namespace SmICSWebApp.Data.WardView
                                     patient.FirstPositiveResult = GetFirstPositveLabResultDate(labResults, stay);
                                     (patient.FirstWardPositiveResult, patient.LastWardResult) = GetFirstAndLastWardLabResultDate(labResults, stay);
                                     patient.CurrentResult = GetLastLabResultDate(labResults);
-                                    if(caseHosp is not null)
+                                    if (caseHosp is not null)
                                     {
                                         patient.CaseAdmission = caseHosp.Admission.Date;
                                         patient.CaseDischarge = caseHosp.Discharge.Date;
@@ -141,10 +141,10 @@ namespace SmICSWebApp.Data.WardView
         private bool IsNosocomial(WardPatient patient)
         {
             if (patient.InfectionStatus is not null)
-            { 
-                if(patient.InfectionStatus.Values.Any(x => 
-                x.Nosocomial 
-                && x.NosocomialDate.Value.Date > patient.Admission.Date.AddDays(2.0) 
+            {
+                if (patient.InfectionStatus.Values.Any(x =>
+                x.Nosocomial
+                && x.NosocomialDate.Value.Date > patient.Admission.Date.AddDays(2.0)
                 && (patient.Discharge.HasValue ? x.NosocomialDate <= patient.Discharge : true)))
                 {
                     return true;
@@ -169,10 +169,10 @@ namespace SmICSWebApp.Data.WardView
         }
         private bool IsKnown(WardPatient patient)
         {
-            if(patient.InfectionStatus is not null)
+            if (patient.InfectionStatus is not null)
             {
-                if((patient.InfectionStatus.Values.Any(x => x.Known) 
-                    || patient.InfectionStatus.Values.Any(x => x.Nosocomial 
+                if ((patient.InfectionStatus.Values.Any(x => x.Known)
+                    || patient.InfectionStatus.Values.Any(x => x.Nosocomial
                     && x.NosocomialDate.Value.Date <= patient.Admission.Date.AddDays(2.0))))
                 {
                     return true;
@@ -182,7 +182,7 @@ namespace SmICSWebApp.Data.WardView
         }
         private void IncrementStress(Dictionary<string, SortedDictionary<DateTime, int>> ChartEntries, DateTime start, DateTime end)
         {
-            for(DateTime date = start.Date; date <= end.Date; date = date.Date.AddDays(1.0))
+            for (DateTime date = start.Date; date <= end.Date; date = date.Date.AddDays(1.0))
             {
                 ChartEntries["Stress"][date.Date] += 1;
             }
@@ -248,7 +248,7 @@ namespace SmICSWebApp.Data.WardView
 
                 }
             }
-            if(last.Value == DateTime.MinValue)
+            if (last.Value == DateTime.MinValue)
             {
                 last = null;
             }
@@ -266,7 +266,7 @@ namespace SmICSWebApp.Data.WardView
             {
                 foreach (LabResult labResult in labResults)
                 {
-                   
+
                     IEnumerable<DateTime> dates = labResult.Specimens.
                         OrderBy(s => s.SpecimenCollectionDateTime).
                         Where(s => s.Pathogens.Any(p => p.Result)).
@@ -291,7 +291,7 @@ namespace SmICSWebApp.Data.WardView
                 {
                     IEnumerable<Specimen> sorted = labResult.Specimens.Where(s => s.Pathogens.Any(p => p.Result))
                         .OrderBy(s => s.SpecimenCollectionDateTime);
-                    if(sorted is not null)
+                    if (sorted is not null)
                     {
                         DateTime tmp = sorted.Last().SpecimenCollectionDateTime;
                         if (last < tmp)

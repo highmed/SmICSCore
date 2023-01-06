@@ -2,7 +2,6 @@
 using SmICSCoreLib.Factories.MiBi.Nosocomial;
 using SmICSCoreLib.Factories.PatientMovementNew;
 using System;
-using System.Collections.Generic;
 
 namespace SmICSWebApp.Data.Contact
 {

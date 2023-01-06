@@ -63,8 +63,7 @@ implemented) will be monitored first as a proof of principle, followed by methic
                         u/items[at0024]/value/value as ResultString,
                         u/items[at0024]/value/value as ResultText,
                         b/items[at0003]/value/value as Rate,
-                        u/items[at0027,'Isolatnummer']/value/magnitude as IsolatNr,
-                        '{parameter.MedicalField}' as MedicalField
+                        u/items[at0027,'Isolatnummer']/value/magnitude as IsolatNr
                         FROM EHR e
                         CONTAINS COMPOSITION c
                         CONTAINS CLUSTER u[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1] 

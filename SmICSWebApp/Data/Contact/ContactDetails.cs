@@ -17,23 +17,23 @@ namespace SmICSWebApp.Data.Contact
 
         public bool Equals(ContactDetails other)
         {
-            if(ReferenceEquals(this, other))
+            if (ReferenceEquals(this, other))
             {
                 return true;
             }
-            if(other is not null)
+            if (other is not null)
             {
-                if(PatientID == other.PatientID)
+                if (PatientID == other.PatientID)
                 {
-                    if(Room == other.Room)
+                    if (Room == other.Room)
                     {
-                        if(Ward == other.Ward)
+                        if (Ward == other.Ward)
                         {
-                            if(Departement == other.Departement)
+                            if (Departement == other.Departement)
                             {
-                                if(ContactStart == other.ContactStart)
+                                if (ContactStart == other.ContactStart)
                                 {
-                                    if(ContactEnd == other.ContactEnd)
+                                    if (ContactEnd == other.ContactEnd)
                                     {
                                         return true;
                                     }

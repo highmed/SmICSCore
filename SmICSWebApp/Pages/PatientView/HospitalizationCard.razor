@@ -3,8 +3,8 @@
 @using SmICSCoreLib.Factories.PatientMovementNew;
 
 
-<Collapse Visible="@Collapsed" Margin="Margin.Is5.Is0.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromLeft">
-    <CollapseHeader Padding="Padding.Is0.Is2.FromLeft" Border="Border.Is0.OnBottom">
+<Collapse Visible="@Collapsed" Margin="Margin.Is5.Is0.FromBottom.Is3.FromTop" Padding="Padding.Is2.FromStart">
+    <CollapseHeader Padding="Padding.Is0.Is2.FromStart" Border="Border.Is0.OnBottom">
         <Heading Size="HeadingSize.Is6">
             <Button Clicked="@(()=>Collapsed = !Collapsed)" Width="Width.Is100">
                 <table class="table-sm w-100 mb-0">
@@ -28,7 +28,7 @@
     </CollapseHeader>
     <CollapseBody>
         <Card Border="Border.Is0" Margin="Margin.Is0">
-            <CardBody Padding="Padding.Is0.Is2.FromLeft">
+            <CardBody Padding="Padding.Is0.Is2.FromStart">
                 <Fields Flex="Flex.AlignItems.Start">
                     <Field Horizontal="true">
                         <Span class="oi oi-fork" TextColor="TextColor.Info" style="width:auto;"></Span>
