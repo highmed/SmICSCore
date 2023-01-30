@@ -6,13 +6,19 @@ services:
     build:
         context: .
     restart: unless-stopped
+    volumes:
+      - ../certs/smicscore/:/root/app/https/
     environment:
       - OPENEHR_DB=<openEHR REST API URL>
-      - OPENEHR_USER=<openEHR SmICS User>
-      - OPENEHR_PASSWD=<openEHR SmICS User PW>
+      - AUTHORITY=<oauth2 Authority  URL>
+      - CLIENT_ID=<oauth2 Client>
+      - CLIENT_SECRET=<oauth2 Client Secret>
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=<.pfx Certificate password>
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/app/https/<filename of pfx certificate>.pfx
       - OUTBREAK_DETECTION_TIME=<Time in the format of hh:mm:ss>
     ports:
       - 80:80
+      - 443:443
     networks: 
       - smics-net
 
@@ -24,11 +30,31 @@ services:
     environment:
       - SMICS_HOSTNAME=<local DNS entry of the server>
       - SMICS_PORT=<Smics Core outside port>
+      - AUTH_PROVIDER_URL=<oauth2 Authority Root URL without "/auth/realm"> 
+      - AUTH_REALM=<oauth2 realm name>
+      - AUTH_CLIENT_ID=<oauth2 client>
+      - AUTH_CLIENT_SECRET=<oauth2 client secret>
     ports:
       - 3231:3231
     networks: 
       - smics-net
+      - nginx-net
+  nginx:
+    image: nginx:mainline-alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports: 
+      - 8080:8080
+      - 8443:8443
+    depends_on:
+      - smics_visualisierung
+    networks:
+      - nginx-net
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d/
+      - ../certs/smicsvisualisierung/:/etc/ssl/
 
 networks:
   smics-net: {}
+  nginx-net: {}
 
