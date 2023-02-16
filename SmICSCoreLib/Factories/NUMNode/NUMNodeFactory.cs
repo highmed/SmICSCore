@@ -78,8 +78,25 @@ namespace SmICSCoreLib.Factories.NUMNode
         public void FirstDataEntry()
         {
             InitializeGlobalVariables();
-            TimespanParameter timespan = new() { Starttime = DateTime.Now.AddYears(-10), Endtime = DateTime.Now };
-            _ = Process(timespan);
+            //TimespanParameter timespan = new() { Starttime = DateTime.Now.AddYears(-10), Endtime = DateTime.Now };
+            DateTime getFirstData = Convert.ToDateTime("2020-01-01");
+            DateTime getLastData = DateTime.Now.AddMonths(-1);
+            TimespanParameter timespan;
+            do
+            {
+                if(getFirstData.Day == 1)
+                {
+                    timespan = new() { Starttime = getFirstData, Endtime = getFirstData.AddDays(14) };
+                    getFirstData = getFirstData.AddDays(14);
+                }
+                else
+                {
+                    timespan = new() { Starttime = getFirstData, Endtime = getFirstData.AddMonths(1).AddDays(-14) };
+                    getFirstData = getFirstData.AddMonths(1).AddDays(-14);
+                }
+                _ = Process(timespan, getFirstData);
+            } while(getLastData.Subtract(getFirstData).TotalDays > 0);
+              
         }
 
         public void RegularDataEntry()
@@ -98,7 +115,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             {
                 _logger.LogWarning("Cannot read saved data :" + e);
             }
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.Today;
             TimespanParameter timespan;
             if (date.Day == 1)
             {
@@ -109,7 +126,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                 timespan = new() { Starttime = DateTime.Now.AddDays(-14), Endtime = DateTime.Now };
             }
 
-            _ = Process(timespan);
+            _ = Process(timespan, date);
         }
 
         private void InitializeGlobalVariables()
@@ -124,7 +141,7 @@ namespace SmICSCoreLib.Factories.NUMNode
             nodeDataItems = new List<NUMNodeDataItems>();
         }
 
-        private async Task Process(TimespanParameter timespan)
+        private async Task Process(TimespanParameter timespan, DateTime filenameDate)
         {
             try
             {
@@ -194,7 +211,8 @@ namespace SmICSCoreLib.Factories.NUMNode
                     author = "SmICS",
                     dataitems = nodeDataItems
                 };
-                JSONFileStream.JSONWriter.Write(NUMNodeList, path, "NUMNode_R" + DateTime.Today.ToString("yyyy_MM_dd"));
+                string name = "NUMNode_R" + filenameDate.ToString("yyyy_MM_dd");
+                JSONFileStream.JSONWriter.Write(NUMNodeList, path, name);
             }
             catch (Exception e)
             {

@@ -52,7 +52,7 @@ namespace SmICSWebApp
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             services.AddSingleton<JobGetReport>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 00 10 ? * *"));
+            //services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobGetReport), "JobGetReport", "0 00 10 ? * *"));
             services.AddHostedService<QuartzHostedService>();
 
             services.AddSingleton<RKIConfigService>();
@@ -62,27 +62,27 @@ namespace SmICSWebApp
             services.AddSingleton<PersInfoInfectCtrlService>();
 
             //CronJob UpdateRkidata
-            services.AddSingleton<JobUpdateRkidata>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
+            //services.AddSingleton<JobUpdateRkidata>();
+            //services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(JobUpdateRkidata), "JobUpdateRkidata", "0 00 15 ? * *"));
 
             services.AddSingleton<NUMNodeJob>();
             services.AddSingleton(new JobMetadata(Guid.NewGuid(), typeof(NUMNodeJob), "NumNode", "0 01 1,15 ? * 0"));
-            DashboardConfig.dashboardEndpoint = Environment.GetEnvironmentVariable("DASHBOARD_DB");
-            DashboardConfig.dashboardUser = Environment.GetEnvironmentVariable("DASHBOARD_USER");
-            DashboardConfig.dashboardPassword = Environment.GetEnvironmentVariable("DASHBOARD_PASSWD");
+            //DashboardConfig.dashboardEndpoint = Environment.GetEnvironmentVariable("DASHBOARD_DB");
+            //DashboardConfig.dashboardUser = Environment.GetEnvironmentVariable("DASHBOARD_USER");
+            //DashboardConfig.dashboardPassword = Environment.GetEnvironmentVariable("DASHBOARD_PASSWD");
 
             services.AddScoped<OutbreakDetectionService>();
 
-            OpenehrConfig.OutbreakDetectionRuntime = Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME");
-            Console.WriteLine("Transformed: OUTBREAK_DETECTION_TIME " + Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME") + "to CONFIG: " + OpenehrConfig.OutbreakDetectionRuntime);
-            string[] runtimeArr = OpenehrConfig.OutbreakDetectionRuntime.Split(":");
-            OpenehrConfig.OutbreakDetectionRuntime = runtimeArr[2] + " " + runtimeArr[1] + " " + runtimeArr[0] + " * * ?";
+            //OpenehrConfig.OutbreakDetectionRuntime = Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME");
+            //Console.WriteLine("Transformed: OUTBREAK_DETECTION_TIME " + Environment.GetEnvironmentVariable("OUTBREAK_DETECTION_TIME") + "to CONFIG: " + OpenehrConfig.OutbreakDetectionRuntime);
+            //string[] runtimeArr = OpenehrConfig.OutbreakDetectionRuntime.Split(":");
+            //OpenehrConfig.OutbreakDetectionRuntime = runtimeArr[2] + " " + runtimeArr[1] + " " + runtimeArr[0] + " * * ?";
 
-            services.AddSingleton<JobOutbreakDetection>();
-            services.AddSingleton(new JobMetadata(Guid.NewGuid(),
-                                  typeof(JobOutbreakDetection),
-                                  "JobOutbreakDetection",
-                                  OpenehrConfig.OutbreakDetectionRuntime));
+            //services.AddSingleton<JobOutbreakDetection>();
+            //services.AddSingleton(new JobMetadata(Guid.NewGuid(),
+            //                      typeof(JobOutbreakDetection),
+            //                      "JobOutbreakDetection",
+            //                      OpenehrConfig.OutbreakDetectionRuntime));
 
             services.AddSwaggerGen(c =>
             {
