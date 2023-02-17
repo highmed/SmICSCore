@@ -9,6 +9,7 @@ COPY SmICSWebApp/Resources/RRuntime/R_Script_00010.R Resources/RRuntime/
 COPY pub/jranke.asc jranke.asc
 COPY pub/jranke2.asc jranke2.asc
 COPY SmICSWebApp/Resources/ Resources/
+COPY SmICSWebApp/Resources/ Resources/NUMNode
 
 RUN apt-get update 
 RUN apt-get -y upgrade
@@ -22,17 +23,17 @@ RUN apt-key add jranke.asc
 RUN apt-key add jranke2.asc
 
 
-RUN add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
-RUN apt-get update
-RUN apt-get -y install -t buster-cran40 r-base
+#RUN add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
+#RUN apt-get update
+#RUN apt-get -y install -t buster-cran40 r-base
 
-RUN Rscript -e "options(repos = 'https://cran.r-project.org')"
-RUN Rscript -e "install.packages('RJSONIO')"
-RUN Rscript -e "install.packages('surveillance')"
-RUN Rscript -e "install.packages('dplyr')"
-RUN Rscript -e "install.packages('lubridate')"
-RUN Rscript -e "install.packages('plotrix')"
-RUN Rscript -e "install.packages('/app/RKIAlgorithm/Statistik.dod.tar.gz', repos=NULL, type='source')"
+#RUN Rscript -e "options(repos = 'https://cran.r-project.org')"
+#RUN Rscript -e "install.packages('RJSONIO')"
+#RUN Rscript -e "install.packages('surveillance')"
+#RUN Rscript -e "install.packages('dplyr')"
+#RUN Rscript -e "install.packages('lubridate')"
+#RUN Rscript -e "install.packages('plotrix')"
+#RUN Rscript -e "install.packages('/app/RKIAlgorithm/Statistik.dod.tar.gz', repos=NULL, type='source')"
 
 WORKDIR /src
 COPY ["SmICSWebApp/SmICSWebApp.csproj", "SmICSWebApp/"]
