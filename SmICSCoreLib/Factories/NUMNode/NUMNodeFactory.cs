@@ -10,6 +10,7 @@ using SmICSCoreLib.StatistikDataModels;
 using System.Threading.Tasks;
 using SmICSCoreLib.Factories.PatientMovement;
 using SmICSCoreLib.Factories.PatientMovement.ReceiveModels;
+using System.IO;
 
 namespace SmICSCoreLib.Factories.NUMNode
 {
@@ -29,20 +30,20 @@ namespace SmICSCoreLib.Factories.NUMNode
         private double averageNumberOfMaybeNosCases;
         private double averageNumberOfContacts;
 
-        private double medianNumberOfStays;
-        private double medianNumberOfNosCases;
-        private double medianNumberOfMaybeNosCases;
-        private double medianNumberOfContacts;
+        //private double medianNumberOfStays;
+        //private double medianNumberOfNosCases;
+        //private double medianNumberOfMaybeNosCases;
+        //private double medianNumberOfContacts;
 
-        private double underQuartilNumberOfStays;
-        private double underQuartilNumberOfNosCases;
-        private double underQuartilNumberOfMaybeNosCases;
-        private double underQuartilNumberOfContacts;
+        //private double underQuartilNumberOfStays;
+        //private double underQuartilNumberOfNosCases;
+        //private double underQuartilNumberOfMaybeNosCases;
+        //private double underQuartilNumberOfContacts;
 
-        private double upperQuartilNumberOfStays;
-        private double upperQuartilNumberOfNosCases;
-        private double upperQuartilNumberOfMaybeNosCases;
-        private double upperQuartilNumberOfContacts;
+        //private double upperQuartilNumberOfStays;
+        //private double upperQuartilNumberOfNosCases;
+        //private double upperQuartilNumberOfMaybeNosCases;
+        //private double upperQuartilNumberOfContacts;
 
         private double standardDeviationNumberOfStays;
         private double standardDeviationNumberOfNosCases;
@@ -78,6 +79,7 @@ namespace SmICSCoreLib.Factories.NUMNode
         public void FirstDataEntry()
         {
             InitializeGlobalVariables();
+            CheckOldFiles();
             //TimespanParameter timespan = new() { Starttime = DateTime.Now.AddYears(-10), Endtime = DateTime.Now };
             DateTime getFirstData = Convert.ToDateTime("2020-01-01");
             DateTime getLastData = DateTime.Now.AddMonths(-1);
@@ -102,19 +104,8 @@ namespace SmICSCoreLib.Factories.NUMNode
         public void RegularDataEntry()
         {
             InitializeGlobalVariables();
-            try
-            {
-                saveData = JSONFileStream.JSONReader<NUMNodeSaveModel>.ReadObject(path + "NumNodeSave.json");
+            CheckOldFiles();
 
-                countPatient = saveData.CountPatient;
-                numberOfStays = saveData.NumberOfStays;
-                numberOfNosCases = saveData.NumberOfNosCases;
-                numberOfMaybeNosCases = saveData.NumberOfMaybeNosCases;
-                numberOfContacts = saveData.NumberOfContacts;
-            }catch (Exception e)
-            {
-                _logger.LogWarning("Cannot read saved data :" + e);
-            }
             DateTime date = DateTime.Today;
             TimespanParameter timespan;
             if (date.Day == 1)
@@ -127,6 +118,43 @@ namespace SmICSCoreLib.Factories.NUMNode
             }
 
             _ = Process(timespan, date);
+        }
+
+        private void CheckOldFiles()
+        {
+            try
+            {
+                if (File.Exists(path + "NumNodeSave.json"))
+                {
+                    saveData = JSONFileStream.JSONReader<NUMNodeSaveModel>.ReadObject(path + "NumNodeSave.json");
+                }
+                else
+                {
+                    saveData = null;
+                }
+                
+
+                if(saveData is null)
+                {
+                    countPatient = 0;
+                    numberOfStays = 0;
+                    numberOfNosCases = 0;
+                    numberOfMaybeNosCases = 0;
+                    numberOfContacts = 0;
+                }else
+                {
+                    countPatient = saveData.CountPatient;
+                    numberOfStays = saveData.NumberOfStays;
+                    numberOfNosCases = saveData.NumberOfNosCases;
+                    numberOfMaybeNosCases = saveData.NumberOfMaybeNosCases;
+                    numberOfContacts = saveData.NumberOfContacts;
+                }
+                
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning("Cannot read saved data :" + e);
+            }
         }
 
         private void InitializeGlobalVariables()
@@ -147,72 +175,92 @@ namespace SmICSCoreLib.Factories.NUMNode
             {
                 await GetLabPatientList(timespan);
 
-                var tasks = new Task[]
-                {
-                    GetNumberOfStays(),
-                    GetNumberOfNosCases(),
-                    //GetNumberOfContacts()
-                };
-
-                foreach(var task in tasks)
-                {
-                    await task;
-                }
-
-                SaveStaticData();
-                List<string> itemNames = new() {
-                    "current.wardsvisited",
-                    "current.nosocomialcases.possible",
-                    "current.nosocomialcases.probable" 
-                    /*"current.patientcontacts"*/ };
-                List<double> averageList = new() { averageNumberOfStays, averageNumberOfMaybeNosCases, averageNumberOfNosCases, averageNumberOfContacts };
-                List<double> medianList = new() { medianNumberOfStays, medianNumberOfMaybeNosCases, medianNumberOfNosCases, medianNumberOfContacts };
-                List<double> underquartilList = new() { underQuartilNumberOfStays, underQuartilNumberOfMaybeNosCases, underQuartilNumberOfNosCases, underQuartilNumberOfContacts };
-                List<double> upperquartilList = new() { upperQuartilNumberOfStays, upperQuartilNumberOfMaybeNosCases, upperQuartilNumberOfNosCases, upperQuartilNumberOfContacts };
-                List<double> maxList;
-                List<double> minList;
-                List<double> standardDeviationList = new() { standardDeviationNumberOfStays, standardDeviationNumberOfMaybeNosCases, standardDeviationNumberOfNosCases, standardDeviationNumberOfContacts };
                 if (labPatientList.Count != 0)
                 {
-                    maxList = new() { labPatientList.Max(a => a.CountStays), labPatientList.Max(a => a.CountMaybeNosCases), labPatientList.Max(a => a.CountNosCases), labPatientList.Max(a => a.CountContacts) };
-                    minList = new() { labPatientList.Min(a => a.CountStays), labPatientList.Min(a => a.CountMaybeNosCases), labPatientList.Min(a => a.CountNosCases), labPatientList.Min(a => a.CountContacts) };
-                }
-                else
-                {
-                    maxList = new() { 0, 0, 0, 0 };
-                    minList = new() { 0, 0, 0, 0 };
-                }               
+                    var tasks = new Task[]
+                    {
+                        GetNumberOfStays(),
+                        GetNumberOfNosCases(),
+                        //GetNumberOfContacts()
+                    };
 
-                for (int i = 0; i < itemNames.Count-1; i++)
+                        foreach (var task in tasks)
+                        {
+                            await task;
+                        }
+                }
+                else {
+
+                    averageNumberOfStays = 0;
+                    averageNumberOfMaybeNosCases = 0;
+                    averageNumberOfNosCases = 0;
+                    averageNumberOfContacts = 0;
+
+                    standardDeviationNumberOfStays = 0;
+                    standardDeviationNumberOfMaybeNosCases = 0;
+                    standardDeviationNumberOfNosCases = 0;
+                    standardDeviationNumberOfContacts = 0;
+                }
+
+
+                SaveStaticData();
+                List<string> itemNames = new()
                 {
-                    nodeDataItems = new List<NUMNodeDataItems>(){
-                            new NUMNodeDataItems(){
-                                itemname = itemNames[i],
-                                itemtype = "statsmean",
-                                data = new NUMNodeData(){
-                                    average = averageList[i],
-                                    //median = medianList[i],
-                                    //underquartil = underquartilList[i],
-                                    //upperquartil = upperquartilList[i],
-                                    //max = maxList[i],
-                                    //min = minList[i],
-                                    standard_dev = standardDeviationList[i],
-                                    sample_size = countPatient + currentcountPatient
-                                }
-                            }
-                        };
+                    "current.wardsvisited",
+                    "current.nosocomialcases.possible",
+                    "current.nosocomialcases.probable"
+                    /*"current.patientcontacts"*/
+                };
+                List<double> averageList = new() { averageNumberOfStays, averageNumberOfMaybeNosCases, averageNumberOfNosCases, averageNumberOfContacts };
+                //List<double> medianList = new() { medianNumberOfStays, medianNumberOfMaybeNosCases, medianNumberOfNosCases, medianNumberOfContacts };
+                //List<double> underquartilList = new() { underQuartilNumberOfStays, underQuartilNumberOfMaybeNosCases, underQuartilNumberOfNosCases, underQuartilNumberOfContacts };
+                //List<double> upperquartilList = new() { upperQuartilNumberOfStays, upperQuartilNumberOfMaybeNosCases, upperQuartilNumberOfNosCases, upperQuartilNumberOfContacts };
+                //List<double> maxList;
+                //List<double> minList;
+                List<double> standardDeviationList = new() { standardDeviationNumberOfStays, standardDeviationNumberOfMaybeNosCases, standardDeviationNumberOfNosCases, standardDeviationNumberOfContacts };
+                //if (labPatientList.Count != 0)
+                //{
+                //    maxList = new() { labPatientList.Max(a => a.CountStays), labPatientList.Max(a => a.CountMaybeNosCases), labPatientList.Max(a => a.CountNosCases), labPatientList.Max(a => a.CountContacts) };
+                //    minList = new() { labPatientList.Min(a => a.CountStays), labPatientList.Min(a => a.CountMaybeNosCases), labPatientList.Min(a => a.CountNosCases), labPatientList.Min(a => a.CountContacts) };
+                //}
+                //else
+                //{
+                //    maxList = new() { 0, 0, 0, 0 };
+                //    minList = new() { 0, 0, 0, 0 };
+                //}
+                nodeDataItems = new List<NUMNodeDataItems>();
+                for (int i = 0; i < itemNames.Count; i++)
+                {
+                    NUMNodeDataItems nodeDataItem = new NUMNodeDataItems()
+                    {
+                        itemname = itemNames[i],
+                        itemtype = "statsmean",
+                        data = new NUMNodeData()
+                        {
+                            average = averageList[i],
+                            //median = medianList[i],
+                            //underquartil = underquartilList[i],
+                            //upperquartil = upperquartilList[i],
+                            //max = maxList[i],
+                            //min = minList[i],
+                            standard_dev = standardDeviationList[i],
+                            sample_size = countPatient + currentcountPatient
+                        }
+                    };
+                    nodeDataItems.Add(nodeDataItem);
                 }
 
                 NUMNodeList = new NUMNodeModel()
                 {
                     provider = "MHH-SmICS",
-                    corona_dashboard_dataset_version = "0.3.0",
+                    corona_dashboard_dataset_version = "0.5.0",
                     exporttimestamp = DateTime.Now,
                     author = "SmICS",
                     dataitems = nodeDataItems
                 };
                 string name = "NUMNode_R" + filenameDate.ToString("yyyy_MM_dd");
                 JSONFileStream.JSONWriter.Write(NUMNodeList, path, name);
+             
             }
             catch (Exception e)
             {
@@ -357,7 +405,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                 }
 
                 averageNumberOfStays = NUMNodeStatistics.GetAverage(numberOfStays + currentnumberOfStays, countPatient + currentcountPatient);
-                (medianNumberOfStays, underQuartilNumberOfStays, upperQuartilNumberOfStays) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "stay");
+                //(medianNumberOfStays, underQuartilNumberOfStays, upperQuartilNumberOfStays) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "stay");
                 standardDeviationNumberOfStays = NUMNodeStatistics.GetStandardDeviation(labPatientList, countPatient + currentcountPatient, averageNumberOfStays, "stay");
                 await Task.CompletedTask;
             }
@@ -424,8 +472,8 @@ namespace SmICSCoreLib.Factories.NUMNode
 
                 averageNumberOfMaybeNosCases = NUMNodeStatistics.GetAverage(numberOfMaybeNosCases + currentnumberOfMaybeNosCases, countPatient + currentcountPatient);
                 averageNumberOfNosCases = NUMNodeStatistics.GetAverage(numberOfNosCases + currentnumberOfNosCases, countPatient + currentcountPatient);
-                (medianNumberOfMaybeNosCases, underQuartilNumberOfMaybeNosCases, upperQuartilNumberOfMaybeNosCases) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "maybeNosCase");
-                (medianNumberOfNosCases, underQuartilNumberOfNosCases, upperQuartilNumberOfNosCases) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "nosCase");
+                //(medianNumberOfMaybeNosCases, underQuartilNumberOfMaybeNosCases, upperQuartilNumberOfMaybeNosCases) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "maybeNosCase");
+                //(medianNumberOfNosCases, underQuartilNumberOfNosCases, upperQuartilNumberOfNosCases) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "nosCase");
                 standardDeviationNumberOfNosCases = NUMNodeStatistics.GetStandardDeviation(labPatientList, countPatient + currentcountPatient, averageNumberOfNosCases, "nosCase");
                 standardDeviationNumberOfMaybeNosCases = NUMNodeStatistics.GetStandardDeviation(labPatientList, countPatient + currentcountPatient, averageNumberOfMaybeNosCases, "maybeNosCase");
                 await Task.CompletedTask;
@@ -536,7 +584,7 @@ namespace SmICSCoreLib.Factories.NUMNode
                 }
 
                 averageNumberOfContacts = NUMNodeStatistics.GetAverage(numberOfContacts + currentnumberOfContacts, countPatient + currentcountPatient);
-                (medianNumberOfContacts, underQuartilNumberOfContacts, upperQuartilNumberOfContacts) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "contact");
+                //(medianNumberOfContacts, underQuartilNumberOfContacts, upperQuartilNumberOfContacts) = NUMNodeStatistics.GetMedianAndInterquartil(labPatientList, countPatient + currentcountPatient, "contact");
                 standardDeviationNumberOfContacts = NUMNodeStatistics.GetStandardDeviation(labPatientList, countPatient + currentcountPatient, averageNumberOfContacts, "contact");
                 await Task.CompletedTask;
             }
