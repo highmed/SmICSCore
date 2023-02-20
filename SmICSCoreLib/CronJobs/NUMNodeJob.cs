@@ -18,8 +18,11 @@ namespace SmICSCoreLib.CronJobs
         private DashboardRestClientConnector _client;
         private readonly INUMNodeFactory _listFac;
         private ILogger<NUMNodeFactory> _logger;
-        private readonly string path = @"../SmICSWebApp/Resources/NUMNode/NUMNode_R" + DateTime.Today.ToString("yyyy_MM_dd") + ".json";
-        private readonly string shortpath = @"../SmICSWebApp/Resources/NUMNode/";
+        //private readonly string path = @"../SmICSWebApp/Resources/NUMNode/NUMNode_R" + DateTime.Today.ToString("yyyy_MM_dd") + ".json";
+        //private readonly string shortpath = @"../SmICSWebApp/Resources/NUMNode/";
+        private readonly string path = @"Resources/NUMNode/NUMNode_R" + DateTime.Today.ToString("yyyy_MM_dd") + ".json";
+        private readonly string shortpath = @"Resources/NUMNode/";
+
 
         public NUMNodeJob(INUMNodeFactory listFac, ILogger<NUMNodeFactory> logger)
         {
@@ -28,9 +31,9 @@ namespace SmICSCoreLib.CronJobs
         }
         public Task Execute(IJobExecutionContext context)
         {
-            if (!Directory.Exists("../SmICSWebApp/Resources/NUMNode/"))
+            if (!Directory.Exists(shortpath))
             {
-                Directory.CreateDirectory("../SmICSWebApp/Resources/NUMNode/");
+                Directory.CreateDirectory(shortpath);
             }
             if (!File.Exists(path))
             {

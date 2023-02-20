@@ -64,7 +64,8 @@ namespace SmICSCoreLib.Factories.NUMNode
         private NUMNodeSaveModel saveData;
 
         private readonly string pathogen = "94500-6";
-        private readonly string path = @"../SmICSWebApp/Resources/NUMNode/";
+        //private readonly string path = @"../SmICSWebApp/Resources/NUMNode/";
+        private readonly string path = @"Resources/NUMNode/";
 
         public IRestDataAccess RestDataAccess { get; set; }
         private readonly ILogger<NUMNodeFactory> _logger;
