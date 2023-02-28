@@ -66,7 +66,7 @@ namespace SmICSCoreLib.REST
             }
             catch(Exception e)
             {
-                Console.WriteLine("RestDataAccess.AQLQuery:\n" + e.Message);
+                Console.WriteLine("RestDataAccess.AQLQuery:\n" + query.ToString() + "\n"+ e.Message);
                 throw;
             }
         }

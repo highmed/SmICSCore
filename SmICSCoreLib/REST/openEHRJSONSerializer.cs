@@ -62,7 +62,14 @@ namespace SmICSCoreLib.REST
 
         private static int GetIndexOfProperty(PropertyInfo[] Properties, string PropertyName)
         {
-            return Properties.Select((prop, index) => new { prop, index }).First(x => x.prop.Name == PropertyName).index;
+            try
+            {
+                return Properties.Select((prop, index) => new { prop, index }).First(x => x.prop.Name == PropertyName).index;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message + " - " + PropertyName);
+            }
         }
 
         private static T CreateReceiveModel(JToken RowElement, List<string> PropertyNames, Dictionary<string, int> PropertyAllocation)
