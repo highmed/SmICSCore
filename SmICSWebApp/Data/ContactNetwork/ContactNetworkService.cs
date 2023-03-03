@@ -1,18 +1,26 @@
-﻿using SmICSCoreLib.Factories.PatientMovementNew;
+﻿using Microsoft.AspNetCore.SignalR;
+using SmICSCoreLib.Factories.General;
+using SmICSCoreLib.Factories.MiBi.Contact;
+using SmICSCoreLib.Factories.MiBi.PatientView;
+using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
+using SmICSCoreLib.REST;
 using SmICSWebApp.Data.MedicalFinding;
 using SmICSWebApp.Data.PatientMovement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmICSWebApp.Data.ContactNetwork
 {
     public class ContactNetworkService
     {
-        private MedicalFindingService _medicalFinding;
+        private IContactFactory _contactFac;
         private PatientMovementService _movementService;
         private IPatientStayFactory _patStayFac;
+        private ILabResultFactory _labFac;
+        private MedicalFindingService _medicalFinding;
 
         private ContactModel contacts;
         private Stack<ContactNetworkParameter> ContactStack;
@@ -20,13 +28,47 @@ namespace SmICSWebApp.Data.ContactNetwork
         private int maxDegree;
         private int currentDegree;
 
-        public ContactNetworkService(MedicalFindingService medicalFindingService, PatientMovementService patientMovementService, IPatientStayFactory patientStayFactory)
+        public ContactNetworkService(IContactFactory contactFac, IPatientStayFactory patStayFac, ILabResultFactory labFac, MedicalFindingService medicalFinding)
         {
-            _medicalFinding = medicalFindingService;
-            _movementService = patientMovementService;
-            _patStayFac = patientStayFactory;
+            _contactFac = contactFac;
+            _patStayFac = patStayFac;
+            _labFac = labFac;
+            _medicalFinding = medicalFinding;
         }
 
+        public async Task<ContactModel> GetContactNetwork(ContactNetworkParameter parameter)
+        {
+
+            Dictionary<Hospitalization, List<PatientStay>> contacts = await _contactFac.ProcessAsync(parameter);
+            ContactModel cModel = new ContactModel();
+
+            foreach(Hospitalization hosp in contacts.Keys)
+            {
+                List<PatientStay> stays = contacts[hosp];
+                foreach(PatientStay stay in stays) 
+                {
+                    List<PatientStay> patientSpecificStays = await _patStayFac.ProcessAsync(stay);
+                    List<VisuPatientMovement> visuPatientMovements = new List<VisuPatientMovement>();
+                    foreach(PatientStay patientStay in patientSpecificStays)
+                    {
+                        visuPatientMovements.Add(new VisuPatientMovement(patientStay));
+                    }
+
+                    List<VisuLabResult> labResults = await _medicalFinding.GetMedicalFinding(
+                        stay, 
+                        new SmICSCoreLib.Factories.MiBi.PatientView.Parameter.PathogenParameter() 
+                        { 
+                            PathogenCodes = new List<string> { parameter.pathogen }
+                        });
+
+                    cModel.PatientMovements.AddRange(visuPatientMovements);
+                    cModel.LaborData.AddRange(labResults);
+                }
+            }
+            return cModel;
+        }
+
+        /*
         public ContactModel GetContactNetwork(ContactNetworkParameter parameter)
         {
             try
@@ -57,7 +99,6 @@ namespace SmICSWebApp.Data.ContactNetwork
 
             }
         }
-
         private void FindWardsQuery()
         {
             ContactNetworkParameter parameter = ContactStack.Pop();
@@ -71,8 +112,6 @@ namespace SmICSWebApp.Data.ContactNetwork
 
             FindContactPatients(patientWardList, parameter);
         }
-
-
         private void FindContactPatients(List<VisuPatientMovement> PatientWardList, ContactNetworkParameter parameter)
         {
 
@@ -111,5 +150,6 @@ namespace SmICSWebApp.Data.ContactNetwork
                 }
             }
         }
+        */
     }
 }

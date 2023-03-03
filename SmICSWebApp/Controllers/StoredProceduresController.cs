@@ -12,6 +12,7 @@ using SmICSWebApp.Data.PatientMovement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SmICSWebApp.Controllers
 {
@@ -47,11 +48,11 @@ namespace SmICSWebApp.Controllers
         /// <returns></returns>
         [Route("Contact_NthDegree_TTKP_Degree")]
         [HttpPost]
-        public ActionResult<Data.ContactNetwork.ContactModel> ContactNetwork([FromBody] ContactNetworkParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
+        public ActionResult<Task<Data.ContactNetwork.ContactModel>> ContactNetwork([FromBody] ContactNetworkParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             try
             {
-                Data.ContactNetwork.ContactModel contacts = _contactService.GetContactNetwork(parameter);
+                Data.ContactNetwork.ContactModel contacts = await _contactService.GetContactNetwork(parameter);
                 return contacts;
             }
             catch (Exception e)
