@@ -1,46 +1,238 @@
 [
   {
-    "WorkflowName": "Resistance",
+    "WorkflowName": "MRERecognition",
     "Rules": [
       {
         "RuleName": "MRSA",
         "SuccessEvent": "MRSA",
-        "ErrorMessage": "One or more adjust rules failed.",
-        "ErrorType": "Error",
-        "RuleExpressionType": "LambdaExpression",
+        "ErrorMessage": "MRSA failed.",
         "Expression": "input.Name == \"Staphylococcus aureus\" && input.Antibiograms.Any(antibiotigram => antibiotigram.Antibiotic == \"Oxacillin\" && antibiotigram.Resistance == \"R\")"
       },
       {
         "RuleName": "MSSA",
         "SuccessEvent": "MSSA",
-        "ErrorMessage": "One or more adjust rules failed.",
-        "ErrorType": "Error",
-        "RuleExpressionType": "LambdaExpression",
+        "ErrorMessage": "MSSA failed.",
         "Expression": "input.Name == \"Staphylococcus aureus\" && input.Antibiograms.Any(antibiotigram => antibiotigram.Antibiotic == \"Oxacillin\" && antibiotigram.Resistance == \"S\")"
       },
       {
-        "RuleName": "3MRGN (Enterobacterales + Acinetobacter baumanmii)",
-        "SuccessEvent": "3MRGN",
+        "RuleName": "MRGN",
         "ErrorMessage": "One or more adjust rules failed.",
-        "ErrorType": "Error",
-        "RuleExpressionType": "LambdaExpression",
-        "Expression": "(input.Name == \"Escherichia coli\" || input.Name == \"Acinetobacter baumannii\" || input.Name == \"Klebsiella pneumoniae\") && input.Antibiograms.Any(antibiotigram => (antibiotigram.Antibiotic == \"Piperacillin\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Cefotaxim\" || antibiotigram.Antibiotic == \"Ceftazidim\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Imipenem\" || antibiotigram.Antibiotic == \"Meropenem\" && antibiotigram.Resistance == \"S\" || antibiotigram.Resistance == \"I\") && (antibiotigram.Antibiotic == \"Ciprofloxacin\" && antibiotigram.Resistance == \"R\"))"
-      },
-      {
-        "RuleName": "4MRGN (Enterobacterales + Acinetobacter baumanmii + Pseudomonas aeruginosa A)",
-        "SuccessEvent": "4MRGN",
-        "ErrorMessage": "One or more adjust rules failed.",
-        "ErrorType": "Error",
-        "RuleExpressionType": "LambdaExpression",
-        "Expression": "(input.Name == \"Escherichia coli\" || input.Name == \"Acinetobacter baumannii\" || input.Name == \"Pseudomonas aeruginosa\" || input.Name == \"Klebsiella pneumoniae\") && input.Antibiograms.Any(antibiotigram => (antibiotigram.Antibiotic == \"Piperacillin\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Cefotaxim\" || antibiotigram.Antibiotic == \"Ceftazidim\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Imipenem\" || antibiotigram.Antibiotic == \"Meropenem\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Ciprofloxacin\" && antibiotigram.Resistance == \"R\"))"
-      },
-      {
-        "RuleName": "3MRGN (Pseudomonas aeruginosa)",
-        "SuccessEvent": "3MRGN",
-        "ErrorMessage": "One or more adjust rules failed.",
-        "ErrorType": "Error",
-        "RuleExpressionType": "LambdaExpression",
-        "Expression": "(input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Count((antibiotigram => (antibiotigram.Antibiotic == \"Piperacillin\" == \"R\") || (antibiotigram.Antibiotic == \"Cefotaxim\" || antibiotigram.Antibiotic == \"Ceftazidim\" && antibiotigram.Resistance == \"R\") && (antibiotigram.Antibiotic == \"Imipenem\" || antibiotigram.Antibiotic == \"Meropenem\" && antibiotigram.Resistance == \"R\" ) && (antibiotigram.Antibiotic == \"Ciprofloxacin\" && antibiotigram.Resistance == \"R\") == 3)"
+        "Rules": [
+          {
+            "RuleName": "PathogenName",
+            "Rules": [
+              {
+                "RuleName": "Escherichia coli",
+                "Expression": "input.Name == \"Escherichia coli\"",
+                "ErrorMessage": "Escherichia coli failed",
+                "Enabled": true
+              },
+              {
+                "RuleName": "Acinetobacter baumannii",
+                "Expression": "input.Name == \"Acinetobacter baumannii\"",
+                "ErrorMessage": "Acinetobacter baumannii failed",
+                "Enabled": true
+              },
+              {
+                "RuleName": "Klebsiella pneumoniae",
+                "Expression": "input.Name == \"Klebsiella pneumoniae\"",
+                "ErrorMessage": "Klebsiella pneumoniae failed",
+                "Enabled": true
+              },
+              {
+                "RuleName": "Pseudomonas aeruginosa",
+                "Expression": "input.Name == \"Pseudomonas aeruginosa\"",
+                "ErrorMessage": "Pseudomonas aeruginosa failed",
+                "Enabled": true
+              }
+            ],
+            "Operator": "OrElse",
+            "ErrorMessage": "PathogenName failed",
+            "Enabled": true
+          },
+          {
+            "RuleName": "Resistance",
+            "Enabled": true,
+            "Rules": [
+              {
+                "RuleName": "3MRGN check",
+                "Enabled": true,
+                "Rules": [
+                  {
+                    "RuleName": "Basic",
+                    "Enabled": true,
+                    "Rules": [
+                      {
+                        "RuleName": "3./4. Generations-Cephalosporine",
+                        "Expression": "input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" || a.Antibiotic == \"Ceftazidim\") && a.Resistance == \"R\"))",
+                        "ErrorMessage": "Cephalosporine failed",
+                        "Enabled": true
+                      },
+                      {
+                        "RuleName": "Acylureidopenicilline",
+                        "Expression": "input.Antibiograms.Any(a => a.Antibiotic == \"Piperacillin\" && a.Resistance == \"R\")",
+                        "ErrorMessage": "Acylureidopenicilline failed",
+                        "Enabled": true
+                      },
+                      {
+                        "RuleName": "Carbapeneme",
+                        "Expression": "input.Antibiograms.Any(a => (a.Antibiotic == \"Imipenem\" || a.Antibiotic == \"Meropenem\") && a.Resistance != \"R\")",
+                        "ErrorMessage": "Carbapeneme failed",
+                        "Enabled": true
+                      },
+                      {
+                        "RuleName": "Fluorchinolone",
+                        "Expression": "input.Antibiograms.Any(a => a.Antibiotic == \"Ciprofloxacin\" && a.Resistance == \"R\")",
+                        "ErrorMessage": "Fluorchinolone failed",
+                        "Enabled": true
+                      }
+                    ],
+                    "Operator": "AndAlso",
+                    "ErrorMessage": "Basic 3MRGN failed"
+                  },
+                  {
+                    "RuleName": "Pseudomonas aeruginosa 1",
+                    "Enabled": true,
+                    "Rules": [
+                      {
+                        "RuleName": "3./4. Generations-Cephalosporine",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" && a.Resistance != \"R\") || (a.Antibiotic == \"Ceftazidim\" && a.Resistance != \"R\"))",
+                        "ErrorMessage": "Cephalosporine failed",
+                        "Enabled": true
+                      },
+                      {
+                        "RuleName": "Acylureidopenicilline",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => a.Antibiotic == \"Piperacillin\" && a.Resistance == \"R\")",
+                        "ErrorMessage": "Acylureidopenicilline failed",
+                        "Enabled": true
+                      },
+                      {
+                        "RuleName": "Carbapeneme",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => (a.Antibiotic == \"Imipenem\" || a.Antibiotic == \"Meropenem\") && a.Resistance == \"R\")",
+                        "ErrorMessage": "Carbapeneme failed",
+                        "Enabled": true
+                      },
+                      {
+                        "RuleName": "Fluorchinolone",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => a.Antibiotic == \"Ciprofloxacin\" && a.Resistance == \"R\")",
+                        "ErrorMessage": "Fluorchinolone failed",
+                        "Enabled": true
+                      }
+                    ],
+                    "Operator": "AndAlso",
+                    "ErrorMessage": "Pseudomonas aeruginosa 1 3MRGN failed"
+                  },
+                  {
+                    "RuleName": "Pseudomonas aeruginosa 2",
+                    "Enabled": true,
+                    "Rules": [
+                      {
+                        "RuleName": "3./4. Generations-Cephalosporine",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" || a.Antibiotic == \"Ceftazidim\") && a.Resistance == \"R\"))",
+                        "ErrorMessage": "Cephalosporine failed",
+                        "Enabled": true
+                      },
+                      {
+                        "RuleName": "Acylureidopenicilline",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => a.Antibiotic == \"Piperacillin\" && a.Resistance != \"R\")",
+                        "ErrorMessage": "Acylureidopenicilline failed",
+                        "Enabled": true
+                      },
+                      {
+                        "RuleName": "Carbapeneme",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => (a.Antibiotic == \"Imipenem\" || a.Antibiotic == \"Meropenem\") && a.Resistance == \"R\")",
+                        "ErrorMessage": "Carbapeneme failed",
+                        "Enabled": true
+                      },
+                      {
+                        "RuleName": "Fluorchinolone",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => a.Antibiotic == \"Ciprofloxacin\" && a.Resistance == \"R\")",
+                        "ErrorMessage": "Fluorchinolone failed",
+                        "Enabled": true
+                      }
+                    ],
+                    "Operator": "AndAlso",
+                    "ErrorMessage": "Pseudomonas aeruginosa 2 3MRGN failed"
+                  },
+                  {
+                    "RuleName": "Pseudomonas aeruginosa 3",
+                    "Enabled": true,
+                    "Rules": [
+                      {
+                        "RuleName": "3./4. Generations-Cephalosporine",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" || a.Antibiotic == \"Ceftazidim\") && a.Resistance == \"R\"))",
+                        "ErrorMessage": "Cephalosporine failed",
+                        "Enabled": true
+                      },
+                      {
+                        "RuleName": "Acylureidopenicilline",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => a.Antibiotic == \"Piperacillin\" && a.Resistance == \"R\")",
+                        "ErrorMessage": "Acylureidopenicilline failed",
+                        "Enabled": true
+                      },
+                      {
+                        "RuleName": "Carbapeneme",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => (a.Antibiotic == \"Imipenem\" || a.Antibiotic == \"Meropenem\") && a.Resistance == \"R\")",
+                        "ErrorMessage": "Carbapeneme failed",
+                        "Enabled": true
+                      },
+                      {
+                        "RuleName": "Fluorchinolone",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => a.Antibiotic == \"Ciprofloxacin\" && a.Resistance != \"R\")",
+                        "ErrorMessage": "Fluorchinolone failed",
+                        "Enabled": true
+                      }
+                    ],
+                    "Operator": "AndAlso",
+                    "ErrorMessage": "Pseudomonas aeruginosa 3 3MRGN failed"
+                  }
+                ],
+                "Operator": "OrElse",
+                "ErrorMessage": "3MRGN check failed",
+                "SuccessEvent": "3MRGN"
+              },
+              {
+                "RuleName": "4MRGN check",
+                "Enabled": true,
+                "Rules": [
+                  {
+                    "RuleName": "3./4. Generations-Cephalosporine",
+                    "Expression": "input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" || a.Antibiotic == \"Ceftazidim\") && a.Resistance == \"R\"))",
+                    "ErrorMessage": "Cephalosporine failed",
+                    "Enabled": true
+                  },
+                  {
+                    "RuleName": "Acylureidopenicilline",
+                    "Expression": "input.Antibiograms.Any(a => a.Antibiotic == \"Piperacillin\" && a.Resistance == \"R\")",
+                    "ErrorMessage": "Acylureidopenicilline failed",
+                    "Enabled": true
+                  },
+                  {
+                    "RuleName": "Carbapeneme",
+                    "Expression": "input.Antibiograms.Any(a => (a.Antibiotic == \"Imipenem\" || a.Antibiotic == \"Meropenem\") && a.Resistance == \"R\")",
+                    "ErrorMessage": "Carbapeneme failed",
+                    "Enabled": true
+                  },
+                  {
+                    "RuleName": "Fluorchinolone",
+                    "Expression": "input.Antibiograms.Any(a => a.Antibiotic == \"Ciprofloxacin\" && a.Resistance == \"R\")",
+                    "ErrorMessage": "Fluorchinolone failed",
+                    "Enabled": true
+                  }
+                ],
+                "Operator": "AndAlso",
+                "ErrorMessage": "4MRGN check failed",
+                "SuccessEvent": "4MRGN"
+              }
+            ],
+            "Operator": "OrElse",
+            "ErrorMessage": "Resistance check failed"
+
+          }
+        ],
+        "Operator": "AndAlso",
+        "ErrorMessage": "MRGN failed",
+        "Enabled": true
       }
     ]
   },

@@ -19,16 +19,36 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                 string json = reader.ReadToEnd();
                 Workflow[] resistanceRules = JsonConvert.DeserializeObject<List<Workflow>>(json).ToArray();
                 RulesEngine.RulesEngine engine = new RulesEngine.RulesEngine(resistanceRules, null);
-                List<RuleResultTree> ruleResult = engine.ExecuteAllRulesAsync("Resistance", input).Result;
+                List<RuleResultTree> ruleResult = engine.ExecuteAllRulesAsync("MRERecognition", input).Result;
                 foreach(RuleResultTree result in ruleResult)
                 {
-                    if(result.IsSuccess)
+                    if(result.IsSuccess && !string.IsNullOrEmpty(result.Rule.SuccessEvent))
                     {
                         resistances.Add(result.Rule.SuccessEvent);
+                    }
+                    else if (result.IsSuccess && string.IsNullOrEmpty(result.Rule.SuccessEvent))
+                    {
+                        resistances.Add(GetSuccessEvent(result));
                     }
                 }
             }
             return resistances.Count > 0 ? resistances : null;
+        }
+
+        private static string GetSuccessEvent(RuleResultTree ruleResult)
+        {
+            foreach(RuleResultTree child in ruleResult.ChildResults)
+            {
+                if(child.IsSuccess && !string.IsNullOrEmpty(child.Rule.SuccessEvent))
+                {
+                    return child.Rule.SuccessEvent;
+                }
+                else if(child.IsSuccess && string.IsNullOrEmpty(child.Rule.SuccessEvent))
+                {
+                    return GetSuccessEvent(child);
+                }
+            }
+            throw new NotImplementedException("Missed Case");
         }
 
         public static List<string> GetPossibleMREClasses(List<string> pathogenCodes)

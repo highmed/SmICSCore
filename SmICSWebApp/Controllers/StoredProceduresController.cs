@@ -48,7 +48,7 @@ namespace SmICSWebApp.Controllers
         /// <returns></returns>
         [Route("Contact_NthDegree_TTKP_Degree")]
         [HttpPost]
-        public ActionResult<Task<Data.ContactNetwork.ContactModel>> ContactNetwork([FromBody] ContactNetworkParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
+        public async Task<ActionResult<Data.ContactNetwork.ContactModel>> ContactNetwork([FromBody] ContactNetworkParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             try
             {
