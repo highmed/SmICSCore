@@ -8,6 +8,10 @@ using Microsoft.Extensions.Logging;
 using SmICSCoreLib.DB.MenuItems;
 using SmICSCoreLib.DB.Models;
 using System.Linq;
+using SmICSCoreLib.Factories.PatientMovementNew;
+using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
+using SmICSCoreLib.Factories.MiBi.PatientView;
+using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 
 namespace SmICSCoreLib.Factories.EpiCurve
 {
