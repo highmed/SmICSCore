@@ -9,6 +9,8 @@ namespace SmICSWebApp.Data.ContactNetwork
     {
         public ContactModel()
         {
+            PatientMovements = new();
+            LaborData = new();
         }
         [JsonProperty(PropertyName = "Patienten_Bewegungen")]
         public List<VisuPatientMovement> PatientMovements { get; set; }

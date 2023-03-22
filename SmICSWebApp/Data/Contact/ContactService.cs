@@ -13,10 +13,10 @@ namespace SmICSWebApp.Data.Contact
     public class ContactService
     {
         private readonly IContactFactory _contactFac;
-        private readonly InfectionStatusFactory _infectionStatusFac;
+        private readonly IInfectionStatusFactory _infectionStatusFac;
         private readonly IHospitalizationFactory _hospitalizationFac;
         private readonly IPatientStayFactory _patientStayFac;
-        public ContactService(IContactFactory contactFac, InfectionStatusFactory infectionStatusFac, IHospitalizationFactory hospitalizationFac, IPatientStayFactory patientStayFac)
+        public ContactService(IContactFactory contactFac, IInfectionStatusFactory infectionStatusFac, IHospitalizationFactory hospitalizationFac, IPatientStayFactory patientStayFac)
         {
             _contactFac = contactFac;
             _infectionStatusFac = infectionStatusFac;

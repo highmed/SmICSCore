@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmICSCoreLib.DB.MenuItems;
-using SmICSCoreLib.Factories.EpiCurve;
 using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.MiBi.PatientView.Parameter;
 using SmICSCoreLib.OutbreakDetection;
 using SmICSWebApp.Data.ContactNetwork;
+using SmICSWebApp.Data.EpiCurve;
 using SmICSWebApp.Data.MedicalFinding;
 using SmICSWebApp.Data.OutbreakDetection;
 using SmICSWebApp.Data.PatientMovement;
@@ -23,13 +23,13 @@ namespace SmICSWebApp.Controllers
     {
         private readonly ILogger<StoredProceduresController> _logger;
 
-        private readonly IEpiCurveFactory _epiCurveFac;
+        private readonly EpiCurveService _epiCurveService;
         private readonly OutbreakDetectionService _outbreakService;
         private readonly MedicalFindingService _medicalFindingService;
         private readonly PatientMovementService _movementService;
         private readonly ContactNetworkService _contactService;
         private readonly IMenuItemDataAccess _menuItemDataAccess;
-        public StoredProceduresController(ILogger<StoredProceduresController> logger, IEpiCurveFactory epiCurveFac, OutbreakDetectionService outbreakService, MedicalFindingService medicalFindingService, PatientMovementService movementService, ContactNetworkService contactService, IMenuItemDataAccess menuItemDataAccess)
+        public StoredProceduresController(ILogger<StoredProceduresController> logger, EpiCurveService epiCurveService, OutbreakDetectionService outbreakService, MedicalFindingService medicalFindingService, PatientMovementService movementService, ContactNetworkService contactService, IMenuItemDataAccess menuItemDataAccess)
         {
             _logger = logger;
             _outbreakService = outbreakService;
@@ -37,6 +37,7 @@ namespace SmICSWebApp.Controllers
             _movementService = movementService;
             _contactService = contactService;
             _menuItemDataAccess = menuItemDataAccess;
+            _epiCurveService = epiCurveService;
         }
 
         /// <summary></summary>
@@ -129,14 +130,14 @@ namespace SmICSWebApp.Controllers
         /// <returns></returns>
         [Route("Labor_ErregerProTag_TTEsKSs")]
         [HttpPost]
-        public ActionResult<List<EpiCurveModel>> Labor_ErregerProTag_TTEsKSs([FromBody] EpiCurveParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
+        public async Task<ActionResult<List<EpiCurveModel>>> Labor_ErregerProTag_TTEsKSs([FromBody] EpiCurveParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
             _logger.LogInformation("CALLED Labor_ErregerProTag_TTEsKSs with parameters: \n\r Starttime: {start} \n\r Endtime: {end} \n\r internal PathogenList: 94500-6, 94745-7, 94558-4", parameter.Starttime, parameter.Endtime);
 
             try
             {
-                _epiCurveFac.RestDataAccess.SetAuthenticationHeader(token);
-                return _epiCurveFac.Process(parameter);
+                //_epiCurveFac.RestDataAccess.SetAuthenticationHeader(token);
+                return await _epiCurveService.GetData(parameter.Starttime, parameter.Endtime, new PathogenParameter { PathogenCodes = new List<string> { parameter.Pathogen } } );
             }
             catch (Exception e)
             {

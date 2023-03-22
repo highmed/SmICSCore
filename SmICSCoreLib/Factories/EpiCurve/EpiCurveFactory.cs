@@ -49,21 +49,21 @@ namespace SmICSCoreLib.Factories.EpiCurve
             };
             if (extendedParams.Pathogen == "sars-cov-2")
             {
-                List<Pathogen> pathos = _menuDataAccess.GetPathogens().Result;
+                //(List<Pathogen> pathos = _menuDataAccess.GetPathogens().Result;
                 List<string> codes = new List<string>();
-                foreach(Pathogen p in pathos)
+                /*foreach(Pathogen p in pathos)
                 {
                     if(p.Name.ToLower().Contains("sars-cov-2"))
                     {
                         codes.Add(p.Code);
                     }
-                }
+                }*/
                 extendedParams.PathogenCodes = codes;
             }
             else
             {
-                List<Pathogen> pathogens = _menuDataAccess.GetPathogendByName(parameter.Pathogen).Result;
-                extendedParams.PathogenCodes = pathogens.Select(p => p.Code).ToList();
+                //List<Pathogen> pathogens = _menuDataAccess.GetPathogendByName(parameter.Pathogen).Result;
+                //extendedParams.PathogenCodes = pathogens.Select(p => p.Code).ToList();
             }
             for (DateTime date = parameter.Starttime.Date; date <= parameter.Endtime.Date; date = date.AddDays(1.0))
             {

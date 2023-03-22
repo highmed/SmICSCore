@@ -18,6 +18,7 @@ using SmICSCoreLib.StatistikServices.CronJob;
 using SmICSWebApp.Data.Contact;
 using SmICSWebApp.Data.ContactComparison;
 using SmICSWebApp.Data.ContactNetwork;
+using SmICSWebApp.Data.EpiCurve;
 using SmICSWebApp.Data.MedicalFinding;
 using SmICSWebApp.Data.Menu;
 using SmICSWebApp.Data.OutbreakDetection;
@@ -65,11 +66,13 @@ namespace SmICSWebApp
             services.AddScoped<ComparisonService>();
             services.AddScoped<MenuService>();
 
+
             //AUTH - START 
 
             //AUTH - ENDE
 
             services.AddSmICSLibrary();
+            services.AddScoped<EpiCurveService>();
             //CronJob GetReport
             services.AddSingleton<IJobFactory, QuartzJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();

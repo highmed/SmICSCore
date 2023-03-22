@@ -21,13 +21,11 @@ namespace SmICSWebApp.Data.EpiCurve
     {
         IHospitalizationFactory _hospitalizationFac;
         IPatientStayFactory _patStayFac;
-        ILabResultFactory _labFac;
         IInfectionStatusFactory _infectionStatusFac;
-        public EpiCurveService(IHospitalizationFactory hospitalizationFac, IPatientStayFactory patStayFac, ILabResultFactory labFac, IInfectionStatusFactory infectionStatusFac)
+        public EpiCurveService(IHospitalizationFactory hospitalizationFac, IPatientStayFactory patStayFac, IInfectionStatusFactory infectionStatusFac)
         {
             _hospitalizationFac = hospitalizationFac;
             _patStayFac = patStayFac;
-            _labFac = labFac;
             _infectionStatusFac = infectionStatusFac;
         }
 

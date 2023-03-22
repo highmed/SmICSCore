@@ -15,7 +15,7 @@ namespace SmICSWebApp.Data.WardView
     public class WardOverviewService
     {
         private readonly IPatientStayFactory _stayFac;
-        private readonly InfectionStatusFactory _infectionStatusFac;
+        private readonly IInfectionStatusFactory _infectionStatusFac;
         private readonly ILabResultFactory _labFac;
         private readonly IHospitalizationFactory _hospitalizationFac;
         private readonly IHelperFactory _helperFac;
@@ -23,7 +23,7 @@ namespace SmICSWebApp.Data.WardView
         public event EventHandler Progress;
 
         private List<WardPatient> wardPatients;
-        public WardOverviewService(IPatientStayFactory stayFac, InfectionStatusFactory infectionStatusFac, ILabResultFactory labFac, IHospitalizationFactory hospitalizationFactory, IHelperFactory helperFac)
+        public WardOverviewService(IPatientStayFactory stayFac, IInfectionStatusFactory infectionStatusFac, ILabResultFactory labFac, IHospitalizationFactory hospitalizationFactory, IHelperFactory helperFac)
         {
             _stayFac = stayFac;
             _infectionStatusFac = infectionStatusFac;

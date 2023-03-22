@@ -41,7 +41,7 @@ namespace SmICS
             services.AddScoped<ISpecimenFactory, SpecimenFactory>();
             services.AddScoped<ILabResultFactory, LabResultFactory>();
             services.AddScoped<IContactFactory, ContactFactory>();
-            services.AddScoped<InfectionStatusFactory>();
+            services.AddScoped<IInfectionStatusFactory, InfectionStatusFactory>();
             services.AddScoped<IHelperFactory, HelperFactory>();
             #endregion
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();

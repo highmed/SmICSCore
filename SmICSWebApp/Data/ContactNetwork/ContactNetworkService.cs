@@ -45,24 +45,27 @@ namespace SmICSWebApp.Data.ContactNetwork
             foreach(Hospitalization hosp in contacts.Keys)
             {
                 List<PatientStay> stays = contacts[hosp];
-                foreach(PatientStay stay in stays) 
+                if (stays is not null)
                 {
-                    List<PatientStay> patientSpecificStays = await _patStayFac.ProcessAsync(stay);
-                    List<VisuPatientMovement> visuPatientMovements = new List<VisuPatientMovement>();
-                    foreach(PatientStay patientStay in patientSpecificStays)
+                    foreach (PatientStay stay in stays)
                     {
-                        visuPatientMovements.Add(new VisuPatientMovement(patientStay));
+                        List<PatientStay> patientSpecificStays = await _patStayFac.ProcessAsync(stay);
+                        List<VisuPatientMovement> visuPatientMovements = new List<VisuPatientMovement>();
+                        foreach (PatientStay patientStay in patientSpecificStays)
+                        {
+                            visuPatientMovements.Add(new VisuPatientMovement(patientStay));
+                        }
+
+                        List<VisuLabResult> labResults = await _medicalFinding.GetMedicalFinding(
+                            stay,
+                            new SmICSCoreLib.Factories.MiBi.PatientView.Parameter.PathogenParameter()
+                            {
+                                PathogenCodes = new List<string> { parameter.pathogen }
+                            });
+
+                        cModel.PatientMovements.AddRange(visuPatientMovements);
+                        cModel.LaborData.AddRange(labResults);
                     }
-
-                    List<VisuLabResult> labResults = await _medicalFinding.GetMedicalFinding(
-                        stay, 
-                        new SmICSCoreLib.Factories.MiBi.PatientView.Parameter.PathogenParameter() 
-                        { 
-                            PathogenCodes = new List<string> { parameter.pathogen }
-                        });
-
-                    cModel.PatientMovements.AddRange(visuPatientMovements);
-                    cModel.LaborData.AddRange(labResults);
                 }
             }
             return cModel;
