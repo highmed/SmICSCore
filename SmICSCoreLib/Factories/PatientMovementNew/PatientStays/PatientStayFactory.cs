@@ -1,5 +1,6 @@
 ﻿using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.REST;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,26 +47,29 @@ namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
         private List<PatientStay> MergeConsectiveStaysAndSetMovementType(List<PatientStay> patientStays)
         {
             List<int> mergedIndices = new List<int>();
-            for (int i = 0; i < patientStays.Count; i++)
+            if (patientStays is not null)
             {
-                if (!mergedIndices.Contains(i))
+                for (int i = 0; i < patientStays.Count; i++)
                 {
-                    patientStays[i].MovementType = SetMovementType(patientStays[i]);
-                
-                    for (int j = (i+1); j < patientStays.Count; j++)
+                    if (!mergedIndices.Contains(i))
                     {
-                        if (patientStays[i].DepartementID == patientStays[j].DepartementID)
+                        patientStays[i].MovementType = SetMovementType(patientStays[i]);
+
+                        for (int j = (i + 1); j < patientStays.Count; j++)
                         {
-                            if (patientStays[i].Ward == patientStays[j].Ward)
+                            if (patientStays[i].DepartementID == patientStays[j].DepartementID)
                             {
-                                if (patientStays[i].Room == patientStays[j].Room)
+                                if (patientStays[i].Ward == patientStays[j].Ward)
                                 {
-                                    if (patientStays[i].Discharge.HasValue)
+                                    if (patientStays[i].Room == patientStays[j].Room)
                                     {
-                                        if (patientStays[i].Discharge.Value == patientStays[j].Admission)
+                                        if (patientStays[i].Discharge.HasValue)
                                         {
-                                            patientStays[i].Discharge = patientStays[j].Discharge;
-                                            mergedIndices.Add(j);
+                                            if (patientStays[i].Discharge.Value == patientStays[j].Admission)
+                                            {
+                                                patientStays[i].Discharge = patientStays[j].Discharge;
+                                                mergedIndices.Add(j);
+                                            }
                                         }
                                     }
                                 }
@@ -73,12 +77,14 @@ namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
                         }
                     }
                 }
+                mergedIndices = mergedIndices.OrderBy(i => i).ToList();
+                for (int i = (mergedIndices.Count - 1); i >= 0; i--)
+                {
+                    patientStays.RemoveAt(mergedIndices[i]);
+                }
+                return patientStays;
             }
-            for (int i = (mergedIndices.Count - 1); i >= 0; i--)
-            {
-                patientStays.RemoveAt(mergedIndices[i]);
-            }
-            return patientStays;
+            return new List<PatientStay>();
         }
 
         private MovementType SetMovementType(PatientStay patientStay)

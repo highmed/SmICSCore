@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -132,14 +133,27 @@ namespace SmICSCoreLib.REST
 
         private HttpContent GetHttpContentQuery(string query)
         {
-            JObject obj = new JObject();
-            //obj.Add("aql", query);
-            obj.Add("q", query);
-            string json = JsonConvert.SerializeObject(obj, Formatting.Indented);
-            //_client.Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
-            HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            string q = query;
+            try
+            {
+                JObject obj = new JObject();
+                
+                if (!string.IsNullOrEmpty(OpenehrConfig.queryLimit))
+                {
+                    q = q + " LIMIT " + OpenehrConfig.queryLimit;
+                }
+                obj.Add("q", q);
+                string json = JsonConvert.SerializeObject(obj, Formatting.Indented);
+                //_client.Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
+                HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            return content;
+                return content;
+            } 
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString() + "\n" + q);
+                throw;
+            }
         }
 
         private HttpContent ConvertJObjectToHTTPResponse(JObject obj)

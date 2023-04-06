@@ -12,13 +12,13 @@ namespace SmICSCoreLib.Factories.MiBi.PatientView
         public bool Result {
             get
             {
-                if (MedicalField == SmICSCoreLib.Factories.General.MedicalField.MICROBIOLOGY)
+                if (MedicalField == SmICSCoreLib.Factories.General.MedicalField.VIROLOGY)
                 {
-                    return ResultString == NACHWEIS ? true : false;
+                    return ResultString == DETECTED ? true : false;
                 }
                 else
                 {
-                    return ResultString == DETECTED ? true : false;
+                    return ResultString == NACHWEIS ? true : false;
                 }
             }
         }

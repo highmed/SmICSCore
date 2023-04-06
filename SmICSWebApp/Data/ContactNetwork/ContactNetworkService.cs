@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using ExcelDataReader.Log;
+using FluentValidation.Validators;
+using Microsoft.AspNetCore.SignalR;
 using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.MiBi.Contact;
 using SmICSCoreLib.Factories.MiBi.PatientView;
@@ -38,37 +40,53 @@ namespace SmICSWebApp.Data.ContactNetwork
 
         public async Task<ContactModel> GetContactNetwork(ContactNetworkParameter parameter)
         {
-
-            Dictionary<Hospitalization, List<PatientStay>> contacts = await _contactFac.ProcessAsync(parameter);
-            ContactModel cModel = new ContactModel();
-
-            foreach(Hospitalization hosp in contacts.Keys)
+            try
             {
-                List<PatientStay> stays = contacts[hosp];
-                if (stays is not null)
+                Dictionary<Hospitalization, List<PatientStay>> contacts = await _contactFac.ProcessAsync(parameter);
+                ContactModel cModel = new ContactModel();
+
+                foreach (Hospitalization hosp in contacts.Keys)
                 {
-                    foreach (PatientStay stay in stays)
+                    List<PatientStay> stays = contacts[hosp];
+                    if (stays is not null)
                     {
-                        List<PatientStay> patientSpecificStays = await _patStayFac.ProcessAsync(stay);
-                        List<VisuPatientMovement> visuPatientMovements = new List<VisuPatientMovement>();
-                        foreach (PatientStay patientStay in patientSpecificStays)
+                        foreach (PatientStay stay in stays)
                         {
-                            visuPatientMovements.Add(new VisuPatientMovement(patientStay));
+                           
+                                List<PatientStay> patientSpecificStays = await _patStayFac.ProcessAsync(stay);
+                                List<VisuPatientMovement> visuPatientMovements = new List<VisuPatientMovement>();
+                                foreach (PatientStay patientStay in patientSpecificStays)
+                                {
+                                    try
+                                    {
+                                        visuPatientMovements.Add(new VisuPatientMovement(patientStay));
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine("Patient: " + stay.PatientID + "\n" + ex.Message + "\n" + ex.StackTrace);
+                                        continue;
+                                    }
+                                }
+
+                                List<VisuLabResult> labResults = await _medicalFinding.GetMedicalFinding(
+                                    stay,
+                                    new SmICSCoreLib.Factories.MiBi.PatientView.Parameter.PathogenParameter()
+                                    {
+                                        PathogenCodes = new List<string> { parameter.pathogen }
+                                    });
+
+                                cModel.PatientMovements.AddRange(visuPatientMovements);
+                                cModel.LaborData.AddRange(labResults);
+                           
                         }
-
-                        List<VisuLabResult> labResults = await _medicalFinding.GetMedicalFinding(
-                            stay,
-                            new SmICSCoreLib.Factories.MiBi.PatientView.Parameter.PathogenParameter()
-                            {
-                                PathogenCodes = new List<string> { parameter.pathogen }
-                            });
-
-                        cModel.PatientMovements.AddRange(visuPatientMovements);
-                        cModel.LaborData.AddRange(labResults);
                     }
                 }
+                return cModel;
             }
-            return cModel;
+            catch
+            {
+                throw;
+            }
         }
 
         /*

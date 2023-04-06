@@ -2,15 +2,6 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Web;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
-using System.Linq;
-
-using System.Threading.Tasks;
 
 namespace SmICSCoreLib.REST
 {
@@ -24,7 +15,7 @@ namespace SmICSCoreLib.REST
             handler = new HttpClientHandler();
             handler.Credentials = new NetworkCredential(OpenehrConfig.openehrUser, OpenehrConfig.openehrPassword);
             Client = new HttpClient(handler);
-            Client.Timeout = TimeSpan.FromMilliseconds(400000);
+            Client.Timeout = TimeSpan.FromMilliseconds(OpenehrConfig.queryTimeout);
             Client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
         }       

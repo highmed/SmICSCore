@@ -64,7 +64,7 @@
                     "Rules": [
                       {
                         "RuleName": "3./4. Generations-Cephalosporine",
-                        "Expression": "input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" || a.Antibiotic == \"Ceftazidim\") && a.Resistance == \"R\"))",
+                        "Expression": "input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" || a.Antibiotic == \"Ceftazidim\") && a.Resistance == \"R\")",
                         "ErrorMessage": "Cephalosporine failed",
                         "Enabled": true
                       },
@@ -96,7 +96,7 @@
                     "Rules": [
                       {
                         "RuleName": "3./4. Generations-Cephalosporine",
-                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" && a.Resistance != \"R\") || (a.Antibiotic == \"Ceftazidim\" && a.Resistance != \"R\"))",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" || a.Antibiotic == \"Ceftazidim\") && a.Resistance != \"R\")",
                         "ErrorMessage": "Cephalosporine failed",
                         "Enabled": true
                       },
@@ -128,7 +128,7 @@
                     "Rules": [
                       {
                         "RuleName": "3./4. Generations-Cephalosporine",
-                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" || a.Antibiotic == \"Ceftazidim\") && a.Resistance == \"R\"))",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" || a.Antibiotic == \"Ceftazidim\") && a.Resistance == \"R\")",
                         "ErrorMessage": "Cephalosporine failed",
                         "Enabled": true
                       },
@@ -160,7 +160,7 @@
                     "Rules": [
                       {
                         "RuleName": "3./4. Generations-Cephalosporine",
-                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" || a.Antibiotic == \"Ceftazidim\") && a.Resistance == \"R\"))",
+                        "Expression": "input.Name == \"Pseudomonas aeruginosa\" && input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" || a.Antibiotic == \"Ceftazidim\") && a.Resistance == \"R\")",
                         "ErrorMessage": "Cephalosporine failed",
                         "Enabled": true
                       },
@@ -197,7 +197,7 @@
                 "Rules": [
                   {
                     "RuleName": "3./4. Generations-Cephalosporine",
-                    "Expression": "input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" || a.Antibiotic == \"Ceftazidim\") && a.Resistance == \"R\"))",
+                    "Expression": "input.Antibiograms.Any(a => (a.Antibiotic == \"Cefotaxim\" || a.Antibiotic == \"Ceftazidim\") && a.Resistance == \"R\")",
                     "ErrorMessage": "Cephalosporine failed",
                     "Enabled": true
                   },

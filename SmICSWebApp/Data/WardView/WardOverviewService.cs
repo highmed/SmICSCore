@@ -137,7 +137,6 @@ namespace SmICSWebApp.Data.WardView
             }
             return chartEntries;
         }
-
         private bool IsNosocomial(WardPatient patient)
         {
             if (patient.InfectionStatus is not null)
@@ -187,8 +186,6 @@ namespace SmICSWebApp.Data.WardView
                 ChartEntries["Stress"][date.Date] += 1;
             }
         }
-
-
         private Dictionary<string, SortedDictionary<DateTime, int>> InitializeChartEntryDictionary(DateTime start, DateTime end)
         {
             Dictionary<string, SortedDictionary<DateTime, int>> chartEntries = new Dictionary<string, SortedDictionary<DateTime, int>>();
@@ -218,7 +215,6 @@ namespace SmICSWebApp.Data.WardView
             List<string> filter = Rules.GetPossibleMREClasses(parameter.PathogenCode);
             return filter;
         }
-
         private (DateTime?, DateTime?) GetFirstAndLastWardLabResultDate(List<LabResult> labResults, PatientStay patStay)
         {
             DateTime? last = DateTime.MinValue;
@@ -258,7 +254,6 @@ namespace SmICSWebApp.Data.WardView
             }
             return (first, last);
         }
-
         private DateTime? GetFirstPositveLabResultDate(List<LabResult> labResults, PatientStay patStay)
         {
             DateTime? last = DateTime.MaxValue;
@@ -281,7 +276,6 @@ namespace SmICSWebApp.Data.WardView
             }
             return last == DateTime.MaxValue ? null : last;
         }
-
         private DateTime? GetLastLabResultDate(List<LabResult> labResults)
         {
             DateTime last = DateTime.MinValue;

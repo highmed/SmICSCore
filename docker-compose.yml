@@ -12,6 +12,8 @@ services:
       - OPENEHR_DB=<openEHR Repo Url http://adress:port (in case of ehrbase  http://adress:port/ehrbase/)>
       - OPENEHR_USER=<openEHR SmICS User>
       - OPENEHR_PASSWD=<openEHR SmICS User PW>
+      - QUERY_LIMIT=<max limit for query results>
+      - QUERY_TIMEOUT=<timeout in milliseconds for HTTP Connection to the OpenEHR repository>
       - FIRST_DATA_ENTRY_YEAR=<Year>
     ports:
       - 80:80

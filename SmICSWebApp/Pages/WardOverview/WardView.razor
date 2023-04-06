@@ -22,6 +22,8 @@
         <div class="card">
             <div class="card-body">
                 <EditForm Model="@parameter" OnValidSubmit="@Submit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
                     <label for="stationDropdown" class="mr-1">Station</label>
                     <select id="stationDropdow" class="col-2 mr-2" @bind="@parameter.Ward">
                         <option value="" selected disabled hidden>Bitte wählen</option>
@@ -153,13 +155,11 @@
 
     private async Task Submit()
     {
-
         emptyResult = false;
         isLoading = true;
         await Task.Delay(1);
         await LoadDataAsync();
         isLoading = false;
-
     }
 
     public void c_Progress(object sender, EventArgs eventArgs)

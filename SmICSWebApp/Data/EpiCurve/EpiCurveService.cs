@@ -14,6 +14,8 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using MudBlazor.Extensions;
 using SmICSCoreLib.Util;
 using static MudBlazor.CategoryTypes;
+using Microsoft.CodeAnalysis.Elfie.Model;
+using System.Diagnostics.Metrics;
 
 namespace SmICSWebApp.Data.EpiCurve
 {
@@ -22,6 +24,9 @@ namespace SmICSWebApp.Data.EpiCurve
         IHospitalizationFactory _hospitalizationFac;
         IPatientStayFactory _patStayFac;
         IInfectionStatusFactory _infectionStatusFac;
+
+        private string ErregerID = "";
+        private string ErregerBEZL = "";
         public EpiCurveService(IHospitalizationFactory hospitalizationFac, IPatientStayFactory patStayFac, IInfectionStatusFactory infectionStatusFac)
         {
             _hospitalizationFac = hospitalizationFac;
@@ -40,15 +45,29 @@ namespace SmICSWebApp.Data.EpiCurve
                 SortedList<Hospitalization, Dictionary<string, InfectionStatus>> infectionStatusByCase = await _infectionStatusFac.ProcessAsync(h, pathogen);
                 List<PatientStay> patientStays = await _patStayFac.ProcessAsync(h);
 
-                InfectionStatus infStatus = infectionStatusByCase.Where(ho => ho.Key.Admission.Date == h.Admission).First().Value["resitenz"];
-                //resitenz ändern
-                if (infStatus.Known)
+                Dictionary<string ,InfectionStatus> infStati = infectionStatusByCase.Where(ho => ho.Key.Admission.Date == h.Admission).Select(kvp => kvp.Value).FirstOrDefault();
+                if (infStati is not null)
                 {
-                    KnownHospitalization(patientStays, data);
-                }
-                else if (infStatus.Nosocomial)
-                {
-                    NosocomialHospitalization(patientStays, data, infStatus.NosocomialDate.Value);
+                    List<InfectionStatus> infStatus = infStati.Select(kvp => kvp.Value).ToList();
+
+                    ErregerID = pathogen.PathogenCodesToAqlMatchString();
+                    ErregerID = ErregerID.Substring(1, ErregerID.Length - 2);
+
+                    if (infStatus is not null)
+                    {
+                        Dictionary<DateTime, string> AddedDates = new Dictionary<DateTime, string>();
+                        foreach (InfectionStatus inf in infStatus)
+                        {
+                            if (inf.Known)
+                            {
+                                KnownHospitalization(patientStays, data, AddedDates);
+                            }
+                            else if (inf.Nosocomial)
+                            {
+                                NosocomialHospitalization(patientStays, data, inf.NosocomialDate.Value, AddedDates);
+                            }
+                        }
+                    }
                 }
             }
             CalculateKlinik(data, start, end);
@@ -68,14 +87,30 @@ namespace SmICSWebApp.Data.EpiCurve
                 {
                     counts.Add(wardEpiCurve[i].Anzahl);
                     completeCount.Add(wardEpiCurve[i].anzahl_gesamt);
-                    wardEpiCurve[i].MAVG7 = counts.Count > 6 ? (int)Math.Ceiling((double)counts.GetRange(counts.Count - 7, counts.Count - 1).Sum() / 7) : 0;
-                    wardEpiCurve[i].MAVG28 = counts.Count > 27 ? (int)Math.Ceiling((double)counts.GetRange(counts.Count - 28, counts.Count - 1).Sum() / 28) : 0;
-                    wardEpiCurve[i].anzahl_gesamt_av7 = completeCount.Count > 6 ? (int)Math.Ceiling((double)completeCount.GetRange(completeCount.Count - 7, completeCount.Count - 1).Sum() / 7) : 0;
-                    wardEpiCurve[i].anzahl_gesamt_av28 = completeCount.Count > 27 ? (int)Math.Ceiling((double)completeCount.GetRange(completeCount.Count - 28, completeCount.Count - 1).Sum() / 28) : 0;
+                    wardEpiCurve[i].MAVG7 = counts.Count > 6 ? AvgFormula(counts, 7) : 0;
+                    wardEpiCurve[i].MAVG28 = counts.Count > 27 ? AvgFormula(counts, 28) : 0;
+                    wardEpiCurve[i].anzahl_gesamt_av7 = completeCount.Count > 6 ? AvgFormula(completeCount, 7) : 0;
+                    wardEpiCurve[i].anzahl_gesamt_av28 = completeCount.Count > 27 ? AvgFormula(completeCount, 28) : 0;
                 }
             }
         }
 
+        private int AvgFormula(List<int> values, int avgTimeFrame)
+        {
+            try
+            {
+                int startindex = values.Count - avgTimeFrame;
+                List<int> subvalues = values.GetRange(startindex, avgTimeFrame);
+                double sum = (double)subvalues.Sum();
+                double div = Math.Ceiling(sum / avgTimeFrame);
+                return (int)div;
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
         private void CalculateKlinik(List<EpiCurveModel> epiCurve, DateTime start, DateTime end)
         {
             for (DateTime date = start.Date; date.Date <= end.Date; date = date.AddDays(1.0).Date)
@@ -92,7 +127,7 @@ namespace SmICSWebApp.Data.EpiCurve
             }
         }
 
-        private void KnownHospitalization(List<PatientStay> stays, List<EpiCurveModel> epiCurve)
+        private void KnownHospitalization(List<PatientStay> stays, List<EpiCurveModel> epiCurve, Dictionary<DateTime, string> dates)
         {
             foreach(PatientStay stay in stays)
             {
@@ -109,69 +144,91 @@ namespace SmICSWebApp.Data.EpiCurve
 
                 DateTime end = stay.Discharge.HasValue ? stay.Discharge.Value : now;
                 EpiCurveModel admissionDay = epiStays.Where(e => e.Datum == stay.Admission).FirstOrDefault();
-                if (admissionDay is null) 
+                if (!dates.Keys.Contains(stay.Admission.Date))
                 {
-                    EpiCurveModel e = new EpiCurveModel()
-                    {
-                        Datum = stay.Admission,
-                        StationID = stay.Ward,
-                        anzahl_gesamt = 1,
-                        Anzahl = 1
-                    };
-                    epiCurve.Add(e);
-                }
-                else
-                {
-                    admissionDay.anzahl_gesamt++;
-                    admissionDay.Anzahl++;
-                }
-                
-                for(DateTime date = stay.Admission.AddDays(1.0).Date; date <= end.AddDays(-1.0).Date; date = date.AddDays(1.0).Date)
-                {
-                    EpiCurveModel epi = epiStays.Where(e => e.Datum == date).FirstOrDefault();
-                    if(epi is null)
+                    if (admissionDay is null)
                     {
                         EpiCurveModel e = new EpiCurveModel()
                         {
-                            Datum = date,
+                            Datum = stay.Admission,
                             StationID = stay.Ward,
-                            anzahl_gesamt = 1
+                            anzahl_gesamt = 1,
+                            Anzahl = 1,
+                            ErregerID = this.ErregerID 
                         };
                         epiCurve.Add(e);
                     }
-                    else 
+                    else
                     {
-                        epi.anzahl_gesamt++;
+                        admissionDay.anzahl_gesamt++;
+                        admissionDay.Anzahl++;
+                    }
+                    dates.Add(stay.Admission.Date, "Increment");
+                }
+                else if(dates.Keys.Contains(stay.Admission.Date) && dates[stay.Admission.Date] == "DECREMENT")
+                {
+                    admissionDay.anzahl_gesamt++;
+                    admissionDay.Anzahl++;
+                    dates[stay.Admission.Date] = "INCREMENT";
+                }
+                for(DateTime date = stay.Admission.AddDays(1.0).Date; date <= end.AddDays(-1.0).Date; date = date.AddDays(1.0).Date)
+                {
+                    if (!dates.Keys.Contains(date))
+                    {
+                        EpiCurveModel epi = epiStays.Where(e => e.Datum == date).FirstOrDefault();
+                        if (epi is null)
+                        {
+                            EpiCurveModel e = new EpiCurveModel()
+                            {
+                                Datum = date,
+                                StationID = stay.Ward,
+                                anzahl_gesamt = 1,
+                                ErregerID = this.ErregerID
+                            };
+                            epiCurve.Add(e);
+                        }
+                        else
+                        {
+                            epi.anzahl_gesamt++;
+                        }
+                        dates.Add(date, "Increment");
+                    }
+                    else if (dates.Keys.Contains(date.Date) && dates[date.Date] == "DECREMENT")
+                    {
+                        admissionDay.anzahl_gesamt++;
+                        dates[date.Date] = "INCREMENT";
                     }
                 }
 
                 EpiCurveModel dischargeDay = epiStays.Where(e => e.Datum == end).FirstOrDefault();
-                if (admissionDay is null)
+                if (dischargeDay is null && !dates.Keys.Contains(stay.Discharge.Value.Date))
                 {
                     EpiCurveModel e = new EpiCurveModel()
                     {
-                        Datum = stay.Admission,
+                        Datum = stay.Discharge.Value,
                         StationID = stay.Ward,
                         anzahl_gesamt = 0,
-                        Anzahl = 0
+                        Anzahl = 0,
+                        ErregerID = this.ErregerID
                     };
                     epiCurve.Add(e);
+                    dates.Add(stay.Discharge.Value.Date, "DECREMENT");
                 }
-                else
+                else if(!dates.Keys.Contains(stay.Discharge.Value.Date)) 
                 {
                     if (admissionDay.anzahl_gesamt > 0)
                     {
                         admissionDay.anzahl_gesamt--;
-
                     }
+                    dates.Add(stay.Discharge.Value.Date, "DECREMENT");
                 }
 
-                epiCurve.OrderBy(e => e.Datum).ThenBy(e => e.StationID);
-
+                 epiCurve.OrderBy(e => e.Datum).ThenBy(e => e.StationID);
+                    
             }
         }
 
-        private void NosocomialHospitalization(List<PatientStay> stays, List<EpiCurveModel> epiCurve, DateTime NosocomialDate)
+        private void NosocomialHospitalization(List<PatientStay> stays, List<EpiCurveModel> epiCurve, DateTime NosocomialDate, Dictionary<DateTime, string> dates)
         {
             PatientStay nosocomialStay = stays.Where(s => 
                 s.Admission <= NosocomialDate && 
@@ -180,8 +237,37 @@ namespace SmICSWebApp.Data.EpiCurve
                 !string.IsNullOrEmpty(s.Ward)).
                 FirstOrDefault();
 
+            EpiCurveModel nosocomialDay = epiCurve.Where(e => e.Datum == nosocomialStay.Admission).FirstOrDefault();
+            if (!dates.Keys.Contains(nosocomialStay.Admission.Date))
+            {
+                if (nosocomialDay is null)
+                {
+                    EpiCurveModel e = new EpiCurveModel()
+                    {
+                        Datum = nosocomialStay.Admission,
+                        StationID = nosocomialStay.Ward,
+                        anzahl_gesamt = 1,
+                        Anzahl = 1,
+                        ErregerID = this.ErregerID
+                    };
+                    epiCurve.Add(e);
+                }
+                else
+                {
+                    nosocomialDay.anzahl_gesamt++;
+                    nosocomialDay.Anzahl++;
+                }
+                dates.Add(nosocomialStay.Admission.Date, "Increment");
+            }
+            else if (dates.Keys.Contains(nosocomialStay.Admission.Date) && dates[nosocomialStay.Admission.Date] == "DECREMENT")
+            {
+                nosocomialDay.anzahl_gesamt++;
+                nosocomialDay.Anzahl++;
+                dates[nosocomialStay.Admission.Date] = "INCREMENT";
+            }
+
             List<PatientStay> KnownStays = stays.Where(s => s.Admission >= NosocomialDate && s != nosocomialStay).ToList();
-            KnownHospitalization(KnownStays, epiCurve);
+            KnownHospitalization(KnownStays, epiCurve, dates);
         }
     }
 }

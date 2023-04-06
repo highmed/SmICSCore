@@ -58,7 +58,7 @@ namespace SmICSWebApp.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogWarning("CALLED Contact_NthDegree_TTP_Degree:" + e.Message);
+                _logger.LogWarning("CALLED Contact_NthDegree_TTP_Degree:" + e.StackTrace);
                 return ErrorHandling(e);
             }
         }
@@ -90,7 +90,7 @@ namespace SmICSWebApp.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogWarning("CALLED PatientLabData:" + e.Message);
+                _logger.LogWarning("CALLED PatientLabData:" + e.StackTrace);
                 return ErrorHandling(e);
             }
         }
@@ -114,7 +114,7 @@ namespace SmICSWebApp.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogWarning("CALLED Patient_Bewegung_Ps:" + e.Message);
+                _logger.LogWarning("CALLED Patient_Bewegung_Ps:" + e.StackTrace);
                 return ErrorHandling(e);
             }
         }
@@ -132,8 +132,6 @@ namespace SmICSWebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<List<EpiCurveModel>>> Labor_ErregerProTag_TTEsKSs([FromBody] EpiCurveParameter parameter, [FromHeader(Name = "Authorization")] string token = "NoToken")
         {
-            _logger.LogInformation("CALLED Labor_ErregerProTag_TTEsKSs with parameters: \n\r Starttime: {start} \n\r Endtime: {end} \n\r internal PathogenList: 94500-6, 94745-7, 94558-4", parameter.Starttime, parameter.Endtime);
-
             try
             {
                 //_epiCurveFac.RestDataAccess.SetAuthenticationHeader(token);
@@ -141,7 +139,7 @@ namespace SmICSWebApp.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogWarning("CALLED Labor_ErregerProTag_TTEsKSs:" + e.Message);
+                _logger.LogWarning("CALLED Labor_ErregerProTag_TTEsKSs:" + e.StackTrace);
                 return ErrorHandling(e);
             }
         }
