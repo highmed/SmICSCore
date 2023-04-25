@@ -29,6 +29,7 @@ namespace SmICSCoreLib.REST
         {
             try{
                 _logger.LogInformation("Posted Query: {Query}", query.Name);
+                _logger.LogDebug("QueryDetails: {Query}", query.Query);
                 string restPath = "rest/openehr/v1/query/aql";
                 Uri RestPath = GetRequestUri(restPath);
                 HttpResponseMessage response = await _client.Client.PostAsync(RestPath, GetHttpContentQuery(query.ToString()));

@@ -22,10 +22,10 @@ namespace SmICSCoreLib.Factories.PatientMovementNew
                 List<Hospitalization> hospitalizations = new List<Hospitalization>();
                 List<Case> cases = await RestDataAccess.AQLQueryAsync<Case>(HospitalizationCasesQuery(patient));
                 foreach (Case Case in cases)
-                    {
-                        Hospitalization hospitalization = await ProcessAsync(Case);
-                        hospitalizations.Add(hospitalization);
-                    }
+                {
+                    Hospitalization hospitalization = await ProcessAsync(Case);
+                    hospitalizations.Add(hospitalization);
+                }
                 return hospitalizations;
             }
             catch

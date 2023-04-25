@@ -13,6 +13,5 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
         Task<List<PatientMovementNew.PatientStays.PatientStay>> ProcessAsync(Hospitalization hospitalization);
         Task<Dictionary<Hospitalization, List<PatientMovementNew.PatientStays.PatientStay>>> ProcessAsync(Patient parameter);
 
-
     }
 }

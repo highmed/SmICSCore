@@ -238,32 +238,35 @@ namespace SmICSWebApp.Data.EpiCurve
                 FirstOrDefault();
 
             EpiCurveModel nosocomialDay = epiCurve.Where(e => e.Datum == nosocomialStay.Admission).FirstOrDefault();
-            if (!dates.Keys.Contains(nosocomialStay.Admission.Date))
+            if (nosocomialStay is not null)
             {
-                if (nosocomialDay is null)
+                if (dates is not null || dates.Keys.Contains(nosocomialStay.Admission.Date))
                 {
-                    EpiCurveModel e = new EpiCurveModel()
+                    if (nosocomialDay is null)
                     {
-                        Datum = nosocomialStay.Admission,
-                        StationID = nosocomialStay.Ward,
-                        anzahl_gesamt = 1,
-                        Anzahl = 1,
-                        ErregerID = this.ErregerID
-                    };
-                    epiCurve.Add(e);
+                        EpiCurveModel e = new EpiCurveModel()
+                        {
+                            Datum = nosocomialStay.Admission,
+                            StationID = nosocomialStay.Ward,
+                            anzahl_gesamt = 1,
+                            Anzahl = 1,
+                            ErregerID = this.ErregerID
+                        };
+                        epiCurve.Add(e);
+                    }
+                    else
+                    {
+                        nosocomialDay.anzahl_gesamt++;
+                        nosocomialDay.Anzahl++;
+                    }
+                    dates.Add(nosocomialStay.Admission.Date, "Increment");
                 }
-                else
+                else if (dates.Keys.Contains(nosocomialStay.Admission.Date) && dates[nosocomialStay.Admission.Date] == "DECREMENT")
                 {
                     nosocomialDay.anzahl_gesamt++;
                     nosocomialDay.Anzahl++;
+                    dates[nosocomialStay.Admission.Date] = "INCREMENT";
                 }
-                dates.Add(nosocomialStay.Admission.Date, "Increment");
-            }
-            else if (dates.Keys.Contains(nosocomialStay.Admission.Date) && dates[nosocomialStay.Admission.Date] == "DECREMENT")
-            {
-                nosocomialDay.anzahl_gesamt++;
-                nosocomialDay.Anzahl++;
-                dates[nosocomialStay.Admission.Date] = "INCREMENT";
             }
 
             List<PatientStay> KnownStays = stays.Where(s => s.Admission >= NosocomialDate && s != nosocomialStay).ToList();

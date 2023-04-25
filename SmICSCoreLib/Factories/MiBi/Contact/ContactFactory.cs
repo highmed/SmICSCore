@@ -1,15 +1,19 @@
-﻿using SmICSCoreLib.Factories.General;
+﻿using Microsoft.Extensions.Hosting;
+using SmICSCoreLib.Factories.General;
 using SmICSCoreLib.Factories.PatientMovementNew;
 using SmICSCoreLib.Factories.PatientMovementNew.PatientStays;
 using SmICSCoreLib.REST;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Runtime.Intrinsics.Arm;
 using System.Threading.Tasks;
 
 namespace SmICSCoreLib.Factories.MiBi.Contact
 {
     public class ContactFactory : IContactFactory
-    {      
+    {
         public IRestDataAccess RestDataAccess { get; set; }
         private readonly IHospitalizationFactory _hospitalizationFac;
         private readonly IPatientStayFactory _patientStayFac;
@@ -45,7 +49,6 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
             {
                 throw;
             }
-           
         }
 
         public async Task<List<PatientMovementNew.PatientStays.PatientStay>> ProcessAsync(Hospitalization hospitalization)
@@ -124,7 +127,7 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
         {
 
             List<int> indices = new List<int>();
-            for(int i = 0; i < (patientStays.Count-2) ; i++)
+            for (int i = 0; i < (patientStays.Count - 2); i++)
             {
                 for (int j = (i + 1); j < (patientStays.Count - 1); j++)
                 {
@@ -142,7 +145,7 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
                 }
             }
             indices = indices.OrderBy(i => i).ToList();
-            for(int i = (indices.Count - 1); i >= 0; i--)
+            for (int i = (indices.Count - 1); i >= 0; i--)
             {
                 patientStays.RemoveAt(indices[i]);
             }
@@ -165,5 +168,6 @@ namespace SmICSCoreLib.Factories.MiBi.Contact
                         AND i/items[at0001]/value/value='{hospStay.CaseID}'"
             };
         }
+       
     }
 }

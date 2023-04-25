@@ -26,9 +26,13 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                     {
                         resistances.Add(result.Rule.SuccessEvent);
                     }
-                    else if (result.IsSuccess && string.IsNullOrEmpty(result.Rule.SuccessEvent))
+                    else if (result.IsSuccess && string.IsNullOrEmpty(result.Rule.SuccessEvent) && result.ChildResults is not null)
                     {
-                        resistances.Add(GetSuccessEvent(result));
+                        string successEvent = GetSuccessEvent(result);
+                        if (!string.IsNullOrEmpty(successEvent))
+                        {
+                            resistances.Add(successEvent);
+                        }
                     }
                 }
             }
@@ -43,12 +47,16 @@ namespace SmICSCoreLib.Factories.MiBi.Nosocomial
                 {
                     return child.Rule.SuccessEvent;
                 }
-                else if(child.IsSuccess && string.IsNullOrEmpty(child.Rule.SuccessEvent))
+                else if(child.IsSuccess && string.IsNullOrEmpty(child.Rule.SuccessEvent) && child.ChildResults is not null)
                 {
-                    return GetSuccessEvent(child);
+                    string successEvent = GetSuccessEvent(child);
+                    if (!string.IsNullOrEmpty(successEvent))
+                    {
+                       return successEvent;
+                    }
                 }
             }
-            throw new NotImplementedException("Missed Case");
+            return null;
         }
 
         public static List<string> GetPossibleMREClasses(List<string> pathogenCodes)

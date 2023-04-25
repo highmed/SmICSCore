@@ -87,7 +87,7 @@ namespace SmICSWebApp.Data.Contact
                     PathogenParameter pathogenParameter = new PathogenParameter() { PathogenCodes = parameter.PathogenCodes };
                     SortedList<Hospitalization, InfectionStatus> infectionStatus = await _infectionStatusFac.ProcessAsync(prevHospitalization, pathogenParameter, parameter.Resistence);
                     List<SmICSCoreLib.Factories.PatientMovementNew.PatientStays.PatientStay> contactLocations = await _patientStayFac.ProcessAsync(prevHospitalization);
-                    rootContact.AddHospitalization(prevHospitalization, infectionStatus[prevHospitalization], null, null);
+                    rootContact.AddHospitalization(prevHospitalization, infectionStatus[prevHospitalization], contactLocations, null);
                     await MergeInfectionStatusAndContactCases(rootContact, prevHospitalization, pathogenParameter, parameter.Resistence);
                 }
                 rootContact.CurrentHospitalization = prevHospitalization;

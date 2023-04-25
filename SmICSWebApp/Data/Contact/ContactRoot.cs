@@ -19,7 +19,10 @@ namespace SmICSWebApp.Data.Contact
         public void AddHospitalization(Hospitalization hospitalization, InfectionStatus infectionStatus, List<PatientStay> patientStays, List<Contact> contacts)
         {
             //If contains clauses
-            InfectionStatus.Add(hospitalization, infectionStatus);
+            if(!InfectionStatus.ContainsKey(hospitalization))
+            {
+                InfectionStatus.Add(hospitalization, infectionStatus);
+            }
             PatientStays.Add(hospitalization, patientStays);
             Contacts.Add(hospitalization, contacts);
         }

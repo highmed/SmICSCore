@@ -82,6 +82,8 @@ namespace SmICSWebApp.Controllers
                 PathogenParameter pathogen = new PathogenParameter() { PathogenCodes = codes };
                 foreach (string pat in parameter.patientList)
                 {
+                    if (pat == "undefined")
+                    { continue; }
                     Patient patient = new Patient() { PatientID = pat };
                     List<VisuLabResult> labs = _medicalFindingService.GetMedicalFinding(patient, pathogen).GetAwaiter().GetResult();
                     visuLabResults.AddRange(labs);
@@ -106,6 +108,8 @@ namespace SmICSWebApp.Controllers
                 List<VisuPatientMovement> visuMovements = new List<VisuPatientMovement>();
                 foreach (string pat in parameter.patientList)
                 {
+                    if (pat == "undefined")
+                    { continue; }
                     Patient patient = new Patient() { PatientID = pat };
                     List<VisuPatientMovement> movements = _movementService.GetPatientMovements(patient).GetAwaiter().GetResult();
                     visuMovements.AddRange(movements);
@@ -117,6 +121,7 @@ namespace SmICSWebApp.Controllers
                 _logger.LogWarning("CALLED Patient_Bewegung_Ps:" + e.StackTrace);
                 return ErrorHandling(e);
             }
+
         }
 
         /// <summary></summary>
@@ -135,7 +140,8 @@ namespace SmICSWebApp.Controllers
             try
             {
                 //_epiCurveFac.RestDataAccess.SetAuthenticationHeader(token);
-                return await _epiCurveService.GetData(parameter.Starttime, parameter.Endtime, new PathogenParameter { PathogenCodes = new List<string> { parameter.Pathogen } } );
+                //return await _epiCurveService.GetData(parameter.Starttime, parameter.Endtime, new PathogenParameter { PathogenCodes = new List<string> { parameter.Pathogen } } );
+                return new List<EpiCurveModel>();
             }
             catch (Exception e)
             {
@@ -186,7 +192,7 @@ namespace SmICSWebApp.Controllers
             }
             catch (Exception e)
             {
-                return ErrorHandling(e);
+                return ErrorHandling(e); 
             }
         }
 
