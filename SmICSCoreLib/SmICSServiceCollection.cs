@@ -16,6 +16,7 @@ using SmICSCoreLib.Factories.Feasability;
 using SmICSCoreLib.DB;
 using SmICSCoreLib.DB.MenuItems;
 using SmICSCoreLib.Factories.Helpers;
+using SmICSCoreLib.Factories.ContactNew;
 
 namespace SmICS
 {
@@ -43,6 +44,7 @@ namespace SmICS
             services.AddScoped<IContactFactory, ContactFactory>();
             services.AddScoped<IInfectionStatusFactory, InfectionStatusFactory>();
             services.AddScoped<IHelperFactory, HelperFactory>();
+            services.AddScoped<IContactFactory2, ContactFactory2>();
             #endregion
             services.AddTransient<IEpiCurveFactory, EpiCurveFactory>();
 

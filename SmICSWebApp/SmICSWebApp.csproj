@@ -8,9 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Resources\nec\**" />
     <Compile Remove="Resources\RKIConfig\**" />
+    <Content Remove="Resources\nec\**" />
     <Content Remove="Resources\RKIConfig\**" />
+    <EmbeddedResource Remove="Resources\nec\**" />
     <EmbeddedResource Remove="Resources\RKIConfig\**" />
+    <None Remove="Resources\nec\**" />
     <None Remove="Resources\RKIConfig\**" />
   </ItemGroup>
 
@@ -57,7 +61,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\nec\json\" />
+    <Folder Include="Data\ContactNew\" />
     <Folder Include="Resources\db\" />
   </ItemGroup>
 

@@ -1,0 +1,52 @@
+﻿@page "/contactNew"
+@using SmICSCoreLib.Factories.ContactNew;
+@using SmICSCoreLib.Factories.General;
+
+@inject SmICSCoreLib.Factories.ContactNew.IContactFactory2 contactFac
+
+<h3>ContactNew</h3>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="card">
+            <div ="card-body">
+                <EditForm Model="@indexPatient" OnValidSubmit="@Submit">
+                    <label for="patID">PatientID:</label>
+                    <input type="text" @bind="indexPatient.PatientID" id="patID" />
+                </EditForm>    
+            </div>
+        </div>
+    </div>
+</div>
+@if(IsLoading)
+{
+     <div class="spinner"></div>
+}
+@if (contactPatients is not null && contactPatients.Count > 0)
+{
+    <div>
+        @foreach(ContactPatient contact in contactPatients)
+        {
+            <p>@contact.PatientID</p>
+        }
+    </div>
+}
+
+@code {
+    Patient indexPatient = new Patient();
+
+    List<ContactPatient> contactPatients;
+
+    private bool IsLoading = false;
+    private async Task Submit()
+    {
+        IsLoading = !IsLoading;
+        contactPatients = new List<ContactPatient>();
+        IAsyncEnumerable<ContactPatient> contacts = contactFac.TestProcessAsync(indexPatient);
+        await foreach(ContactPatient cp in contacts)
+        {
+            contactPatients.Add(cp);
+        }
+        IsLoading = !IsLoading;
+    }
+}
