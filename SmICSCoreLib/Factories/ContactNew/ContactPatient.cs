@@ -48,7 +48,7 @@ namespace SmICSCoreLib.Factories.ContactNew
         {
             if (rootStay.Discharge.HasValue && possibleContact.Discharge.HasValue)
             {
-                return rootStay.Discharge.Value <= possibleContact.Discharge.Value ? DateOnly.FromDateTime(rootStay.Discharge.Value) : DateOnly.FromDateTime(possibleContact.Discharge.Value.Date);
+                return rootStay.Discharge.Value <= possibleContact.Discharge.Value ? DateOnly.FromDateTime(rootStay.Discharge.Value) : DateOnly.FromDateTime(possibleContact.Discharge.Value);
             }
             else if (rootStay.Discharge.HasValue)
             {

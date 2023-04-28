@@ -93,12 +93,13 @@ namespace SmICSWebApp
 
         private static void GetEnvironmentVariables()
         {
-            OpenehrConfig.openehrEndpoint = Environment.GetEnvironmentVariable("OPENEHR_DB");
-            OpenehrConfig.openehrUser = Environment.GetEnvironmentVariable("OPENEHR_USER");
-            OpenehrConfig.openehrPassword = Environment.GetEnvironmentVariable("OPENEHR_PASSWD");
-            OpenehrConfig.queryLimit = Environment.GetEnvironmentVariable("QUERY_LIMIT");
-            OpenehrConfig.queryTimeout = Convert.ToDouble(Environment.GetEnvironmentVariable("QUERY_TIMEOUT")); 
-            OpenehrConfig.smicsVisuPort = Environment.GetEnvironmentVariable("SMICS_VISU_PORT");
+            OpenehrConfig.openehrEndpoint = "http://plri-highmed01.mh-hannover.local:8081/";//Environment.GetEnvironmentVariable("OPENEHR_DB");
+            OpenehrConfig.openehrUser = "smics";//Environment.GetEnvironmentVariable("OPENEHR_USER");
+            OpenehrConfig.openehrPassword = "b+KzsSFD?cgdW2UA";
+            //OpenehrConfig.smicsVisuPort = Environment.GetEnvironmentVariable("SMICS_VISU_PORT");
+            OpenehrConfig.queryLimit = "1000000";
+            OpenehrConfig.queryTimeout = 400000; 
+            //OpenehrConfig.smicsVisuPort = Environment.GetEnvironmentVariable("SMICS_VISU_PORT");
 
         }
     }

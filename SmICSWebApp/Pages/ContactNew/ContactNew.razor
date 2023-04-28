@@ -1,8 +1,11 @@
 ﻿@page "/contactNew"
 @using SmICSCoreLib.Factories.ContactNew;
 @using SmICSCoreLib.Factories.General;
+@using SmICSWebApp.Data.Menu;
 
 @inject SmICSCoreLib.Factories.ContactNew.IContactFactory2 contactFac
+@inject MenuService _menuService;
+
 
 <h3>ContactNew</h3>
 
@@ -11,9 +14,32 @@
         <div class="card">
             <div ="card-body">
                 <EditForm Model="@indexPatient" OnValidSubmit="@Submit">
-                    <label for="patID">PatientID:</label>
+                    <label for="patID">Patient ID:</label>
                     <input type="text" @bind="indexPatient.PatientID" id="patID" />
-                </EditForm>    
+                    <button type="submit" class="btn btn-outline-primary"><i class="oi oi-magnifying-glass"></i></button><br />
+                    <label for="caseID">Fall ID:</label>
+                    <input type="text" @bind="indexPatient.CurrentCase" id="caseID" /><br />
+                    <label for="pathogen">Erreger:</label>
+                    <select id="pathogenDropdown" class="col-2 mr-2" @onchange="GetPathogenFilter">
+                        <option value="" selected disabled hidden>leer</option>
+                        @foreach (PathogenEntry entry in _pathogenMenuEntries)
+                        {
+                            <option value="@string.Join(",", entry.Codes)">@entry.Name</option>
+                        }
+                    </select>
+                    <label for="res">Resistenz:</label>
+                    <select id="res" class="col-2 mr-2" @bind="indexPatient.ChoosenMRE">
+                        <option value="" selected disabled hidden>leer</option>
+                        <option value="keine">keine</option>
+                        @if (_filterMRE is not null)
+                        {
+                            @foreach (string filter in _filterMRE)
+                            {
+                                <option value="@filter">@filter</option>
+                            }
+                        }
+                    </select>                    
+                </EditForm>
             </div>
         </div>
     </div>
@@ -24,18 +50,47 @@
 }
 @if (contactPatients is not null && contactPatients.Count > 0)
 {
-    <div>
-        @foreach(ContactPatient contact in contactPatients)
-        {
-            <p>@contact.PatientID</p>
-        }
-    </div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="text-center">Kontaktpatient</th>
+                <th class="text-center">Statusdatum</th>
+                <th class="text-center">Raum <i class="oi oi-elevator" @onclick="() => Sort(p => p.Room)"></i></th>
+                <th class="text-center">Station <i class="oi oi-elevator" @onclick="() => Sort(p => p.Ward)"></i></th>
+                <th class="text-center">Fachabteilung <i class="oi oi-elevator" @onclick="() => Sort(p => p.Departement)"></i></th>
+                <th class="text-center">Kontaktstart <i class="oi oi-elevator" @onclick="() => Sort(p => p.ContactStart)"></i></th>
+                <th class="text-center">Kontaktende <i class="oi oi-elevator" @onclick="() => Sort(p => p.ContactStart)"></i></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ContactPatient contact in contactPatients)
+            {
+                @foreach(ContactInformation cInf in contact.Contacts)
+                {
+                    <tr>
+                        <td class="text-center">@contact.PatientID</td>
+                        <td class="text-center">@cInf.ContactLocation.Room</td>
+                        <td class="text-center">@cInf.ContactLocation.Ward.Name</td>
+                        <td class="text-center">@cInf.ContactLocation.Departement.Name</td>
+                        <td class="text-center">@cInf.ContactTime.ContactStart.ToString()</td>
+                        <td class="text-center">@cInf.ContactTime.ContactEnd.Value.ToString()</td>
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
 }
 
 @code {
-    Patient indexPatient = new Patient();
+    IndexPatient indexPatient = new IndexPatient();
 
     List<ContactPatient> contactPatients;
+    private List<string> _filterMRE;
+    private List<PathogenEntry> _pathogenMenuEntries;
 
     private bool IsLoading = false;
     private async Task Submit()
@@ -46,7 +101,31 @@
         await foreach(ContactPatient cp in contacts)
         {
             contactPatients.Add(cp);
+            this.StateHasChanged();
         }
         IsLoading = !IsLoading;
     }
+
+    private void Sort(Func<Data.Contact.ContactDetails, IComparable> getProp){ }
+
+    private void GetPathogenFilter(ChangeEventArgs e)
+    {
+        indexPatient.ChoosenPathoghen = e.Value.ToString().Split(",").ToList();
+    }
+
+    private void LoadMenu()
+    {
+        _pathogenMenuEntries = _menuService.GetPathogens().GetAwaiter().GetResult();
+        _pathogenMenuEntries = _pathogenMenuEntries.OrderBy(p => p.Name).ToList();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        IsLoading = !IsLoading;
+        await Task.Run(LoadMenu);
+        IsLoading = !IsLoading;
+
+    }
+    
 }

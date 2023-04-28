@@ -26,7 +26,7 @@ namespace SmICSCoreLib.Factories.ContactNew
         public async IAsyncEnumerable<ContactPatient> TestProcessAsync(Patient parameter)
         {
             List<Hospitalization> Hospitalizations = await _hospitalizationFac.ProcessAsync(parameter);
-            Hospitalization hospitalization = Hospitalizations[0];
+            Hospitalization hospitalization = Hospitalizations.Last();
             LocationCategoryDict RootPatientStays = await GetSortedPatientStays(hospitalization);
             List<HospStay> PossibleContactPatients = await _hospitalizationFac.ProcessAsync(hospitalization.Admission.Date, hospitalization.Discharge.Date);
             IAsyncEnumerable<KeyValuePair<Patient, LocationCategoryDict>> patientStayDict = GetAllPossibleContactPatientStays(PossibleContactPatients);
@@ -44,7 +44,7 @@ namespace SmICSCoreLib.Factories.ContactNew
             {
                 LocationCategoryDict locCatDict = await GetSortedPatientStays(PossibleContactPatients[i]);
                 int next = i + 1;
-                while (PossibleContactPatients[next].PatientID == PossibleContactPatients[i].PatientID)
+                while (next < PossibleContactPatients.Count && PossibleContactPatients[next].PatientID == PossibleContactPatients[i].PatientID)
                 {
                     LocationCategoryDict locCatDict_next = await GetSortedPatientStays(PossibleContactPatients[i]);
                     locCatDict.Merge(locCatDict_next);
@@ -54,7 +54,7 @@ namespace SmICSCoreLib.Factories.ContactNew
             }
         }
          
-        private async IAsyncEnumerable<ContactInformation> GetRealContactPatientStays(IAsyncEnumerable<KeyValuePair<Patient, LocationCategoryDict>> patientStayDict, LocationCategoryDict rootPatientStays)
+        private async IAsyncEnumerable<ContactPatient> GetRealContactPatientStays(IAsyncEnumerable<KeyValuePair<Patient, LocationCategoryDict>> patientStayDict, LocationCategoryDict rootPatientStays)
         {
             await foreach (KeyValuePair<Patient, LocationCategoryDict> patient in patientStayDict)
             {
@@ -70,7 +70,7 @@ namespace SmICSCoreLib.Factories.ContactNew
                                 ContactPatient cPatient = CompareContactPoints(rootPatientStays[location.Key][stayInformation.Key], stayInformation.Value, location.Key, stayInformation.Key);
                                 if (cPatient is not null)
                                 {
-                                    yield return cInfo;
+                                    yield return cPatient;
                                 }
                             }
                         }
@@ -90,7 +90,8 @@ namespace SmICSCoreLib.Factories.ContactNew
                     {
                         if (contactPatient is null)
                         {
-                            contactPatient = new ContactPatient();
+                            contactPatient = new ContactPatient { PatientID = possibleContact.PatientID };
+                            
                         }
                         ContactInformation contactInformation = new ContactInformation { PatientStayMetaData = possibleContact};
                         contactInformation.ContactLocation.SetFromLocation(locationCategory, location);
