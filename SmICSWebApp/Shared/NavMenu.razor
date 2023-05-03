@@ -68,8 +68,8 @@
 
         string baseURL = navigation.BaseUri;
         string[] splitted = baseURL.Split(':');
-        string http = splitted[0] + ":";
-        string url = splitted[1];
+        string http = splitted[0] + "://";
+        string url = splitted[1].Replace("/","");
         string port = ":" + OpenehrConfig.smicsVisuPort;
 
         visuLink = http + url + port;
