@@ -53,8 +53,8 @@
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th class="text-center">Kontaktpatient</th>
-                <th class="text-center">Statusdatum</th>
+                <th class="text-center">Kontaktpatient <i class="oi oi-elevator" @onclick="() => Sort(p => p.PatientID)"></i></th>
+                <th class="text-center">Statusdatum <i class="oi oi-elevator" @onclick="() => Sort(p => p.StatusDate)"></i></th>
                 <th class="text-center">Raum <i class="oi oi-elevator" @onclick="() => Sort(p => p.Room)"></i></th>
                 <th class="text-center">Station <i class="oi oi-elevator" @onclick="() => Sort(p => p.Ward)"></i></th>
                 <th class="text-center">Fachabteilung <i class="oi oi-elevator" @onclick="() => Sort(p => p.Departement)"></i></th>
@@ -65,21 +65,40 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (ContactPatient contact in contactPatients)
+            @foreach ((ContactInformation cInf, string patID) in contactPatients.Select(c => (c.Contacts.Select(ci => new Tuple<ContactInformation, string> (ci, c.PatientID)))).Select(t => t))
             {
-                @foreach(ContactInformation cInf in contact.Contacts)
-                {
                     <tr>
-                        <td class="text-center">@contact.PatientID</td>
-                        <td class="text-center">@cInf.ContactLocation.Room</td>
-                        <td class="text-center">@cInf.ContactLocation.Ward.Name</td>
-                        <td class="text-center">@cInf.ContactLocation.Departement.Name</td>
+                        <td class="text-center">@patID</td>
+                        <td class="text-center"></td>
+                        <td class="text-center">
+                            @if (!string.IsNullOrEmpty(cInf.ContactLocation.Room))
+                            {
+                                @cInf.ContactLocation.Room
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if (cInf.ContactLocation.Ward is not null)
+                            {
+                                @cInf.ContactLocation.Ward.Name
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if(cInf.ContactLocation.Departement is not null)
+                            {
+                                @cInf.ContactLocation.Departement.Name
+                            }
+                        </td>
                         <td class="text-center">@cInf.ContactTime.ContactStart.ToString()</td>
-                        <td class="text-center">@cInf.ContactTime.ContactEnd.Value.ToString()</td>
+                        <td class="text-center">
+                            @if(cInf.ContactTime.ContactEnd.HasValue)
+                            {
+                                @cInf.ContactTime.ContactEnd.Value.ToString()
+                            }
+                        </td>
                         <td class="text-center"></td>
                         <td class="text-center"></td>
                     </tr>
-                }
+                
             }
         </tbody>
     </table>
@@ -127,5 +146,18 @@
         IsLoading = !IsLoading;
 
     }
-    
+
+    private IEnumerable<Tuple<ContactInformation, string>> GetContactInformationTuple()
+    {
+        List<Tuple<ContactInformation, string>> retVal = new();
+        foreach(ContactPatient c in contactPatients)
+        {
+            foreach(ContactInformation ci in c.Contacts)
+            {
+                retVal.Add((ci, c.PatientID));
+            }
+        }
+
+        return null;
+    }
 }
