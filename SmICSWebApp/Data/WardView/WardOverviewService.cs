@@ -285,7 +285,7 @@ namespace SmICSWebApp.Data.WardView
                 {
                     IEnumerable<Specimen> sorted = labResult.Specimens.Where(s => s.Pathogens.Any(p => p.Result))
                         .OrderBy(s => s.SpecimenCollectionDateTime);
-                    if (sorted is not null)
+                    if (sorted is not null && sorted.Count() > 0)
                     {
                         DateTime tmp = sorted.Last().SpecimenCollectionDateTime;
                         if (last < tmp)

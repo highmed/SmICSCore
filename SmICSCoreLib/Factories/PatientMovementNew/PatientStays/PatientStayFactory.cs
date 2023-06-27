@@ -77,7 +77,7 @@ namespace SmICSCoreLib.Factories.PatientMovementNew.PatientStays
                         }
                     }
                 }
-                mergedIndices = mergedIndices.OrderBy(i => i).ToList();
+                mergedIndices = mergedIndices.Distinct().OrderBy(i => i).ToList();
                 for (int i = (mergedIndices.Count - 1); i >= 0; i--)
                 {
                     patientStays.RemoveAt(mergedIndices[i]);
